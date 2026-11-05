@@ -136,7 +136,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .card .ct{font:900 14px/1.15 var(--head);letter-spacing:.05em}
 .card .cs{display:flex;gap:10px;font:800 11px/1 var(--ui);color:var(--mute)}
 .card.cur{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,207,106,.45)}
-.card.locked{cursor:default}.card.locked .ci{filter:grayscale(1) brightness(.35) blur(1px)}
+.card.locked{cursor:not-allowed}.card.shake{animation:hpShake .4s}.card.locked .ci{filter:grayscale(1) brightness(.35) blur(1px)}
 .card.locked::after{content:"🔒";position:absolute;left:50%;top:32%;transform:translate(-50%,-50%);font-size:28px}
 .gem{display:inline-block;width:12px;height:12px;transform:rotate(45deg);background:linear-gradient(135deg,#bff,#3ad0ff 50%,#1a5aff);box-shadow:0 0 8px #3ad0ff;border-radius:2px}
 .gem.off{background:#3a2a5a;box-shadow:none}
@@ -643,7 +643,8 @@ function groundSeg(z0,z1,x0=-4.6,x1=4.6,walls=true){addSolid(x0,x1,-4,0,z1,z0,'g
   if(walls){addSolid(x0-.9,x0,0,.75,z1,z0,'wall',wallMat);addSolid(x1,x1+.9,0,.75,z1,z0,'wall',wallMat);}}
 
 /* ---------- level layout ---------- */
-const LV=(()=>{const m=(location.hash||'').toLowerCase().match(/^#level(\d)$/);let n=m?+m[1]:0;if(!n){try{n=+localStorage.getItem('wt-level')||1;}catch(e){n=1;}}return clamp(n,1,9);})();
+const UNLOCK=(()=>{try{return clamp(+localStorage.getItem('wt-unlocked')||1,1,10);}catch(e){return 1;}})();
+const LV=(()=>{const m=(location.hash||'').toLowerCase().match(/^#level(\d)$/);let n=m?+m[1]:0;if(!n){try{n=+localStorage.getItem('wt-level')||1;}catch(e){n=1;}}return clamp(n,1,Math.min(9,UNLOCK));})();
 const MAXLV=9;
 if(LV>MAXLV){try{localStorage.setItem('wt-level','1');}catch(e){}location.hash='level1';location.reload();}
 let ARENA=null,gate=null,gateMesh=null,sunSky=null;
@@ -1815,9 +1816,10 @@ $('pRestart').addEventListener('click',()=>location.reload());$('pQuit').addEven
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>{$(b.dataset.close).hidden=true;}));
 $('settingsBtn').addEventListener('click',()=>{initAudio();$('settingsScr').hidden=false;});
 $('levelsBtn').addEventListener('click',()=>{initAudio();buildCards();$('levelsScr').hidden=false;});
-function buildCards(){const best=getBest();$('cards').innerHTML=LEVELS.map((l,i)=>{const n=i+1,ok=n<=MAXLV,b=best[n]||{};
-  return `<button class="card${ok?'':' locked'}${n===LV?' cur':''}" type="button" data-lv="${n}" ${ok?'':'aria-disabled="true"'}><div class="ci" style="background-image:url(art/l${n}.jpg)"></div><div class="cb"><span class="cn">LEVEL ${n}</span><span class="ct">${l.name}</span><span class="cs">${ok?`<span><i class="gem${b.gem?'':' off'}"></i></span><span>${b.time?fmtT(b.time):'--:--'}</span><span>${b.orbs||0} orbs</span>`:'Coming soon'}</span></div></button>`;}).join('');
-  $('cards').querySelectorAll('.card').forEach(c=>c.addEventListener('click',()=>{const n=+c.dataset.lv;if(n>MAXLV)return;if(n===LV){$('levelsScr').hidden=true;return;}goLevel(n);}));
+function popupLock(n){const c=document.querySelector(`.card[data-lv="${n}"]`);if(c){c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');}blip(220,140,.15,'square',.05);}
+function buildCards(){const best=getBest();$('cards').innerHTML=LEVELS.map((l,i)=>{const n=i+1,ok=n<=MAXLV&&n<=UNLOCK,b=best[n]||{};
+  return `<button class="card${ok?'':' locked'}${n===LV?' cur':''}" type="button" data-lv="${n}" ${ok?'':'aria-disabled="true"'}><div class="ci" style="background-image:url(art/l${n}.jpg)"></div><div class="cb"><span class="cn">LEVEL ${n}</span><span class="ct">${l.name}</span><span class="cs">${ok?`<span><i class="gem${b.gem?'':' off'}"></i></span><span>${b.time?fmtT(b.time):'--:--'}</span><span>${b.orbs||0} orbs</span>`:'Beat Level '+(n-1)+' to unlock'}</span></div></button>`;}).join('');
+  $('cards').querySelectorAll('.card').forEach(c=>c.addEventListener('click',()=>{const n=+c.dataset.lv;if(n>MAXLV||n>UNLOCK){popupLock(n);return;}if(n===LV){$('levelsScr').hidden=true;return;}goLevel(n);}));
   const cur=$('cards').querySelector('.cur');if(cur)cur.scrollIntoView({inline:'center',block:'nearest'});}
 function fmtT(t){const m=Math.floor(t/60),s=Math.floor(t%60);return `${m}:${String(s).padStart(2,'0')}`;}
 /* settings controls */
