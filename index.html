@@ -989,9 +989,15 @@ hexStone(-1.5,-32.2,0);hexStone(1.8,-35.2,0,{ay:.45,spd:1.4});hexStone(-1.4,-38.
 deck(-9,9,-48,-58,0,rock,rockS,4);ramp(-3,3,-50,-58,0,3);deck(-9,-3,-50,-58,3,rock,rockS,3);deck(3,9,-50,-58,3,rock,rockS,3);
 /* --- B: station + cart --- */
 deck(-4,4,-58,-68,3,wood,woodS,.6);for(const [x,z] of[[-3.6,-59],[3.6,-59],[-3.6,-67],[3.6,-67]])post(x,z,-2,3,woodS);
-const cart=new THREE.Group();{const cm=new THREE.Mesh(boxGeo(1.7,1,2.2,1),[wood,wood,woodS,wood,wood,wood]);cm.position.y=.75;cart.add(cm);
+const cart=new THREE.Group();{const W=1.7,D=2.2,H=.6,T=.12,y0=.25;
+  const fl=new THREE.Mesh(boxGeo(W,T,D,1),[woodS,woodS,woodS,woodS,woodS,woodS]);fl.position.y=y0+T/2;cart.add(fl);
+  for(const sx of[-1,1]){const w=new THREE.Mesh(boxGeo(T,H,D,1),[wood,wood,woodS,woodS,wood,wood]);w.position.set(sx*(W-T)/2,y0+H/2,0);cart.add(w);}
+  for(const sz of[-1,1]){const w=new THREE.Mesh(boxGeo(W-2*T,H,T,1),[wood,wood,woodS,woodS,wood,wood]);w.position.set(0,y0+H/2,sz*(D-T)/2);cart.add(w);}
+  const inner=new THREE.Mesh(new THREE.PlaneGeometry(W-2*T,D-2*T),new THREE.MeshPhongMaterial({color:0x1a0e08}));inner.rotation.x=-Math.PI/2;inner.position.y=y0+T+.01;cart.add(inner);
+  for(const sx of[-1,1]){const r=new THREE.Mesh(new THREE.BoxGeometry(.16,.1,D+.08),iron);r.position.set(sx*W/2,y0+H,0);cart.add(r);}
+  for(const sz of[-1,1]){const r=new THREE.Mesh(new THREE.BoxGeometry(W+.08,.1,.16),iron);r.position.set(0,y0+H,sz*D/2);cart.add(r);}
   for(const [x,z] of[[-.8,-.7],[.8,-.7],[-.8,.7],[.8,.7]]){const w=new THREE.Mesh(new THREE.CylinderGeometry(.32,.32,.18,10),iron);w.rotation.z=Math.PI/2;w.position.set(x,.3,z);cart.add(w);}
-  const rim=new THREE.Mesh(new THREE.BoxGeometry(1.8,.12,2.3),iron);rim.position.y=1.28;cart.add(rim);cart.add(spr(glowTex,0xffc84a,1.2,1.2,.8,1.4,-1));}
+  cart.add(spr(glowTex,0xffc84a,1.2,1.2,.8,1.4,-1));}
 const CART0=V3(0,3,-64);cart.position.copy(CART0);scene.add(cart);
 /* --- C: trestle track over the slime river --- */
 const TY=3;
