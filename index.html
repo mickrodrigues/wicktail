@@ -787,13 +787,17 @@ const sealTex=texSmooth(128,256,g=>{const gr=g.createLinearGradient(0,0,0,256);g
   g.strokeStyle='rgba(255,230,240,.9)';g.lineWidth=3;for(let i=0;i<10;i++){const x=R(10,118),y=R(10,246);g.beginPath();g.moveTo(x,y);g.lineTo(x+R(-12,12),y+R(10,26));g.lineTo(x+R(-12,12),y+R(26,40));g.stroke();}
   for(let y=0;y<256;y+=16){g.fillStyle='rgba(255,255,255,.18)';g.fillRect(0,y,128,3);}});
 sealTex.wrapS=sealTex.wrapT=THREE.RepeatWrapping;
-function minionsLeft(){return enemies.filter(e=>e.alive&&!e.dying&&!e.sect&&!e.summoned).length;}
+function sealMinions(){if(!gate)return [];const gx=(gate.min.x+gate.max.x)/2,gz=(gate.min.z+gate.max.z)/2;return enemies.filter(e=>e.alive&&!e.dying&&!e.sect&&!e.summoned&&e.pos.y>L.killY+1&&Math.hypot(e.pos.x-gx,e.pos.z-gz)<70);}
+function minionsLeft(){return sealMinions().length;}
 function setupSeal(){if(!gate||LV===4||LV===5||minionsLeft()===0)return;const mn=gate.min,mx=gate.max;seal=addSolid(mn.x-.3,mx.x+.3,mn.y-.5,mn.y+7,mn.z,mx.z,'wall',null);
   const w=mx.x-mn.x+.6,t=sealTex.clone();t.needsUpdate=true;t.repeat.set(w/3,1);const m=new THREE.Mesh(new THREE.PlaneGeometry(w,4.6),new THREE.MeshBasicMaterial({map:t,color:0xff6a9a,transparent:true,opacity:.75,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide}));
   m.position.set((mn.x+mx.x)/2,mn.y+2.3,(mn.z+mx.z)/2);scene.add(m);seal.m=m;seal.glow=spr(glowTex,0xff6a9a,w+2,4.5,m.position.x,m.position.y,m.position.z);seal.glow.material.opacity=.3;scene.add(seal.glow);L.sealMsgT=0;}
-function updSeal(dt){if(!seal||!seal.alive||state!=='play')return;seal.m.material.map.offset.y-=dt*.35;seal.m.material.opacity=.32+.12*Math.sin(time*4);const n=minionsLeft();
-  const d=Math.hypot(P.pos.x-seal.m.position.x,P.pos.z-seal.m.position.z);if(d<8&&n>0){L.sealMsgT-=dt;if(L.sealMsgT<=0){L.sealMsgT=3.2;showHint('DEFEAT EVERY MINION TO BREAK THE SEAL · '+n+' LEFT',2.8);}}
-  if(n===0){seal.alive=false;burst(seal.m.position.clone(),0xff8aa0,40,8,.6);sfx.check();banner('ALL MINIONS DEFEATED','THE SEAL BREAKS');const m=seal.m,gl=seal.glow;let k=1;const f=()=>{k-=.04;m.material.opacity=Math.max(0,k*.7);m.scale.y=Math.max(.01,k);gl.material.opacity=Math.max(0,k*.3);if(k>0)requestAnimationFrame(f);else{scene.remove(m);scene.remove(gl);}};f();}}
+function updSeal(dt){if(!seal||!seal.alive||state!=='play')return;seal.m.material.map.offset.y-=dt*.35;seal.m.material.opacity=.32+.12*Math.sin(time*4);const ms=sealMinions();let n=ms.length;
+  const d=Math.hypot(P.pos.x-seal.m.position.x,P.pos.z-seal.m.position.z);
+  /* point out the ones still standing, and never soft-lock the player */
+  const near=d<16&&n>0;for(const e of enemies){const want=near&&ms.includes(e);if(want&&!e.beacon){e.beacon=spr(glowTex,0xff6a9a,1.6,1.6,0,0,0);scene.add(e.beacon);}if(e.beacon){if(!want){scene.remove(e.beacon);e.beacon=null;}else{e.beacon.position.set(e.pos.x,e.pos.y+(e.h||1.2)+1.2+Math.sin(time*5)*.2,e.pos.z);e.beacon.material.opacity=.6+.4*Math.sin(time*6);}}}
+  if(d<10&&n>0){L.sealWait=(L.sealWait||0)+dt;if(L.sealWait>20)n=0;}if(d<8&&n>0){L.sealMsgT-=dt;if(L.sealMsgT<=0){L.sealMsgT=3.2;showHint('DEFEAT EVERY MINION TO BREAK THE SEAL · '+n+' LEFT',2.8);}}
+  if(n===0){seal.alive=false;for(const e of enemies)if(e.beacon){scene.remove(e.beacon);e.beacon=null;}burst(seal.m.position.clone(),0xff8aa0,40,8,.6);sfx.check();banner('ALL MINIONS DEFEATED','THE SEAL BREAKS');const m=seal.m,gl=seal.glow;let k=1;const f=()=>{k-=.04;m.material.opacity=Math.max(0,k*.7);m.scale.y=Math.max(.01,k);gl.material.opacity=Math.max(0,k*.3);if(k>0)requestAnimationFrame(f);else{scene.remove(m);scene.remove(gl);}};f();}}
 
 /* ===================== v3 SYSTEMS: minion HP, boss phases, pickups, Crash-style path sections ===================== */
 /* --- minion health scales with level --- */
@@ -902,11 +906,11 @@ function buildSection(){if(SEC.built||!L.start)return;SEC.built=true;const rng=s
       const deep=c.t==='gap'||c.t==='plat'?4:1;rimL.push({g:boxGeo(hx*2,1.15+deep,hz*2,2.5),x:ex,y:y+.6-(1.15+deep)/2,z:ez});
       addSolid(ex-(dx?.38:SC/2),ex+(dx?.38:SC/2),y-12,y+18,ez-(dz?.38:SC/2),ez+(dz?.38:SC/2),'wall',null);}}
   /* 3) banks + props around the path for depth */
-  mergeBoxes(rimL,rim,rim);
+  SEC_OCC.push(mergeBoxes(rimL,rim,rim));
   const ring={};for(const c of all)for(let dx=-3;dx<=3;dx++)for(let dz=-3;dz<=3;dz++){const k=(c.cx+dx)+','+(c.cz+dz);if(at[k])continue;const d=Math.max(Math.abs(dx),Math.abs(dz));const r=ring[k]||(ring[k]={cx:c.cx+dx,cz:c.cz+dz,d:9,hm:-9});r.d=Math.min(r.d,d);if(d<=1)r.hm=Math.max(r.hm,c.h);else r.hm=Math.max(r.hm,c.h-.6);}
   let props=0;const bankL=[];for(const k in ring){const r=ring[k],x=SX+r.cx*SC,z=r.cz*SC;const tp=r.hm+(r.d<=1?RR(.8,1.3):r.d===2?RR(1.7,2.6):RR(2.8,4.6));bankL.push({g:boxGeo(SC,tp+9,SC,2.5),x,y:tp-(tp+9)/2,z});
     if(r.d>=2&&props<34&&rng()<(r.d===2?.4:.22)&&T.props&&T.props.length){try{const pr=T.props[(rng()*T.props.length)|0](M,1);const o=pr.o||pr;o.position.set(x+RR(-1.2,1.2),tp,z+RR(-1.2,1.2));o.rotation.y=RR(0,TAU);o.scale.multiplyScalar(RR(.8,1.15));scene.add(o);props++;}catch(err){}}}
-  cliff.map.wrapS=cliff.map.wrapT=THREE.RepeatWrapping;cliff.map.repeat.set(.35,.2);mergeBoxes(bankL,cliff,bank);
+  cliff.map.wrapS=cliff.map.wrapT=THREE.RepeatWrapping;cliff.map.repeat.set(.35,.2);SEC_OCC.push(mergeBoxes(bankL,cliff,bank));
   {const vp=new THREE.Mesh(new THREE.PlaneGeometry(220,320),new THREE.MeshBasicMaterial({map:voidTex,color:0x5a4a88}));vp.material.map=voidTex.clone();vp.material.map.needsUpdate=true;vp.material.map.repeat.set(8,12);vp.rotation.x=-Math.PI/2;vp.position.set(SX,-9,-150);scene.add(vp);}
   /* 4) content: crates, enemies, orbs, wisps, checkpoints */
   const en=secEnemy(rng);const flyer=typeof ravenProto!=='undefined'&&ravenProto;let lastEn=-9,ck=0;
@@ -952,10 +956,17 @@ function exitBonus(won){if(!SEC.bonus)return;SEC.bonus=false;fade(1,.3);state='w
 function warpToLevel(){if(SEC.done)return;SEC.done=true;sfx.check();burst(SEC.warpP.clone(),0xc8a8ff,40,8,.6);fade(1,.45);state='warp';
   setTimeout(()=>{P.pos.copy(L.start0);P.vel.set(0,0,0);checkpoint.copy(L.start0);P.face=Math.PI;camBehind();state='play';fade(0,.6);SEC.on=false;if(L.hint)setTimeout(()=>showHint(L.hint,3),600);},480);}
 function updSection(dt){SEC.on=P.pos.x>SX-120;if(!SEC.built)return;
-  if(SEC.warp){SEC.warp.children.forEach((c,i)=>{if(c.isMesh){c.rotation.y+=dt*(1+i*.7);c.rotation.x=Math.sin(time*(1+i*.3))*.5;}});if(SEC.on&&!SEC.done&&state==='play'&&P.pos.distanceTo(SEC.warpP)<2)warpToLevel();}
+  if(SEC.warp){SEC.warp.children.forEach((c,i)=>{if(c.isMesh){c.rotation.y+=dt*(1+i*.7);c.rotation.x=Math.sin(time*(1+i*.3))*.5;}});if(SEC.on&&!SEC.done&&state==='play'&&Math.hypot(P.pos.x-SEC.warpP.x,P.pos.z-SEC.warpP.z)<2.3&&Math.abs(P.pos.y-SEC.warpP.y)<3)warpToLevel();}
   for(const b of[SEC.bonusPad,SEC.bonusExit]){if(!b)continue;b.cd-=dt;b.g.children[1].rotation.z+=dt*2;b.g.children[2].material.opacity=.6+.3*Math.sin(time*5);
     if(state==='play'&&!P.dead&&b.cd<=0&&P.onGround&&Math.hypot(P.pos.x-b.p.x,P.pos.z-b.p.z)<1.2&&Math.abs(P.pos.y-b.p.y)<.6){if(b===SEC.bonusPad)enterBonus();else exitBonus(true);}}
   if(SEC.bonus&&state==='play'&&P.pos.y<BY-7){exitBonus(false);}}
+
+/* camera never hides behind walls/banks: pull it in front of whatever is between it and Flint */
+const camRay=new THREE.Raycaster(),SEC_OCC=[];let camOccList=null,camOccN=-1;
+function camOcc(){if(camOccList&&camOccN===solids.length)return camOccList;camOccN=solids.length;camOccList=SEC_OCC.slice();
+  for(const s of solids){if(!s.mesh||!s.mesh.isMesh||!s.alive)continue;if(s.type==='wall'||s.type==='block'||s.type==='ground'||s.type==='ramp')camOccList.push(s.mesh);}return camOccList;}
+function camAvoid(t){const head=V3(P.pos.x,P.pos.y+1.3,P.pos.z),dir=t.clone().sub(head),dist=dir.length();if(dist<.5)return false;dir.multiplyScalar(1/dist);camRay.set(head,dir);camRay.far=dist+.3;
+  const hits=camRay.intersectObjects(camOcc(),false);for(const h of hits){if(h.object.material&&h.object.material.transparent&&h.object.material.opacity<.5)continue;const d=Math.max(.9,h.distance-.45);t.copy(head).addScaledVector(dir,d);if(d<2.2)t.y+=(2.2-d)*.6;return true;}return false;}
 
 if(LV===1){
 /* ===================== LEVEL 1: SLEEPY-SUN VILLAGE ===================== */
@@ -2123,11 +2134,11 @@ function frame(){requestAnimationFrame(frame);let dt=Math.min(clock.getDelta(),.
   if(state==='title'){titleA+=dt*.35;const a=Math.PI+Math.sin(titleA*.5)*.55,fx=-Math.sin(a),fz=-Math.cos(a);camera.position.set(P.pos.x+Math.sin(a)*3.6,P.pos.y+1.5,P.pos.z+Math.cos(a)*3.6);camera.lookAt(P.pos.x+fz*1.3,P.pos.y+1.15,P.pos.z-fx*1.3);}
   else{const por=innerWidth/innerHeight<.8;
     if(inBoss){camYaw=0;const off=V3(0,por?11:6.2,por?13:10.5),look=V3(P.pos.x*.5,ARENA.y+(por?0:1.6),lerp(P.pos.z,ARENA.cz,.5)-3);camTarget.copy(P.pos).add(off);camTarget.x=P.pos.x*.5;camera.position.lerp(camTarget,Math.min(1,dt*4));camera.position.x+=R(-sk,sk);camera.position.y+=R(-sk,sk);camera.lookAt(look);}
-    else{const SO=SEC.on,h=SO?(por?7.6:5.9):L.camH||(por?4.7:3.3),d=SO?(por?8.4:6.6):L.camD||(por?7.4:5.4);const dx=camera.position.x-P.pos.x,dz=camera.position.z-P.pos.z;if(keys['q'])camDrag-=dt*2.4;if(keys['e'])camDrag+=dt*2.4;camManualT-=dt;if(camDrag){camYaw-=camDrag;camDrag=0;camManualT=Math.max(camManualT,1.2);camera.position.set(P.pos.x+Math.sin(camYaw)*d,camera.position.y,P.pos.z+Math.cos(camYaw)*d);}else if(camManualT<=0&&Math.hypot(dx,dz)>.5)camYaw=lerpAngle(camYaw,Math.atan2(dx,dz),Math.min(1,dt*2.2));
-      if(L.lockYaw!=null&&!SO){camDrag=0;camYaw=lerpAngle(camYaw,L.lockYaw,Math.min(1,dt*4));}if(SO&&camManualT<=0)camYaw=lerpAngle(camYaw,0,Math.min(1,dt*2.5));
+    else{const SO=SEC.on,h=SO?(por?7.6:5.9):L.camH||(por?4.7:3.3),d=SO?(por?8.4:6.6):L.camD||(por?7.4:5.4);const dx=camera.position.x-P.pos.x,dz=camera.position.z-P.pos.z;if(keys['q'])camDrag-=dt*2.4;if(keys['e'])camDrag+=dt*2.4;camManualT-=dt;if(camDrag){camYaw-=camDrag;camDrag=0;camManualT=Math.max(camManualT,1.2);camera.position.set(P.pos.x+Math.sin(camYaw)*d,camera.position.y,P.pos.z+Math.cos(camYaw)*d);}
+      if(L.lockYaw!=null&&!SO){camDrag=0;camYaw=lerpAngle(camYaw,L.lockYaw,Math.min(1,dt*4));}
       camTarget.set(P.pos.x+Math.sin(camYaw)*d,P.pos.y+h,P.pos.z+Math.cos(camYaw)*d);if(L.side!=null&&!SO)camTarget.z+=L.side;
-      if(!SO)L.clampCam(camTarget);
-      camera.position.lerp(camTarget,Math.min(1,dt*5));camera.position.x+=R(-sk,sk);camera.position.y+=R(-sk,sk);
+      if(!SO)L.clampCam(camTarget);const blocked=camAvoid(camTarget);
+      if(blocked)camera.position.lerp(camTarget,Math.min(1,dt*18));else camera.position.lerp(camTarget,Math.min(1,dt*5));camera.position.x+=R(-sk,sk);camera.position.y+=R(-sk,sk);
       camLook.lerp(L.side!=null&&!SO?V3(P.pos.x-1,P.pos.y+1.4,P.pos.z+L.side):V3(P.pos.x-Math.sin(camYaw)*5+P.vel.x*.35,P.pos.y+1+clamp(P.vel.y*.04,-.4,.4),P.pos.z-Math.cos(camYaw)*5+P.vel.z*.35),Math.min(1,dt*4));camera.lookAt(camLook);}}
   if(sunSky)sunSky.position.set(camera.position.x,camera.position.y+30,camera.position.z-90);if(skySun&&skySun.visible){skySun.position.set(camera.position.x*.8,camera.position.y+20,camera.position.z-95);skySun.lookAt(camera.position);skySun.rotation.z+=Math.sin(time*.4)*.05;}
   updCtr();
