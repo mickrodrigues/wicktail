@@ -1554,7 +1554,7 @@ function gfxUI(){const QL={auto:'AUTO',low:'LOW',medium:'MEDIUM',high:'HIGH',ult
 
 function S2(){return MENU.root||MENU.scene;}
 
-const WT_VERSION='v1.9';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
+const WT_VERSION='v1.10';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
 
 /* ---------- beta feedback: opens an email with the details filled in ---------- */
 const FEEDBACK_TO='mike.jose.rodrigues@gmail.com';
@@ -1961,6 +1961,8 @@ const HOLES=[[1,2],[7,2],[4,6],[1,10],[7,10]].map(([c,r])=>({x:-9.6+c*2.4,z:AZ0-
 {const T=2.4;for(let r=0;r<15;r++){const za=AZ0-r*T,zb=za-T;let run=null;for(let c=0;c<9;c++){const xa=-10.8+c*T,xb=xa+T,cx=xa+T/2,cz=za-T/2;const isHole=HOLES.some(h=>Math.abs(h.x-cx)<.1&&Math.abs(h.z-cz)<.5);
     if(!isHole){if(run)run[1]=xb;else run=[xa,xb];}if(isHole||c===8){if(run){deck(run[0],run[1],za,zb,GY,road,roadS,4);run=null;}}}}
   for(const h of HOLES){deck(h.x-1.2,h.x+1.2,h.z+1.2,h.z-1.2,GY-1.8,roadS,roadS,2);
+    /* solid sides so moving or jumping inside a hole can't slip under the arena floor */
+    {const x0=h.x-1.2,x1=h.x+1.2,z0=h.z-1.2,z1=h.z+1.2,b=GY-1.85,t=GY-.03,w=.35;addSolid(x0-w,x0,b,t,z0-w,z1+w,'wall',null);addSolid(x1,x1+w,b,t,z0-w,z1+w,'wall',null);addSolid(x0,x1,b,t,z0-w,z0,'wall',null);addSolid(x0,x1,b,t,z1,z1+w,'wall',null);}
     const ring=new THREE.Mesh(new THREE.TorusGeometry(1.45,.09,6,30),new THREE.MeshBasicMaterial({color:0xffd27a}));ring.rotation.x=Math.PI/2;ring.position.set(h.x,GY+.06,h.z);occAdd(ring);h.ring=ring;h.glow=spr(glowTex,0xffb03a,3,3,h.x,GY-1,h.z);occAdd(h.glow);}}
 for(const sd of[-1,1]){addSolid(sd<0?-12.2:11,sd<0?-11:12.2,GY-4,GY+16,AZ1-1,AZ0,'wall',null);const m=new THREE.Mesh(boxGeo(1.2,14,AZ0-AZ1+1,3),rock);m.position.set(sd*11.6,GY+3,(AZ0+AZ1)/2);occAdd(m);}
 addSolid(-12,12,GY-4,GY+16,AZ1-1.2,AZ1,'wall',null);{const m=new THREE.Mesh(boxGeo(24,14,1.2,3),rock);m.position.set(0,GY+3,AZ1-.6);occAdd(m);}
