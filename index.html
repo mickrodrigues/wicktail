@@ -239,6 +239,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
   <div class="srow"><label for="setSfx">Sound effects</label><input id="setSfx" type="range" min="0" max="100" value="90"></div>
   <div class="srow"><label for="setSens">Camera speed</label><input id="setSens" type="range" min="30" max="200" value="100"></div>
   <div class="srow"><label>Invert camera drag</label><button id="setInvert" class="tog glass" type="button" aria-pressed="false">OFF</button></div>
+  <div class="srow"><label>Mouse look (click to lock)</label><button id="setMouse" class="tog glass" type="button" aria-pressed="true">ON</button></div>
   <div class="srow"><label>Easy mode</label><button id="setEasy" class="tog glass" type="button" aria-pressed="false">OFF</button></div>
   <div class="srow"><label>Glow effects</label><button id="setGlow" class="tog glass" type="button" aria-pressed="true">ON</button></div>
   <div class="srow kbHead"><label>Keyboard controls</label><button id="kbReset" class="tog glass" type="button">RESET</button></div>
@@ -2326,7 +2327,7 @@ let kbListen=null;function kbKey(a){return (SET.keys&&SET.keys[a])||KB_DEF[a][0]
 function kbLabel(k){if(!k)return '—';return ({' ':'SPACE','arrowup':'↑','arrowdown':'↓','arrowleft':'←','arrowright':'→','escape':'ESC','shift':'SHIFT','control':'CTRL','alt':'ALT','enter':'ENTER','tab':'TAB'})[k]||k.toUpperCase();}
 function kbRender(){const el=$('kbList');if(el){el.innerHTML='';for(const a in KB_DEF){const row=document.createElement('div');row.className='srow kbRow';const lb=document.createElement('label');lb.textContent=KB_NAME[a];const b=document.createElement('button');b.type='button';b.className='tog glass kbBtn';b.textContent=kbListen===a?'PRESS A KEY…':kbLabel(kbKey(a));if(kbListen===a)b.classList.add('listen');
   b.addEventListener('click',()=>{kbListen=a;kbRender();});row.append(lb,b);el.appendChild(row);}}
-  const cb=$('ctrlBox');if(cb){const K=a=>kbLabel(kbKey(a))+(KB_DEF[a][1]?' · '+kbLabel(KB_DEF[a][1]):'');cb.innerHTML=[['Move',[kbKey('up'),kbKey('left'),kbKey('down'),kbKey('right')].map(kbLabel).join('')+' · stick'],['Jump',K('jump')],['Spin',K('spin')],['Lantern',K('lantern')],['Dash',K('dash')],['Camera',kbLabel(kbKey('camL'))+' / '+kbLabel(kbKey('camR'))+' · drag'],['Spin in air','boosts your jump'],['Pause',K('pause')]].map(([t,v])=>`<div><b>${t}</b><span>${v}</span></div>`).join('');}}
+  const cb=$('ctrlBox');if(cb){const K=a=>kbLabel(kbKey(a))+(KB_DEF[a][1]?' · '+kbLabel(KB_DEF[a][1]):'');cb.innerHTML=[['Move',[kbKey('up'),kbKey('left'),kbKey('down'),kbKey('right')].map(kbLabel).join('')+' · stick'],['Jump',K('jump')],['Spin',K('spin')],['Lantern',K('lantern')],['Dash',K('dash')],['Camera',kbLabel(kbKey('camL'))+' / '+kbLabel(kbKey('camR'))+' · drag'],['Spin in air','boosts your jump'],['Pause',K('pause')],['Mouse','look · L-click lantern · R-click spin']].map(([t,v])=>`<div><b>${t}</b><span>${v}</span></div>`).join('');}}
 addEventListener('keydown',e=>{if(!kbListen)return;e.preventDefault();e.stopImmediatePropagation();const k=e.key.toLowerCase();if(k!=='escape'){SET.keys=SET.keys||{};for(const o in SET.keys)if(SET.keys[o]===k&&o!==kbListen)delete SET.keys[o];SET.keys[kbListen]=k;saveSet();}kbListen=null;kbRender();},true);
 addEventListener('keydown',e=>{if(kbListen)return;const k=e.key.toLowerCase();if(keys[k])return;keys[k]=true;if(state!=='play')return;
   if(isK('jump',k)){e.preventDefault();if(!doSlam())P.jumpBuf=.14;}if(isK('spin',k))doSpin();if(isK('lantern',k))doBlast();if(isK('dash',k))doDash();if(isK('pause',k))togglePause();});
@@ -2383,7 +2384,7 @@ function updClips(){for(const e of clipped){if(!e.clipOn||!e.alive){e.planes[0].
   const front=o.clone().addScaledVector(f,.04*sc);e.planes[0].setFromNormalAndCoplanarPoint(f.clone().negate(),front);e.planes[1].setFromNormalAndCoplanarPoint(V3(0,1,0),V3(0,o.y+.42*sc,0));}}
 function setBossHP(f){$('bbFill').style.width=(f*100)+'%';$('bbLag').style.width=(f*100)+'%';}
 let state='load',shakeT=0,time=0,runTime=0;
-function togglePause(){if(state==='play'){state='paused';paused=true;$('pName').textContent='Level '+LV+' · '+LEVELS[LV-1].name;$('pause').hidden=false;if(AC)AC.suspend();}else if(state==='paused'){state='play';paused=false;$('pause').hidden=true;$('settingsScr').hidden=true;if(AC)AC.resume();clock.getDelta();}}
+function togglePause(){if(document.pointerLockElement&&document.exitPointerLock)document.exitPointerLock();if(state==='play'){state='paused';paused=true;$('pName').textContent='Level '+LV+' · '+LEVELS[LV-1].name;$('pause').hidden=false;if(AC)AC.suspend();}else if(state==='paused'){state='play';paused=false;$('pause').hidden=true;$('settingsScr').hidden=true;if(AC)AC.resume();clock.getDelta();}}
 $('pauseBtn').addEventListener('click',togglePause);$('resumeBtn').addEventListener('click',togglePause);
 $('pRestart').addEventListener('click',()=>location.reload());$('pQuit').addEventListener('click',()=>location.reload());$('pSettings').addEventListener('click',()=>{$('pause').hidden=true;$('settingsScr').hidden=false;});
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>{$(b.dataset.close).hidden=true;if(b.dataset.close==='settingsScr'&&state==='paused')$('pause').hidden=false;}));
@@ -2397,12 +2398,12 @@ function buildCards(){const best=getBest();$('cards').innerHTML=LEVELS.map((l,i)
 function fmtT(t){const m=Math.floor(t/60),s=Math.floor(t%60);return `${m}:${String(s).padStart(2,'0')}`;}
 /* settings controls */
 $('setMusic').value=Math.round(SET.music*100);$('setSfx').value=Math.round(SET.sfx*100);$('setSens').value=Math.round(SET.sens*100);
-function setTog(id,v){const b=$(id);b.setAttribute('aria-pressed',v?'true':'false');b.textContent=v?'ON':'OFF';}setTog('setInvert',SET.invert);setTog('setGlow',SET.glow);setTog('setEasy',SET.easy);$('setEasy').addEventListener('click',()=>{SET.easy=!SET.easy;setTog('setEasy',SET.easy);saveSet();});kbRender();$('kbReset').addEventListener('click',()=>{SET.keys={};saveSet();kbListen=null;kbRender();});
+function setTog(id,v){const b=$(id);b.setAttribute('aria-pressed',v?'true':'false');b.textContent=v?'ON':'OFF';}setTog('setInvert',SET.invert);setTog('setGlow',SET.glow);setTog('setEasy',SET.easy);setTog('setMouse',SET.mouse!==false);$('setMouse').addEventListener('click',()=>{SET.mouse=SET.mouse===false;setTog('setMouse',SET.mouse!==false);saveSet();});$('setEasy').addEventListener('click',()=>{SET.easy=!SET.easy;setTog('setEasy',SET.easy);saveSet();});kbRender();$('kbReset').addEventListener('click',()=>{SET.keys={};saveSet();kbListen=null;kbRender();});
 $('setMusic').addEventListener('input',e=>{SET.music=e.target.value/100;applyAudio();saveSet();});$('setSfx').addEventListener('input',e=>{SET.sfx=e.target.value/100;applyAudio();saveSet();sfx.orb(3);});
 $('setSens').addEventListener('input',e=>{SET.sens=e.target.value/100;saveSet();});
 $('setInvert').addEventListener('click',()=>{SET.invert=!SET.invert;setTog('setInvert',SET.invert);saveSet();});
 $('setGlow').addEventListener('click',()=>{SET.glow=!SET.glow;setTog('setGlow',SET.glow);saveSet();if(SET.glow){if(!composer)setupFX();}else{composer=null;renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));resize();}});
-function startGame(){camBehind();$('title').hidden=true;$('hud').hidden=false;$('controls').hidden=false;state='play';runTime=0;playCfg(L.mus);banner('LEVEL '+L.num,LEVELS[LV-1].name);setTimeout(()=>showHint(SEC.on?'FOLLOW THE PATH · SMASH EVERY CRATE':L.hint,3),2000);lastOrbs=-1;lastCr=-1;updHUD();showCtr('cOrbs',3200);showCtr('cCrates',3200);showCtr('cShards',3200);}
+function startGame(){camBehind();$('title').hidden=true;$('hud').hidden=false;$('controls').hidden=false;state='play';runTime=0;playCfg(L.mus);banner('LEVEL '+L.num,LEVELS[LV-1].name);setTimeout(()=>showHint(SEC.on?'FOLLOW THE PATH · SMASH EVERY CRATE':L.hint,3),2000);if(matchMedia('(pointer:fine)').matches&&SET.mouse!==false)setTimeout(()=>showHint('CLICK TO STEER THE CAMERA WITH YOUR MOUSE · ESC TO PAUSE',3.2),5600);lastOrbs=-1;lastCr=-1;updHUD();showCtr('cOrbs',3200);showCtr('cCrates',3200);showCtr('cShards',3200);}
 function gameOver(){state='over';stopMusic();$('overTitle').textContent='You Woke Up';$('overSub').textContent='Out of lives · the dream fades';$('nextBtn').hidden=true;showResults(false);}
 function bossDefeated(){const A=ARENA;$('bossBar').hidden=true;clearGlobs();if(typeof clearHaz==='function')clearHaz();boss.state='off';const px=clamp(P.pos.x*.3,A.x0+3,A.x1-3);goalPortal(px,A.y||0,A.cz);banner('VICTORY','A DREAM PORTAL OPENS');playCfg(L.mus);showHint('WALK INTO THE PORTAL',4);}
 function levelComplete(){try{if(+localStorage.getItem('wt-unlocked')<LV+1)localStorage.setItem('wt-unlocked',String(LV+1));}catch(e){}$('nextBtn').hidden=LV>=MAXLV;state='done';stopMusic();sfx.life();
@@ -2447,11 +2448,17 @@ function updAtmos(dt){const cp=camera.position;
 /* ---------- main loop ---------- */
 const clock=new THREE.Clock();const camTarget=V3();let camLook=V3();let titleA=0,camYaw=0,camDrag=0,camManualT=0;
 {let drag=null;const st=$('stage')||renderer.domElement;
- const down=e=>{if(state!=='play'||inBoss)return;const t=e.changedTouches?e.changedTouches[0]:e;if(e.target.closest&&(e.target.closest('button')||e.target.closest('#touchZone')||e.target.closest('#hud')))return;drag={id:t.identifier,x:t.clientX};};
+ const down=e=>{if(state!=='play'||document.pointerLockElement)return;const t=e.changedTouches?e.changedTouches[0]:e;if(e.target.closest&&(e.target.closest('button')||e.target.closest('#touchZone')||e.target.closest('#hud')))return;drag={id:t.identifier,x:t.clientX};};
  const move=e=>{if(!drag)return;const ts=e.changedTouches?[...e.changedTouches]:[e];for(const t of ts){if(e.changedTouches&&t.identifier!==drag.id)continue;camDrag+=(t.clientX-drag.x)*.008*SET.sens*(SET.invert?-1:1);drag.x=t.clientX;camManualT=1.5;}};
  const up=e=>{if(!drag)return;if(e.changedTouches&&![...e.changedTouches].some(t=>t.identifier===drag.id))return;drag=null;};
  addEventListener('touchstart',down,{passive:true});addEventListener('touchmove',move,{passive:true});addEventListener('touchend',up);addEventListener('touchcancel',up);
- addEventListener('mousedown',e=>{if(e.button===0&&!e.target.closest('button'))down(e);});addEventListener('mousemove',move);addEventListener('mouseup',up);}
+ addEventListener('mousedown',e=>{if(e.target.closest&&e.target.closest('button,input,.panel,#hud'))return;const locked=!!document.pointerLockElement;
+   if(locked&&state==='play'){if(e.button===0)doBlast();else if(e.button===2)doSpin();return;}
+   if(e.button===0&&state==='play'&&SET.mouse!==false&&matchMedia('(pointer:fine)').matches&&renderer.domElement.requestPointerLock){try{const r=renderer.domElement.requestPointerLock();if(r&&r.catch)r.catch(()=>{});}catch(err){}return;}
+   if(e.button===0)down(e);});
+ addEventListener('mousemove',e=>{if(document.pointerLockElement){if(state==='play'){camDrag+=e.movementX*.0026*SET.sens*(SET.invert?-1:1);camManualT=1.5;}return;}move(e);});addEventListener('mouseup',up);
+ addEventListener('contextmenu',e=>{if(document.pointerLockElement||state==='play')e.preventDefault();});
+ document.addEventListener('pointerlockchange',()=>{if(!document.pointerLockElement&&state==='play')togglePause();});}
 function camBehind(){camYaw=0;camLook.set(P.pos.x,P.pos.y+1,P.pos.z-5);const por=innerWidth/innerHeight<.8,SO=SEC.on||P.pos.x>SX-120;camera.position.set(P.pos.x,P.pos.y+(SO?(por?7.6:5.9):por?4.7:3.3),P.pos.z+(SO?(por?8.4:6.6):por?7.4:5.4));}
 function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);if(composer)composer.setSize(w,h);if(bloomPass)bloomPass.resolution.set(w/2,h/2);camera.aspect=w/h;camera.fov=w/h<.8?68:56;camera.updateProjectionMatrix();}
 addEventListener('resize',resize);resize();
