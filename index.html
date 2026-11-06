@@ -1065,6 +1065,7 @@ function crsProps(path,T,M,rng,o){let n=0;for(let s=6;s<path.len-4&&n<(o.max||44
 /* ---------- hazards & set pieces ---------- */
 const hayTex=texSmooth(128,128,g=>{g.fillStyle='#d8a83a';g.fillRect(0,0,128,128);for(let i=0;i<260;i++){g.strokeStyle=pick(['#f0c85a','#b8862a','#ffe08a','#a0701a']);g.lineWidth=R(1,3);const x=R(0,128),y=R(0,128);g.beginPath();g.moveTo(x,y);g.lineTo(x+R(-6,6),y+R(10,26));g.stroke();}g.fillStyle='#7a3a1a';g.fillRect(0,40,128,7);g.fillRect(0,86,128,7);});
 function fallRock(x,y,z){const r=new THREE.Mesh(new THREE.DodecahedronGeometry(.8,0),new THREE.MeshPhongMaterial({color:0x6a5a7a,flatShading:true,shininess:5}));r.position.set(x,y+11,z);scene.add(r);CRS.items.push({k:'rock',m:r,y,t:0,d:1.05});warnZone(x,y,z,1.25,1.05,0xff8a3a,h=>{burst(V3(h.x,h.y+.4,h.z),0x8a7a9a,18,6,.5,true);});}
+function fallStar(x,y,z){const st=spr(glowTex,0xffe8a0,2.2,2.2,x+6,y+14,z-3);scene.add(st);CRS.items.push({k:'rock',m:st,y,t:0,d:1.15,star:true,x0:x+6,x:x,z0:z-3,z});warnZone(x,y,z,1.3,1.15,0xb08aff,h=>{burst(V3(h.x,h.y+.4,h.z),0xffe8a0,22,6,.5);const c=new THREE.Mesh(new THREE.CircleGeometry(.9,16),new THREE.MeshBasicMaterial({color:0x2a2040,transparent:true,opacity:.6}));c.rotation.x=-Math.PI/2;c.position.set(h.x,h.y+.03,h.z);scene.add(c);setTimeout(()=>scene.remove(c),6000);});}
 function lanternSwing(path,s,ph,blade){const q=crsAt(path,s);const p=q.p;const g=new THREE.Group();const beam=new THREE.Mesh(boxGeo(p.w+1.6,.4,.5,2.5),crsMat(wallMat,.6,false));beam.position.set(0,6.6,0);g.add(beam);
   for(const sd of[-1,1]){const post=new THREE.Mesh(boxGeo(.45,6.8,.45,2.5),crsMat(wallMat,.6,false));post.position.set(sd*(p.w/2+.55),3.2,0);g.add(post);}
   const arm=new THREE.Group();arm.position.y=6.4;g.add(arm);const chain=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,4.9,6),new THREE.MeshPhongMaterial({color:0x3a2a4a}));chain.position.y=-2.45;arm.add(chain);
@@ -1077,15 +1078,25 @@ function lilyPad(x,z,y){const m=new THREE.Mesh(new THREE.CylinderGeometry(1.15,1
   const s=addSolid(x-1.05,x+1.05,y-.5,y,z-1.05,z+1.05,'plat',null,{bx:x,bz:z,by:y,ax:0,az:0,amp:0,spd:0,ph:0,ay:.05,dx:0,dz:0,dy:0,surf:'mud'});s.mesh=m;s.sink=y;movers.push(s);return s;}
 function updCourse(dt){if(!CRS.paths.length)return;
   for(let ii=CRS.items.length-1;ii>=0;ii--){const it=CRS.items[ii];
-    if(it.k==='rock'){it.t+=dt;it.m.position.y=it.y+.7+11*(1-Math.min(1,it.t/it.d)**2);it.m.rotation.x+=dt*5;if(it.t>=it.d){scene.remove(it.m);CRS.items.splice(ii,1);}continue;}
+    if(it.k==='rock'){it.t+=dt;const kk=Math.min(1,it.t/it.d);if(it.star){it.m.position.set(lerp(it.x0,it.x,kk),it.y+.5+14*(1-kk),lerp(it.z0,it.z,kk));if(Math.random()<dt*30)emit(it.m.position.clone(),{life:.4,size:.6,size1:.05,color:0xffe8a0});}else it.m.position.y=it.y+.7+11*(1-kk**2);it.m.rotation.x+=dt*5;if(it.t>=it.d){scene.remove(it.m);CRS.items.splice(ii,1);}continue;}
     if(it.k==='rocks'){const q=crsNear(P.pos.x,P.pos.z);if(!q||q.path!==it.path||q.s<it.a||q.s>it.b||P.dead||state!=='play')continue;it.t-=dt;if(it.t<=0){it.t=R(.8,1.3);const ah=crsAt(it.path,q.s+R(1.5,5),R(-1.5,1.5));if(!ah.p.gap)fallRock(ah.x,ah.y,ah.z);}continue;}
     if(it.k==='gear'){it.m.rotation[it.ax||'z']+=dt*it.spd;continue;}
+    if(it.k==='crumble'){const sd=it.s;if(sd.alive&&P.stand===sd){it.ct+=dt;it.m.position.x=it.x+Math.sin(time*60)*.04;if(it.ct>.45){sd.alive=false;it.vy=0;it.rt=3.2;blip(300,90,.25,'square',.05);burst(V3(it.x,it.y,it.z),0x8a7a9a,8,3,.4,true);}}
+      if(!sd.alive){it.vy-=20*dt;it.m.position.y+=it.vy*dt;it.rt-=dt;if(it.rt<=0){sd.alive=true;it.ct=0;it.m.position.set(it.x,it.y-.25,it.z);}}continue;}
+    if(it.k==='crusher'){const T=(time*.9+it.ph)%3.4;let off;if(T<1.6)off=6.8;else if(T<2.1)off=6.8+Math.sin(time*50)*.06;else if(T<2.25)off=6.8*(1-(T-2.1)/.15);else if(T<2.8)off=0;else off=6.8*((T-2.8)/.6);
+      it.m.position.y=it.y+off+1.1;if(T>=2.25&&!it.slam){it.slam=true;shakeT=Math.max(shakeT,.3);if(Math.hypot(P.pos.x-it.x,P.pos.z-it.z)<14)sfx.boom();burst(V3(it.x,it.y+.2,it.z),0xcfc0e0,14,5,.4,true);}if(T<2.1)it.slam=false;
+      const [lt,ln]=crsLL(it.p,P.pos.x,P.pos.z);if(state==='play'&&!P.dead&&off<1.6&&Math.abs(lt)<it.w/2&&Math.abs(ln)<1.1&&P.pos.y<it.y+off+.2&&P.pos.y>it.y-1){hurt();if(!P.dead){const f=crsFwd(it.p),dir=ln>0?1:-1;P.pos.addScaledVector(f,dir*(1.3-Math.abs(ln)));P.vel.x=f.x*dir*8;P.vel.z=f.z*dir*8;P.vel.y=5;}}continue;}
+    if(it.k==='lava'){const q=crsNear(P.pos.x,P.pos.z);const inZ=q&&q.path===it.path&&q.s>it.a&&q.s<it.b+6&&SEC.on;if(inZ&&!it.on&&!P.dead){it.on=true;showHint('THE LAVA IS RISING · CLIMB!',2);shakeT=.5;}
+      if(it.on){it.y=Math.min(it.top,it.y+dt*it.spd);if(q&&q.s>it.b+3){it.done=true;}if(!it.done&&state==='play'&&!P.dead&&P.pos.y<it.y+.1){burst(P.pos.clone(),0xff6a1a,30,7,.6);die(true);}}
+      it.m.visible=SEC.on&&!SEC.bonus;it.m.position.set(P.pos.x,it.y,P.pos.z);if(Math.random()<dt*10&&it.on)emit(V3(P.pos.x+R(-8,8),it.y+.1,P.pos.z+R(-8,8)),{vy:R(1,3),life:.8,size:.6,size1:.1,color:pick([0xffb03a,0xff5a1a])});continue;}
+    if(it.k==='jet'){it.t-=dt;if(it.t<=0){it.t=it.per;if(Math.hypot(P.pos.x-it.x,P.pos.z-it.z)<26)warnZone(it.x,it.y,it.z,1.3,.9,0xff6a1a,h=>{for(let i=0;i<28;i++)emit(V3(h.x+R(-.4,.4),h.y+.2,h.z+R(-.4,.4)),{vx:R(-1,1),vy:R(8,13),vz:R(-1,1),life:.7,size:.9,size1:.2,color:pick([0xffd27a,0xff7a1a,0xff3a1a])});});}continue;}
+    if(it.k==='stars'){const q=crsNear(P.pos.x,P.pos.z);if(!q||q.path!==it.path||P.dead||state!=='play'||!SEC.on)continue;it.t-=dt;if(it.t<=0){it.t=R(1.1,1.8);const ah=crsAt(it.path,q.s+R(2,6),R(-1.4,1.4));if(!ah.p.gap)fallStar(ah.x,ah.y,ah.z);}continue;}
     if(it.k==='lantern'){const th=Math.sin(time*it.spd+it.ph)*it.amp;it.arm.rotation.z=th;it.hitCD-=dt;
       const bl=Math.sin(th)*it.len,by=6.4-Math.cos(th)*it.len;const bx=it.g.position.x+Math.cos(it.p.a)*bl,bz=it.g.position.z+Math.sin(it.p.a)*bl,byw=it.g.position.y+by;
       if(state==='play'&&!P.dead&&it.hitCD<=0&&Math.hypot(P.pos.x-bx,P.pos.z-bz)<it.r&&P.pos.y+.9>byw-.9&&P.pos.y<byw+.6){it.hitCD=1;hurt();const dir=Math.cos(time*it.spd+it.ph)>0?1:-1;if(!P.dead){P.vel.x=Math.cos(it.p.a)*dir*9;P.vel.z=Math.sin(it.p.a)*dir*9;P.vel.y=6;}blip(900,400,.15,'square',.06);}}
     else if(it.k==='geyser'){it.t-=dt;if(Math.random()<dt*6)emit(V3(it.x+R(-.8,.8),it.y+.1,it.z+R(-.8,.8)),{vy:R(.5,1.4),life:.5,size:.35,size1:.6,color:0x8aff5a});
       if(it.t<=0){it.t=it.per;if(Math.hypot(P.pos.x-it.x,P.pos.z-it.z)<26)warnZone(it.x,it.y,it.z,1.35,1.05,0x8aff3a,h=>{for(let i=0;i<26;i++)emit(V3(h.x+R(-.5,.5),h.y+.2,h.z+R(-.5,.5)),{vx:R(-1.5,1.5),vy:R(7,12),vz:R(-1.5,1.5),life:.9,size:.7,size1:.2,color:pick([0x8aff3a,0xc8ff8a,0x3aff5a])});});}}}
-  updChase(dt);updRide(dt);
+  updChase(dt);updRide(dt);CRS.grav=SEC.on&&!SEC.bonus&&COURSE[LV]&&COURSE[LV].lowg?.5:1;
   /* darkness zones */
   const q=SEC.on&&!SEC.bonus?crsNear(P.pos.x,P.pos.z):null;CRS.darkT=q&&q.tag==='dark'?1:0;CRS.dark=lerp(CRS.dark,CRS.darkT,Math.min(1,dt*1.6));
   if(SEC.on&&CRS.killY!=null&&state==='play'&&!P.dead&&!SEC.bonus&&P.pos.y<CRS.killY&&q&&Math.abs(crsLL(q,P.pos.x,P.pos.z)[0])<q.w/2+8){burst(P.pos.clone(),0x6a9a8a,20,5,.5);if(AC)noise(AC.currentTime,.5,.3,'lowpass',500,sfxBus);die(true);}}
@@ -1108,7 +1119,7 @@ function updChase(dt){const Z=CRS.chase;if(!Z)return;const path=CRS.paths[0];con
   if(Math.random()<dt*20)emit(V3(g.position.x+R(-2,2),g.position.y-2.1,g.position.z),{vy:R(.5,2),life:.6,size:.6,size1:1.2,color:0xd8b86a});shakeT=Math.max(shakeT,.12);if(AC&&Math.random()<dt*10)noise(AC.currentTime,.12,.12,'lowpass',160,sfxBus);
   if(state==='play'&&!P.dead&&q&&ps<CH.s+2.1&&ps>CH.s-2.6&&P.pos.y<c.y+4.2){P.vel.set(0,0,0);burst(P.pos.clone().setY(P.pos.y+1),0xffe08a,30,7,.6);die(false);}
   if(P.dead||ps>Z.b+5){if(P.dead){CH.on=false;CRS.camYaw=null;CRS.camH=CRS.camD=null;g.visible=false;}}}
-function chaseReset(){if(CH.done)return;CH.on=false;if(CH.bale)CH.bale.visible=false;CRS.camYaw=null;CRS.camH=CRS.camD=null;}
+function chaseReset(){const lv=CRS.lava;if(lv&&!lv.done){lv.on=false;lv.y=lv.y0;}if(CH.done)return;CH.on=false;if(CH.bale)CH.bale.visible=false;CRS.camYaw=null;CRS.camH=CRS.camD=null;}
 /* --- L2 set piece: ride a cauldron down the slime slide --- */
 let cauldronM=null;
 function updRide(dt){const Z=CRS.ride;if(!Z)return;const q=SEC.on&&!SEC.bonus?crsNear(P.pos.x,P.pos.z):null;const inZ=q&&q.tag==='ride'&&state==='play'&&!P.dead&&P.pos.y>q.y-2;
@@ -1135,6 +1146,14 @@ const COURSE={
    look:{top:'path',banks:true,water:true,blue:true},killY:-.9},
  6:{w:5,cmds:[{s:8},{arc:-45,r:11,dh:1.5},{s:6,dh:1},{gap:1,s:12,tag:'gear'},{s:6},{arc:80,r:10,dh:2},{s:12,tag:'pend'},{arc:-70,r:11,dh:2},{s:8,tag:'ck'},{gap:1,s:12,tag:'gear'},{s:6,dh:1},{arc:60,r:11,dh:2},{s:14,tag:'pend'},{arc:-50,r:12,dh:1.5},{s:6},{gap:1,s:2.6},{s:8,dh:1},{arc:40,r:12},{s:6,tag:'end'}],
    look:{top:'boards',sky:true}},
+ 7:{w:5,cmds:[{s:8},{arc:40,r:12},{s:10,tag:'crush'},{arc:-60,r:11},{s:6},{gap:1,s:12,tag:'crumble'},{s:6},{arc:70,r:10,dh:1.5},{s:12,tag:'crush'},{s:8,tag:'ck'},{arc:-50,r:12},{gap:1,s:2.6},{s:6},{arc:-40,r:12},{gap:1,s:14,tag:'crumble'},{s:6},{arc:60,r:11,dh:-1.5},{s:14,tag:'crush'},{arc:-30,r:14},{s:10},{s:6,tag:'end'}],
+   look:{top:'castle',sky:true,castle:true}},
+ 8:{w:5.2,cmds:[{s:8},{arc:-40,r:12,dh:1},{s:8,tag:'jet'},{arc:70,r:10,dh:1.5},{s:8,tag:'jet'},{gap:1,s:2.6},{s:6},{arc:-60,r:11,dh:1},{s:8,tag:'ck'},
+   {s:6,dh:2,tag:'lava'},{arc:120,r:7,dh:3,tag:'lava'},{s:6,dh:2,tag:'lava'},{gap:1,s:2.4,tag:'lava'},{s:4,dh:1,tag:'lava'},{arc:-120,r:7,dh:3,tag:'lava'},{s:8,dh:2.5,tag:'lava'},{arc:80,r:8,dh:2,tag:'lava'},{s:6,dh:1,tag:'lava'},{s:8},
+   {arc:-40,r:12},{s:10,tag:'jet'},{gap:1,s:2.8},{s:8},{arc:30,r:14},{s:6,tag:'end'}],
+   look:{top:'rock',banks:true,lava:true}},
+ 9:{w:5,lowg:1,cmds:[{s:8},{arc:30,r:14},{s:4},{gap:1,s:7},{s:5},{arc:-50,r:12},{gap:1,s:8},{s:6,tag:'star'},{arc:60,r:12,tag:'star'},{gap:1,s:7},{s:5},{s:6,tag:'ck'},{gap:1,s:9},{s:5,tag:'star'},{arc:-70,r:11,dh:2,tag:'star'},{gap:1,s:8},{s:6},{arc:45,r:12},{gap:1,s:10},{s:6,tag:'star'},{arc:-40,r:13,tag:'star'},{gap:1,s:7},{s:8},{s:6,tag:'end'}],
+   look:{top:'moon',sky:true,moon:true}},
  3:{w:4.4,cmds:[{s:8},{arc:40,r:10},{s:6},{arc:-80,r:9},{s:4},{gap:1,s:12,tag:'lily'},{s:6},{arc:60,r:10},{s:8,tag:'ck'},{s:4,tag:'dark'},{arc:-50,r:10,tag:'dark'},{s:10,tag:'dark'},{gap:1,s:2.4,tag:'dark'},{s:8,tag:'dark'},{arc:70,r:9,tag:'dark'},{s:8,tag:'dark'},{gap:1,s:2.6,tag:'dark'},{s:10,tag:'dark'},{arc:-40,r:12,tag:'dark'},{s:6,tag:'dark'},
    {s:6},{arc:-30,r:12},{gap:1,s:14,tag:'lily'},{s:8},{arc:50,r:10},{s:12},{s:6,tag:'end'}],
    look:{top:'boards',rails:true,water:true},killY:-.9}};
@@ -1143,9 +1162,9 @@ function buildCourseSection(){const D=COURSE[LV];SEC.built=true;const rng=srng(L
   let mn=V3(1e9,1e9,1e9),mx=V3(-1e9,-1e9,-1e9);for(const p of path.pts){mn.min(V3(p.x,p.y,p.z));mx.max(V3(p.x,p.y,p.z));}
   addSolid(mn.x-8,mx.x+8,mn.y-12,mx.y+1,mn.z-8,mx.z+8,'ramp',null,{topAt:crsTop,surf:SECSURF[LV]||'grass'});
   const cliff=new THREE.MeshPhongMaterial({map:noiseTex('#2e2240',['#4a3a5e','#251a36','#5a4a70','#3a2c4e'],1,1,true),shininess:6,side:THREE.DoubleSide});cliff.map.wrapS=cliff.map.wrapT=THREE.RepeatWrapping;cliff.map.repeat.set(.6,.35);
-  const lk=D.look;let top;if(lk.top==='path')top=crsMat(M.ground||groundTop,.9);else if(lk.top==='boards')top=crsMat(platMat,1.1);else top=crsMat(groundTop,.9);
+  const lk=D.look;let top;if(lk.top==='castle'||lk.top==='moon')top=crsMat(groundTop,.9);else if(lk.top==='rock')top=crsMat(groundTop,.9);else if(lk.top==='path')top=crsMat(M.ground||groundTop,.9);else if(lk.top==='boards')top=crsMat(platMat,1.1);else top=crsMat(groundTop,.9);
   const brass=new THREE.MeshPhongMaterial({color:0x7a5a2a,emissive:0x0a0602,shininess:50,specular:0x8a7050,side:THREE.DoubleSide});
-  const o={top,side:cliff,rim:lk.rails?crsMat(platMat,1,false):lk.sky?brass:crsMat(wallMat,1.1),bt:lk.tunnel?cliff:crsMat(M.side||groundTop,.6),bs:cliff,banks:lk.banks,rails:lk.rails,o1:5,o2:13};if(lk.tunnel){o.o1=1.4;o.o2=4.5;o.b1=3.4;o.b2=7.5;}
+  const o={top,side:cliff,rim:lk.rails?crsMat(platMat,1,false):lk.castle||lk.moon?crsMat(wallMat,1.1):lk.sky?brass:crsMat(wallMat,1.1),bt:lk.tunnel?cliff:crsMat(M.side||groundTop,.6),bs:cliff,banks:lk.banks,rails:lk.rails,o1:5,o2:13};if(lk.tunnel){o.o1=1.4;o.o2=4.5;o.b1=3.4;o.b2=7.5;}
   crsMesh(path,o);
   if(lk.water){const wm=new THREE.Mesh(new THREE.PlaneGeometry(mx.x-mn.x+160,mx.z-mn.z+160,1,1),new THREE.MeshPhongMaterial({color:lk.blue?0x2a3a8a:0x1e3436,emissive:lk.blue?0x0a1030:0x050c0c,shininess:70,specular:0x3a5a5a}));wm.rotation.x=-Math.PI/2;wm.position.set((mn.x+mx.x)/2,-.45,(mn.z+mx.z)/2);scene.add(wm);CRS.water=wm;
     for(let i=0;i<70;i++){const s=R(4,path.len-4),sd=Math.random()<.5?-1:1,q=crsAt(path,s,sd*R(4,16));if(crsInside(q.x,q.z,1.5))continue;const r=new THREE.Mesh(new THREE.ConeGeometry(R(.06,.12),R(1.4,2.6),4),new THREE.MeshPhongMaterial({color:pick([0x4a6a3a,0x6a7a4a,0x3a5a3a])}));r.position.set(q.x,-.45+r.geometry.parameters.height/2,q.z);scene.add(r);}}
@@ -1153,7 +1172,7 @@ function buildCourseSection(){const D=COURSE[LV];SEC.built=true;const rng=srng(L
   CRS.killY=D.killY!=null?D.killY:null;
   /* props on the banks */
   if(lk.tunnel)crsProps(path,T,M,rng,{every:5,lat:1.6,p:.6,top:p=>p.y+3.4,sc:.7});
-  else if(lk.sky){for(let k=0;k<16;k++){const s=R(4,path.len-4),sd=Math.random()<.5?-1:1,q=crsAt(path,s,sd*R(10,17));if(crsInside(q.x,q.z,6))continue;const r0=R(1.6,3.2);const g=new THREE.Mesh(new THREE.CylinderGeometry(r0,r0,.5,18),brass);const teeth=new THREE.Mesh(new THREE.TorusGeometry(r0,.28,4,18),brass);g.add(teeth);g.rotation.x=Math.PI/2;g.position.set(q.x,q.y-R(3,10),q.z);scene.add(g);CRS.items.push({k:'gear',m:g,ax:'y',spd:R(-.8,.8)});}}
+  else if(lk.sky&&!lk.castle&&!lk.moon){for(let k=0;k<16;k++){const s=R(4,path.len-4),sd=Math.random()<.5?-1:1,q=crsAt(path,s,sd*R(10,17));if(crsInside(q.x,q.z,6))continue;const r0=R(1.6,3.2);const g=new THREE.Mesh(new THREE.CylinderGeometry(r0,r0,.5,18),brass);const teeth=new THREE.Mesh(new THREE.TorusGeometry(r0,.28,4,18),brass);g.add(teeth);g.rotation.x=Math.PI/2;g.position.set(q.x,q.y-R(3,10),q.z);scene.add(g);CRS.items.push({k:'gear',m:g,ax:'y',spd:R(-.8,.8)});}}
   else if(lk.banks)crsProps(path,T,M,rng,{every:7,lat:7.5,p:.55,top:(p,sd,lat)=>p.y+2.6+1.3*Math.sin(p.s*.09+sd*2.1)+.6*Math.sin(p.s*.31+sd)});
   else crsProps(path,T,M,rng,{every:9,lat:6,p:.4,top:()=>-.45,sc:.9});
   /* level-specific set pieces */
@@ -1178,6 +1197,14 @@ function buildCourseSection(){const D=COURSE[LV];SEC.built=true;const rng=srng(L
   if(LV===6){let k=0;for(const [a,b] of tagRuns('gear'))for(let s=a+1.6;s<b-.5;s+=2.9,k++){const q=crsAt(path,s,0);const ax=Math.abs(Math.cos(q.a))>Math.abs(Math.sin(q.a))?1:0;const m=new THREE.Mesh(new THREE.CylinderGeometry(1.35,1.35,.4,16),brass);m.position.set(q.x,q.y-.2,q.z);scene.add(m);const tt=new THREE.Mesh(new THREE.TorusGeometry(1.35,.18,4,16),brass);tt.rotation.x=Math.PI/2;m.add(tt);
       const sl=addSolid(q.x-1.2,q.x+1.2,q.y-.5,q.y,q.z-1.2,q.z+1.2,'plat',null,{bx:q.x,bz:q.z,by:q.y,ax,az:1-ax,amp:1.4,spd:1.2,ph:k*1.7,ay:0,dx:0,dz:0,dy:0,surf:'metal'});sl.mesh=m;movers.push(sl);CRS.items.push({k:'gear',m,ax:'y',spd:1.5*(k%2?1:-1)});}
     let i=0;for(const [a,b] of tagRuns('pend'))for(let s=a+2;s<b-1;s+=4.5,i++)lanternSwing(path,s,i*1.6,true);}
+  if(LV===7){for(const [a,b] of tagRuns('crumble'))for(let s=a+1.1;s<b-.3;s+=1.75){const q=crsAt(path,s,0);const w=path.pts[0].w-.6;const m=new THREE.Mesh(boxGeo(1.6,.5,1.6,2.5),crsMat(wallMat,1,false));m.position.set(q.x,q.y-.25,q.z);scene.add(m);const sd=addSolid(q.x-.8,q.x+.8,q.y-.5,q.y,q.z-.8,q.z+.8,'ground',null,{surf:'stone'});CRS.items.push({k:'crumble',s:sd,m,x:q.x,y:q.y,z:q.z,ct:0,vy:0,rt:0});
+      for(const sd2 of[-1.75,1.75]){const q2=crsAt(path,s,sd2);const m2=new THREE.Mesh(boxGeo(1.6,.5,1.6,2.5),crsMat(wallMat,1,false));m2.position.set(q2.x,q2.y-.25,q2.z);scene.add(m2);const s2=addSolid(q2.x-.8,q2.x+.8,q2.y-.5,q2.y,q2.z-.8,q2.z+.8,'ground',null,{surf:'stone'});CRS.items.push({k:'crumble',s:s2,m:m2,x:q2.x,y:q2.y,z:q2.z,ct:0,vy:0,rt:0});}}
+    let i=0;for(const [a,b] of tagRuns('crush'))for(let s=a+2.5;s<b-1;s+=4.5,i++){const q=crsAt(path,s,0);const w=q.p.w-.3;const m=new THREE.Mesh(boxGeo(w,2.2,2,2.5),crsMat(wallMat,1,false));m.rotation.y=-q.a;m.position.set(q.x,q.y+5,q.z);const sp=new THREE.Mesh(boxGeo(w*.9,.3,1.8,2.5),new THREE.MeshPhongMaterial({color:0x9a9ab8,shininess:80}));sp.position.y=-1.15;m.add(sp);scene.add(m);
+      for(const sd of[-1,1]){const t=new THREE.Mesh(boxGeo(.6,10,.6,2.5),crsMat(wallMat,1,false));const e=crsAt(path,s,sd*(q.p.w/2+.4));t.position.set(e.x,q.y+5,e.z);scene.add(t);}CRS.items.push({k:'crusher',m,p:q.p,x:q.x,y:q.y,z:q.z,w,ph:i*1.3});}}
+  if(LV===8){for(const [a,b] of tagRuns('lava')){const lm=new THREE.Mesh(new THREE.PlaneGeometry(90,90),new THREE.MeshBasicMaterial({color:0xff5a1a,transparent:true,opacity:.92}));lm.rotation.x=-Math.PI/2;scene.add(lm);const y0=crsAt(path,a).y-4,top=crsAt(path,b).y-1.2;
+      const it={k:'lava',path,a,b,m:lm,y:y0,y0,top,spd:(top-y0)/((b-a)/5.2),on:false,done:false};CRS.items.push(it);CRS.lava=it;crsCheck(path,a-4);}
+    let i=0;for(const [a,b] of tagRuns('jet'))for(let s=a+1.5;s<b;s+=4,i++){const q=crsAt(path,s,(i%2?1:-1)*1.3);const d=new THREE.Mesh(new THREE.CircleGeometry(.9,18),new THREE.MeshBasicMaterial({color:0x2a1008}));d.rotation.x=-Math.PI/2;d.position.set(q.x,q.y+.03,q.z);scene.add(d);CRS.items.push({k:'jet',x:q.x,y:q.y,z:q.z,t:i*.8,per:2.6});}}
+  if(LV===9){CRS.items.push({k:'stars',path,t:2});}
   /* generic content */
   crsPop(path,rng,{skip:['chase','ride','lily','fork','bridge','blade','gear'],step:7});
   const pts=path.pts;const len=path.len;crsShardHigh(path,len*.3,'high');if(!(LV%2)){crsShardHigh(path,len*.78,'high2');}
@@ -2066,7 +2093,7 @@ function physics(dt,inp){const p=P.pos,v=P.vel;
   if(Math.hypot(inp.x,inp.z)>.15&&!(P.dashT>0))P.face=Math.atan2(inp.x,inp.z);rideVel(v,inp);
   P.jumpBuf-=dt;P.coyote-=dt;if(P.jumpBuf>0&&(P.onGround||P.coyote>0)){v.y=11.4;P.onGround=false;P.coyote=0;P.jumpBuf=0;P.stand=null;sfx.jump();P.sq=.22;for(let i=0;i<5;i++)emit(p.clone().add(V3(R(-.3,.3),.1,R(-.3,.3))),{vx:R(-1,1),vy:R(.5,1.5),life:.4,size:.4,size1:.9,color:0xd8c8b8,normal:true});}
   if(!inp.jumpHeld&&v.y>4)v.y-=dt*30;
-  if(P.dashT>0)v.y=Math.max(v.y,-.5)*.6;else{v.y-=(v.y<0?38:30)*dt;}v.y=Math.max(v.y,-28);
+  if(P.dashT>0)v.y=Math.max(v.y,-.5)*.6;else{v.y-=(v.y<0?38:30)*dt*(CRS.grav||1);}v.y=Math.max(v.y,-28);
   if(P.stand&&P.stand.type==='plat'){p.x+=P.stand.dx;p.z+=P.stand.dz;p.y+=P.stand.dy||0;}
   for(const ax of['x','z']){p[ax]+=v[ax]*dt;for(const s of solids){if(!s.alive||s.type==='ramp'||s.type==='ground'&&p.y>=s.max.y-.02)continue;if(p.y>=s.max.y-.3||p.y+PH<=s.min.y)continue;if(!overlapXZ(s,p.x,p.z,PR))continue;if(P.ram&&s.type==='crate'){if(s.kind==='boom')explode(s);else{s.bounces=99;breakCrate(s);}continue;}
       const c=(s.min[ax]+s.max[ax])/2;if(p[ax]<c)p[ax]=s.min[ax]-PR-.001;else p[ax]=s.max[ax]+PR+.001;v[ax]=0;}}crsContain(p);
