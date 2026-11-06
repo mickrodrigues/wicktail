@@ -724,7 +724,7 @@ function groundSeg(z0,z1,x0=-4.6,x1=4.6,walls=true){addSolid(x0,x1,-4,0,z1,z0,'g
 
 /* ---------- level layout ---------- */
 const UNLOCK=(()=>{try{return clamp(+localStorage.getItem('wt-unlocked')||1,1,10);}catch(e){return 1;}})();
-const LV=(()=>{const m=(location.hash||'').toLowerCase().match(/^#level(\d)$/);let n=m?+m[1]:0;if(!n){try{n=+localStorage.getItem('wt-level')||1;}catch(e){n=1;}}return clamp(n,1,Math.min(9,UNLOCK));})();
+const LV=(()=>{const m=(location.hash||'').toLowerCase().match(/^#level(\d)/);let n=m?+m[1]:0;if(!n){try{n=+localStorage.getItem('wt-level')||1;}catch(e){n=1;}}return clamp(n,1,Math.min(9,UNLOCK));})();
 const MAXLV=9;
 if(LV>MAXLV){try{localStorage.setItem('wt-level','1');}catch(e){}location.hash='level1';location.reload();}
 let ARENA=null,gate=null,gateMesh=null,sunSky=null;
@@ -1340,7 +1340,7 @@ function padRead(dt){const p=padNow();const out={x:0,z:0,jump:false};if(!p)retur
   if(state==='play'){out.x=dz(p.axes[0]||0);out.z=dz(p.axes[1]||0);if(now[14])out.x-=1;if(now[15])out.x+=1;if(now[12])out.z-=1;if(now[13])out.z+=1;out.jump=ph('jump');
     const rx=dz(p.axes[2]||0),ry=dz(p.axes[3]||0);if(rx)camDrag+=rx*dt*2.8*SET.sens*(SET.invert?-1:1);if(ry)camPitch=clamp(camPitch+ry*dt*1.7*SET.sens,-.55,.85);if(rx||ry)camManualT=1.5;
     if(pe('jump')){P.jumpBuf=.14;}if(pe('spin'))doSpin();if(pe('lantern'))doBlast();if(pe('dash'))doDash();if(pe('pause'))togglePause();return out;}
-  if(CINE.on)return out;
+  if(CINE.on){HOLD.pad=now[0]?1:0;return out;}
   if(window._anyBtn&&now.some((v,i)=>v&&!(PAD.prevAny||[])[i])){PAD.prevAny=now;window._anyBtn();return out;}PAD.prevAny=now;
   /* menus: d-pad / stick to move between buttons, A to press, B to go back */
   const btns=[...document.querySelectorAll('button')].filter(x=>x.offsetParent!==null&&!x.closest('#controls')&&!x.closest('#hud')&&!x.disabled);if(!btns.length)return out;
@@ -1352,16 +1352,18 @@ function padRead(dt){const p=padNow();const out={x:0,z:0,jump:false};if(!p)retur
 
 /* ===================== cinematics ===================== */
 const CINE={on:false,t:0,i:0,lines:[],cb:null,cam:null,skip:false,stage:null};
-function cineUI(on){let c=$('cine');if(!c){c=document.createElement('div');c.id='cine';c.innerHTML='<div class="cbar top"></div><div class="cbar bot"></div><div class="ctext"><div class="cname" id="cineName"></div><div class="cline" id="cineLine"></div></div>';document.body.appendChild(c);
+function cineUI(on){let c=$('cine');if(!c){c=document.createElement('div');c.id='cine';c.innerHTML='<div class="cbar top"></div><div class="cbar bot"></div><div class="ctext"><div class="cname" id="cineName"></div><div class="cline" id="cineLine"></div></div><div class="chold" id="cHold"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" class="hb"/><circle cx="22" cy="22" r="18" class="hf" id="cHoldF"/></svg><span id="cHoldT">HOLD TO SKIP</span></div>';document.body.appendChild(c);
     const st=document.createElement('style');st.textContent=`#cine{position:fixed;inset:0;z-index:30;pointer-events:none}#cine .cbar{position:absolute;left:0;right:0;height:0;background:#000;transition:height .6s ease}#cine.on .cbar{height:11vh}#cine .top{top:0}#cine .bot{bottom:0}
 #cine .ctext{position:absolute;left:50%;bottom:14vh;transform:translateX(-50%);width:min(820px,90vw);text-align:center;opacity:0;transition:opacity .3s}#cine.on .ctext{opacity:1}
 #cine .cname{font:900 13px/1 var(--head,serif);letter-spacing:.32em;color:#c8a8ff;margin-bottom:10px;text-shadow:0 0 12px #6a2aff}#cine .cline{font:800 clamp(17px,2.6vw,28px)/1.35 var(--head,serif);color:#fff6e0;text-shadow:0 2px 0 #000,0 0 18px rgba(160,120,255,.6)}
+#cine .chold{position:absolute;right:22px;bottom:max(4px,calc(5.5vh - 19px));display:flex;align-items:center;gap:10px;opacity:0;transition:opacity .4s}#cine.on .chold{opacity:.85}#cine .chold svg{width:38px;height:38px;transform:rotate(-90deg)}#cine .chold .hb{fill:rgba(10,4,30,.55);stroke:rgba(255,255,255,.25);stroke-width:3}#cine .chold .hf{fill:none;stroke:#ffd27a;stroke-width:3.4;stroke-linecap:round;stroke-dasharray:113.1;stroke-dashoffset:113.1;filter:drop-shadow(0 0 4px rgba(255,200,110,.9))}#cine .chold span{font:800 11px/1 var(--ui,sans-serif);letter-spacing:.2em;color:#fff;text-shadow:0 1px 3px #000}
 #cine .cskip{position:absolute;right:22px;bottom:4vh;font:800 11px/1 var(--ui,sans-serif);letter-spacing:.2em;color:rgba(255,255,255,.55);opacity:0;transition:opacity .4s}#cine.on .cskip{opacity:1}`;document.head.appendChild(st);}
   c.classList.toggle('on',on);if(!on){$('cineName').textContent='';$('cineLine').textContent='';}}
 function cineSay(name,text){$('cineName').textContent=name;$('cineLine').textContent='';CINE.full=text;CINE.typed=0;}
-function cineSkip(){/* story scenes can't be skipped */}
-addEventListener('keydown',e=>{if(CINE.on&&!CINE.noSkip){e.preventDefault();cineSkip();}},true);addEventListener('mousedown',e=>{if(CINE.on&&!CINE.noSkip)cineSkip();},true);addEventListener('touchstart',()=>{if(CINE.on&&!CINE.noSkip)cineSkip();},{capture:true,passive:true});
-function runCine(def,cb){document.body.classList.add('cine');CINE.on=true;CINE.t=0;CINE.i=-1;CINE.def=def;CINE.cb=cb;CINE.skip=false;CINE.noSkip=!!def.noSkip;CINE.prevState=state;state='cine';cineUI(true);$('hud').hidden=true;$('controls').hidden=true;if(def.start)def.start();}
+function cineSkip(){if(!CINE.on)return;CINE.skip=true;}
+const HOLD={k:0,pt:0,pad:0};
+addEventListener('keydown',e=>{if(CINE.on){e.preventDefault();if(!e.repeat&&!/^(F11|Alt|Meta|Control)$/.test(e.key))HOLD.k=1;}},true);addEventListener('keyup',()=>{HOLD.k=0;},true);addEventListener('pointerdown',()=>{if(CINE.on)HOLD.pt=1;},true);addEventListener('pointerup',()=>{HOLD.pt=0;},true);addEventListener('pointercancel',()=>{HOLD.pt=0;},true);addEventListener('blur',()=>{HOLD.k=HOLD.pt=0;});
+function runCine(def,cb){CINE.hold=0;HOLD.k=HOLD.pt=HOLD.pad=0;document.body.classList.add('cine');CINE.on=true;CINE.t=0;CINE.i=-1;CINE.def=def;CINE.cb=cb;CINE.skip=false;CINE.noSkip=!!def.noSkip;CINE.prevState=state;state='cine';cineUI(true);$('hud').hidden=true;$('controls').hidden=true;if(def.start)def.start();}
 function endCine(){stopVO();document.body.classList.remove('cine');CINE.on=false;cineUI(false);if(CINE.def&&CINE.def.end)CINE.def.end();const cb=CINE.cb;CINE.cb=null;if(cb)cb();}
 /* ---------- voice acting (Hedra / ElevenLabs v3, voice: Malvoryx) ---------- */
 const VO={},VO_OK={};let voCur=null,voBus=null;
@@ -1369,7 +1371,7 @@ function preloadVO(keys){for(const k of keys){if(VO[k])continue;const a=new Audi
 function voFx(a){if(!AC||a._fx)return;try{a._fx=1;const src=AC.createMediaElementSource(a);if(!voBus){voBus=AC.createGain();voBus.gain.value=1.15;const lo=AC.createBiquadFilter();lo.type='lowshelf';lo.frequency.value=180;lo.gain.value=5;const d=AC.createDelay(1);d.delayTime.value=.13;const fb=AC.createGain();fb.gain.value=.22;const wet=AC.createGain();wet.gain.value=.28;voBus.connect(lo);lo.connect(AC.destination);lo.connect(d);d.connect(fb);fb.connect(d);d.connect(wet);wet.connect(AC.destination);}src.connect(voBus);}catch(e){}}
 function playVO(k){const a=VO[k];if(!a||VO_OK[k]===0)return false;try{if(voCur&&voCur!==a)voCur.pause();voFx(a);a.currentTime=0;a.volume=muted?0:1;const p=a.play();if(p&&p.catch)p.catch(()=>{});voCur=a;return true;}catch(e){return false;}}
 function stopVO(){if(voCur){try{voCur.pause();}catch(e){}voCur=null;}}
-function updCine(dt){const d=CINE.def;CINE.t+=dt;
+function updCine(dt){{const h=HOLD.k||HOLD.pt||HOLD.pad;CINE.hold=h?(CINE.hold||0)+dt:Math.max(0,(CINE.hold||0)-dt*3);const f=$('cHoldF');if(f)f.style.strokeDashoffset=113.1*(1-Math.min(1,CINE.hold/3));const tl=$('cHoldT');if(tl){const pad=typeof lastDev!=='undefined'&&lastDev==='pad'&&padNow();tl.textContent=pad?'HOLD '+(padIsPS()?'✕':'A')+' TO SKIP':document.body.classList.contains('pc')?'HOLD ANY KEY TO SKIP':'HOLD TO SKIP';}if(CINE.hold>=3&&CINE.on){CINE.hold=0;cineSkip();}}const d=CINE.def;CINE.t+=dt;
   /* typewriter + mumble */
   if(CINE.full&&CINE.typed<CINE.full.length){const n0=CINE.typed|0;CINE.typed=Math.min(CINE.full.length,CINE.typed+dt*38);const n1=CINE.typed|0;if(n1>n0){$('cineLine').textContent=CINE.full.slice(0,n1);if(!CINE.vo&&n1%3===0&&/[a-z]/i.test(CINE.full[n1-1]||''))blip(R(90,140),R(60,80),.07,'sawtooth',.045);}}
   let acc=0,idx=-1;for(let k=0;k<d.lines.length;k++){acc+=d.lines[k][2];if(CINE.t<acc){idx=k;break;}}
@@ -1424,7 +1426,7 @@ function playIntro(cb){$('title').hidden=true;const go=()=>{CINE.cp=null;const s
 /* ---------- ending: the Moon escapes at light speed ---------- */
 function playMoonEnding(mn,done){const A=ARENA;let streak=null;mn.visible=true;mn.scale.setScalar(1);if(mn.position.distanceTo(P.pos)>26){const ax=(A.x0+A.x1)/2,az=A.cz!=null?A.cz:(A.z0+A.z1)/2;const d=V3(ax-P.pos.x,0,az-P.pos.z);if(d.length()<2)d.set(0,0,-1);d.normalize();mn.position.set(P.pos.x+d.x*10,A.y+1,P.pos.z+d.z*10);}
   const dir=V3(mn.position.x-P.pos.x,0,mn.position.z-P.pos.z).normalize(),side=V3(-dir.z,0,dir.x),camTo=mn.position.clone().addScaledVector(dir,-13).addScaledVector(side,2.5);camTo.y=A.y+3.6;
-  runCine({skippable:false,noSkip:true,outFade:false,lines:[
+  runCine({outFade:false,lines:[
     ['THE MOON\'S TEETH','Heh... heh... You think a little lantern can put out the MOON?',6.6,null,'e1'],
     ['THE MOON\'S TEETH','You can\'t kill a dream, Wicktail.',3.3,null,'e2'],
     ['THE MOON\'S TEETH','I\'ll be back. Every night. FOREVER!',7.8,()=>{shakeT=.8;},'e3'],
@@ -1552,7 +1554,7 @@ function gfxUI(){const QL={auto:'AUTO',low:'LOW',medium:'MEDIUM',high:'HIGH',ult
 
 function S2(){return MENU.root||MENU.scene;}
 
-const WT_VERSION='v1.6';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
+const WT_VERSION='v1.7';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
 
 if(LV===1){
 /* ===================== LEVEL 1: SLEEPY-SUN VILLAGE ===================== */
@@ -2849,11 +2851,11 @@ function skinBox(o){o.updateMatrixWorld(true);const bx=new THREE.Box3();let sk=f
 function norm(o,size,center){brighten(o);o.updateMatrixWorld(true);const b=skinBox(o),sz=b.getSize(V3()),k=size/Math.max(sz.x,sz.y,sz.z);const c=b.getCenter(V3());o.scale.multiplyScalar(k);o.position.set(-c.x*k,center?-c.y*k:-b.min.y*k,-c.z*k);const g=new THREE.Group();g.add(o);
   g.traverse(m=>{if(m.isMesh&&m.material.map){m.material.map.magFilter=THREE.NearestFilter;}});return g;}
 function loadScript(src){return new Promise((res,rej)=>{const e=document.createElement('script');e.src=src;e.onload=res;e.onerror=()=>rej(new Error(src));document.head.appendChild(e);});}
-function goTo(mode){try{sessionStorage.setItem('wt-go',mode);}catch(e){}location.reload();}
-function goLevel(n){try{localStorage.setItem('wt-level',String(n));sessionStorage.setItem('wt-go','play');}catch(e){}location.hash='level'+n;location.reload();}
+function goTo(mode){try{sessionStorage.setItem('wt-go',mode);}catch(e){}location.hash='level'+LV+'!'+mode+'!'+P.lives;location.reload();}
+function goLevel(n){try{localStorage.setItem('wt-level',String(n));sessionStorage.setItem('wt-go','play');}catch(e){}location.hash='level'+n+'!play';location.reload();}
 /* ---------- boot ---------- */
-const GO=(()=>{try{const v=sessionStorage.getItem('wt-go');sessionStorage.removeItem('wt-go');return v;}catch(e){return null;}})();
-const LVPLAY=GO==='play'||GO==='retry';if(GO==='retry'){try{const lv=+sessionStorage.getItem('wt-lives');if(lv>0)P.lives=lv;}catch(e){}}
+const HASHP=(location.hash||'').split('!');const GO=(()=>{let v=null;try{v=sessionStorage.getItem('wt-go');sessionStorage.removeItem('wt-go');}catch(e){}if(!v&&HASHP[1])v=HASHP[1];try{if(HASHP.length>1)history.replaceState(null,'','#level'+LV);}catch(e){}return v;})();
+const LVPLAY=GO==='play'||GO==='retry';if(GO==='retry'){let lv=0;try{lv=+sessionStorage.getItem('wt-lives');}catch(e){}if(!(lv>0))lv=+HASHP[2];if(lv>0)P.lives=lv;}
 (async function boot(){const bar=$('lfill'),txt=$('ltxt');const img=`url(art/l${LVPLAY||GO==='menu'?LV:1}.jpg)`;$('lart').style.backgroundImage=img;$('lpic').style.backgroundImage=img;$('lcap').textContent=LEVELS[(LVPLAY||GO==='menu'?LV:1)-1].name;
   if(LVPLAY){$('lLogo').textContent=LEVELS[LV-1].name;$('lName').textContent=GO==='retry'?'TRY AGAIN · LEVEL '+LV:'LEVEL '+LV;$('loader').classList.add('lvload');}else if(GO==='menu'){$('lLogo').textContent='Wicktail';$('lName').textContent='RETURNING TO THE DREAM';$('loader').classList.add('lvload');}$('ltip').innerHTML=pick(TIPS);const step=(p,t)=>{bar.style.width=p+'%';txt.textContent=t;};
   try{step(15,'Waking Flint…');await new Promise(r=>setTimeout(r,30));flintGL=await loadGLB(WT_ASSETS.flint);setupFlint(flintGL);
@@ -2889,7 +2891,8 @@ const LVPLAY=GO==='play'||GO==='retry';if(GO==='retry'){try{const lv=+sessionSto
   $('playBtn').addEventListener('click',()=>{const tgt=Math.min(MAXLV,UNLOCK);if(tgt!==LV){goLevel(tgt);return;}levelCard();});
   window.levelCard=()=>{$('title').hidden=true;const l=$('loader');l.hidden=false;l.style.transition='none';l.style.opacity='1';l.classList.add('lvload');const img=`url(art/l${LV}.jpg)`;$('lart').style.backgroundImage=img;$('lpic').style.backgroundImage=img;$('lcap').textContent=LEVELS[LV-1].name;$('lLogo').textContent=LEVELS[LV-1].name;$('lName').textContent='LEVEL '+LV;$('ltip').innerHTML=pick(TIPS);
     setTimeout(()=>prompt(pcm?'PRESS ANY BUTTON':'TAP TO CONTINUE',()=>{initAudio();hideLoader();beginPlay();}),350);};})();
-function beginPlay(){menuExit();initAudio();lockPointer();try{const d=document.documentElement;if(matchMedia('(pointer:coarse)').matches&&d.requestFullscreen)d.requestFullscreen().then(()=>screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape')).catch(()=>{});}catch(e){}$('title').hidden=true;$('levelsScr').hidden=true;$('settingsScr').hidden=true;if(LV===1&&!SET.noIntro)playIntro(startGame);else startGame();}
+function beginPlay(){menuExit();initAudio();lockPointer();try{const d=document.documentElement;if(matchMedia('(pointer:coarse)').matches&&d.requestFullscreen)d.requestFullscreen().then(()=>screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape')).catch(()=>{});}catch(e){}$('title').hidden=true;$('levelsScr').hidden=true;$('settingsScr').hidden=true;if(LV===1&&GO!=='retry'&&!introSeen())playIntro(()=>{markIntro();startGame();});else startGame();}
+function introSeen(){try{return localStorage.getItem('wt-intro')==='1';}catch(e){return !!window._introSeen;}}function markIntro(){window._introSeen=1;try{localStorage.setItem('wt-intro','1');}catch(e){}}
 setupFX();resize();try{initQuality();}catch(e){}requestAnimationFrame(frame);
 
 })();
