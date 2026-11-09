@@ -1828,12 +1828,12 @@ function playCh2Intro(cb){$('title').hidden=true;const B=buildBedroom(),Ob=build
          const cp=k<.35?BO.clone().add(V3(-.2,2.2,.6)):BO.clone().add(V3(.5,2.3,-1.4)),lk=k<.35?P.pos.clone().add(V3(0,.3,0)):BO.clone().add(V3(.6,3.4,-9));cam(cp,lk,Math.min(1,dt*1.2));}}
      else if(scn===2){/* castle approach */Ob.plat.visible=false;for(const k in C)C[k].g.visible=false;Ob.rings.forEach(r=>r.visible=false);const k=Math.min(1,(t-18.9)/9);cam(OO.clone().add(V3(-38+k*14,-18+k*16,62-k*30)),OO.clone().add(V3(16,-14+k*12,-60)),k<.02?1:Math.min(1,dt*1.6));
        if(Math.random()<dt*4){c2FlyStar(Ob,OO.clone().add(V3(R(-60,60),R(10,30),R(-40,40))),OO.clone().add(V3(0,3.5,-6)),R(2,3));}}
-     else if(scn===3){if(!Ob.plat.visible){Ob.plat.visible=true;for(const k in C)C[k].g.visible=true;Ob.rings.forEach(r=>r.visible=true);}cam(OO.clone().add(V3(Math.sin(t*.1)*3,3.2,9)),OO.clone().add(V3(0,3,-6)),Math.min(1,dt*1.5));}
-     else if(scn>=4&&scn<=11){const who={4:'bellwarden',5:'bellwarden',6:'regent',7:'regent',8:'abbess',9:'abbess',10:'cinderwing',11:'cinderwing'}[scn];const a=C[who];
+     else if(scn===3){if(!Ob.plat.visible){Ob.plat.visible=true;for(const k in C)C[k].g.visible=true;Ob.rings.forEach(r=>{r.visible=true;r.position.y=13.5;});}cam(OO.clone().add(V3(Math.sin(t*.1)*3,7.6,13)),OO.clone().add(V3(0,3,-6)),Math.min(1,dt*1.5));}
+     else if(scn>=4&&scn<=11){Ob.rings.forEach(r=>r.visible=false);/* the gyro only belongs to the star-gathering shot */const who={4:'bellwarden',5:'bellwarden',6:'regent',7:'regent',8:'abbess',9:'abbess',10:'cinderwing',11:'cinderwing'}[scn];const a=C[who];
        if(Vq&&a)Vq.g.rotation.y=lerpAngle(Vq.g.rotation.y,Math.atan2(a.g.position.x-Vq.g.position.x,a.g.position.z-Vq.g.position.z),Math.min(1,dt*3));
-       if(scn%2===0){/* over Vesper's shoulder toward the boss */const vp=Vq?Vq.g.position.clone().add(OO):OO.clone();const bp=a?a.g.position.clone().add(OO):OO.clone();const dir=bp.clone().sub(vp).setY(0).normalize();
+       if(scn%2===0){for(const kk in C)C[kk].g.visible=true;/* over Vesper's shoulder toward the boss */const vp=Vq?Vq.g.position.clone().add(OO):OO.clone();const bp=a?a.g.position.clone().add(OO):OO.clone();const dir=bp.clone().sub(vp).setY(0).normalize();
          cam(vp.clone().addScaledVector(dir,-6.5).add(V3(dir.z*3,5.6,-dir.x*3)),bp.clone().add(V3(0,a?a.g.scale.y*.5:3,0)),Math.min(1,dt*2));}
-       else if(a){const bp=a.g.position.clone().add(OO);const h=a.g.scale.y;const toV=OO.clone().add(V3(0,0,-6)).sub(bp).setY(0).normalize();cam(bp.clone().addScaledVector(toV,h*1.25+2).add(V3(0,h*.55,0)),bp.clone().add(V3(0,h*.62,0)),Math.min(1,dt*2.4));}}
+       else if(a){/* boss close-up: only the speaker is shown, so neither Vesper's hat wheel nor a neighbour can block the camera */for(const kk in C)C[kk].g.visible=(kk===who);const bp=a.g.position.clone().add(OO);const h=a.g.scale.y;const toV=OO.clone().add(V3(0,0,-6)).sub(bp).setY(0).normalize();cam(bp.clone().addScaledVector(toV,h*1.25+2).add(V3(0,h*.6,0)),bp.clone().add(V3(0,h*.62,0)),Math.min(1,dt*2.4));}}
      else if(scn===12){const k=Math.min(1,(t-(LN.slice(0,12).reduce((s,l)=>s+l[2],0)))/6.9);cam(OO.clone().add(V3(0,4+k*14,12+k*18)),OO.clone().add(V3(0,3,-6)),Math.min(1,dt*1.4));
        for(const kk of['bellwarden','regent','abbess','cinderwing'])if(!bossGone[kk]&&k>.3+['bellwarden','regent','abbess','cinderwing'].indexOf(kk)*.12&&C[kk]){bossGone[kk]=1;burst(C[kk].g.position.clone().add(OO).setY(3),0xb07aff,40,8,.8);C[kk].g.visible=false;sfx.boom();}}
      else if(scn===13){const k=Math.min(1,(t-(LN.slice(0,13).reduce((s,l)=>s+l[2],0)))/7.2);cam(L0.clone().add(V3(-6+k*6,6-k*2.6,10-k*3)),L0.clone().add(V3(0,1.2,-2)),Math.min(1,dt*1.6));if(flint){flint.position.copy(P.pos);}}
@@ -2568,7 +2568,7 @@ function gfxUI(){const QL={auto:'AUTO',low:'LOW',medium:'MEDIUM',high:'HIGH',ult
 
 function S2(){return MENU.root||MENU.scene;}
 
-const WT_VERSION='v1.17.1';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
+const WT_VERSION='v1.17.2';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
 
 /* ---------- beta feedback: opens an email with the details filled in ---------- */
 const FEEDBACK_TO='mike.jose.rodrigues@gmail.com';
@@ -3690,9 +3690,9 @@ else if(LV===11){
    → the raised trail (a Bud lashes along it, another watches from a side ledge) → displaced path stones → checkpoint at the
    foot of the root staircase → the Root Regent's clearing. Cobalt forest, cyan moss, enormous trunks, red eyes in the dark. */
 ARENA={x0:-13,x1:13,z0:-137,z1:-163,cz:-150,y:5,cx:0};
-Object.assign(L,{num:11,name:"REGENT'S HOLLOW",start:V3(0,0,5),killY:-5,mus:LVMUS[11][0],bossMus:LVMUS[11][1],bossName:'THE ROOT REGENT',hemiI:1.05,
+Object.assign(L,{num:11,name:"REGENT'S HOLLOW",start:V3(0,0,60),killY:-5,mus:LVMUS[11][0],bossMus:LVMUS[11][1],bossName:'THE ROOT REGENT',hemiI:1.05,
   hint:'INTO THE HOLLOW · JUMP THE ROOT LASHES',grade:{sat:1.2,vig:.9,tint:[.96,1,1.14]},
-  clampP:p=>{if(p.z>-14)p.z=Math.min(p.z,9);if(p.z<-136&&p.y>4)p.x=clamp(p.x,-12.6,12.6);},clampCam:c=>{c.z=Math.min(c.z,14);}});
+  clampP:p=>{p.z=Math.min(p.z,63.4);if(p.z<-136&&p.y>4)p.x=clamp(p.x,-12.6,12.6);},clampCam:c=>{c.z=Math.min(c.z,14);}});
 SEC.built=true;/* no bonus course here: the hollow starts where the tracks end */
 /* ---- sky, fog, light: cold blue starlight ---- */
 scene.background=skyTex(g=>{grad(g,512,1024,[[0,'#02031a'],[.25,'#081248'],[.45,'#14227a'],[.56,'#2a2a8a'],[.62,'#101a5a'],[1,'#060a2a']]);stars(g,512,1024,520,.6);
@@ -3724,14 +3724,26 @@ function ruinWall(x,z,y,len,ry,h=7){/* ruined castle wall with arched openings, 
   for(let i=0;i<n;i++){const px=i*5-len/2+2.5;const hh=h*(.6+Math.random()*.5);for(const sx of[-1,1]){const p=new THREE.Mesh(kBoxGeo(1,hh,1.4,2.2),st);p.position.set(px+sx*2,hh/2,0);g.add(p);}const top=new THREE.Mesh(kBoxGeo(5,1,1.4,2.2),st);top.position.set(px,hh-.5,0);if(Math.random()<.75)g.add(top);
     const ar=new THREE.Mesh(new THREE.CylinderGeometry(1.5,1.5,1.42,10,1,false,0,Math.PI),st);ar.rotation.z=Math.PI/2;ar.rotation.y=Math.PI/2;ar.position.set(px,hh-1.6,0);ar.scale.set(1,1,.7);if(Math.random()<.7)g.add(ar);}
   const base=new THREE.Mesh(kBoxGeo(len+1,1.2,1.8,2.2),st);base.position.y=.6;g.add(base);g.position.set(x,y,z);g.rotation.y=ry;c1Add(g);}
-/* ===================== 01 · WHERE THE TRACKS END (z 9 → -14) ===================== */
+/* ===================== 00 · THE LAST STRETCH OF TRACK (z 64 → 42), THE CREEK (42 → 30), THE BUD GLADE (30 → 10) ===================== */
+deck(-4,4,64.5,42,0,flag,soil,5);for(const sx of[-1,1])addSolid(sx<0?-5.5:4,sx<0?-4:5.5,0,4,42,64.5,'wall',null);addSolid(-4,4,0,4,64.5,65.5,'wall',null);
+kTrack([[0,64],[0,42.6]],-.05,{bed:true});{const bs=new THREE.Mesh(kBoxGeo(2.2,.9,.6,1),c1Lam('buffer',KT.wood()));bs.position.set(0,.45,64.2);c1Add(bs);}
+{/* drifting logs over the creek (the middle one slides, the last one sinks if you dawdle) */const logM=barkM;const mk=(x,z,o)=>{const m=new THREE.Mesh(new THREE.CylinderGeometry(.75,.8,3.4,8),logM);m.rotation.z=Math.PI/2;m.position.set(x,-.4,z);scene.add(m);const pl=platform(x,z,3.2,1.9,o.ax||0,0,o.amp||0,o.spd||1,o.ph||0,0,o.ay||0,m);if(o.sink)pl.sink=0;return pl;};
+  mk(0,39.4,{});mk(-1.2,36.1,{ax:1,amp:1.8,spd:1.1});mk(.8,32.8,{sink:true});}
+deck(-8,8,30.4,10,0,flag,soil,5);for(const sx of[-1,1])addSolid(sx<0?-9.5:8,sx<0?-8:9.5,0,4,10,30.4,'wall',null);for(const sx of[-1,1])addSolid(sx<0?-8:4.5,sx<0?-4.5:8,0,4,9.4,10.4,'wall',null);
+rootArch(22,0,8.5);rootArch(52,0,5.5);
+for(const [x,z,r] of[[-9.5,58,2.6],[9.5,50,2.8],[-10,44,2.4],[12,34,3],[-12,28,3.2],[13,16,2.8],[-13,12,2.6],[-20,46,3.6],[21,60,3.8],[-22,22,3.8],[23,6,3.6]])trunk(x,z,-3.2,r,36);
+c1Reeds(c1Scatter(-7.5,7.5,11,29,12,0,(x,z)=>Math.abs(x)<3,.6,1,131),cyan);kGrass(c1Scatter(-7.5,7.5,11,29,40,0,(x,z)=>Math.abs(x)<2.6,.8,1.3,132));
+for(const [x,y,z,s] of[[-3.5,0,58,.5],[3.6,0,47,.55],[-7.2,0,26,.6],[7.2,0,14,.6]])c1CrystalCluster(x,y,z,s,cyan,.45);
+for(const [x,z,ry] of[[3.5,61,Math.PI],[-3.5,45,0],[7.4,27,Math.PI],[-7.4,13,0]])c1Lantern(x,0,z,{h:2.6,ry,col:0x9af0ff});
+c1Bushes([[-6.8,0,18,.9,1],[6.9,0,24,.8,2],[-3.4,0,62,.6,3]],false);
+/* ===================== 01 · WHERE THE GLADE NARROWS (z 10 → -14) ===================== */
 deck(-4.5,4.5,10,-14,0,flag,soil,5);
-kTrack([[0,9.5],[0,5.4]],-.05,{bed:true});{const bs=new THREE.Mesh(kBoxGeo(2.2,.9,.6,1),c1Lam('buffer',KT.wood()));bs.position.set(0,.45,5.1);c1Add(bs);const lamp=c1Lantern(1.9,0,6,{h:2.4,ry:Math.PI});}
+
 for(const sx of[-1,1])addSolid(sx<0?-6:4.5,sx<0?-4.5:6,0,4,-14,10,'wall',null);
 /* ===================== 02 · THE GULLY, CROSSED ON ROOTS (z -14 → -40) ===================== */
 const gullyT=c1T('gully',()=>kTex(kCanvas(64,64,(g,w,h,r)=>{g.fillStyle='#062a3a';g.fillRect(0,0,w,h);for(let i=0;i<w*h*.5;i++)kRect(g,w,h,(r()*w)|0,(r()*h)|0,2+((r()*3)|0),1,pick(['#0a3a4a','#083444','#0e4a5a','#042030']));
   for(let i=0;i<14;i++){const cx=r()*w,cy=r()*h,rad=2+r()*6;for(let a=0;a<TAU;a+=.2)kRect(g,w,h,Math.round(cx+Math.cos(a)*rad),Math.round(cy+Math.sin(a)*rad*.7),1,1,r()<.5?'#4af0e0':'#2ab8c0');}},113)));
-liquidPool(-60,60,40,-200,-3.2,gullyT,0x9affff);
+liquidPool(-60,60,90,-200,-3.2,gullyT,0x9affff);
 rootLog(-1.3,1.3,-14,-21.5,0);platform(0,-24,2.6,2.2,1,0,1.8,1,0,0);rootLog(-1,1.6,-26.5,-31.5,0);platform(-1,-34,2.4,2.4,0,0,0,1,0,0,.45);rootLog(-2.4,.2,-36.6,-40.4,0);
 for(const [x,z] of[[-6,-26],[7,-30],[-8,-36],[5,-18]])c1CrystalCluster(x,-3.2,z,1.2,cyan,.6);
 /* gully walls: mossy earth banks */
@@ -3777,7 +3789,7 @@ c1Finish();
 /* ===================== BRISTLE BUD (minion) =====================
    digs in its root feet and raises its tail (0.75 s), then a thin root lashes along the ground the way it faced: jump it, then strike
    while it recovers (0.9 s). The lash keeps the direction it had when it planted its feet. */
-ANIM.bud=ANIM.bud||{idle:t=>({y:Math.abs(Math.sin(t*3))*.03,rz:Math.sin(t*1.6)*.04}),dig:(t,k)=>({y:-.06*k,rx:-.25*k+Math.sin(t*40)*.02}),lash:(t,k)=>({y:.04,rx:.3*(1-k)}),recover:(t,k)=>({y:-.04,rx:.15,rz:Math.sin(t*9)*.08}),hurt:(t,k)=>({rx:-.4*(1-k)})};
+ANIM.bud=ANIM.bud||{idle:t=>({y:Math.abs(Math.sin(t*3))*.03,rz:Math.sin(t*1.6)*.04}),walk:t=>({y:Math.abs(Math.sin(t*9))*.09,rz:Math.sin(t*9)*.12,rx:.08}),dig:(t,k)=>({y:-.06*k,rx:-.25*k+Math.sin(t*40)*.02}),lash:(t,k)=>({y:.04,rx:.3*(1-k)}),recover:(t,k)=>({y:-.04,rx:.15,rz:Math.sin(t*9)*.08}),hurt:(t,k)=>({rx:-.4*(1-k)})};
 const lashM=c1M('lash',()=>new THREE.MeshLambertMaterial({map:HB,emissive:0x0a5a50}));
 function bud(x,z,y=0,face=0,len=6.5){const e=c2Enemy('bud','bud',x,z,y,1.35,{upd:updBud,face,lashLen:len,guard:(e,dir,stomp)=>!stomp&&e.mode!=='recover'&&e.mode!=='idle'});if(!e)return null;
   const gl=spr(glowTex,0x6af0ff,2.6,2.6,0,1,-.4);gl.material.opacity=.35;e.obj.add(gl);
@@ -3787,7 +3799,14 @@ function bud(x,z,y=0,face=0,len=6.5){const e=c2Enemy('bud','bud',x,z,y,1.35,{upd
 const BUDS=[];
 function updBud(e,dt){const a=e.an;e.mt-=dt;const dx=P.pos.x-e.pos.x,dz=P.pos.z-e.pos.z,d=Math.hypot(dx,dz);const near=d<e.lashLen+2&&Math.abs(P.pos.y-e.pos.y)<2.5;
   const place=()=>{e.lash.position.set(e.pos.x,e.pos.y+.16,e.pos.z);e.lash.rotation.y=e.lf;};
-  if(e.mode==='idle'){c2Play(a,'idle');if(near)e.face=lerpAngle(e.face,Math.atan2(dx,dz),Math.min(1,dt*4));if(e.mt<=0&&near&&state==='play'){e.mode='dig';e.mt=.75;e.lf=e.face;c2Play(a,'dig',.75);blip(240,180,.2,'square',.05);e.lash.visible=true;e.lk=0;place();}}
+  if(e.mode==='idle'||e.mode==='walk'){/* Buds come for you: waddle toward Flint until he is in lash range, never off a ledge, never far from home */
+    const sameLvl=Math.abs(P.pos.y-e.pos.y)<2.5,aware=d<16&&sameLvl&&state==='play'&&!P.dead,inRange=d<e.lashLen*.8;
+    if(aware)e.face=lerpAngle(e.face,Math.atan2(dx,dz),Math.min(1,dt*5));
+    if(aware&&!inRange){e.mode='walk';c2Play(a,'walk');const sp=2.6*dt,nx=e.pos.x+Math.sin(e.face)*sp,nz=e.pos.z+Math.cos(e.face)*sp;const gy=groundBelow(nx,nz,e.pos.y+.6,.35);
+      if(Math.abs(gy-e.pos.y)<.45&&Math.hypot(nx-e.base.x,nz-e.base.z)<14){e.pos.x=nx;e.pos.z=nz;e.pos.y=gy;}}
+    else if(!aware&&Math.hypot(e.pos.x-e.base.x,e.pos.z-e.base.z)>.5){e.mode='walk';c2Play(a,'walk');e.face=lerpAngle(e.face,Math.atan2(e.base.x-e.pos.x,e.base.z-e.pos.z),Math.min(1,dt*4));e.pos.x+=Math.sin(e.face)*1.6*dt;e.pos.z+=Math.cos(e.face)*1.6*dt;}
+    else{e.mode='idle';c2Play(a,'idle');}
+    if(e.mt<=0&&aware&&inRange){e.mode='dig';e.mt=.75;e.lf=e.face;c2Play(a,'dig',.75);blip(240,180,.2,'square',.05);e.lash.visible=true;e.lk=0;place();}}
   else if(e.mode==='dig'){const k=1-e.mt/.75;e.warn.material.opacity=.15+.45*k*(.6+.4*Math.sin(time*30));e.warn.scale.set(1,e.lashLen,1);e.warn.position.z=e.lashLen/2;e.seg.scale.set(1,1,.01);e.tip.position.z=.2;place();if(Math.random()<dt*20)emit(e.pos.clone().add(V3(R(-.4,.4),.1,R(-.4,.4))),{vy:R(1,2),life:.3,size:.18,color:0x6af0ff});
     if(e.mt<=0){e.mode='lash';e.mt=.42;c2Play(a,'lash',.42);blip(520,180,.14,'sawtooth',.06);e.warn.material.opacity=0;}}
   else if(e.mode==='lash'){const k=clamp(1-(e.mt-.2)/.22,0,1);const L2=e.lashLen*k;e.seg.scale.set(1,1,Math.max(.01,L2));e.tip.position.z=L2+.3;place();
@@ -3798,76 +3817,125 @@ function updBud(e,dt){const a=e.an;e.mt-=dt;const dx=P.pos.x-e.pos.x,dz=P.pos.z-
   if(!e.alive&&e.lash)e.lash.visible=false;
   c2Anim(a,dt);e.obj.rotation.y=e.face;e.obj.position.copy(e.pos);}
 L.minion=(x,z,y)=>bud(x,z,y);
-L.summon=(x,z,y)=>{const sd=pick([-1,1]);const e=bud(sd*9,-141,ARENA.y,sd<0?Math.PI*.65:-Math.PI*.65,6);if(e)e.summoned=true;return e;};
-/* ===================== THE ROOT REGENT (boss) =====================
-   A living cedar stump: draws its rake-like root arm back while the moss on the striking root lights up, then sweeps the root
-   low across the clearing (jump it). Then it sags and the glowing knot at its base is open.
-   Phase 1: one sweep (1.1 s wind-up) · knot open 1.5 s
-   Phase 2: a sweep, then a raised-arm cue and a return sweep · knot open 1.3 s
-   Phase 3: two floor strips flash green and roots jab up out of them, then a final sweep · knot open 1.2 s */
+L.summon=(x,z,y)=>{const sd=pick([-1,1]);const e=bud(sd*9.5,-140.5,ARENA.y,sd<0?2.2:-2.2,6);if(e){e.summoned=true;e.base.set(0,ARENA.y,-150);}return e;};
+/* ===================== THE ROOT REGENT (boss, v2) =====================
+   A living cedar stump that hunts you around its clearing. Every attack is aimed at where Flint is, and every one has a clear tell:
+   · RAKE SWEEP  — the root arm lies glowing on the ground on the far side, then sweeps through your position at a steady pace (jump it)
+   · ROOT CHASE  — green rings open under your feet one after another and roots burst up a beat later (keep moving)
+   · ROOT WAVE   — a ridge of roots tears along the ground straight at you (jump it, or step aside)
+   · SLAM        — it pounds the ground; a ring rolls out across the clearing (jump it)
+   · STRIP JABS  — two floor strips flash, roots jab up out of them (stand in the dark strip)
+   After each routine it sags and the glowing knot at its roots is open. Three knots free the Forest Star. */
 const RX=0,RZ=-166.4,RY=ARENA.y,KZ=-162.6,LEN=34;let rg=null;
+const AX0=ARENA.x0+.6,AX1=ARENA.x1-.6,AZ0=ARENA.z0-.6,AZ1=-163.4;
 const rake=new THREE.Group();rake.position.set(RX,RY+.45,RZ);scene.add(rake);
 {const arm=new THREE.Mesh(new THREE.CylinderGeometry(.34,.62,LEN-3,7),new THREE.MeshLambertMaterial({map:HB,emissive:0x000000}));arm.rotation.x=Math.PI/2;arm.position.z=(LEN-3)/2+3;rake.add(arm);rake.userData.arm=arm;
   for(let i=0;i<9;i++){const c=new THREE.Mesh(new THREE.ConeGeometry(.3,1.4,5),arm.material);c.position.set((i%2?.5:-.5),0,5+i*3.2);c.rotation.set(Math.PI/2,0,(i%2?-1:1)*.9);rake.add(c);}
-  const glow=new THREE.Mesh(new THREE.PlaneGeometry(1.8,LEN-3),new THREE.MeshBasicMaterial({color:0x6aff9a,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));glow.rotation.x=-Math.PI/2;glow.position.set(0,-.4,(LEN-3)/2+3);rake.add(glow);rake.userData.glow=glow;}
+  const glow=new THREE.Mesh(new THREE.PlaneGeometry(2.2,LEN-3),new THREE.MeshBasicMaterial({color:0x6aff9a,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));glow.rotation.x=-Math.PI/2;glow.position.set(0,-.4,(LEN-3)/2+3);rake.add(glow);rake.userData.glow=glow;
+  const trail=new THREE.Mesh(new THREE.PlaneGeometry(4,LEN-3),new THREE.MeshBasicMaterial({color:0x9affc0,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));trail.rotation.x=-Math.PI/2;trail.position.set(0,-.38,(LEN-3)/2+3);rake.add(trail);rake.userData.trail=trail;}
 rake.visible=false;
 const knot=grp(spr(glowTex,0x6aff9a,5,5,0,0,0),spr(glowTex,0xffffff,1.6,1.6,0,0,0));{const kb=new THREE.Mesh(new THREE.IcosahedronGeometry(.75,0),new THREE.MeshBasicMaterial({color:0x8affb0}));knot.add(kb);}knot.position.set(RX,RY+1.2,KZ);knot.visible=false;scene.add(knot);
-/* three floor strips for the root jabs */
-const STRIPS=[[-13,-4.33],[-4.33,4.33],[4.33,13]].map(([x0,x1])=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(x1-x0,24),new THREE.MeshBasicMaterial({color:0x6aff7a,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));m.rotation.x=-Math.PI/2;m.position.set((x0+x1)/2,RY+.05,-149);m.renderOrder=3;scene.add(m);
-  const sp=new THREE.Group();const sm=new THREE.MeshLambertMaterial({map:HB,emissive:0x0a3a30});for(let i=0;i<14;i++){const c=new THREE.Mesh(new THREE.ConeGeometry(.45,2.6,5),sm);c.position.set(x0+.8+Math.random()*(x1-x0-1.6),1.3,-138.5-Math.random()*21);sp.add(c);}sp.position.y=RY-3;sp.visible=false;scene.add(sp);return {x0,x1,m,sp};});
+const rootM=new THREE.MeshLambertMaterial({map:HB,emissive:0x0a3a30,flatShading:true});
+const ringM=()=>new THREE.MeshBasicMaterial({color:0x6aff7a,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide});
+/* floor strips for the jabs */
+const STRIPS=[[-13,-4.33],[-4.33,4.33],[4.33,13]].map(([x0,x1])=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(x1-x0,24),ringM());m.rotation.x=-Math.PI/2;m.position.set((x0+x1)/2,RY+.05,-149);m.renderOrder=3;scene.add(m);
+  const sp=new THREE.Group();for(let i=0;i<14;i++){const c=new THREE.Mesh(new THREE.ConeGeometry(.45,2.6,5),rootM);c.position.set(x0+.8+Math.random()*(x1-x0-1.6),1.3,-138.5-Math.random()*21);sp.add(c);}sp.position.y=RY-3;sp.visible=false;scene.add(sp);return {x0,x1,m,sp};});
+/* chase spikes: a pool of tell-ring + root-burst pairs */
+const SPK=[];for(let i=0;i<7;i++){const g=new THREE.Group();const ring=new THREE.Mesh(new THREE.RingGeometry(1.25,1.6,28),ringM());ring.rotation.x=-Math.PI/2;ring.position.y=.06;g.add(ring);const fill=new THREE.Mesh(new THREE.CircleGeometry(1.6,24),ringM());fill.rotation.x=-Math.PI/2;fill.position.y=.05;g.add(fill);
+  const burstG=new THREE.Group();for(let k=0;k<5;k++){const c=new THREE.Mesh(new THREE.ConeGeometry(.42,2.8,5),rootM);const a=k/5*TAU;c.position.set(Math.cos(a)*.7,1.4,Math.sin(a)*.7);c.rotation.set(Math.sin(a)*.3,0,-Math.cos(a)*.3);burstG.add(c);}const mid=new THREE.Mesh(new THREE.ConeGeometry(.55,3.6,5),rootM);mid.position.y=1.8;burstG.add(mid);g.add(burstG);
+  g.visible=false;scene.add(g);SPK.push({g,ring,fill,burstG,on:false,t:0});}
+/* root waves */
+const WAV=[];for(let i=0;i<3;i++){const g=new THREE.Group();for(let k=0;k<5;k++){const c=new THREE.Mesh(new THREE.ConeGeometry(.5,1.7,5),rootM);c.position.set(-1+k*.5,.85,(k%2)*.4);c.rotation.z=(k-2)*.12;g.add(c);}
+  const line=new THREE.Mesh(new THREE.PlaneGeometry(2.6,1),ringM());line.rotation.x=-Math.PI/2;line.position.y=.05;scene.add(line);g.visible=false;scene.add(g);WAV.push({g,line,on:false});}
+function clearRootFx(){for(const s of SPK){s.on=false;s.g.visible=false;}for(const w of WAV){w.on=false;w.g.visible=false;w.line.material.opacity=0;}for(const s of STRIPS){s.m.material.opacity=0;s.sp.visible=false;}rake.visible=false;rake.userData.glow.material.opacity=0;rake.userData.trail.material.opacity=0;}
 function setupRegent(){rg=c2Make('regent',9.5);if(!rg)return;rg.g.position.set(RX,RY,RZ-1);scene.add(rg.g);
   rg.mats=[];rg.g.traverse(o=>{if(o.isMesh)for(const m of[].concat(o.material))if(m&&m.emissive&&!rg.mats.includes(m)){rg.mats.push(m);m.userData.e0=m.emissive.clone();}});rg.flash=0;
-  boss.maxHp=60;boss.reset=()=>{boss.state='idle';boss.t=0;boss.n=0;boss.kd=0;rake.visible=false;knot.visible=false;rake.userData.glow.material.opacity=0;for(const s of STRIPS){s.m.material.opacity=0;s.sp.visible=false;}};}
+  boss.maxHp=60;boss.reset=()=>{boss.state='idle';boss.t=0;boss.n=0;boss.kd=0;knot.visible=false;clearRootFx();};}
 L.setup=()=>{setupRegent();};
 L.startBoss=()=>{bossIntro(L.bossName);boss.reset();boss.state='intro';boss.t=0;};
-/* one knockdown = one third of its life (three punish windows, as designed) */
+/* one knockdown = one third of its life (three punish windows) */
 L.hitBoss=()=>{if(boss.state!=='sleep')return;const m=boss.maxHp,tgt=boss.hp>m*2/3+.5?m*2/3:boss.hp>m/3+.5?m/3:0;NEXTDMG=Math.max(1,Math.ceil(boss.hp-tgt));
-  if(bossDamage(0x6aff9a)){boss.state='dead';boss.t=0;knot.visible=false;rake.visible=false;sfx.life();return;}
-  boss.state='hurt';boss.t=0;knot.visible=false;const ph=bossPhase();showHint(ph===1?'TWO SWEEPS NOW · WATCH THE ARM RISE':'MIND THE GREEN STRIPS · THEN JUMP THE SWEEP',2.8);};
-function sweepPlan(){const ph=bossPhase();const from=P.pos.x<0?1:-1;/* sweep starts on the side away from you, so you see it coming */
-  if(ph===0)return {ph,steps:[{k:'sweep',wind:1.1,a0:from*1.5,a1:-from*1.5,dur:.8}],open:1.5};
-  if(ph===1)return {ph,steps:[{k:'sweep',wind:1.1,a0:from*1.5,a1:-from*1.5,dur:.75},{k:'sweep',wind:.9,a0:-from*1.5,a1:from*1.5,dur:.75,raise:true}],open:1.3};
-  const safe=(Math.random()*3)|0;return {ph,steps:[{k:'jab',strips:[0,1,2].filter(i=>i!==safe),wind:1,hold:.7},{k:'sweep',wind:.8,a0:from*1.5,a1:-from*1.5,dur:.7}],open:1.2};}
+  if(bossDamage(0x6aff9a)){boss.state='dead';boss.t=0;knot.visible=false;clearRootFx();sfx.life();return;}
+  boss.state='hurt';boss.t=0;knot.visible=false;const ph=bossPhase();showHint(ph===1?'IT\'S ANGRY · ROOT WAVES AND A GROUND SLAM':'LAST STAND · IT THROWS EVERYTHING AT YOU',2.8);};
 function playerAng(){return Math.atan2(P.pos.x-RX,P.pos.z-RZ);}
+function plan(){const ph=bossPhase();
+  if(ph===0)return {ph,open:3.1,steps:[{k:'sweep',wind:1.35,dur:2.1},{k:'chase',n:4,gap:.62,tell:.85},{k:'sweep',wind:1.2,dur:2}]};
+  if(ph===1)return {ph,open:2.7,steps:[{k:'wave',n:2,tell:.75,spd:9.5},{k:'sweep',wind:1.15,dur:1.85},{k:'slam'},{k:'chase',n:4,gap:.55,tell:.75}]};
+  return {ph,open:2.4,steps:[{k:'jab',wind:1,hold:.7},{k:'chase',n:6,gap:.48,tell:.7},{k:'sweep',wind:1,dur:1.6},{k:'wave',n:3,tell:.7,spd:11},{k:'slam'}]};}
 let prevA=0;
-L.updBoss=dt=>{const b=boss;if(b.state==='off'||!rg)return;b.t+=dt;const g=rg.g;
-  if(b.state==='intro'){c2Play(rg,'talk');g.position.y=RY+Math.max(0,Math.sin(b.t*3))*.25*(1-b.t/2.4);if(b.t>.5&&!b.roared){b.roared=1;blip(90,50,1.4,'sawtooth',.12);shakeT=.7;}if(b.t>2.4){b.roared=0;b.state='idle';b.t=0;showHint('JUMP THE SWEEPING ROOT · THEN HIT THE GLOWING KNOT',3.4);}}
-  else if(b.state==='idle'){c2Play(rg,'idle');if(b.t>.9){b.state='act';b.t=0;b.pl=sweepPlan();b.si=0;b.st=0;b.sub='wind';}}
-  else if(b.state==='act'){const s=b.pl.steps[b.si];b.st+=dt;const glow=rake.userData.glow.material,arm=rake.userData.arm.material;
+function stepStart(b,s){b.st=0;b.sub='wind';
+  if(s.k==='sweep'){const pa=playerAng();s.a0=pa<0?1.55:-1.55;s.a1=-s.a0;/* always starts on the far side of you and sweeps through you */prevA=s.a0;showHint('JUMP THE ROOT AS IT REACHES YOU',1.3);}
+  if(s.k==='chase'){s.i=0;s.next=0;}
+  if(s.k==='wave'){s.dirs=[];const base=Math.atan2(P.pos.x-RX,P.pos.z-KZ);const n=s.n;for(let i=0;i<n;i++)s.dirs.push(base+(i-(n-1)/2)*.34);s.dirs.forEach((a,i)=>{const w=WAV[i];w.a=a;w.d=2;w.on=false;w.line.material.opacity=0;});}
+  if(s.k==='summon'){for(let i=0;i<s.n;i++){const sd=i%2?1:-1;const e=bud(sd*9.5,-140.5,RY,sd<0?2.2:-2.2,6);if(e){e.summoned=true;burst(V3(sd*9.5,RY+.5,-140.5),0x6aff9a,20,5,.5);}}}}
+L.updBoss=dt=>{const b=boss;if(b.state==='off'||!rg)return;b.t+=dt;const g=rg.g;const glow=rake.userData.glow.material,trail=rake.userData.trail.material,arm=rake.userData.arm.material;
+  const PL=state==='play'&&!P.dead;
+  if(b.state==='intro'){c2Play(rg,'talk');g.position.y=RY+Math.max(0,Math.sin(b.t*3))*.25*(1-b.t/2.4);if(b.t>.5&&!b.roared){b.roared=1;blip(90,50,1.4,'sawtooth',.12);shakeT=.7;}if(b.t>2.4){b.roared=0;b.state='idle';b.t=0;showHint('IT HUNTS YOU · WATCH THE GREEN TELLS · HIT THE KNOT WHEN IT TIRES',3.6);}}
+  else if(b.state==='idle'){c2Play(rg,'idle');if(b.t>.8){b.state='act';b.t=0;b.pl=plan();b.si=0;stepStart(b,b.pl.steps[0]);}}
+  else if(b.state==='act'){const s=b.pl.steps[b.si];b.st+=dt;let done=false;
     if(s.k==='sweep'){rake.visible=true;
-      if(b.sub==='wind'){const k=Math.min(1,b.st/s.wind);rake.rotation.y=s.a0;rake.position.y=RY+.45+(s.raise?Math.sin(k*Math.PI)*1.2:0);glow.opacity=.2+.55*k*(.6+.4*Math.sin(time*(14+k*20)));arm.emissive.setHex(0x0a6a50).multiplyScalar(.4+k*.6);c2Play(rg,'sweep',s.wind);rg.r.root.rotation.y=-.5*Math.sign(s.a1-s.a0)*k;
-        if(s.raise&&b.st<.05)showHint('THE ARM RISES · ANOTHER SWEEP!',1.2);if(b.st>=s.wind){b.sub='go';b.st=0;prevA=s.a0;blip(160,60,.5,'sawtooth',.1);shakeT=Math.max(shakeT,.3);glow.opacity=0;}}
-      else if(b.sub==='go'){const k=Math.min(1,b.st/s.dur),e=k*k*(3-2*k);const ang=s.a0+(s.a1-s.a0)*e;rake.rotation.y=ang;rake.position.y=RY+.45;arm.emissive.setHex(0x0a6a50);rg.r.root.rotation.y=.5*Math.sign(s.a1-s.a0)*(e*2-1);
-        const pa=playerAng(),pd=Math.hypot(P.pos.x-RX,P.pos.z-RZ);const lo=Math.min(prevA,ang)-.04,hi=Math.max(prevA,ang)+.04;
-        if(state==='play'&&!P.dead&&pa>lo&&pa<hi&&pd>2.5&&pd<LEN+.5&&P.pos.y<RY+1.05)hurt();prevA=ang;
-        if(Math.random()<.6){const r0=R(4,LEN-2);emit(V3(RX+Math.sin(ang)*r0,RY+.3,RZ+Math.cos(ang)*r0),{vx:R(-2,2),vy:R(1,3),vz:R(-2,2),g:8,life:.5,size:.3,color:pick([0x6aff9a,0x8a94d8])});}
-        if(k>=1){b.sub='rest';b.st=0;shakeT=Math.max(shakeT,.25);sfx.boom();}}
-      else if(b.st>.35){b.si++;b.st=0;b.sub='wind';if(b.si>=b.pl.steps.length){b.state='sleep';b.t=0;rg.r.root.rotation.y=0;boss.kd=Math.ceil(boss.maxHp*.15)-.5;}}}
-    else if(s.k==='jab'){rake.visible=false;
-      if(b.sub==='wind'){const k=Math.min(1,b.st/s.wind);for(const i of s.strips)STRIPS[i].m.material.opacity=.12+.4*k*(.6+.4*Math.sin(time*(12+k*24)));c2Play(rg,'talk');if(b.st<.05)blip(300,700,.3,'triangle',.06);
-        if(b.st>=s.wind){b.sub='go';b.st=0;sfx.boom();shakeT=Math.max(shakeT,.45);for(const i of s.strips){STRIPS[i].sp.visible=true;STRIPS[i].sp.position.y=RY-3;}}}
-      else if(b.sub==='go'){const up=Math.min(1,b.st/.12);for(const i of s.strips){STRIPS[i].sp.position.y=RY-3+3*up;STRIPS[i].m.material.opacity=.5;const S=STRIPS[i];if(state==='play'&&!P.dead&&P.pos.x>S.x0&&P.pos.x<S.x1&&P.pos.z<-137&&P.pos.z>-161&&P.pos.y<RY+2.4)hurt();}
+      if(b.sub==='wind'){const k=Math.min(1,b.st/s.wind);rake.rotation.y=s.a0;rake.position.y=RY+.45;glow.opacity=.25+.55*k*(.6+.4*Math.sin(time*(12+k*18)));arm.emissive.setHex(0x0a6a50).multiplyScalar(.4+k*.6);c2Play(rg,'sweep',s.wind);rg.r.root.rotation.y=-.45*Math.sign(s.a1-s.a0)*k;
+        if(b.st>=s.wind){b.sub='go';b.st=0;prevA=s.a0;blip(160,60,.5,'sawtooth',.1);shakeT=Math.max(shakeT,.3);glow.opacity=0;}}
+      else if(b.sub==='go'){/* steady angular speed: the root's arrival at you is easy to read */const k=Math.min(1,b.st/s.dur);const ang=s.a0+(s.a1-s.a0)*k;rake.rotation.y=ang;trail.opacity=.35;rg.r.root.rotation.y=.45*Math.sign(s.a1-s.a0)*(k*2-1);
+        const pa=playerAng(),pd=Math.hypot(P.pos.x-RX,P.pos.z-RZ);const lo=Math.min(prevA,ang)-.03,hi=Math.max(prevA,ang)+.03;
+        if(PL&&pa>lo&&pa<hi&&pd>2.5&&pd<LEN+.5&&P.pos.y<RY+1.05)hurt();prevA=ang;
+        if(Math.random()<.7){const r0=R(4,LEN-2);emit(V3(RX+Math.sin(ang)*r0,RY+.3,RZ+Math.cos(ang)*r0),{vx:R(-2,2),vy:R(1,3),vz:R(-2,2),g:8,life:.5,size:.3,color:pick([0x6aff9a,0x8a94d8])});}
+        if(Math.random()<dt*14&&AC)noise(AC.currentTime,.06,.06,'lowpass',R(200,400),sfxBus);
+        if(k>=1){b.sub='rest';b.st=0;sfx.boom();trail.opacity=0;}}
+      else if(b.st>.45){rake.visible=false;done=true;}}
+    else if(s.k==='chase'){c2Play(rg,'talk');/* rings open under you one after another; roots burst a beat later */
+      s.next-=dt;if(s.i<s.n&&s.next<=0){const sp=SPK.find(q=>!q.on);if(sp){sp.on=true;sp.t=0;sp.tell=s.tell;sp.x=clamp(P.pos.x,AX0,AX1);sp.z=clamp(P.pos.z,AZ1,AZ0);sp.g.position.set(sp.x,RY,sp.z);sp.g.visible=true;sp.burstG.visible=false;blip(420,640,.12,'triangle',.05);}s.i++;s.next=s.gap;}
+      if(s.i>=s.n&&!SPK.some(q=>q.on)&&b.st>.4)done=true;}
+    else if(s.k==='wave'){c2Play(rg,'sweep',s.tell);
+      if(b.sub==='wind'){const k=Math.min(1,b.st/s.tell);for(let i=0;i<s.n;i++){const w=WAV[i];const len=30;w.line.scale.set(1,len,1);w.line.position.set(RX+Math.sin(w.a)*(len/2+2),RY+.05,KZ+Math.cos(w.a)*(len/2+2));w.line.rotation.z=w.a+Math.PI;w.line.material.opacity=.15+.35*k*(.6+.4*Math.sin(time*26));}
+        if(b.st>=s.tell){b.sub='go';b.st=0;sfx.boom();shakeT=Math.max(shakeT,.3);for(let i=0;i<s.n;i++){const w=WAV[i];w.on=true;w.d=2;w.g.visible=true;w.line.material.opacity=0;}}}
+      else if(b.sub==='go'){let any=false;for(let i=0;i<s.n;i++){const w=WAV[i];if(!w.on)continue;any=true;w.d+=s.spd*dt;const x=RX+Math.sin(w.a)*w.d,z=KZ+Math.cos(w.a)*w.d;w.g.position.set(x,RY,z);w.g.rotation.y=w.a;
+          if(Math.random()<.5)emit(V3(x+R(-1,1),RY+.3,z),{vy:R(1,3),vx:R(-1,1),life:.4,size:.3,color:0x8a94d8,normal:true});
+          const dx=P.pos.x-x,dz=P.pos.z-z,al=dx*Math.sin(w.a)+dz*Math.cos(w.a),lat=Math.abs(dx*Math.cos(w.a)-dz*Math.sin(w.a));if(PL&&Math.abs(al)<.9&&lat<1.4&&P.pos.y<RY+1.3)hurt();
+          if(w.d>34||x<ARENA.x0-1||x>ARENA.x1+1||z>ARENA.z0+1){w.on=false;w.g.visible=false;}}
+        if(!any){b.sub='rest';b.st=0;}}
+      else if(b.st>.35)done=true;}
+    else if(s.k==='slam'){c2Play(rg,'sweep',.7);if(b.sub==='wind'){g.position.y=RY+Math.sin(Math.min(1,b.st/.7)*Math.PI)*1.4;if(b.st<.05){showHint('GROUND SLAM · JUMP THE RING!',1.2);blip(200,90,.6,'sawtooth',.08);}
+        if(b.st>=.75){b.sub='go';b.st=0;g.position.y=RY;shakeT=.6;sfx.boom();shockRing(RX,RY,KZ+1,8.5,30,0x6aff9a);burst(V3(RX,RY+.4,KZ+1),0x8a94d8,30,8,.6,true);}}
+      else if(b.st>2.2)done=true;}
+    else if(s.k==='jab'){c2Play(rg,'talk');const safe=s.safe??(s.safe=(()=>{let best=0,bd=-1;for(let i=0;i<3;i++){const cx=(STRIPS[i].x0+STRIPS[i].x1)/2,d=Math.abs(cx-P.pos.x);if(d>bd){bd=d;best=i;}}return best;})());/* the safe strip is the one farthest from you: you have to run for it */
+      const on=[0,1,2].filter(i=>i!==safe);
+      if(b.sub==='wind'){const k=Math.min(1,b.st/s.wind);for(const i of on)STRIPS[i].m.material.opacity=.12+.42*k*(.6+.4*Math.sin(time*(12+k*24)));if(b.st<.05){blip(300,700,.3,'triangle',.06);showHint('GET TO THE DARK STRIP!',1.2);}
+        if(b.st>=s.wind){b.sub='go';b.st=0;sfx.boom();shakeT=Math.max(shakeT,.45);for(const i of on){STRIPS[i].sp.visible=true;STRIPS[i].sp.position.y=RY-3;}}}
+      else if(b.sub==='go'){const up=Math.min(1,b.st/.12);for(const i of on){const S=STRIPS[i];S.sp.position.y=RY-3+3*up;S.m.material.opacity=.5;if(PL&&P.pos.x>S.x0&&P.pos.x<S.x1&&P.pos.z<-137&&P.pos.z>-161&&P.pos.y<RY+2.4)hurt();}
         if(b.st>s.hold){b.sub='down';b.st=0;}}
-      else if(b.sub==='down'){const k=Math.min(1,b.st/.3);for(const i of s.strips){STRIPS[i].sp.position.y=RY-3*k;STRIPS[i].m.material.opacity=.5*(1-k);}if(k>=1){for(const i of s.strips)STRIPS[i].sp.visible=false;b.sub='rest';b.st=0;}}
-      else if(b.st>.5){b.si++;b.st=0;b.sub='wind';}}}
-  else if(b.state==='sleep'){/* worn out: it sags forward, the rake lies still, the knot at its base glows */c2Play(rg,'idle');g.rotation.x=lerp(g.rotation.x,.12,dt*4);knot.visible=true;knot.children[0].material.opacity=.6+Math.sin(time*14)*.35;if(Math.random()<dt*16)emit(V3(RX+R(-.6,.6),RY+1.2,KZ),{vy:R(1,3),life:.4,size:.3,color:0x6aff9a});
-    if(!b.kHint){b.kHint=1;showHint('NOW! HIT THE GLOWING KNOT AT ITS ROOTS',2.4);}
-    if(b.t>b.pl.open){b.state='idle';b.t=0;knot.visible=false;rake.visible=false;g.rotation.x=0;}
+      else if(b.sub==='down'){const k=Math.min(1,b.st/.3);for(const i of on){STRIPS[i].sp.position.y=RY-3*k;STRIPS[i].m.material.opacity=.5*(1-k);}if(k>=1){for(const i of on)STRIPS[i].sp.visible=false;done=true;s.safe=undefined;}}}
+    else if(s.k==='summon'){c2Play(rg,'talk');if(b.st>.9)done=true;}
+    if(done){b.si++;if(b.si>=b.pl.steps.length){b.state='sleep';b.t=0;rg.r.root.rotation.y=0;boss.kd=Math.ceil(boss.maxHp*.15)-.5;b.kHint=0;}else stepStart(b,b.pl.steps[b.si]);}}
+  else if(b.state==='sleep'){/* worn out: it sags forward, the knot at its base glows */c2Play(rg,'idle');g.rotation.x=lerp(g.rotation.x,.14,dt*4);knot.visible=true;knot.children[0].material.opacity=.6+Math.sin(time*14)*.35;if(Math.random()<dt*16)emit(V3(RX+R(-.6,.6),RY+1.2,KZ),{vy:R(1,3),life:.4,size:.3,color:0x6aff9a});
+    {const cap=Math.ceil(boss.maxHp*.15);if((boss.kd||0)<cap-.5)boss.kd=cap-.5;/* one clean hit on the knot = one third */}
+    if(!b.kHint){b.kHint=1;showHint('IT\'S TIRED · RUN IN AND HIT THE GLOWING KNOT!',2.4);}
+    if(b.t>b.pl.open){b.state='idle';b.t=0;knot.visible=false;g.rotation.x=0;}
     else if(spinNear(RX,KZ,3.2,RY)||stompOn(RX,KZ,2.2,RY+2.2))L.hitBoss();}
-  else if(b.state==='hurt'){g.rotation.x=lerp(g.rotation.x,0,dt*4);rake.visible=false;if(b.t>1.1){b.state='idle';b.t=0;}}
-  else if(b.state==='dead'){rake.visible=false;for(const s of STRIPS){s.sp.visible=false;s.m.material.opacity=0;}if(Math.random()<.8)emit(V3(RX+R(-3,3),RY+R(1,9),RZ+R(-1,2)),{vx:R(-4,4),vy:R(1,6),vz:R(0,4),g:8,life:1,size:.7,color:pick([0x6aff9a,0x4af0e0,0x8a94d8])});shakeT=Math.max(shakeT,.12);
+  else if(b.state==='hurt'){g.rotation.x=lerp(g.rotation.x,0,dt*4);if(b.t>1.1){b.state='idle';b.t=0;}}
+  else if(b.state==='dead'){clearRootFx();if(Math.random()<.8)emit(V3(RX+R(-3,3),RY+R(1,9),RZ+R(-1,2)),{vx:R(-4,4),vy:R(1,6),vz:R(0,4),g:8,life:1,size:.7,color:pick([0x6aff9a,0x4af0e0,0x8a94d8])});shakeT=Math.max(shakeT,.12);
     if(b.t>2.2)g.position.y-=dt*3;if(b.t>3.4&&!b.done){b.done=true;g.visible=false;c2Star(0,RY+2.4,-152,'FOREST STAR',()=>bossDefeated());showHint('GRAB THE FOREST STAR',3);}}
+  /* chase spikes run on their own clocks */
+  for(const sp of SPK){if(!sp.on)continue;sp.t+=dt;const T=sp.tell;
+    if(sp.t<T){const k=sp.t/T;sp.ring.material.opacity=.35+.5*k;sp.fill.material.opacity=.08+.22*k*(.6+.4*Math.sin(time*30));sp.ring.scale.setScalar(1.4-.4*k);}
+    else if(sp.t<T+.45){if(!sp.burstG.visible){sp.burstG.visible=true;sp.burstG.position.y=-2.6;blip(140,70,.25,'sawtooth',.07);burst(V3(sp.x,RY+.4,sp.z),0x8a94d8,14,6,.5,true);shakeT=Math.max(shakeT,.2);}
+      sp.burstG.position.y=Math.min(0,-2.6+(sp.t-T)*26);sp.ring.material.opacity=.2;sp.fill.material.opacity=0;if(PL&&Math.hypot(P.pos.x-sp.x,P.pos.z-sp.z)<1.75&&P.pos.y<RY+2.6)hurt();}
+    else if(sp.t<T+.8){sp.burstG.position.y=-(sp.t-T-.45)*7;sp.ring.material.opacity=Math.max(0,.2-(sp.t-T-.45));}
+    else{sp.on=false;sp.g.visible=false;}}
   if(b.state!=='sleep'&&b.state!=='hurt')g.rotation.x=lerp(g.rotation.x,0,dt*3);
   /* every damaging hit gets the full reaction: white-green flash, splinters, a stagger */
   if(rg.lastHp!==undefined&&b.hp<rg.lastHp&&b.state!=='intro'){rg.flash=1;rg.stag=.35;burst(V3(RX,RY+1.5,KZ),0x6aff9a,36,9,.7);burst(V3(RX,RY+2,KZ),0x8a6a4a,16,6,.5,true);hitStop(.12);shakeT=Math.max(shakeT,.5);blip(160,70,.4,'square',.1);}rg.lastHp=b.hp;
   if(rg.flash>0){rg.flash=Math.max(0,rg.flash-dt*3.2);for(const m of rg.mats)m.emissive.copy(m.userData.e0).lerp(new THREE.Color(.8,1,.85),rg.flash*.8);}
   if(rg.stag>0){rg.stag-=dt;g.position.x=RX+Math.sin(rg.stag*60)*.1;}else g.position.x=RX;
-  c2Anim(rg,dt);b.pos.copy(knot.visible?knot.position:V3(RX,RY+5,RZ));
-  };
+  c2Anim(rg,dt);b.pos.copy(knot.visible?knot.position:V3(RX,RY+5,RZ));};
 L.inArena=p=>p.z<ARENA.z0+1&&p.z>ARENA.z1&&p.y>4;
-L.onRespawn=()=>{for(const s of STRIPS){s.sp.visible=false;s.m.material.opacity=0;}rake.visible=false;for(const e of enemies)if(e.lash){e.lash.visible=false;e.mode='idle';e.mt=1;}};
+L.onRespawn=()=>{clearRootFx();for(const e of enemies)if(e.lash){e.lash.visible=false;e.mode='idle';e.mt=1;}};
 L.update=dt=>{c2Tick(dt);for(const e of BUDS)if(!e.alive&&e.lash.visible)e.lash.visible=false;if(rg&&boss.state==='off'){c2Play(rg,'idle');c2Anim(rg,dt);}};
 L.populate=()=>{
+  /* the last stretch of track, the creek logs and the Bud glade (two Buds that come for you) */
+  orbLine(0,60,0,46,6,1);makeCrate('crate',-2.6,55);makeCrate('crate',2.6,50);makeCrate('lucky',2.6,50,1);
+  spawnOrb(0,1.4,39.4);spawnOrb(-1.2,1.6,36.1);spawnOrb(.8,1.4,32.8);
+  makeCrate('check',0,28.6);bud(3.5,20,0,Math.PI,6);bud(-5,13.5,0,Math.PI,6);orbLine(-6,26,-6,12,5);orbLine(6,26,6,12,5);makeCrate('boom',6.2,17);makeCrate('crate',-6.4,21);makeCrate('crate',-6.4,21,1);
   orbLine(0,3,0,-11,5,1);makeCrate('crate',-3,-6);makeCrate('crate',3,-9);makeCrate('crate',3,-9,1);makeCrate('lucky',-3,-12);
   /* gully roots */
   for(const z of[-16,-19])spawnOrb(0,1.2,z);spawnOrb(0,1.6,-24);for(const z of[-28,-30.5])spawnOrb(.3,1.2,z);spawnOrb(-1,1.8,-34);spawnOrb(-1.1,1.2,-38.5);
