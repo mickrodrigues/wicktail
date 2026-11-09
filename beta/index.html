@@ -355,7 +355,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
-<script>window.WT_AREF={"assets.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets1.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets2.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets3.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets4.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets5.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets_moon.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets6.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets7.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets8.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets9.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets_bosses.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets10.js": "e19924241b5a9ee76ccefb394aa258475327b287", "assets_c2i.js": "e19924241b5a9ee76ccefb394aa258475327b287", "assets11.js": "d7bede7c35f6402f3fb2d465f4b4f96474137d24"};</script>
+<script>window.WT_AREF={"assets.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets1.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets2.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets3.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets4.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets5.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets_moon.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets6.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets7.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets8.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets9.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets_bosses.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets10.js": "e19924241b5a9ee76ccefb394aa258475327b287", "assets_c2i.js": "e19924241b5a9ee76ccefb394aa258475327b287", "assets11.js": "d7bede7c35f6402f3fb2d465f4b4f96474137d24", "assets12.js": "0e7ed9fb4aa4e96c9432af6955efed961802dbd5", "assets13.js": "0e7ed9fb4aa4e96c9432af6955efed961802dbd5", "assets14.js": "0e7ed9fb4aa4e96c9432af6955efed961802dbd5"};</script>
 <script>
 (() => {
 'use strict';
@@ -737,7 +737,10 @@ const LVMUS={
  8:[vary(MUSIC[0],{seed:801,root:55,bpm:120,scale:[0,2,3,7,8],lead:'square',leadCut:1800}),vary(MUSIC[4],{seed:807,root:50,bpm:122,lead:'sawtooth'}).boss],
  9:[vary(MUSIC[1],{seed:901,root:50,bpm:102,lead:'square',leadCut:1500,drums:'drive'}),vary(MUSIC[2],{seed:911,root:46,bpm:132,organ:true}).boss],
  10:[null,vary(MUSIC[4],{seed:1003,root:49,bpm:118,lead:'square',leadCut:1700}).boss],
- 11:[vary(MUSIC[1],{seed:1101,root:52,bpm:94,lead:'triangle',leadVib:true,arp:2,arpWave:'sine'}),vary(MUSIC[4],{seed:1107,root:47,bpm:122,lead:'sawtooth',leadCut:1600}).boss]};
+ 11:[vary(MUSIC[1],{seed:1101,root:52,bpm:94,lead:'triangle',leadVib:true,arp:2,arpWave:'sine'}),vary(MUSIC[4],{seed:1107,root:47,bpm:122,lead:'sawtooth',leadCut:1600}).boss],
+ 12:[vary(MUSIC[5],{seed:1201,root:56,bpm:88,lead:'sine',leadVib:true,bell:true,drums:'dream',arp:1,arpOct:2}),vary(MUSIC[3],{seed:1209,root:50,bpm:118,lead:'triangle',organ:true}).boss],
+ 13:[vary(MUSIC[2],{seed:1301,root:49,bpm:132,lead:'sawtooth',leadCut:1900,drums:'heavy'}),vary(MUSIC[4],{seed:1307,root:45,bpm:142,organ:true}).boss],
+ 14:[vary(MUSIC[5],{seed:1401,root:58,bpm:104,lead:'triangle',bell:true,organ:true}),vary(MUSIC[2],{seed:1409,root:48,bpm:150,lead:'square',leadCut:2200,organ:true}).boss]};
 const seq={on:false,cfg:null,step:0,next:0};
 function schedule(){if(!AC||!seq.on||AC.state!=='running')return;const c=seq.cfg,spb=60/c.bpm/4;if(seq.next<AC.currentTime-.2)seq.next=AC.currentTime+.05;
   while(seq.next<AC.currentTime+.14){playStep(c,seq.step,seq.next,spb);seq.next+=spb*(seq.step%2===0?1+c.swing:1-c.swing);seq.step=(seq.step+1)%64;}}
@@ -794,7 +797,7 @@ function groundSeg(z0,z1,x0=-4.6,x1=4.6,walls=true){addSolid(x0,x1,-4,0,z1,z0,'g
   if(walls){addSolid(x0-.9,x0,0,.75,z1,z0,'wall',wallMat);addSolid(x1,x1+.9,0,.75,z1,z0,'wall',wallMat);}}
 
 /* ---------- level layout ---------- */
-const MAXLV=11;/* Chapter 2 levels open as they are finished */
+const MAXLV=14;/* Chapter 2 levels open as they are finished */
 const UNLOCK=(()=>{try{return clamp(+localStorage.getItem('wt-unlocked')||1,1,MAXLV);}catch(e){return 1;}})();
 function lvLabel(n){return n>=10?'Chapter 2 · Level '+(n-9):'Level '+n;}function lvHash(n){return n>=10?'chapter2-level'+(n-9):'level'+n;}
 const LV=(()=>{const h=(location.hash||'').toLowerCase();const m=h.match(/^#level(\d+)/),m2=h.match(/^#chapter2-level(\d+)/);let n=m2?+m2[1]+9:m?+m[1]:0;if(!n){try{n=+localStorage.getItem('wt-level')||1;}catch(e){n=1;}}return clamp(n,1,Math.min(MAXLV,UNLOCK));})();
@@ -1198,7 +1201,27 @@ function updAmb(dt){for(const a of C2.amb||[]){if(a.k==='fly'){a.o.position.set(
   else if(a.k==='bat'){const t=time*a.sp+a.ph;a.o.position.set(a.c.x+Math.cos(t)*a.r,a.c.y+Math.sin(t*2.3)*1.2,a.c.z+Math.sin(t)*a.r);a.o.rotation.y=-t+(a.sp>0?0:Math.PI);const f=Math.sin(time*18+a.ph)*.9;a.o.userData.l.rotation.y=f;a.o.userData.r.rotation.y=-f;}
   else if(a.k==='steam'){if(Math.random()<dt*a.rate)emit(a.p.clone(),{vx:R(-.4,.4),vy:R(1.6,2.6),vz:R(-.4,.4),life:R(1.4,2.2),size:R(.6,1),size1:R(2,3),color:0xcfc4e8,normal:true});}
   else if(a.k==='mist'){a.o.position.x=a.b.x+Math.sin(time*.07+a.ph)*6;}}}
-function c2Tick(dt){if(typeof c2WorldTick==='function')c2WorldTick(dt);updPulses(dt);updNpcs(dt);updCar(dt);updStars(dt);updTrains(dt);updBells(dt);updAmb(dt);}
+/* ---------- story helpers ----------
+   c2Scene: a scripted cutscene with its own camera. shot(t,i) returns [cameraPos, lookAt]; lines: [speaker,text,seconds,fn?].
+   c2Lore: a lectern with a glowing open diary; walking up to it reads a page aloud (one-time), framed on the book. */
+function c2Scene(lines,shot,end,o={}){CINE.cp=null;P.vel.set(0,0,0);try{playAct('idle',.1);}catch(e){}
+  runCine({lines:lines.map(l=>[l[0],l[1],l[2],l[3]||null,null]),outFade:false,
+    update:(dt,t,i)=>{if(o.tick)o.tick(dt,t,i);const r=shot(t,Math.max(0,i));if(!r)return;const [cp,lk]=r;if(!CINE.cp){CINE.cp=cp.clone();CINE.lk=lk.clone();}const k=o.snap?1:Math.min(1,dt*(o.ease||2.2));CINE.cp.lerp(cp,k);CINE.lk.lerp(lk,k);camera.position.copy(CINE.cp);camera.lookAt(CINE.lk);},
+    end:()=>{state='play';$('hud').hidden=false;$('controls').hidden=false;camBehind();if(end)end();}});}
+C2.lore=[];C2.pages=0;
+function c2Lore(x,y,z,ry,title,lines,o={}){const g=new THREE.Group();const wood=new THREE.MeshLambertMaterial({map:typeof KT!=='undefined'?KT.wood():null,color:0xb08a6a});
+  const post=new THREE.Mesh(new THREE.BoxGeometry(.32,1.05,.32),wood);post.position.y=.52;g.add(post);const foot=new THREE.Mesh(new THREE.BoxGeometry(.9,.12,.7),wood);foot.position.y=.06;g.add(foot);
+  const desk=new THREE.Mesh(new THREE.BoxGeometry(1.15,.1,.8),wood);desk.position.set(0,1.12,0);desk.rotation.x=-.42;g.add(desk);
+  const page=new THREE.Mesh(new THREE.BoxGeometry(1.05,.06,.7),new THREE.MeshBasicMaterial({color:o.pageCol||0xfff0c8}));page.position.set(0,1.19,.02);page.rotation.x=-.42;g.add(page);
+  const gl=spr(glowTex,o.col||0xffd27a,2.2,2.2,0,1.5,0);g.add(gl);g.position.set(x,y,z);g.rotation.y=ry;scene.add(g);
+  const mk=spr(labelTex('?','#fff2a8','#ffb83a'),0xffffff,.8,.8,x,y+2.4,z,false);scene.add(mk);
+  const n={g,gl,mk,pos:V3(x,y,z),ry,title,lines,read:false,r:o.r||2.6,total:o.total||3,after:o.after};C2.lore.push(n);return n;}
+function readLore(n){n.read=true;C2.pages++;const fx=Math.sin(n.ry),fz=Math.cos(n.ry);const bk=V3(n.pos.x,n.pos.y+1.25,n.pos.z);
+  const cp=V3(n.pos.x+fx*2.6+fz*1.2,n.pos.y+2.4,n.pos.z+fz*2.6-fx*1.2);
+  c2Scene(n.lines.map(l=>[n.title,l[0],l[1]||6]),(t,i)=>[cp.clone().add(V3(Math.sin(t*.3)*.15,0,0)),bk],()=>{showHint('DIARY PAGE '+C2.pages+' / '+n.total,2.6);sfx.check();if(n.after)n.after();});}
+function updLore(dt){for(const n of C2.lore){n.gl.material.opacity=n.read?.25:.6+.3*Math.sin(time*3);n.mk.visible=!n.read;n.mk.position.y=n.pos.y+2.4+Math.sin(time*3)*.12;
+    if(!n.read&&state==='play'&&!P.dead&&P.onGround&&Math.hypot(P.pos.x-n.pos.x,P.pos.z-n.pos.z)<n.r&&Math.abs(P.pos.y-n.pos.y)<1.5)readLore(n);}}
+function c2Tick(dt){if(typeof c2WorldTick==='function')c2WorldTick(dt);updPulses(dt);updNpcs(dt);updCar(dt);updStars(dt);updLore(dt);updTrains(dt);updBells(dt);updAmb(dt);}
 
 /* ===================== CHAPTER 2 WORLD DRESSING =====================
    Everything outside the playable track: a deep forested gorge with a glowing river, mountain walls
@@ -1312,9 +1335,12 @@ function w2RailWorld(LATE){const cx=z=>7*Math.sin(z*.017+.6);
 
 /* ---------- the course section (before the portal): a gorge of its own around the winding path ---------- */
 function w2CourseWorld(path,mn,mx){const P2=path.pts.filter((p,i)=>i%3===0),base=mn.y-9.5;/* v1.17.1: a shallower ravine so the forest floor and pines fill the space under the line instead of an empty void */
-  const dist=(x,z)=>{let b=1e9;for(const p of P2){const d=(p.x-x)*(p.x-x)+(p.z-z)*(p.z-z);if(d<b)b=d;}return Math.sqrt(b);};
+  const near=(x,z)=>{let b=1e9,q=null;for(const p of P2){const d=(p.x-x)*(p.x-x)+(p.z-z)*(p.z-z);if(d<b){b=d;q=p;}}return [Math.sqrt(b),q];};
+  const dist=(x,z)=>near(x,z)[0];
   const x0=mn.x-150,x1=mx.x+150,z0=mx.z+150,z1=mn.z-150;const cache=new Map();
-  const H=(x,z)=>{const k=Math.round(x)+','+Math.round(z);let d=cache.get(k);if(d===undefined){d=dist(x,z);cache.set(k,d);}const w=Math.max(0,d-15);return base+w2Noise(x,z)*1.2+Math.pow(Math.min(1,w/42),1.5)*58+Math.max(0,d-70)*.4+w2Noise(x*1.6,z*1.6)*Math.min(1,w/16)*10;};
+  /* v1.18: the valley floor follows the line's own height, a few metres under the embankment, so there's real ground beside and
+     under the track everywhere (no void on the right, nothing to see under the map); only the broken spans drop into a deeper gully */
+  const H=(x,z)=>{const k=Math.round(x)+','+Math.round(z);let c=cache.get(k);if(c===undefined){const [d,q]=near(x,z);const gp=q&&(q.gap||(path.pts[q.i+3]&&path.pts[q.i+3].gap)||(path.pts[q.i-3]&&path.pts[q.i-3].gap));c=[d,(q?q.y:base+9.5)-(gp&&d<9?10:4.2)];cache.set(k,c);}const d=c[0],fl=lerp(c[1],base,Math.min(1,Math.max(0,d-40)/60));const w=Math.max(0,d-12);return fl+w2Noise(x,z)*1.2*Math.min(1,d/10)+Math.pow(Math.min(1,w/42),1.5)*58+Math.max(0,d-70)*.4+w2Noise(x*1.6,z*1.6)*Math.min(1,w/16)*10;};
   w2Terrain(x0,x1,z0,z1,4,H,w2Pal);
   const F=[];let tries=0;const NC=Math.round(1000*w2Dens());while(F.length<NC&&tries<9000){tries++;const x=R(x0+5,x1-5),z=R(z1+5,z0-5),d=dist(x,z);if(d<11)continue;const h=H(x,z);const sl=Math.abs(H(x+2,z)-H(x-2,z))+Math.abs(H(x,z+2)-H(x,z-2));if(sl>15)continue;F.push([x,h-.3,z,R(1.4,2.8)*(d<24?1.7:1),R(0,TAU),R(.9,1.25)]);}
   w2Forest(F,t=>t[3]>2.45);
@@ -2082,16 +2108,16 @@ function crsAt(path,s,lat=0,dy=0){const pts=path.pts,p=pts[clamp(Math.round(s/.5
 function crsFwd(p){return V3(Math.sin(p.a),0,-Math.cos(p.a));}
 
 /* ---------- mesh builder: floor, skirts, rims, banks, rails ---------- */
-function crsMesh(path,o){const P=path.pts,CH=70;const out=[];
+function crsMesh(path,o){const P=path.pts,CH=70,SK=o.skirt||7;const out=[];
   for(let c0=1;c0<P.length;c0+=CH){const B={top:[],side:[],rim:[],bt:[],bs:[]};
     const V=(p,lat,y,u,v)=>[p.x+Math.cos(p.a)*lat,y,p.z+Math.sin(p.a)*lat,u,v];
     const Q=(arr,a,b,c,d)=>arr.push(a,b,c,a,c,d);
     for(let i=c0;i<Math.min(P.length,c0+CH);i++){const p0=P[i-1],p1=P[i],w0=p0.w/2,w1=p1.w/2;
       if(!p1.gap){const strips=p1.hole?[[-w0,-p0.hole,-w1,-p1.hole],[p0.hole,w0,p1.hole,w1]]:[[-w0,w0,-w1,w1]];
         for(const [a0,b0,a1,b1] of strips)Q(B.top,V(p0,a0,p0.y,a0/2.5,p0.s/2.5),V(p0,b0,p0.y,b0/2.5,p0.s/2.5),V(p1,b1,p1.y,b1/2.5,p1.s/2.5),V(p1,a1,p1.y,a1/2.5,p1.s/2.5));
-        for(const sd of[-1,1])Q(B.side,V(p0,sd*w0,p0.y,p0.s/2.5,0),V(p1,sd*w1,p1.y,p1.s/2.5,0),V(p1,sd*w1,p1.y-7,p1.s/2.5,-2.8),V(p0,sd*w0,p0.y-7,p0.s/2.5,-2.8));
+        for(const sd of[-1,1])Q(B.side,V(p0,sd*w0,p0.y,p0.s/2.5,0),V(p1,sd*w1,p1.y,p1.s/2.5,0),V(p1,sd*w1,p1.y-SK,p1.s/2.5,-SK/2.5),V(p0,sd*w0,p0.y-SK,p0.s/2.5,-SK/2.5));
         if(p1.hole)for(const sd of[-1,1])Q(B.side,V(p0,sd*p0.hole,p0.y,p0.s/2.5,0),V(p1,sd*p1.hole,p1.y,p1.s/2.5,0),V(p1,sd*p1.hole,p1.y-7,p1.s/2.5,-2.8),V(p0,sd*p0.hole,p0.y-7,p0.s/2.5,-2.8));}
-      if(p0.gap!==p1.gap&&i>1)Q(B.side,V(p0,-w0,p0.y,-w0/2.5,0),V(p0,w0,p0.y,w0/2.5,0),V(p0,w0,p0.y-7,w0/2.5,-2.8),V(p0,-w0,p0.y-7,-w0/2.5,-2.8));
+      if(p0.gap!==p1.gap&&i>1)Q(B.side,V(p0,-w0,p0.y,-w0/2.5,0),V(p0,w0,p0.y,w0/2.5,0),V(p0,w0,p0.y-SK,w0/2.5,-SK/2.5),V(p0,-w0,p0.y-SK,-w0/2.5,-SK/2.5));
       if(!p1.wall)continue;
       for(const sd of[-1,1]){
         if(o.rails){continue;}
@@ -2122,11 +2148,12 @@ function crsPop(path,rng,cfg){const PK=a=>a[(rng()*a.length)|0];const en=secEnem
     const lanes=p.hole?[-(p.hole+p.w/2)/2,(p.hole+p.w/2)/2]:[0];const L0=PK(lanes);const at=(lat,ds=0)=>crsAt(path,s+ds,L0+lat);
     if(r<.3){const n=1+(rng()*3|0);for(let k=0;k<n;k++){const lt=(k-(n-1)/2)*1.25;if(Math.abs(L0+lt)>hw+.5)continue;const q=at(lt);const kind=PK(['crate','crate','crate','lucky']);if(rng()<.25){makeCrate('iron',q.x,q.z,q.y);makeCrate(kind,q.x,q.z,q.y+1);}else makeCrate(kind,q.x,q.z,q.y);}}
     else if(r<.4){const a=at(1.2),b=at(-1.2);makeCrate('boom',a.x,a.z,a.y);makeCrate('crate',b.x,b.z,b.y);makeCrate('crate',b.x,b.z,b.y+1);}
-    if(en&&s-lastEn>=12&&rng()<.6){const q=at(rng()<.5?-.9:.9,-2);const e=en(q.x,q.z,q.y);if(e){e.sect=true;lastEn=s;}}
-    else if(flyer&&rng()<.15){const q=at(0);const b=gloombat(q.x,q.z,1.4,1.3,q.y+1.8);if(b)b.sect=true;}
+    if(en&&s-lastEn>=(cfg.enGap||12)&&rng()<(cfg.enP!=null?cfg.enP:.6)){const q=at(rng()<.5?-.9:.9,-2);const e=en(q.x,q.z,q.y);if(e){e.sect=true;lastEn=s;}}
+    else if(flyer&&!cfg.noFly&&rng()<.15){const q=at(0);const b=gloombat(q.x,q.z,1.4,1.3,q.y+1.8);if(b)b.sect=true;}
     if(r>=.3){for(let k=-1;k<=1;k++){const q=at(0,k*1.4);if(!q.p.gap)spawnOrb(q.x,q.y+1,q.z);}}}}
-function crsCheck(path,s){const q=crsAt(path,s,1.6);makeCrate('check',q.x,q.z,q.y);}
-function crsShardHigh(path,s,id){const q=crsAt(path,s,0);makeCrate('bounce',q.x,q.z,q.y);spawnShard(q.x,q.y+6.2,q.z,id);for(let k=1;k<=3;k++)spawnOrb(q.x,q.y+1.6+k*1.3,q.z);}
+function crsSolidS(path,s){for(let k=0;k<40&&s<path.len-2&&crsAt(path,s).p.gap;k++)s+=1;return s;}
+function crsCheck(path,s){s=crsSolidS(path,s);const q=crsAt(path,s,1.6);makeCrate('check',q.x,q.z,q.y);}
+function crsShardHigh(path,s,id){s=crsSolidS(path,s);const q=crsAt(path,s,0);makeCrate('bounce',q.x,q.z,q.y);spawnShard(q.x,q.y+6.2,q.z,id);for(let k=1;k<=3;k++)spawnOrb(q.x,q.y+1.6+k*1.3,q.z);}
 function crsProps(path,T,M,rng,o){let n=0;for(let s=6;s<path.len-4&&n<(o.max||44);s+=o.every||7){for(const sd of[-1,1]){if(rng()>(o.p||.55))continue;const p=crsAt(path,s).p;if(p.gap)continue;const ks=p.ks*sd;const cap=ks>0?.85/ks:99;const lat=Math.min(p.w/2+(o.lat||9)+rng()*3,cap-1);if(lat<p.w/2+2)continue;
   const q=crsAt(path,s,sd*lat);const top=o.top?o.top(p,sd,lat):p.y;try{const fn=o.fn||(o.fns?o.fns[(rng()*o.fns.length)|0]:T.props[(rng()*T.props.length)|0]);if(LV<10&&fn===THEMES[0].props[0]&&typeof c1House==='function'){const hy=crsGround(q.x,q.z,top);c1House(q.x,hy==null?top:hy,q.z,-p.a+(sd>0?-Math.PI/2:Math.PI/2),{pal:pick(LV===2?['lilac','stone','pink']:['cream','pink','ochre']),floors:1+((rng()*2.4)|0)});n++;continue;}const pr=fn(M,1);const ob=pr.o||pr;ob.rotation.y=-p.a+(sd>0?-Math.PI/2:Math.PI/2)+R(-.3,.3);ob.scale.multiplyScalar(o.sc||1);
     if(o.sky){/* nothing to stand on out here: candles and lanterns hover, everything else rides a floating island */const tall=(pr.w||1)<1.1;if(tall){ob.position.set(q.x,top+.6,q.z);scene.add(ob);crsHover(ob);}else crsIsland(ob,q.x,top,q.z);n++;continue;}
@@ -2157,11 +2184,11 @@ function updCourse(dt){if(!CRS.paths.length)return;
     if(it.k==='crusher'){const T=(time*.9+it.ph)%3.4;let off;if(T<1.6)off=6.8;else if(T<2.1)off=6.8+Math.sin(time*50)*.06;else if(T<2.25)off=6.8*(1-(T-2.1)/.15);else if(T<2.8)off=0;else off=6.8*((T-2.8)/.6);
       it.m.position.y=it.y+off+1.1;if(T>=2.25&&!it.slam){it.slam=true;shakeT=Math.max(shakeT,.3);if(Math.hypot(P.pos.x-it.x,P.pos.z-it.z)<14)sfx.boom();burst(V3(it.x,it.y+.2,it.z),0xcfc0e0,14,5,.4,true);}if(T<2.1)it.slam=false;
       const [lt,ln]=crsLL(it.p,P.pos.x,P.pos.z);if(state==='play'&&!P.dead&&off<1.6&&Math.abs(lt)<it.w/2&&Math.abs(ln)<1.1&&P.pos.y<it.y+off+.2&&P.pos.y>it.y-1){hurt();if(!P.dead){const f=crsFwd(it.p),dir=ln>0?1:-1;P.pos.addScaledVector(f,dir*(1.3-Math.abs(ln)));P.vel.x=f.x*dir*8;P.vel.z=f.z*dir*8;P.vel.y=5;}}continue;}
-    if(it.k==='lava'){const q=crsNear(P.pos.x,P.pos.z);const inZ=q&&q.path===it.path&&q.s>it.a&&q.s<it.b+6&&SEC.on;if(inZ&&!it.on&&!P.dead){it.on=true;showHint('THE LAVA IS RISING · CLIMB!',2);shakeT=.5;}
-      if(it.on){it.y=Math.min(it.top,it.y+dt*it.spd);if(q&&q.s>it.b+3){it.done=true;}if(!it.done&&state==='play'&&!P.dead&&P.pos.y<it.y+.1){burst(P.pos.clone(),0xff6a1a,30,7,.6);die(true);}}
-      it.m.visible=SEC.on&&!SEC.bonus;it.m.position.set(P.pos.x,it.y,P.pos.z);if(Math.random()<dt*10&&it.on)emit(V3(P.pos.x+R(-8,8),it.y+.1,P.pos.z+R(-8,8)),{vy:R(1,3),life:.8,size:.6,size1:.1,color:pick([0xffb03a,0xff5a1a])});continue;}
+    if(it.k==='lava'){const q=crsNear(P.pos.x,P.pos.z);const inZ=q&&q.path===it.path&&q.s>it.a&&q.s<it.b+6&&SEC.on;if(inZ&&!it.on&&!P.dead){it.on=true;if(it.onStart)it.onStart(it);showHint(it.hint||'THE LAVA IS RISING · CLIMB!',2);shakeT=.5;}
+      if(it.on){it.y=Math.min(it.top,it.y+dt*it.spd);if(q&&q.s>it.b+3){it.done=true;}if(!it.done&&state==='play'&&!P.dead&&P.pos.y<it.y+.1){burst(P.pos.clone(),it.col||0xff6a1a,30,7,.6);die(true);}}
+      it.m.visible=SEC.on&&!SEC.bonus;it.m.position.set(P.pos.x,it.y,P.pos.z);if(it.onMove)it.onMove(it);if(Math.random()<dt*10&&it.on)emit(V3(P.pos.x+R(-8,8),it.y+.1,P.pos.z+R(-8,8)),{vy:R(1,3),life:.8,size:.6,size1:.1,color:pick(it.sparks||[0xffb03a,0xff5a1a])});continue;}
     if(it.k==='jet'){it.t-=dt;if(it.t<=0){it.t=it.per;if(Math.hypot(P.pos.x-it.x,P.pos.z-it.z)<26)warnZone(it.x,it.y,it.z,1.3,.9,0xff6a1a,h=>{for(let i=0;i<28;i++)emit(V3(h.x+R(-.4,.4),h.y+.2,h.z+R(-.4,.4)),{vx:R(-1,1),vy:R(8,13),vz:R(-1,1),life:.7,size:.9,size1:.2,color:pick([0xffd27a,0xff7a1a,0xff3a1a])});});}continue;}
-    if(it.k==='stars'){const q=crsNear(P.pos.x,P.pos.z);if(!q||q.path!==it.path||P.dead||state!=='play'||!SEC.on)continue;it.t-=dt;if(it.t<=0){it.t=R(1.1,1.8);const ah=crsAt(it.path,q.s+R(2,6),R(-1.4,1.4));if(!ah.p.gap)fallStar(ah.x,ah.y,ah.z);}continue;}
+    if(it.k==='stars'){const q=crsNear(P.pos.x,P.pos.z);if(!q||q.path!==it.path||P.dead||state!=='play'||!SEC.on||(it.tag&&q.tag!==it.tag))continue;it.t-=dt;if(it.t<=0){it.t=R(1.1,1.8);const ah=crsAt(it.path,q.s+R(2,6),R(-1.4,1.4));if(!ah.p.gap)fallStar(ah.x,ah.y,ah.z);}continue;}
     if(it.k==='lantern'){const th=Math.sin(time*it.spd+it.ph)*it.amp;it.arm.rotation.z=th;it.hitCD-=dt;
       const bl=Math.sin(th)*it.len,by=6.4-Math.cos(th)*it.len;const bx=it.g.position.x+Math.cos(it.p.a)*bl,bz=it.g.position.z+Math.sin(it.p.a)*bl,byw=it.g.position.y+by;
       if(state==='play'&&!P.dead&&it.hitCD<=0&&Math.hypot(P.pos.x-bx,P.pos.z-bz)<it.r&&P.pos.y+.9>byw-.9&&P.pos.y<byw+.6){it.hitCD=1;hurt();const dir=Math.cos(time*it.spd+it.ph)>0?1:-1;if(!P.dead){P.vel.x=Math.cos(it.p.a)*dir*9;P.vel.z=Math.sin(it.p.a)*dir*9;P.vel.y=6;}blip(900,400,.15,'square',.06);}}
@@ -2241,15 +2268,15 @@ function buildCourseSection(){const D=COURSE[LV];SEC.built=true;const rng=srng(L
   const cliff=new THREE.MeshPhongMaterial({map:noiseTex('#2e2240',['#4a3a5e','#251a36','#5a4a70','#3a2c4e'],1,1,true),shininess:6,side:THREE.DoubleSide});cliff.map.wrapS=cliff.map.wrapT=THREE.RepeatWrapping;cliff.map.repeat.set(.6,.35);
   const lk=D.look;let top;if(lk.top==='castle'||lk.top==='moon')top=crsMat(groundTop,.9);else if(lk.top==='rock')top=crsMat(groundTop,.9);else if(lk.top==='path')top=crsMat(M.ground||groundTop,.9);else if(lk.top==='boards')top=crsMat(platMat,1.1);else top=crsMat(groundTop,.9);
   const brass=new THREE.MeshPhongMaterial({color:0x7a5a2a,emissive:0x0a0602,shininess:50,specular:0x8a7050,side:THREE.DoubleSide});
-  const o={top,side:cliff,rim:lk.rails?crsMat(platMat,1,false):lk.castle||lk.moon?crsMat(wallMat,1.1):lk.sky?brass:crsMat(wallMat,1.1),bt:lk.tunnel?cliff:crsMat(M.side||groundTop,.6),bs:cliff,banks:lk.banks,rails:lk.rails,o1:5,o2:13};if(lk.tunnel){o.o1=1.4;o.o2=4.5;o.b1=3.4;o.b2=7.5;}if(LV===10&&typeof KT!=='undefined'){o.bt=new THREE.MeshLambertMaterial({map:KT.moss()});o.bs=new THREE.MeshLambertMaterial({map:KT.rock(),side:THREE.DoubleSide});o.top=new THREE.MeshLambertMaterial({map:KT.cobble()});o.rim=new THREE.MeshLambertMaterial({map:KT.masonry()});}
+  const o={top,side:cliff,rim:lk.rails?crsMat(platMat,1,false):lk.castle||lk.moon?crsMat(wallMat,1.1):lk.sky?brass:crsMat(wallMat,1.1),bt:lk.tunnel?cliff:crsMat(M.side||groundTop,.6),bs:cliff,banks:lk.banks,rails:lk.rails,o1:5,o2:13};if(lk.tunnel){o.o1=1.4;o.o2=4.5;o.b1=3.4;o.b2=7.5;}if(LV===10&&typeof KT!=='undefined'){o.bt=new THREE.MeshLambertMaterial({map:KT.moss()});o.bs=new THREE.MeshLambertMaterial({map:KT.rock(),side:THREE.DoubleSide});o.top=new THREE.MeshLambertMaterial({map:KT.cobble()});o.rim=new THREE.MeshLambertMaterial({map:KT.masonry()});o.skirt=13;}if(L.courseMats)Object.assign(o,L.courseMats());
   {const n0=scene.children.length;crsMesh(path,o);CRS.terrain=scene.children.slice(n0).filter(c=>c.isMesh||c.isGroup);}
   if(lk.water){const wm=new THREE.Mesh(new THREE.PlaneGeometry(mx.x-mn.x+160,mx.z-mn.z+160,1,1),new THREE.MeshPhongMaterial({color:lk.blue?0x2a3a8a:0x1e3436,emissive:lk.blue?0x0a1030:0x050c0c,shininess:70,specular:0x3a5a5a}));wm.rotation.x=-Math.PI/2;wm.position.set((mn.x+mx.x)/2,-.45,(mn.z+mx.z)/2);scene.add(wm);CRS.water=wm;if(LV===3&&typeof c1BogCourse==='function')c1BogCourse(path,wm,mn,mx);
-    for(let i=0;i<70;i++){const s=R(4,path.len-4),sd=Math.random()<.5?-1:1,q=crsAt(path,s,sd*R(4,16));if(crsInside(q.x,q.z,1.5))continue;const r=new THREE.Mesh(new THREE.ConeGeometry(R(.06,.12),R(1.4,2.6),4),new THREE.MeshPhongMaterial({color:pick([0x4a6a3a,0x6a7a4a,0x3a5a3a])}));r.position.set(q.x,-.45+r.geometry.parameters.height/2,q.z);scene.add(r);}}
+    for(let i=0;i<(D.noReeds?0:70);i++){const s=R(4,path.len-4),sd=Math.random()<.5?-1:1,q=crsAt(path,s,sd*R(4,16));if(crsInside(q.x,q.z,1.5))continue;const r=new THREE.Mesh(new THREE.ConeGeometry(R(.06,.12),R(1.4,2.6),4),new THREE.MeshPhongMaterial({color:pick([0x4a6a3a,0x6a7a4a,0x3a5a3a])}));r.position.set(q.x,-.45+r.geometry.parameters.height/2,q.z);scene.add(r);}}
   else if(LV===10&&typeof w2CourseWorld==='function')w2CourseWorld(path,mn,mx);
   else if(!lk.sky){const vp=new THREE.Mesh(new THREE.PlaneGeometry(mx.x-mn.x+200,mx.z-mn.z+200),new THREE.MeshBasicMaterial({color:0x2a1e48}));vp.rotation.x=-Math.PI/2;vp.position.set((mn.x+mx.x)/2,mn.y-9,(mn.z+mx.z)/2);scene.add(vp);}
   CRS.killY=D.killY!=null?D.killY:null;
   /* props on the banks */
-  if(lk.tunnel)crsProps(path,T,M,rng,{every:5,lat:1.6,p:.6,top:p=>p.y+3.4,sc:.7});
+  if(D.noProps){}else if(lk.tunnel)crsProps(path,T,M,rng,{every:5,lat:1.6,p:.6,top:p=>p.y+3.4,sc:.7});
   else if(lk.sky&&!lk.castle&&!lk.moon){for(let k=0;k<16;k++){const s=R(4,path.len-4),sd=Math.random()<.5?-1:1,q=crsAt(path,s,sd*R(10,17));if(crsInside(q.x,q.z,6))continue;const r0=R(1.6,3.2);const g=new THREE.Mesh(new THREE.CylinderGeometry(r0,r0,.5,18),brass);const teeth=new THREE.Mesh(new THREE.TorusGeometry(r0,.28,4,18),brass);g.add(teeth);g.rotation.x=Math.PI/2;g.position.set(q.x,q.y-R(3,10),q.z);scene.add(g);CRS.items.push({k:'gear',m:g,ax:'y',spd:R(-.8,.8)});}}
   else if(lk.banks)crsProps(path,T,M,rng,{fns:LV===2?T.props.filter((f,i)=>i!==1):null,every:7,lat:7.5,p:.55,top:(p,sd,lat)=>p.y+2.6+1.3*Math.sin(p.s*.09+sd*2.1)+.6*Math.sin(p.s*.31+sd)});
   else crsProps(path,T,M,rng,{every:9,lat:6,p:.4,top:p=>p.y-.2,sc:.9,sky:true});
@@ -2294,12 +2321,13 @@ function buildCourseSection(){const D=COURSE[LV];SEC.built=true;const rng=srng(L
       const it={k:'lava',path,a,b,m:lm,y:y0,y0,top,spd:(top-y0)/((b-a)/5.2),on:false,done:false};CRS.items.push(it);CRS.lava=it;crsCheck(path,a-4);}
     let i=0;for(const [a,b] of tagRuns('jet'))for(let s=a+1.5;s<b;s+=4,i++){const q=crsAt(path,s,(i%2?1:-1)*1.3);const d=new THREE.Mesh(new THREE.CircleGeometry(.9,18),new THREE.MeshBasicMaterial({color:0x2a1008}));d.rotation.x=-Math.PI/2;d.position.set(q.x,q.y+.03,q.z);scene.add(d);CRS.items.push({k:'jet',x:q.x,y:q.y,z:q.z,t:i*.8,per:2.6});}}
   if(LV===9){CRS.items.push({k:'stars',path,t:2});}
+  if(L.courseDress)L.courseDress(path,{mn,mx,tagRuns,tagS,rng});
   /* generic content */
-  crsPop(path,rng,{skip:['chase','ride','lily','fork','bridge','blade','gear'],step:7});
+  crsPop(path,rng,Object.assign({skip:['chase','ride','lily','fork','bridge','blade','gear'],step:7},D.pop||{}));
   const pts=path.pts;const len=path.len;crsShardHigh(path,len*.3,'high');if(!(LV%2)){crsShardHigh(path,len*.78,'high2');}
   crsCheck(path,len*.5);{const sw=[len*.62,len*.9];for(const s of sw){const q=crsAt(path,s,-1.5);spawnWisp(q.x,q.y+1,q.z);}}
   /* bonus pad on odd levels */
-  if(LV%2){let s=len*.42;for(let k=0;k<30&&(crsAt(path,s).p.gap||crsAt(path,s).p.tag);k++)s+=1;const q=crsAt(path,s,0);SEC.bonusPad=bonusPad(q.x,q.y,q.z);buildBonus(rng,[cliff,cliff,crsMat(groundTop,.5),cliff,cliff,cliff]);}
+  if(LV%2||D.bonus){let s=len*(D.bonus||.42);for(let k=0;k<30&&(crsAt(path,s).p.gap||crsAt(path,s).p.tag);k++)s+=1;const q=crsAt(path,s,0);SEC.bonusPad=bonusPad(q.x,q.y,q.z);buildBonus(rng,[cliff,cliff,crsMat(groundTop,.5),cliff,cliff,cliff]);}
   /* warp gate */
   {const e=pts[pts.length-1];const q=crsAt(path,e.s-1.2);const g=new THREE.Group();for(let i=0;i<3;i++){const t=new THREE.Mesh(new THREE.TorusGeometry(1.5-i*.28,.1,8,48),new THREE.MeshBasicMaterial({color:[0xc8a8ff,0xffd27a,0x8af0ff][i],transparent:true,opacity:.9}));g.add(t);}g.add(spr(glowTex,0xb08aff,5.5,5.5,0,0,0),spr(glowTex,0xffffff,1.8,1.8,0,0,0));g.position.set(q.x,q.y+1.9,q.z);g.rotation.y=-q.a;scene.add(g);SEC.warp=g;SEC.warpP=V3(q.x,q.y+.9,q.z);}
   L.start0=L.start.clone();L.start=V3(SX,0,-1.5);SEC.on=true;if(LEVELS[LV-1])LEVELS[LV-1].par+=Math.round(len*.55);}
@@ -2568,7 +2596,7 @@ function gfxUI(){const QL={auto:'AUTO',low:'LOW',medium:'MEDIUM',high:'HIGH',ult
 
 function S2(){return MENU.root||MENU.scene;}
 
-const WT_VERSION='v1.17.2';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
+const WT_VERSION='v1.18';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
 
 /* ---------- beta feedback: opens an email with the details filled in ---------- */
 const FEEDBACK_TO='mike.jose.rodrigues@gmail.com';
@@ -3895,12 +3923,12 @@ L.updBoss=dt=>{const b=boss;if(b.state==='off'||!rg)return;b.t+=dt;const g=rg.g;
           if(w.d>34||x<ARENA.x0-1||x>ARENA.x1+1||z>ARENA.z0+1){w.on=false;w.g.visible=false;}}
         if(!any){b.sub='rest';b.st=0;}}
       else if(b.st>.35)done=true;}
-    else if(s.k==='slam'){c2Play(rg,'sweep',.7);if(b.sub==='wind'){g.position.y=RY+Math.sin(Math.min(1,b.st/.7)*Math.PI)*1.4;if(b.st<.05){showHint('GROUND SLAM · JUMP THE RING!',1.2);blip(200,90,.6,'sawtooth',.08);}
+    else if(s.k==='slam'){c2Play(rg,'sweep',.7);if(b.sub==='wind'){g.position.y=RY+Math.sin(Math.min(1,b.st/.7)*Math.PI)*1.4;if(b.st<=dt){showHint('GROUND SLAM · JUMP THE RING!',1.2);blip(200,90,.6,'sawtooth',.08);}
         if(b.st>=.75){b.sub='go';b.st=0;g.position.y=RY;shakeT=.6;sfx.boom();shockRing(RX,RY,KZ+1,8.5,30,0x6aff9a);burst(V3(RX,RY+.4,KZ+1),0x8a94d8,30,8,.6,true);}}
       else if(b.st>2.2)done=true;}
     else if(s.k==='jab'){c2Play(rg,'talk');const safe=s.safe??(s.safe=(()=>{let best=0,bd=-1;for(let i=0;i<3;i++){const cx=(STRIPS[i].x0+STRIPS[i].x1)/2,d=Math.abs(cx-P.pos.x);if(d>bd){bd=d;best=i;}}return best;})());/* the safe strip is the one farthest from you: you have to run for it */
       const on=[0,1,2].filter(i=>i!==safe);
-      if(b.sub==='wind'){const k=Math.min(1,b.st/s.wind);for(const i of on)STRIPS[i].m.material.opacity=.12+.42*k*(.6+.4*Math.sin(time*(12+k*24)));if(b.st<.05){blip(300,700,.3,'triangle',.06);showHint('GET TO THE DARK STRIP!',1.2);}
+      if(b.sub==='wind'){const k=Math.min(1,b.st/s.wind);for(const i of on)STRIPS[i].m.material.opacity=.12+.42*k*(.6+.4*Math.sin(time*(12+k*24)));if(b.st<=dt){blip(300,700,.3,'triangle',.06);showHint('GET TO THE DARK STRIP!',1.2);}
         if(b.st>=s.wind){b.sub='go';b.st=0;sfx.boom();shakeT=Math.max(shakeT,.45);for(const i of on){STRIPS[i].sp.visible=true;STRIPS[i].sp.position.y=RY-3;}}}
       else if(b.sub==='go'){const up=Math.min(1,b.st/.12);for(const i of on){const S=STRIPS[i];S.sp.position.y=RY-3+3*up;S.m.material.opacity=.5;if(PL&&P.pos.x>S.x0&&P.pos.x<S.x1&&P.pos.z<-137&&P.pos.z>-161&&P.pos.y<RY+2.4)hurt();}
         if(b.st>s.hold){b.sub='down';b.st=0;}}
@@ -3948,6 +3976,962 @@ L.populate=()=>{
   for(const [x,z] of[[-1,-102.6],[1.5,-105.8],[-.6,-109],[1.2,-112.2],[-.4,-115.4]])spawnOrb(x,3.8,z);
   /* foot of the root staircase: checkpoint, then two Buds guard the climb */
   makeCrate('check',0,-120.5,2.5);makeCrate('crate',-4,-122,2.5);makeCrate('crate',4,-122,2.5);bud(-2,-131,4.2,0,5);for(let i=0;i<4;i++)spawnOrb(0,3.6+i*.5,-125-i*2.2);};
+}
+
+else if(LV===12){
+/* ===================== CHAPTER 2 · LEVEL 12: THE DROWNED ARCHIVE =====================
+   Route (forward = -Z): the flooded library stairs (Mara) → the nave walkway along the shelves → a wide landing (first Ripple Novice)
+   → broad stepping slabs over luminous water (second Novice) → a run along toppled shelves and hovering books → the statue gallery
+   (checkpoint, Mara again) → the stair to the circular reading court where Abbess Undertow keeps the Archive Star. */
+const ACZ=-166,AY=2;
+ARENA={x0:-13,x1:13,z0:-153,z1:-179,cz:ACZ,y:AY,cx:0};
+Object.assign(L,{num:12,name:'THE DROWNED ARCHIVE',start:V3(0,3,8),killY:-3.4,mus:LVMUS[12][0],bossMus:LVMUS[12][1],bossName:'ABBESS UNDERTOW',hemiI:1.05,
+  hint:'CROSS THE GREAT READING HALL',grade:{sat:1.22,vig:.9,tint:[.94,1,1.16]},
+  clampP:p=>{if(p.x>SX-120)return;p.z=Math.min(p.z,9.6);if(p.z<-153.4&&p.y>1){const dx=p.x,dz=p.z-ACZ,d=Math.hypot(dx,dz);if(d>12.6){p.x=dx/d*12.6;p.z=ACZ+dz/d*12.6;}}},clampCam:c=>{if(c.x<SX-120)c.z=Math.min(c.z,15);}});
+/* ---- sky: open roof under a deep starfield ---- */
+scene.background=skyTex(g=>{grad(g,512,1024,[[0,'#020316'],[.25,'#0a1246'],[.45,'#1a2a8a'],[.56,'#2a3aa0'],[.62,'#101a5a'],[1,'#040824']]);stars(g,512,1024,700,.62);
+  for(let i=0;i<7;i++){const x=R(30,480),y=R(60,460),r=R(60,160);const gr=g.createRadialGradient(x,y,0,x,y,r);gr.addColorStop(0,'rgba(90,150,255,.3)');gr.addColorStop(1,'rgba(40,60,200,0)');g.fillStyle=gr;g.fillRect(x-r,y-r,r*2,r*2);}});
+scene.fog=new THREE.Fog(0x081248,28,125);hemi.color.setHex(0xa8c0ff);hemi.groundColor.setHex(0x0a1440);hemi.intensity=1.05;
+/* ---- materials ---- */
+const STONE=c1T('arStone',()=>kTex(kCanvas(64,64,(g,w,h,r)=>{kStones(g,w,h,r,{nx:5,ny:5,jit:.7,gap:1.3,shade:.1,noise:.1,mortar:'#0e1236',pal:['#4a5aa0','#42528f','#5466ac','#3a4884','#5a6cb4'],moss:.01,mossPal:['#3a7a6a','#2a6a5a']});
+  for(let k=0;k<5;k++){let x=r()*w,y=r()*h;for(let q=0;q<12;q++){kRect(g,w,h,x|0,y|0,1,1,'rgba(10,14,40,.7)');x+=(r()-.5)*2;y+=1;}}},121)));
+const flag=new THREE.MeshLambertMaterial({map:STONE}),side=new THREE.MeshLambertMaterial({map:KT.masonry(),color:0x9aa8e8});
+const colM=c1Lam('arCol',c1Stone('arCol',['#5a68a8','#4e5c9a','#6676b6','#46548e'],'#141a40'));
+const WAT=c1T('arWater',()=>kTex(kCanvas(64,64,(g,w,h,r)=>{g.fillStyle='#0a2a8a';g.fillRect(0,0,w,h);for(let i=0;i<w*h*.4;i++)kRect(g,w,h,(r()*w)|0,(r()*h)|0,2+((r()*3)|0),1,pick(['#0c3296','#08268a','#10389e','#0a2c90']));
+  /* caustic hex web like the cover's glowing water */for(let j=0;j<5;j++)for(let i=0;i<5;i++){const cx=(i+(j%2?.5:0))*w/5,cy=j*h/5+6,R0=6.6;for(let a=0;a<6;a++){const a0=a/6*TAU,a1=(a+1)/6*TAU;for(let t=0;t<1;t+=.08)kRect(g,w,h,Math.round(cx+Math.cos(a0+(a1-a0)*t)*R0),Math.round(cy+Math.sin(a0+(a1-a0)*t)*R0),1,1,r()<.7?'#4ad8ff':'#8af0ff');}}
+  for(let i=0;i<30;i++)kRect(g,w,h,(r()*w)|0,(r()*h)|0,1,1,'#d8ffff');},122)));
+const cyan=0x5ae0ff;
+/* ---- kit pieces ---- */
+const BOOKT=c1T('books',()=>kTex(kCanvas(32,64,(g,w,h,r)=>{g.fillStyle='#2a1a14';g.fillRect(0,0,w,h);for(let row=0;row<4;row++){const y0=row*16+2;let x=1;while(x<w-1){const bw=1+((r()*3)|0),bh=10+((r()*4)|0),c=pick(['#a83a3a','#3a6ab0','#c8a03a','#3a8a5a','#7a3aa8','#b86a2a','#2a4a8a','#8a2a4a']);kRect(g,w,h,x,y0+12-bh+2,bw,bh,c);kRect(g,w,h,x,y0+12-bh+3,bw,1,'#e8d8a0');x+=bw;}
+  kRect(g,w,h,0,row*16+14,w,2,'#5a3a22');}kRect(g,w,h,0,0,1,h,'#4a2e1a');kRect(g,w,h,w-1,0,1,h,'#4a2e1a');},123)));
+const shelfM=c1M('shelfM',()=>new THREE.MeshLambertMaterial({map:BOOKT,emissive:0x1a1208,emissiveIntensity:1}));
+function shelfWall(x,z0,z1,y,h,face){/* a long bookcase wall; face +1 = books face +x */const len=Math.abs(z0-z1);
+  const m=new THREE.Mesh(c1Box(.9,h,len,2,4),[shelfM,shelfM,c1Lam('wood',KT.wood()),c1Lam('wood',KT.wood()),c1Lam('wood',KT.wood()),c1Lam('wood',KT.wood())]);m.position.set(x,y+h/2,(z0+z1)/2);scene.add(m);
+  for(let z=Math.max(z0,z1)-1;z>Math.min(z0,z1);z-=4.2){const post=new THREE.Mesh(kBoxGeo(1,h+.4,.5,1.4),c1Lam('wood',KT.wood()));post.position.set(x+face*.12,y+(h+.4)/2,z);c1Add(post);}
+  const cap=new THREE.Mesh(kBoxGeo(1.3,.35,len,1.4),c1Lam('wood',KT.wood()));cap.position.set(x,y+h+.2,(z0+z1)/2);c1Add(cap);c1Solid(x-.5,x+.5,y-3,y+h,Math.min(z0,z1),Math.max(z0,z1));}
+function pillar(x,z,y,h,o={}){const g=new THREE.Group();const sh=new THREE.Mesh(kBoxGeo(1.5,h,1.5,1.8),colM);sh.position.y=h/2;g.add(sh);const base=new THREE.Mesh(kBoxGeo(2.1,.8,2.1,1.8),colM);base.position.y=.4;g.add(base);const cap=new THREE.Mesh(kBoxGeo(2.2,.7,2.2,1.8),colM);cap.position.y=h+.35;g.add(cap);
+  if(o.moss!==false)for(let i=0;i<3;i++){const mc=new THREE.Mesh(new THREE.PlaneGeometry(1.2,1.4+Math.random()),c1M('arMoss',()=>new THREE.MeshLambertMaterial({map:C1TEX.swamp(),alphaTest:.5,side:THREE.DoubleSide,color:0x7affd0})));const a=i/3*TAU;mc.position.set(Math.cos(a)*.78,h*.5+Math.random()*h*.3,Math.sin(a)*.78);mc.rotation.y=-a+Math.PI/2;g.add(mc);}
+  g.position.set(x,y,z);c1Add(g);if(o.solid!==false)c1Solid(x-.8,x+.8,y-3,y+h+.7,z-.8,z+.8);return g;}
+function gothicArch(x,z,y,W,ry=0,h=8){/* two pillars and a pointed arch of stone blocks */const g=new THREE.Group();for(const sx of[-1,1]){const p=new THREE.Mesh(kBoxGeo(1.3,h,1.3,1.8),colM);p.position.set(sx*W/2,h/2,0);g.add(p);}
+  for(const sd of[-1,1]){const cx=-sd*W/2,n=7;for(let i=0;i<n;i++){const a=(i+.5)/n*(Math.PI/3);const px=cx+sd*Math.cos(a)*W,py=h+Math.sin(a)*W;const b=new THREE.Mesh(kBoxGeo(1.1,1,1.3,1.8),colM);b.position.set(px,py,0);b.rotation.z=sd*a;g.add(b);}}
+  const key=new THREE.Mesh(kBoxGeo(1.2,1.4,1.4,1.8),colM);key.position.set(0,h+W*Math.sin(Math.PI/3)+.2,0);g.add(key);g.position.set(x,y,z);g.rotation.y=ry;c1Add(g);return g;}
+function statue(x,z,y,ry){const g=new THREE.Group();const sm=c1Lam('arStat',c1Stone('arStat',['#9aa4c8','#8a94b8','#aab4d8','#7a84a8'],'#4a5070'));
+  const robe=new THREE.Mesh(new THREE.ConeGeometry(.9,2.6,8),sm);robe.position.y=1.3+.6;g.add(robe);const hood=new THREE.Mesh(new THREE.SphereGeometry(.45,8,6,0,TAU,0,Math.PI*.7),sm);hood.position.y=3.2+.4;g.add(hood);
+  const book=new THREE.Mesh(kBoxGeo(.8,.08,.55,1),sm);book.position.set(0,2.5,.55);book.rotation.x=-.5;g.add(book);const ped=new THREE.Mesh(kBoxGeo(1.8,.6,1.8,1.8),colM);ped.position.y=.3;g.add(ped);
+  g.position.set(x,y,z);g.rotation.y=ry;c1Add(g);c1Solid(x-.9,x+.9,y,y+3.8,z-.9,z+.9);}
+const JELLY=[];function jelly(x,y,z,s=1){const g=new THREE.Group();g.userData.live=true;const bell=new THREE.Mesh(new THREE.SphereGeometry(.8,10,6,0,TAU,0,Math.PI/2),c1M('jelM',()=>new THREE.MeshBasicMaterial({color:0x6ae8ff,transparent:true,opacity:.7})));g.add(bell);
+  for(let i=0;i<6;i++){const a=i/6*TAU;const t=new THREE.Mesh(new THREE.CylinderGeometry(.03,.01,1.6+Math.random(),4),c1M('jelT',()=>new THREE.MeshBasicMaterial({color:0x9af4ff,transparent:true,opacity:.6})));t.position.set(Math.cos(a)*.45,-.8,Math.sin(a)*.45);g.add(t);}
+  g.add(spr(glowTex,0x5ad8ff,3.4,3.4,0,0,0));g.position.set(x,y,z);g.scale.setScalar(s);scene.add(g);JELLY.push({g,y0:y,ph:Math.random()*9});}
+function openBook(x,z,y,ry,s=1){const g=new THREE.Group();const pm=c1M('page',()=>new THREE.MeshLambertMaterial({map:kTex(kCanvas(32,16,(gg,w,h,r)=>{gg.fillStyle='#d8ccaa';gg.fillRect(0,0,w,h);for(let y=2;y<h-1;y+=2)for(let x=2;x<w-2;x++)if(r()<.6&&x!==15&&x!==16)gg.fillRect(x,y,1,1);gg.fillStyle='#6a5a3a';gg.fillRect(15,0,2,h);},124)),emissive:0x2a2418}));
+  const cov=c1Lam('cover',null,{color:0x6a1a2a});const c=new THREE.Mesh(kBoxGeo(1.7,.08,1.15,1),cov);c.position.y=.04;g.add(c);const pg=new THREE.Mesh(kBoxGeo(1.6,.12,1.05,1),pm);pg.position.y=.12;g.add(pg);g.position.set(x,y,z);g.rotation.y=ry;g.scale.setScalar(s);c1Add(g);}
+/* ---- water: luminous blue with a shimmering caustic layer ---- */
+liquidPool(-70,70,40,-230,-1.1,WAT,0xb0c8f0);
+{const t2=WAT.clone();t2.needsUpdate=true;t2.repeat.set(140/9,270/9);const sh=new THREE.Mesh(new THREE.PlaneGeometry(140,270),new THREE.MeshBasicMaterial({map:t2,color:0x4a9aff,transparent:true,opacity:.24,blending:THREE.AdditiveBlending,depthWrite:false}));sh.rotation.x=-Math.PI/2;sh.position.set(0,-1.02,-95);sh.renderOrder=2;scene.add(sh);C1.upd.push(dt=>{t2.offset.x-=dt*.025;t2.offset.y+=dt*.018;});}
+/* ===================== 00 · THE FLOODED STAIRS (Mara) ===================== */
+deck(-5,5,10,2,3,flag,side,6);ramp(-3.5,3.5,2,-6,3,0);for(const sx of[-1,1])addSolid(sx<0?-5:3.5,sx<0?-3.5:5,0,6,-6,2,'wall',null);
+for(let i=0;i<8;i++){const st=new THREE.Mesh(kBoxGeo(7,.36,1,1.8),flag);st.position.set(0,3-(i+.5)*.375-.18,2-(i+.5));c1Add(st);}
+shelfWall(-6,10,-40,0,7.5,1);pillar(-5,6,3,8);pillar(5,6,3,8);gothicArch(0,9.5,3,10,0,6);
+/* ===================== 01 · THE NAVE WALKWAY (z -6 → -40) ===================== */
+deck(-4,4,-6,-24,0,flag,side,4);
+{const sl=new THREE.CylinderGeometry(1.6,1.4,.8,8);const mk=(x,z,o={})=>{const m=new THREE.Mesh(sl,[side,flag,side]);m.position.set(x,-.4,z);scene.add(m);const s=platform(x,z,2.8,2.8,o.ax||0,o.az||0,o.amp||0,o.spd||1,o.ph||0,0,o.ay||0,m);if(o.sink)s.sink=0;return s;};
+  mk(0,-26.6);mk(1.4,-29.8,{ax:1,amp:1.8,spd:1.1});mk(-.6,-33,{sink:true});}
+deck(-4,4,-35.4,-40,0,flag,side,4);
+for(let z=-8;z>-40;z-=8){pillar(5.5,z,-1.1,10);}for(let z=-12;z>-40;z-=16)gothicArch(9.5,z,-1.1,7,Math.PI/2,7);
+/* ===================== 02 · THE WIDE LANDING (first Ripple Novice) ===================== */
+deck(-8,8,-40,-60,0,flag,side,4);for(const [x,z] of[[-7,-42],[7,-42],[-7,-58],[7,-58]])pillar(x,z,0,9);shelfWall(-9.4,-40,-60,0,6,1);
+openBook(5,-46,0,.4);openBook(-4.8,-56,0,-.3,.8);statue(6.4,-50,0,-Math.PI/2);
+/* ===================== 03 · BROAD STEPPING SLABS (second Novice) ===================== */
+{const slabG=new THREE.BoxGeometry(3.4,.9,3.4);const mk=(x,z,o={})=>{const m=new THREE.Mesh(slabG,[side,side,flag,side,side,side]);m.position.set(x,-.45,z);m.rotation.y=(Math.random()-.5)*.3;scene.add(m);const w=o.w||3.2;if(o.w)m.scale.set(o.w/3.4,1,o.w/3.4);const s=platform(x,z,w,w,o.ax||0,o.az||0,o.amp||0,o.spd||1,o.ph||0,0,o.ay||0,m);if(o.sink)s.sink=0;return s;};
+  mk(-2,-63.4);mk(-4.4,-67.2,{sink:true});mk(-5.6,-71.2,{ax:1,amp:1.6,spd:1});mk(-7.8,-75.2);mk(-9.4,-80.4,{w:6});mk(-11.4,-85.6,{sink:true});mk(-12.8,-89.4);mk(-14,-93,{ay:.4,spd:1.3});}
+deck(-19,-9,-95.4,-100,0,flag,side,4);
+/* ===================== 04 · TOPPLED SHELVES AND HOVERING BOOKS (z -100 → -125) ===================== */
+function shelfBridge(x0,x1,z0,z1){const s=deck(x0,x1,z0,z1,0,c1Lam('wood',KT.wood()),shelfM,1.2);return s;}
+shelfBridge(-15.1,-12.9,-100,-106);shelfBridge(-10.2,-8,-110,-115.4);shelfBridge(-4.2,-2,-119.6,-125);
+{const bk=(x,z,o)=>{const g=new THREE.Group();const cv=new THREE.Mesh(kBoxGeo(2.6,.25,2,1),c1Lam('cover',null,{color:0x6a1a2a}));g.add(cv);const pg=new THREE.Mesh(kBoxGeo(2.4,.2,1.8,1),C1.mat.page||cv.material);pg.position.y=.18;g.add(pg);g.add(spr(glowTex,0xffe0a0,3,2,0,-.4,0));g.position.set(x,-.1,z);scene.add(g);return platform(x,z,2.6,2,o.ax||0,0,o.amp||0,o.spd||1.2,o.ph||0,0,o.ay||.6,g);};
+  bk(-12.2,-108,{ay:.7,spd:1.4});bk(-6.6,-117.6,{ay:.6,spd:1.6,ph:1.2});}
+deck(-22,-18,-106,-116,0,flag,side,4);/* side island across a short hop from the first shelf: a Novice guards a lucky crate */
+for(const [x,z] of[[-6,-104],[-10.5,-123],[6,-121]])pillar(x,z,-1.1,10);
+/* ===================== 05 · THE STATUE GALLERY (checkpoint, Mara again) ===================== */
+deck(-6,6,-125,-140,0,flag,side,4);for(const [x,z,ry] of[[-5,-128,Math.PI/2],[5,-128,-Math.PI/2],[-5,-136,Math.PI/2],[5,-136,-Math.PI/2]])statue(x,z,0,ry);
+shelfWall(-7.4,-125,-140,0,6,1);shelfWall(7.4,-125,-140,0,6,-1);openBook(0,-138.5,0,0,.9);
+/* ===================== 06 · THE STAIR TO THE READING COURT ===================== */
+ramp(-3,3,-140,-148,0,AY);deck(-3,3,-148,-154,AY,flag,side,5);for(const sx of[-1,1])addSolid(sx<0?-4:3,sx<0?-3:4,0,7,-154,-140,'wall',null);
+gate=addSolid(-3,3,AY,AY+3,-152.8,-151.8,'gate',null);gate.alive=false;gateMesh=new THREE.Mesh(boxGeo(6,3,1,2.5),side);gateMesh.position.set(0,AY-2,-152.3);scene.add(gateMesh);
+/* ===================== 07 · THE CIRCULAR READING COURT ===================== */
+deck(-13,13,-158,-174,AY,flag,side,5);deck(-8,8,-153,-179,AY,flag,side,5);deck(-11,11,-155,-177,AY,flag,side,5);
+{const dt2=STONE.clone();dt2.needsUpdate=true;dt2.repeat.set(7,7);const dais=new THREE.Mesh(new THREE.CylinderGeometry(13.3,13.6,.5,40),[side,new THREE.MeshLambertMaterial({map:dt2}),side]);dais.position.set(0,AY-.2,ACZ);scene.add(dais);
+  for(let i=0;i<24;i++){const a=i/24*TAU;if(Math.abs(Math.sin(a))<.2&&Math.cos(a)>0)continue;const b=new THREE.Mesh(kBoxGeo(1.2,1,.5,1.6),colM);b.position.set(Math.sin(a)*13.4,AY+.5,ACZ+Math.cos(a)*13.4);b.rotation.y=a;c1Add(b);}
+  for(let i=0;i<8;i++){const a=i/8*TAU+.2;if(Math.cos(a)>.85)continue;pillar(Math.sin(a)*15.5,ACZ+Math.cos(a)*15.5,-1.1,13,{solid:false});}
+  gothicArch(0,ACZ-16,AY,11,0,9);statue(-7,ACZ-14.6,AY,0);statue(7,ACZ-14.6,AY,0);
+  const ring=new THREE.Mesh(new THREE.RingGeometry(3.4,3.9,48),new THREE.MeshBasicMaterial({color:cyan,transparent:true,opacity:.45,blending:THREE.AdditiveBlending,depthWrite:false}));ring.rotation.x=-Math.PI/2;ring.position.set(0,AY+.06,ACZ);scene.add(ring);
+  for(const [x,z] of[[-10,-158],[10,-158],[-10,-174],[10,-174]])c1Lantern(x*1.18,AY,z,{h:3,ry:x<0?0:Math.PI,col:0x9ad8ff,solid:false,pool:false});}
+/* ===================== THE ARCHIVE: shelves across the water, arches, jellyfish in the air ===================== */
+for(const sx of[-1,1])for(let z=-44;z>-200;z-=26){const near=sx<0&&z>-130;shelfWall(sx*(near?R(28,33):R(18,24)),z,z-16,-1.1,9,-sx);gothicArch(sx*(near?R(37,42):R(26,32)),z-8,-1.1,9,Math.PI/2,9);}
+for(let i=0;i<26;i++)jelly(R(-30,30),R(7,16),R(-200,10),R(.7,1.4));
+for(const [x,z] of[[3.6,-4],[-3.6,-20],[7.4,-44],[-7.4,-56],[-9.6,-96.6],[-18.4,-98.8],[5.4,-127],[-5.4,-138]])c1Lantern(x,0,z,{h:3,ry:x<0?0:Math.PI,col:0xffc070});
+c1Finish();
+/* ===================== THE FLOODED STACKS (opening course, reached first) =====================
+   A winding stone walkway over the drowned shelves: right, uphill, left, a jump, the first Novice alone on a wide reading floor,
+   a downhill bend into hovering books, a toppled bookcase beam with no parapet, then the Abbess notices Flint and the tide surges
+   up a spiral stair. A bonus portal, a high crystal, three diary pages on reading stands, and the Reading Room portal at the end. */
+COURSE[12]={w:5.2,killY:-.9,noReeds:true,noProps:true,bonus:.8,pop:{enP:.32,enGap:24,noFly:true,step:7,skip:['chase','ride','lily','fork','bridge','blade','gear','mara','rip1','rip2','books','shelf','tide','lore1','lore2','lore3']},
+  look:{top:'path',water:true,blue:true},
+  cmds:[{s:12,tag:'mara'},{arc:40,r:12},{s:8,dh:2},{arc:-70,r:10},{s:4},{gap:1,s:2.8},{s:5},{s:12,w:8.5,tag:'rip1'},{s:3,w:5.2},
+    {arc:60,r:11,dh:-1.5},{s:4},{gap:1,s:11,tag:'books'},{s:7,tag:'lore1'},{arc:-50,r:12},{s:3,w:2.8},{s:11,w:2.8,open:1,tag:'shelf'},{s:3,w:5.2},
+    {arc:85,r:9},{s:10},{s:8,dh:2,tag:'tide'},{arc:-120,r:7,dh:3,tag:'tide'},{s:6,dh:2,tag:'tide'},{gap:1,s:2.4,tag:'tide'},{s:4,dh:1,tag:'tide'},{arc:120,r:7,dh:3,tag:'tide'},{s:8,dh:2.5,tag:'tide'},{s:4,tag:'tide'},
+    {s:9,tag:'lore2'},{arc:-40,r:12},{gap:1,s:2.8},{s:6},{arc:50,r:10,dh:-2.5},{s:3},{gap:1,s:10,tag:'books'},{s:12,w:7.5,tag:'rip2'},{s:2,w:5.2},
+    {arc:-35,r:14,dh:-1},{s:10,tag:'lore3'},{s:8,tag:'end'}]};
+L.courseMats=()=>{const top=new THREE.MeshLambertMaterial({map:STONE,side:THREE.DoubleSide}),sk=new THREE.MeshLambertMaterial({map:KT.masonry(),color:0x9aa8e8,side:THREE.DoubleSide});return {top,side:sk,rim:sk,skirt:24};};
+L.courseDress=(path,{mn,mx,tagRuns})=>{
+  /* luminous caustic water under the whole course */
+  if(CRS.water){CRS.water.scale.set(3,3,1);const W=(mx.x-mn.x+160)*3,H=(mx.z-mn.z+160)*3;const t=WAT.clone();t.needsUpdate=true;t.repeat.set(W/7,H/7);CRS.water.material=new THREE.MeshBasicMaterial({map:t,color:0xb0c8f0});
+    const t2=WAT.clone();t2.needsUpdate=true;t2.repeat.set(W/9,H/9);const sh=new THREE.Mesh(CRS.water.geometry,new THREE.MeshBasicMaterial({map:t2,color:0x4a9aff,transparent:true,opacity:.24,blending:THREE.AdditiveBlending,depthWrite:false}));sh.rotation.x=-Math.PI/2;sh.position.copy(CRS.water.position);sh.scale.copy(CRS.water.scale);sh.position.y+=.04;sh.renderOrder=2;scene.add(sh);C1.upd.push(dt=>{t2.offset.x-=dt*.025;t2.offset.y+=dt*.018;});}
+  const at=(s,lat=0)=>crsAt(path,s,lat);const free=(x,z,pad)=>!crsInside(x,z,pad);
+  /* the archive doors behind the start */{const q=at(.5);gothicArch(q.x,q.z+.6,-.45,8.6,-q.a,q.y+.45+6);}
+  /* pointed arches stride over the walkway; their pillars stand in the water */
+  for(let s=20;s<path.len-10;s+=13){const q=at(s);if(q.p.gap||q.p.w<5||Math.abs(q.p.ks)>.012||at(s-6).p.gap||at(s+6).p.gap)continue;if(s<(L._lastArch||-99)+24)continue;L._lastArch=s;const W=q.p.w+6.4,a=at(s,-W/2),b=at(s,W/2);if(!free(a.x,a.z,1)||!free(b.x,b.z,1))continue;gothicArch(q.x,q.z,-.45,W,-q.a,q.y+.45+6);}
+  /* bookcases rising out of the flood, only on the outside of bends so they never sit between Flint and the camera */
+  for(let s=8;s<path.len-6;s+=9)for(const sd of[-1,1]){if(Math.random()<.3)continue;const p=at(s).p;if(p.ks*sd>.02)continue;const lat=sd*(p.w/2+R(4.5,9));const q=at(s,lat);const len=R(5,8),fx=Math.sin(q.a),fz=-Math.cos(q.a);
+    if(!free(q.x,q.z,3)||!free(q.x+fx*len/2,q.z+fz*len/2,3)||!free(q.x-fx*len/2,q.z-fz*len/2,3))continue;const h=Math.max(4,p.y+R(3,6))+.45;
+    const m=new THREE.Mesh(c1Box(.9,h,len,2,4),[shelfM,shelfM,c1Lam('wood',KT.wood()),c1Lam('wood',KT.wood()),shelfM,shelfM]);m.position.set(q.x,-.45+h/2,q.z);m.rotation.y=-q.a;c1Add(m);
+    const cap=new THREE.Mesh(kBoxGeo(1.3,.35,len,1.4),c1Lam('wood',KT.wood()));cap.position.set(q.x,-.45+h+.18,q.z);cap.rotation.y=-q.a;c1Add(cap);}
+  /* lanterns on the parapet */
+  {let k=0;for(let s=6;s<path.len-4;s+=11,k++){const q0=at(s);if(q0.p.gap||!q0.p.wall)continue;const sd=k%2?1:-1;const q=at(s,sd*(q0.p.w/2+.3));c1Lantern(q.x,q.y+.9,q.z,{h:2.2,ry:-q.a+(sd>0?Math.PI:0),col:0xffc070,solid:false});}}
+  /* jellyfish drifting over the stacks */
+  for(let i=0;i<34;i++){const q=at(R(4,path.len-4),(Math.random()<.5?-1:1)*R(5,16));jelly(q.x,q.y+R(4.5,10),q.z,R(.7,1.3));}
+  /* hovering books over the gaps: they bob, so time the hop */
+  {let i=0;for(const [a,b] of tagRuns('books'))for(let s=a+1.6;s<b-.6;s+=3.3,i++){const q=at(s,(i%2?.9:-.9));const g=new THREE.Group();g.userData.live=true;
+      const cv=new THREE.Mesh(kBoxGeo(2.3,.22,2.3,1),c1Lam('cover'+(i%3),null,{color:[0x6a1a2a,0x1a3a6a,0x2a5a2a][i%3]}));g.add(cv);const pg=new THREE.Mesh(kBoxGeo(2.1,.18,2.1,1),C1.mat.page||cv.material);pg.position.y=.18;g.add(pg);
+      const gl=spr(glowTex,0xffe0a0,3,1.6,0,-.3,0);gl.material.opacity=.6;g.add(gl);g.rotation.y=-q.a;g.position.set(q.x,q.y-.27,q.z);scene.add(g);platform(q.x,q.z,2.2,2.2,0,0,0,1.3,i*1.15,q.y,.45,g);}}
+  /* the toppled bookcase beam: planks and spines over the narrow, open stretch */
+  for(const [a,b] of tagRuns('shelf'))for(let s=a+.5;s<b;s+=1){const q=at(s);const pl=new THREE.Mesh(kBoxGeo(q.p.w+.1,.3,1.04,1.2),c1Lam('wood',KT.wood()));pl.position.set(q.x,q.y-.13,q.z);pl.rotation.y=-q.a;c1Add(pl);
+    const sp=new THREE.Mesh(kBoxGeo(.3,1.6,1.04,1.2),shelfM);for(const sd of[-1,1]){const e=at(s,sd*(q.p.w/2+.2));const m2=sp.clone();m2.position.set(e.x,q.y-.9,e.z);m2.rotation.y=-q.a;c1Add(m2);}}
+  /* reading stands with the Abbess's diary */
+  const PAGES=[[["Day one of the Long Quiet. A tall man in a crooked blue hat came to my archive with a star in a cage.",5.6],["'Keep it,' he said, 'and no one will ever borrow a book from you again.' I was so tired of late returns. I said yes.  — Undine",7]],
+    [["Day forty. I opened the floodgates so no one could reach the shelves. The star makes the water glow. It is beautiful. And so quiet.",6.6],["Mara still taps on the high windows at night. I don't answer anymore. I'm not sure why.",5.4]],
+    [["I can't remember the last book I read. I only guard them now. Perhaps a guard doesn't need to read.",5.8],["If someone finds this... please be loud. I think I've forgotten what a library is for.",5.8]]];
+  ['lore1','lore2','lore3'].forEach((tg,k)=>{const r=tagRuns(tg)[0];if(!r)return;const q0=at(r[0]+3);const sd=k%2?-1:1;const q=at(r[0]+3,sd*(q0.p.w/2-1.05));c2Lore(q.x,q.y,q.z,-q.a,"THE ABBESS'S DIARY · PAGE "+(k+1),PAGES[k],{col:0x8af0ff});});
+  /* Mara waits at the archive doors */
+  {const q=at(6,2.3);L.maraC=npc('mara',q.x,q.z,q.y,-q.a-Math.PI/2,1.55,[
+    ['MARA WICKMEND',"Hoo! A lantern-bearer, all the way down here? Mara Wickmend, archivist. The only one left, I'm afraid.",6.2,'talk'],
+    ['MARA WICKMEND',"This was the brightest library in the dream. Then Vesper Quill gave Abbess Undertow a stolen star, and she flooded every stack to keep it.",7.6,'talk'],
+    ['MARA WICKMEND',"Without that star, the sky road over the Archive is fading. The villages it joined are drifting apart.",5.8,'point'],
+    ['MARA WICKMEND',"Her old diaries are still on the reading stands. Read them as you pass. I want to know what happened to my friend.",6.6,'talk'],
+    ['MARA WICKMEND',"Ripple Novices dip and flash before they ring: hop the ring, then bop them while they float low. The Reading Room portal is at the end of the stacks.",8,'wave']],{name:'MARA WICKMEND',r:4.2,after:()=>showHint('FOLLOW THE STACKS · READ THE DIARIES',2.8)});}
+  /* the first Novice alone on the wide reading floor; another guards the floor before the last diary */
+  for(const tg of['rip1','rip2']){const r=tagRuns(tg)[0];if(!r)continue;const q=at((r[0]+r[1])/2,1);const e=novice(q.x,q.z,q.y);if(e){e.sect=true;e.base.set(q.x,q.y,q.z);}}
+  /* THE TIDE: the Abbess hears Flint and the water surges up the spiral stair behind him */
+  {const tr=tagRuns('tide');if(tr.length){const a=tr[0][0],b=tr[tr.length-1][1];const tt=WAT.clone();tt.needsUpdate=true;tt.repeat.set(90/7,90/7);
+    const lm=new THREE.Mesh(new THREE.PlaneGeometry(90,90),new THREE.MeshBasicMaterial({map:tt,color:0xc0dcff,transparent:true,opacity:.94}));lm.rotation.x=-Math.PI/2;lm.renderOrder=1;scene.add(lm);lm.visible=false;
+    const y0=at(a).y-3.4,top=at(b).y-1.2;const it={k:'lava',path,a,b,m:lm,y:y0,y0,top,spd:(top-y0)/((b-a)/4.9),on:false,done:false,hint:'THE TIDE IS RISING · CLIMB!',col:0x8af0ff,sparks:[0x8af0ff,0xd8ffff],
+      onMove:it=>{tt.offset.set(P.pos.x/7,-P.pos.z/7);},
+      onStart:()=>{if(L.tideCine)return;L.tideCine=1;shakeT=.6;const q=crsNear(P.pos.x,P.pos.z);const f=crsFwd(q);
+        c2Scene([['ABBESS UNDERTOW (ECHOING)',"Who is splashing in my stacks?",2.6],['ABBESS UNDERTOW (ECHOING)',"Shhh... let the tide read you to sleep.",3]],
+          (t,i)=>{const p=P.pos;return [V3(p.x-f.x*6.5+f.z*2,p.y+3.6+t*.25,p.z-f.z*6.5-f.x*2),V3(p.x+f.x*3,p.y+1.2,p.z+f.z*3)];},null,{tick:(dt,t)=>{it.y=Math.min(it.y+dt*.5,P.pos.y-1.6);it.m.visible=true;it.m.position.set(P.pos.x,it.y,P.pos.z);tt.offset.set(P.pos.x/7,-P.pos.z/7);}});}};
+    CRS.items.push(it);CRS.lava=it;crsCheck(path,a-4);}}
+  c1Finish();};
+/* ===================== RIPPLE NOVICE (minion) =====================
+   A little cyan jellyfish under a chipped slate cap. Drifts toward you, dips and flashes (0.7 s), then rings once (jump it),
+   then floats low for 0.9 s: that's your opening. */
+ANIM.ripple=ANIM.ripple||{idle:t=>({y:Math.sin(t*2.2)*.06,rz:Math.sin(t*1.4)*.05}),dip:(t,k)=>({y:-.12*k+Math.sin(t*30)*.01,rx:.1*k}),low:(t,k)=>({y:-.16,rz:Math.sin(t*6)*.1})};
+ANIM.mara=ANIM.mara||{idle:t=>({y:Math.abs(Math.sin(t*1.4))*.01,rz:Math.sin(t*.9)*.02}),talk:t=>({y:Math.abs(Math.sin(t*5))*.02,rz:Math.sin(t*2)*.04}),point:(t,k)=>({rz:-.08*k,rx:-.05*k}),wave:t=>({rz:Math.sin(t*6)*.06})};
+function novice(x,z,y=0){const e=c2Enemy('ripple','ripple',x,z,y,1.25,{upd:updNovice,guard:(e,dir,stomp)=>!stomp&&e.mode!=='low'&&e.mode!=='idle'&&e.mode!=='drift'});if(!e)return null;
+  const gl=spr(glowTex,0x6ae8ff,2.2,2.2,0,.9,0);gl.material.opacity=.5;e.obj.add(gl);e.gl=gl;e.mt=R(.8,1.6);return e;}
+function updNovice(e,dt){const a=e.an;e.mt-=dt;const dx=P.pos.x-e.pos.x,dz=P.pos.z-e.pos.z,d=Math.hypot(dx,dz);const aware=d<15&&Math.abs(P.pos.y-e.pos.y)<3&&state==='play'&&!P.dead;let hov=.9;
+  if(e.mode==='idle'||e.mode==='drift'){c2Play(a,'idle');if(aware){e.face=lerpAngle(e.face,Math.atan2(dx,dz),Math.min(1,dt*4));if(d>5.5){e.mode='drift';const sp=1.9*dt,nx=e.pos.x+dx/d*sp,nz=e.pos.z+dz/d*sp;const gy=groundBelow(nx,nz,e.pos.y+.6,.4);if(Math.abs(gy-e.pos.y)<.5&&Math.hypot(nx-e.base.x,nz-e.base.z)<11){e.pos.x=nx;e.pos.z=nz;}}else e.mode='idle';}
+    if(e.mt<=0&&aware&&d<8){e.mode='dip';e.mt=.7;c2Play(a,'dip',.7);blip(900,1400,.1,'sine',.05);}}
+  else if(e.mode==='dip'){hov=.9-.5*(1-e.mt/.7);e.gl.material.opacity=.5+.5*Math.sin(time*40);if(e.mt<=0){e.mode='ring';shockRing(e.pos.x,e.pos.y,e.pos.z,6.2,9,cyan,0,false);blip(1300,700,.25,'sine',.07);e.mode='low';e.mt=.9;c2Play(a,'low',.9);}}
+  else if(e.mode==='low'){hov=.25;e.gl.material.opacity=.25;if(e.mt<=0){e.mode='idle';e.mt=R(1.1,1.7);e.gl.material.opacity=.5;}}
+  c2Anim(a,dt);e.obj.rotation.y=e.face;e.obj.position.set(e.pos.x,e.pos.y+hov+Math.sin(time*2+e.ph)*.1,e.pos.z);}
+L.minion=(x,z,y)=>novice(x,z,y);
+L.summon=(x,z,y)=>{const a=R(0,TAU);const e=novice(Math.sin(a)*9,ACZ+Math.cos(a)*9,AY);if(e){e.summoned=true;e.base.set(0,AY,ACZ);}return e;};
+/* ===================== ABBESS UNDERTOW (boss) =====================
+   Hovers over the court in dark robes. Every routine is aimed at Flint:
+   · RINGS     — her robe flares, a cyan pool spreads beneath her, a chime, then an expanding ring (jump it). P1 one, P2 two, P3 quick-pause-quick
+   · LUNGE     — a cyan line marks the path from her to you, then she glides along it low and fast (step aside)
+   · DOWNPOUR  — glowing drops fall where you stand, one after another (keep moving)
+   · UNDERTOW  — (P3) a whirlpool at the centre drags you in while drops fall (run against it)
+   Then she sinks low, her pale mask lowered and glowing: hit it. Three hits free the Archive Star. */
+let ab=null,ABX=0,ABZ=ACZ;const ABH=4.2;
+const pool=new THREE.Mesh(new THREE.CircleGeometry(3.4,40),new THREE.MeshBasicMaterial({color:cyan,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));pool.rotation.x=-Math.PI/2;pool.position.set(0,AY+.07,ACZ);pool.renderOrder=3;scene.add(pool);
+const lungeLine=new THREE.Mesh(new THREE.PlaneGeometry(2.2,1),new THREE.MeshBasicMaterial({color:0x8af0ff,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));lungeLine.rotation.x=-Math.PI/2;lungeLine.position.y=AY+.06;lungeLine.renderOrder=3;scene.add(lungeLine);
+const DROPS=[];for(let i=0;i<7;i++){const ring=new THREE.Mesh(new THREE.RingGeometry(1.15,1.5,28),new THREE.MeshBasicMaterial({color:0x8af0ff,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;scene.add(ring);
+  const dr=grp(spr(glowTex,0x6ae8ff,1.6,2.4,0,0,0),spr(glowTex,0xffffff,.6,.9,0,0,0));scene.add(dr);ring.visible=dr.visible=false;DROPS.push({ring,dr,on:false});}
+const whirl=new THREE.Mesh(new THREE.RingGeometry(1,6,48,1,0,TAU*.85),new THREE.MeshBasicMaterial({color:0x6ad8ff,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));whirl.rotation.x=-Math.PI/2;whirl.position.set(0,AY+.08,ACZ);scene.add(whirl);
+function clearAbFx(){pool.material.opacity=0;lungeLine.material.opacity=0;whirl.material.opacity=0;for(const d of DROPS){d.on=false;d.ring.visible=d.dr.visible=false;}}
+function setupAbbess(){ab=c2Make('abbess',5.6);if(!ab)return;ab.g.position.set(0,AY-6,ACZ);scene.add(ab.g);{const gs=spr(glowTex,0x5ad8ff,1.5,1.5,0,.32,0);gs.material.opacity=.55;ab.g.add(gs);}/* child of a 5.6x-scaled rig: ~8 m glow */
+  ab.mats=[];ab.g.traverse(o=>{if(o.isMesh)for(const m of[].concat(o.material))if(m&&m.emissive&&!ab.mats.includes(m)){ab.mats.push(m);m.userData.e0=m.emissive.clone();}});ab.flash=0;
+  const mask=grp(spr(glowTex,0xffffff,2.6,2.6,0,0,0),spr(glowTex,0x8af0ff,4.4,4.4,0,0,0));mask.visible=false;scene.add(mask);ab.mask=mask;
+  boss.maxHp=75;boss.reset=()=>{boss.state='idle';boss.t=0;boss.kd=0;ABX=0;ABZ=ACZ;clearAbFx();if(ab){ab.mask.visible=false;ab.g.visible=true;}};}
+L.setup=()=>{setupAbbess();
+  L.mara=npc('mara',3.4,5.2,3,-Math.PI/2,1.55,[
+    ['MARA WICKMEND',"You made it through the stacks! Welcome to the Great Reading Hall.",4.8,'talk'],
+    ['MARA WICKMEND',"The reading court is at the far end, past the stepping slabs and the toppled shelves. That's where she keeps the star.",6.6,'point'],
+    ['MARA WICKMEND',"I'll fly ahead and wait for you by the statues.",3.4,'wave']],{name:'MARA WICKMEND',after:()=>showHint('CROSS THE GREAT READING HALL',2.6)});
+  L.mara2=npc('mara',-3.6,-131,0,Math.PI/2,1.55,[],{name:'MARA WICKMEND',r:4,after:()=>showHint('CLIMB TO THE READING COURT',2.6)});};
+L.maraLines=()=>C2.pages>=3?[
+    ['MARA WICKMEND',"You found all three pages. 'Please be loud.' Oh, Undine. She was so tired, little lantern.",6.2,'talk'],
+    ['FLINT',"Then let's be loud.",2.4],
+    ['MARA WICKMEND',"Jump her rings and step out of her lunges. When she sinks, strike the mask. Maybe a little noise is exactly what she needs.",7,'point']]:[
+    ['MARA WICKMEND',"The court is up those stairs. She's waiting in the middle of it, holding the star.",5,'talk'],
+    ['MARA WICKMEND',"Undine used to read to the whole village every Sunday. I wish I knew what changed her.",5.4,'talk'],
+    ['MARA WICKMEND',"Jump her rings and step out of her lunges. When she sinks, strike the mask.",5.2,'point']];
+L.startBoss=()=>{if(L._pre===1)return;const go=st=>{bossIntro(L.bossName);boss.reset();boss.state=st;boss.t=0;if(st==='idle')showHint('JUMP HER RINGS · DODGE THE LUNGE · HIT HER MASK WHEN SHE SINKS',3.6);};
+  if(L._pre===2||!ab){go('intro');return;}L._pre=1;
+  const lines=[['ABBESS UNDERTOW',"Shhh. This is a reading room.",3.2],['FLINT',"That star isn't yours! The sky road is fading without it.",3.6],
+    ['ABBESS UNDERTOW',"Vesper Quill brought it to me. One star, and no one would ever borrow my books again. No noise. No late returns. Only the tide.",6.4]];
+  if(C2.pages>=3)lines.push(['FLINT',"I read your diary. You wrote 'please be loud.'",3.4],['ABBESS UNDERTOW',"...Then I shall drown that page as well.",3.4]);
+  lines.push(['ABBESS UNDERTOW',"You are far too loud for my library, little lantern. Let me show you the quiet.",4.4]);
+  const fl=()=>V3(P.pos.x,P.pos.y,P.pos.z);
+  c2Scene(lines,(t,i)=>{const who=lines[i][0];const A=V3(0,AY+ABH+2,ACZ);
+      if(i===0)return [V3(7+Math.sin(t*.25)*2,AY+3+t*.5,ACZ+12.5),V3(0,AY+lerp(0,ABH+1.5,Math.min(1,t/2.6)),ACZ)];
+      if(who==='FLINT'){const f=fl();return [f.clone().add(V3(1.6,1.9,-3.4)),f.clone().add(V3(0,1.2,0))];}
+      return [V3(A.x+Math.sin(t*.2)*2.5,AY+ABH+1.2,ACZ+9.5),A];},
+    ()=>{L._pre=2;go('idle');},
+    {tick:(dt,t)=>{const k=Math.min(1,t/2.6);ab.g.position.set(0,AY+lerp(-6,ABH,k)+Math.sin(time*1.6)*.15,ACZ);ab.g.rotation.y=lerpAngle(ab.g.rotation.y,Math.atan2(P.pos.x,P.pos.z-ACZ),Math.min(1,dt*3));c2Play(ab,'talk');c2Anim(ab,dt);
+      if(t<2.6&&Math.random()<.6)emit(V3(R(-3,3),AY+.2,ACZ+R(-3,3)),{vy:R(2,5),life:.8,size:.6,color:0x8af0ff});}});};
+L.hitBoss=()=>{if(boss.state!=='sleep')return;const m=boss.maxHp,tgt=boss.hp>m*2/3+.5?m*2/3:boss.hp>m/3+.5?m/3:0;NEXTDMG=Math.max(1,Math.ceil(boss.hp-tgt));
+  if(bossDamage(0x8af0ff)){boss.state='dead';boss.t=0;clearAbFx();ab.mask.visible=false;sfx.life();return;}
+  boss.state='hurt';boss.t=0;ab.mask.visible=false;const ph=bossPhase();showHint(ph===1?'TWO RINGS NOW · SHE LUNGES TWICE':'THE UNDERTOW PULLS · RUN AGAINST IT',2.8);};
+function abPlan(){const ph=bossPhase();
+  if(ph===0)return {open:3,steps:[{k:'rings',times:[0]},{k:'drops',n:4,gap:.62,tell:.85},{k:'lunge',n:1},{k:'rings',times:[0]}]};
+  if(ph===1)return {open:2.6,steps:[{k:'rings',times:[0,1.1]},{k:'lunge',n:2},{k:'drops',n:5,gap:.55,tell:.75},{k:'rings',times:[0]}]};
+  return {open:2.3,steps:[{k:'rings',times:[0,.55,1.9]},{k:'whirl',dur:3.6,n:6,gap:.55,tell:.7},{k:'lunge',n:2},{k:'rings',times:[0,1.05]}]};}
+function abStep(b,s){b.st=0;b.sub='go';s.i=0;s.next=0;s.fired=0;if(s.k==='rings'){b.sub='move';}if(s.k==='lunge'){s.i=0;b.sub='aim';s.aimT=0;}}
+function dropAt(x,z,tell){const d=DROPS.find(q=>!q.on);if(!d)return;d.on=true;d.t=0;d.tell=tell;d.x=clamp(x,-12,12);d.z=clamp(z,ACZ-12,ACZ+12);if(Math.hypot(d.x,d.z-ACZ)>12.4){const k=12.4/Math.hypot(d.x,d.z-ACZ);d.x*=k;d.z=ACZ+(d.z-ACZ)*k;}
+  d.ring.position.set(d.x,AY+.07,d.z);d.ring.visible=true;d.dr.visible=true;d.dr.position.set(d.x,AY+14,d.z);blip(1100,1500,.08,'sine',.04);}
+L.updBoss=dt=>{const b=boss;if(b.state==='off'||!ab)return;b.t+=dt;const g=ab.g;const PL=state==='play'&&!P.dead;let hy=ABH;
+  const toP=Math.atan2(P.pos.x-ABX,P.pos.z-ABZ);
+  if(b.state==='intro'){/* rises out of the water at the centre */hy=lerp(-6,ABH,Math.min(1,b.t/2));c2Play(ab,'talk');if(b.t>.3&&!b.ch){b.ch=1;blip(600,300,1.2,'sine',.1);}if(b.t>2.4){b.ch=0;b.state='idle';b.t=0;showHint('JUMP HER RINGS · DODGE THE LUNGE · HIT HER MASK WHEN SHE SINKS',3.6);}}
+  else if(b.state==='idle'){c2Play(ab,'idle');ABX=lerp(ABX,clamp(P.pos.x*.35,-5,5),dt*.8);ABZ=lerp(ABZ,ACZ+clamp((P.pos.z-ACZ)*.35,-5,5),dt*.8);if(b.t>.8){b.state='act';b.t=0;b.pl=abPlan();b.si=0;abStep(b,b.pl.steps[0]);}}
+  else if(b.state==='act'){const s=b.pl.steps[b.si];b.st+=dt;let done=false;
+    if(s.k==='rings'){if(b.sub==='move'){/* back to the centre of the court first */ABX=lerp(ABX,0,dt*3);ABZ=lerp(ABZ,ACZ,dt*3);c2Play(ab,'idle');if(b.st>.6){b.sub='go';b.st=0;}}
+      else{c2Play(ab,'talk');const tell0=1;let pending=false;for(let i=0;i<s.times.length;i++){const tFire=tell0+s.times[i];if(i>=s.fired){pending=true;const lead=i===0?tell0:.45;const k=clamp(1-(tFire-b.st)/lead,0,1);if(b.st>tFire-lead){pool.position.set(ABX,AY+.07,ABZ);pool.material.opacity=.15+.55*k;pool.scale.setScalar(.6+.6*k);hy=ABH+.6*k;}
+            if(b.st>=tFire){s.fired=i+1;pool.material.opacity=0;shockRing(ABX,AY,ABZ,7.4,16,cyan,0,false);blip(1500-i*200,900,.3,'sine',.08);shakeT=Math.max(shakeT,.2);}break;}}
+        if(!pending&&b.st>tell0+s.times[s.times.length-1]+1.8)done=true;}}
+    else if(s.k==='lunge'){/* a line from her to you, then she glides along it low and fast */
+      if(b.sub==='aim'){c2Play(ab,'talk');if(b.st<=dt){s.tx=clamp(P.pos.x,-11,11);s.tz=clamp(P.pos.z,ACZ-11,ACZ+11);const dx=s.tx-ABX,dz=s.tz-ABZ,L2=Math.hypot(dx,dz)||1;s.dx=dx/L2;s.dz=dz/L2;s.len=Math.min(24,L2+3);}
+        const k=Math.min(1,b.st/.85);lungeLine.material.opacity=.2+.5*k*(.6+.4*Math.sin(time*30));lungeLine.scale.set(1,s.len,1);lungeLine.position.set(ABX+s.dx*s.len/2,AY+.06,ABZ+s.dz*s.len/2);lungeLine.rotation.z=Math.atan2(s.dx,s.dz)+Math.PI;hy=ABH+.4*k;
+        if(b.st>=.85){b.sub='glide';b.st=0;s.x0=ABX;s.z0=ABZ;lungeLine.material.opacity=0;blip(500,200,.4,'sawtooth',.06);}}
+      else if(b.sub==='glide'){const k=Math.min(1,b.st/(s.len/17));ABX=s.x0+s.dx*s.len*k;ABZ=s.z0+s.dz*s.len*k;{const dd=Math.hypot(ABX,ABZ-ACZ);if(dd>11.5){ABX*=11.5/dd;ABZ=ACZ+(ABZ-ACZ)*11.5/dd;}}hy=1.4;
+        if(Math.random()<.8)emit(V3(ABX+R(-1,1),AY+.4,ABZ+R(-1,1)),{vy:R(1,3),life:.5,size:.4,color:0x8af0ff});if(PL&&Math.hypot(P.pos.x-ABX,P.pos.z-ABZ)<1.9&&P.pos.y<AY+2.6)hurt();
+        if(k>=1){b.sub='settle';b.st=0;shockRing(ABX,AY,ABZ,6,4.5,cyan,0,false);s.i++;}}
+      else if(b.sub==='settle'){hy=lerp(1.4,ABH,Math.min(1,b.st/.6));if(b.st>.7){if(s.i<s.n){b.sub='aim';b.st=0;}else done=true;}}}
+    else if(s.k==='drops'||s.k==='whirl'){c2Play(ab,'talk');s.next-=dt;if(s.i<s.n&&s.next<=0){dropAt(P.pos.x,P.pos.z,s.tell);s.i++;s.next=s.gap;}
+      if(s.k==='whirl'){ABX=lerp(ABX,0,dt*2);ABZ=lerp(ABZ,ACZ,dt*2);const k=Math.min(1,b.st/.6)*(b.st<s.dur?1:Math.max(0,1-(b.st-s.dur)*3));whirl.material.opacity=.45*k;whirl.rotation.z+=dt*3;
+        if(PL&&P.pos.y<AY+3&&k>0){const dx=-P.pos.x,dz=ACZ-P.pos.z,d=Math.hypot(dx,dz)||1;if(d>1.2){P.pos.x+=dx/d*3.3*k*dt;P.pos.z+=dz/d*3.3*k*dt;}}if(b.st<=dt)showHint('THE UNDERTOW! RUN AGAINST THE PULL',1.6);}
+      if(s.i>=s.n&&!DROPS.some(q=>q.on)&&b.st>(s.k==='whirl'?s.dur:.3)){whirl.material.opacity=0;done=true;}}
+    if(done){b.si++;if(b.si>=b.pl.steps.length){b.state='sleep';b.t=0;}else abStep(b,b.pl.steps[b.si]);}}
+  else if(b.state==='sleep'){/* she sinks low, the pale mask lowered and glowing */hy=lerp(ABH,1.1,Math.min(1,b.t*2.5));c2Play(ab,'idle');ab.mask.visible=true;ab.mask.position.set(ABX,AY+2.4,ABZ);ab.mask.children[0].material.opacity=.6+Math.sin(time*14)*.35;
+    {const cap=Math.ceil(boss.maxHp*.15);if((boss.kd||0)<cap-.5)boss.kd=cap-.5;}if(!b.kHint){b.kHint=1;showHint('SHE SINKS · HIT HER MASK!',2.2);}
+    if(b.t>b.pl.open){b.state='idle';b.t=0;ab.mask.visible=false;b.kHint=0;}
+    else if(spinNear(ABX,ABZ,3,AY)||stompOn(ABX,ABZ,2,AY+3.6))L.hitBoss();}
+  else if(b.state==='hurt'){hy=lerp(1.1,ABH,Math.min(1,b.t));if(b.t>1.1){b.state='idle';b.t=0;b.kHint=0;}}
+  else if(b.state==='dead'){clearAbFx();hy=b.freed?lerp(2.2,-7,Math.min(1,b.ft/2.4)):lerp(ABH,2.2,Math.min(1,b.t/1.4));if(!b.freed&&Math.random()<.5)emit(V3(ABX+R(-2,2),AY+R(1,5),ABZ+R(-2,2)),{vx:R(-2,2),vy:R(1,4),vz:R(-2,2),g:4,life:1,size:.5,color:pick([0x8af0ff,0xffffff])});
+    if(b.t>1.6&&!b.cine){b.cine=1;const lines=[['ABBESS UNDERTOW',"...Oh. It's so loud in here. Your little feet. Your lantern.",4],
+        ['ABBESS UNDERTOW',"I remember now. A library isn't for keeping books. It's for lending them.",4.6],
+        ['ABBESS UNDERTOW',"Take the star, little lantern. Some things are only worth having when they are shared.",4.8]];
+      c2Scene(lines,(t,i)=>[V3(ABX+Math.sin(t*.15)*1.5,AY+3.8,ABZ+7.4),V3(ABX,AY+3.6,ABZ)],()=>{b.freed=true;b.ft=0;burst(V3(ABX,AY+3,ABZ),0x8af0ff,60,10,.9);sfx.check();
+        c2Star(0,AY+2.4,ACZ,'ARCHIVE STAR',()=>bossDefeated());showHint('GRAB THE ARCHIVE STAR',3);},
+        {tick:(dt,t)=>{c2Play(ab,'talk');c2Anim(ab,dt);ab.g.position.set(ABX,AY+2.2+Math.sin(time*1.6)*.12,ABZ);ab.g.rotation.y=lerpAngle(ab.g.rotation.y,Math.atan2(P.pos.x-ABX,P.pos.z-ABZ),Math.min(1,dt*3));for(const m of ab.mats)m.emissive.copy(m.userData.e0);}});}
+    if(b.freed){b.ft=(b.ft||0)+dt;if(b.ft>2.4&&g.visible)g.visible=false;}}
+  /* falling drops */
+  for(const d of DROPS){if(!d.on)continue;d.t+=dt;const k=d.t/d.tell;if(k<1){d.ring.material.opacity=.3+.5*k;d.ring.scale.setScalar(1.3-.3*k);d.dr.position.y=AY+.4+14*(1-Math.max(0,(k-.6)/.4));}
+    else if(!d.hit){d.hit=true;d.dr.visible=false;shockRing(d.x,AY,d.z,5,2.6,cyan,0,false);burst(V3(d.x,AY+.3,d.z),0x8af0ff,14,5,.4);if(PL&&Math.hypot(P.pos.x-d.x,P.pos.z-d.z)<1.6&&P.pos.y<AY+2.2)hurt();}
+    if(k>1.35){d.on=false;d.hit=false;d.ring.visible=false;d.dr.visible=false;}}
+  /* hit reaction */
+  if(ab.lastHp!==undefined&&b.hp<ab.lastHp&&b.state!=='intro'){ab.flash=1;burst(V3(ABX,AY+2.4,ABZ),0x8af0ff,36,9,.7);hitStop(.12);shakeT=Math.max(shakeT,.5);blip(1400,600,.4,'sine',.1);}ab.lastHp=b.hp;
+  if(ab.flash>0){ab.flash=Math.max(0,ab.flash-dt*3.2);for(const m of ab.mats)m.emissive.copy(m.userData.e0).lerp(new THREE.Color(.8,1,1),ab.flash*.8);}
+  g.position.set(ABX,AY+hy+Math.sin(time*1.6)*.15,ABZ);if(b.state!=='dead')g.rotation.y=lerpAngle(g.rotation.y,toP,Math.min(1,dt*3));c2Anim(ab,dt);
+  b.pos.copy(ab.mask.visible?ab.mask.position:V3(ABX,AY+hy+2,ABZ));};
+L.inArena=p=>p.x<SX-120&&p.z<ARENA.z0&&p.z>ARENA.z1&&p.y>1;
+L.onRespawn=()=>{clearAbFx();};
+L.update=dt=>{c2Tick(dt);if(SEC.done&&!SEC.on&&!L.arr){L.arr=1;setTimeout(()=>banner('THE DROWNED ARCHIVE','THE GREAT READING HALL'),700);}if(L.mara2&&!L.mara2.said)L.mara2.lines=L.maraLines();if(ab&&boss.state==='off'){c2Play(ab,'idle');c2Anim(ab,dt);ab.g.position.y=AY-6;}for(const j of JELLY){j.g.position.y=j.y0+Math.sin(time*.9+j.ph)*.6;j.g.rotation.y+=dt*.2;}};
+L.populate=()=>{
+  orbLine(0,6,0,-1,4,4.2);makeCrate('crate',-3,-10);makeCrate('crate',3,-14);makeCrate('crate',3,-14,1);orbLine(-2.5,-8,-2.5,-22,5);
+  spawnOrb(0,1.4,-26.6);spawnOrb(1.4,1.4,-29.8);spawnOrb(-.6,1.4,-33);makeCrate('lucky',2.6,-38);
+  /* wide landing: the first Novice, alone */
+  makeCrate('check',0,-41.5);novice(0,-53,0);orbLine(-5,-44,-5,-58,5);orbLine(5,-44,5,-58,5);makeCrate('crate',-6,-50);makeCrate('boom',6,-56);
+  /* slabs */
+  for(const [x,z] of[[-2,-63.4],[-4.4,-67.2],[-5.6,-71.2],[-7.8,-75.2]])spawnOrb(x,1.4,z);novice(-9.4,-80.4,0);for(const [x,z] of[[-11.4,-85.6],[-12.8,-89.4],[-14,-93]])spawnOrb(x,1.4,z);makeCrate('crate',-10.5,-98);makeCrate('ward',-17.5,-98);
+  /* shelves and books */
+  orbLine(-14,-101,-14,-105,3,1.2);spawnOrb(-12.2,1.8,-108);orbLine(-9.1,-111,-9.1,-114.6,3,1.2);spawnOrb(-6.6,1.8,-117.6);orbLine(-3.1,-120.4,-3.1,-124.4,3,1.2);{const e=novice(-20,-111,0);if(e)e.sect=true;}/* optional side island: doesn't hold the court's seal */makeCrate('crate',-21,-108);makeCrate('lucky',-21,-114.5);
+  /* gallery */
+  makeCrate('check',0,-127);makeCrate('crate',-3,-139);makeCrate('crate',3,-139);for(let i=0;i<4;i++)spawnOrb(0,1.4+i*.5,-141-i*1.8);};
+}
+
+else if(LV===13){
+/* ===================== CHAPTER 2 · LEVEL 13: CINDERWING'S CROSSING =====================
+   Opening course (the Ember Road): Sir Bramble's rest stop and his apple → a winding causeway over the fire river, uphill and downhill,
+   switchbacks, lava jets, crumbling stones, the Warden's logbook on three stands, a bonus portal, then the Baroness spots Flint
+   and strafes the road with red dive lines. The road's portal opens onto the Crossing itself (hub, forward = -Z):
+   gatehouse terrace → narrow bridge with alcoves (and the old bridge supports as a side route) → the watchtower (Bramble again)
+   → the broken span over the river → the second bridge → the stair to the fortress courtyard, where Baroness Cinderwing dives. */
+const ACZ=-146,AY=5,BY=2;
+ARENA={x0:-14,x1:14,z0:-132,z1:-160,cz:ACZ,y:AY,cx:0};
+Object.assign(L,{num:13,name:"CINDERWING'S CROSSING",start:V3(0,BY,6),killY:-6.5,mus:LVMUS[13][0],bossMus:LVMUS[13][1],bossName:'BARONESS CINDERWING',hemiI:.95,
+  hint:'CROSS THE BRIDGE · MIND THE SQUIRES',grade:{sat:1.16,vig:.95,tint:[1.12,.96,.92]},
+  clampP:p=>{if(p.x>SX-120)return;p.z=Math.min(p.z,9.4);if(p.z<-132.4&&p.y>AY-1){p.x=clamp(p.x,-13.3,13.3);p.z=Math.max(p.z,-159.3);}},
+  clampCam:c=>{if(c.x<SX-120)c.z=Math.min(c.z,16);}});
+/* ---- sky: blood-red with a red moon ---- */
+scene.background=skyTex(g=>{grad(g,512,1024,[[0,'#100206'],[.22,'#2e0610'],[.42,'#6a0e18'],[.55,'#a8261c'],[.61,'#5a0a10'],[1,'#180406']]);clouds(g,512,1024,12,['#4a0a14','#2a050c','#7a1a1a'],.25,.58,22);
+});
+{/* the blood moon hangs over the fortress */const mt=texSmooth(128,128,g=>{const gr=g.createRadialGradient(64,64,30,64,64,64);gr.addColorStop(0,'rgba(255,90,60,.5)');gr.addColorStop(1,'rgba(120,10,10,0)');g.fillStyle=gr;g.fillRect(0,0,128,128);g.fillStyle='#c8382a';g.beginPath();g.arc(64,64,34,0,TAU);g.fill();g.fillStyle='rgba(120,20,20,.45)';for(let i=0;i<9;i++){g.beginPath();g.arc(64+R(-20,20),64+R(-20,20),R(3,8),0,TAU);g.fill();}});
+  const moon=spr(mt,0xffffff,64,64,-50,72,-235,false);moon.material.fog=false;scene.add(moon);}
+scene.fog=new THREE.Fog(0x3a0a10,34,150);hemi.color.setHex(0xffa080);hemi.groundColor.setHex(0x2a0608);hemi.intensity=.95;
+/* ---- materials ---- */
+const COB=c1Stone('cwStone',['#5a5a8e','#50507f','#64649c','#484872','#5c5a8a'],'#14122a');
+const top=new THREE.MeshLambertMaterial({map:COB}),side=new THREE.MeshLambertMaterial({map:KT.masonry(),color:0xb0a0c8}),dark=c1Lam('cwDark',KT.masonry(),{color:0x7a6a90});
+const LAVA=c1T('lava',()=>kTex(kCanvas(64,64,(g,w,h,r)=>{g.fillStyle='#d8460c';g.fillRect(0,0,w,h);for(let i=0;i<w*h*.5;i++)kRect(g,w,h,(r()*w)|0,(r()*h)|0,1+((r()*3)|0),1,pick(['#f06a10','#ff9a20','#c8340a','#ffc040','#e8500e']));
+  for(let k=0;k<16;k++){let x=r()*w,y=r()*h;for(let q=0;q<14;q++){kRect(g,w,h,x|0,y|0,2,1,'#4a0e06');x+=1+(r()-.5)*2;y+=(r()-.5)*2;}}for(let i=0;i<24;i++)kRect(g,w,h,(r()*w)|0,(r()*h)|0,2,2,'#fff0a0');},131)));
+const iron=c1M('cwIron',()=>new THREE.MeshLambertMaterial({color:0x3a2a2e})),rust=c1M('cwRust',()=>new THREE.MeshLambertMaterial({color:0x6a3a2a}));
+const red=0xff3a2a,orange=0xff7a1a;
+/* ---- kit pieces ---- */
+function railRun(x,z0,z1,y){/* spiked iron posts and two bars along a bridge edge */const a=Math.max(z0,z1),b=Math.min(z0,z1),len=a-b;
+  for(let z=a-.2;z>b;z-=2.1){const p=new THREE.Mesh(kBoxGeo(.22,1.3,.22,1),iron);p.position.set(x,y+.65,z);c1Add(p);const sp=new THREE.Mesh(new THREE.ConeGeometry(.16,.42,4),rust);sp.position.set(x,y+1.5,z);c1Add(sp);}
+  for(const h of[.55,1.05]){const bar=new THREE.Mesh(kBoxGeo(.1,.1,len,1),iron);bar.position.set(x,y+h,(a+b)/2);c1Add(bar);}}
+function rail(x,z0,z1,y,gaps=[]){/* a blocking edge with optional openings [za,zb] */let cur=Math.max(z0,z1);const end=Math.min(z0,z1);const segs=[];for(const [ga,gb] of gaps.slice().sort((p,q)=>q[0]-p[0])){const hi=Math.max(ga,gb),lo=Math.min(ga,gb);if(hi<cur)segs.push([cur,hi]);cur=Math.min(cur,lo);}if(cur>end)segs.push([cur,end]);
+  for(const [a,b] of segs){railRun(x,a,b,y);addSolid(x-.2,x+.2,y-2,y+7,b,a,'wall',null);}}
+function pier(x,z,topY,w=4.4,d=2.6){/* bridge support from the lava up to the deck, with a pointed arch notch */const h=topY+9;const m=new THREE.Mesh(kBoxGeo(w,h,d,2.2),dark);m.position.set(x,topY-h/2,z);c1Add(m);
+  const cap=new THREE.Mesh(kBoxGeo(w+.6,.6,d+.6,2.2),side);cap.position.set(x,topY-2.6,z);c1Add(cap);}
+function tower(x,z,y,h=10,r0=2.2){const g=new THREE.Group();const body=new THREE.Mesh(new THREE.CylinderGeometry(r0,r0*1.1,h,10),side);body.position.y=h/2;g.add(body);
+  const crown=new THREE.Mesh(new THREE.CylinderGeometry(r0*1.25,r0*1.25,.9,10),dark);crown.position.y=h+.45;g.add(crown);const roof=new THREE.Mesh(new THREE.ConeGeometry(r0*1.35,r0*2.4,10),c1Lam('cwRoof',null,{color:0x5a1418}));roof.position.y=h+.9+r0*1.2;g.add(roof);
+  for(let i=0;i<3;i++){const wdw=new THREE.Mesh(new THREE.PlaneGeometry(.6,1.1),c1M('cwWin',()=>new THREE.MeshBasicMaterial({color:0xffb04a})));const a=i/3*TAU+.4;wdw.position.set(Math.sin(a)*(r0+.02),h*.62,Math.cos(a)*(r0+.02));wdw.rotation.y=a;g.add(wdw);}
+  g.position.set(x,y,z);c1Add(g);c1Solid(x-r0,x+r0,y-2,y+h+1,z-r0,z+r0);return g;}
+function brazier(x,z,y,s=1){const g=new THREE.Group();const b=new THREE.Mesh(new THREE.CylinderGeometry(.55*s,.3*s,.5*s,8),iron);b.position.y=1.1*s;g.add(b);const leg=new THREE.Mesh(kBoxGeo(.16*s,1*s,.16*s,1),iron);leg.position.y=.5*s;g.add(leg);g.position.set(x,y,z);c1Add(g);
+  const f=grp(spr(glowTex,0xff8a2a,2.6*s,2.6*s,0,0,0),spr(glowTex,0xffe08a,1*s,1.4*s,0,.1,0));f.position.set(x,y+1.55*s,z);scene.add(f);FIRES.push({f,ph:Math.random()*9,x,y:y+1.55*s,z,s});}
+const FIRES=[];
+function alcove(x0,x1,z0,z1,y,open){/* a stone niche off the bridge: back wall, side walls, pointed roof and a lantern; open = the side facing the bridge (-1 / +1 in x) */
+  deck(x0,x1,z0,z1,y,top,side,2.2);const bx=open<0?x1:x0,lo=Math.min(z0,z1),hi=Math.max(z0,z1),cz=(lo+hi)/2;
+  const back=new THREE.Mesh(kBoxGeo(.6,3.6,hi-lo,2),side);back.position.set(bx-open*.3,y+1.8,cz);c1Add(back);c1Solid(bx-.6,bx+.6,y,y+3.6,lo,hi);
+  for(const zz of[lo,hi]){const w=new THREE.Mesh(kBoxGeo(Math.abs(x1-x0),3.6,.5,2),side);w.position.set((x0+x1)/2,y+1.8,zz);c1Add(w);c1Solid(Math.min(x0,x1),Math.max(x0,x1),y,y+3.6,zz-.25,zz+.25);}
+  const roof=new THREE.Mesh(kBoxGeo(Math.abs(x1-x0)+.6,.5,hi-lo+.8,2),dark);roof.position.set((x0+x1)/2,y+3.85,cz);c1Add(roof);
+  c1Lantern(bx-open*.7,y,lo+.9,{h:2.4,ry:open<0?Math.PI:0,col:0xffb84a,solid:false});}
+/* ---- the fire river ---- */
+liquidPool(-140,140,70,-280,-8,LAVA,0xffffff);
+{const gl=new THREE.Mesh(new THREE.PlaneGeometry(280,350),new THREE.MeshBasicMaterial({color:0xff5a1a,transparent:true,opacity:.18,blending:THREE.AdditiveBlending,depthWrite:false}));gl.rotation.x=-Math.PI/2;gl.position.set(0,-7.6,-105);scene.add(gl);}
+/* ===================== 00 · THE GATEHOUSE TERRACE (portal arrival) ===================== */
+deck(-6,6,10,-2,BY,top,side,10);rail(-6,10,-2,BY);rail(6,10,-2,BY);for(const sx of[-1,1]){const w=new THREE.Mesh(kBoxGeo(2.8,1,.5,2),side);w.position.set(sx*4.6,BY+.5,-1.8);c1Add(w);addSolid(sx<0?-6:3.2,sx<0?-3.2:6,BY-2,BY+7,-2.2,-1.6,'wall',null);}{const b=new THREE.Mesh(kBoxGeo(12,1.2,.5,2),side);b.position.set(0,BY+.6,10);c1Add(b);c1Solid(-6,6,BY,BY+7,9.8,10.4);}
+tower(-8.6,6,-6,14,2.4);tower(8.6,6,-6,14,2.4);brazier(-4.6,1,BY);brazier(4.6,1,BY);
+/* ===================== 01 · BRIDGE A, with alcoves and the old supports ===================== */
+deck(-3,3,-2,-46,BY,top,side,2.2);
+rail(-3.2,-2,-46,BY,[[-4.6,-9.6],[-40.4,-45.4]]);rail(3.2,-2,-46,BY,[[-15,-21],[-30,-36]]);
+alcove(3,7,-15,-21,BY,-1);alcove(3,7,-30,-36,BY,-1);
+for(let z=-8;z>-46;z-=12)pier(0,z,BY-1.6);
+/* side route: hop down onto the bridge supports and run along them */
+deck(-6.8,-3.2,-4.6,-9.6,BY-1,top,side,3);deck(-6.8,-3.2,-40.4,-45.4,BY-1,top,side,3);
+{const pt=new THREE.CylinderGeometry(1.35,1.6,1,8);const mk=(x,z,o={})=>{const m=new THREE.Mesh(pt,[side,top,side]);m.position.set(x,BY-1.5,z);scene.add(m);const s=platform(x,z,2.4,2.4,o.ax||0,o.az||0,o.amp||0,o.spd||1,o.ph||0,BY-1,o.ay||0,m);if(o.sink)s.sink=BY-1;
+    const col=new THREE.Mesh(kBoxGeo(1.8,8,1.8,2),dark);col.position.set(x,BY-6,z);if(!o.ax&&!o.az&&!o.sink&&!o.ay)c1Add(col);return s;};
+  mk(-7.2,-13.6);mk(-7.4,-19.2,{az:1,amp:1.2,spd:1.1});mk(-7.2,-24.8);mk(-7.4,-30.2,{sink:true});mk(-7.2,-35.6);}
+/* ===================== 02 · THE WATCHTOWER (checkpoint, Bramble) ===================== */
+deck(-8,8,-46,-62,BY,top,side,3);rail(-8,-46,-62,BY);rail(8,-46,-62,BY);
+for(const sx of[-1,1]){const w=new THREE.Mesh(kBoxGeo(5,1.2,.5,2),side);w.position.set(sx*5.5,BY+.6,-46.25);c1Add(w);c1Solid(sx*3,sx*8,BY,BY+7,-46.5,-46);const w2=w.clone();w2.position.z=-61.75;c1Add(w2);c1Solid(sx*3,sx*8,BY,BY+7,-62,-61.5);}
+tower(-6,-58.6,BY,11,1.8);tower(6,-58.6,BY,11,1.8);brazier(-6.2,-48.6,BY);brazier(6.2,-48.6,BY);c1Banner(-6,BY+3.4,-56.7,0,'#8a1a1a',4.2);c1Banner(6,BY+3.4,-56.7,0,'#8a1a1a',4.2);
+/* ===================== 03 · THE BROKEN SPAN ===================== */
+deck(-3,3,-62,-70,BY,top,side,2.2);rail(-3.2,-62,-70,BY);rail(3.2,-62,-70,BY);
+{const slab=new THREE.BoxGeometry(2.8,.8,2.8);const mk=(x,z,o={})=>{const m=new THREE.Mesh(slab,[side,side,top,side,side,side]);m.position.set(x,BY-.4,z);m.rotation.y=(Math.random()-.5)*.3;scene.add(m);const s=platform(x,z,2.6,2.6,o.ax||0,o.az||0,o.amp||0,o.spd||1,o.ph||0,BY,o.ay||0,m);if(o.sink)s.sink=BY;return s;};
+  mk(-1.2,-73.2,{sink:true});mk(1.4,-77.6,{ax:1,amp:1.5,spd:1.2});mk(-1,-82);mk(.6,-86.4,{ay:.6,spd:1.4});}
+/* the fallen stones of the span lie in the river */for(const [x,z,r] of[[-4,-75,.4],[3.5,-80,-.3],[-2.5,-85,.2]]){const m=new THREE.Mesh(kBoxGeo(3,1.2,2.4,2),side);m.position.set(x,-7.6,z);m.rotation.set(.3,r,.2);c1Add(m);}
+/* ===================== 04 · BRIDGE B (two Squires, alcoves both sides) ===================== */
+deck(-3,3,-90,-118,BY,top,side,2.2);rail(-3.2,-90,-118,BY,[[-99,-105]]);rail(3.2,-90,-118,BY,[[-108,-114]]);
+alcove(-7,-3,-99,-105,BY,1);alcove(3,7,-108,-114,BY,-1);for(let z=-94;z>-118;z-=12)pier(0,z,BY-1.6);
+/* ===================== 05 · THE STAIR TO THE COURTYARD ===================== */
+ramp(-3.5,3.5,-118,-128,BY,AY);deck(-3.5,3.5,-128,-132.6,AY,top,side,6);for(const sx of[-1,1])addSolid(sx<0?-4.2:3.5,sx<0?-3.5:4.2,BY-1,AY+7,-132.6,-118,'wall',null);
+for(const sx of[-1,1]){const w=new THREE.Mesh(kBoxGeo(.7,2,14.6,2),side);w.position.set(sx*3.85,(BY+AY)/2+.6,-125.3);w.rotation.x=Math.atan2(AY-BY,10)*(1);c1Add(w);}
+gate=addSolid(-3.5,3.5,AY,AY+3,-132.3,-131.3,'gate',null);gate.alive=false;gateMesh=new THREE.Mesh(boxGeo(7,3,1,2.5),iron);gateMesh.position.set(0,AY-2,-131.8);scene.add(gateMesh);
+/* ===================== 06 · THE FORTRESS COURTYARD ===================== */
+deck(-14.6,14.6,-132,-160.6,AY,top,side,14);
+{const ct=COB.clone();ct.needsUpdate=true;ct.repeat.set(8,8);const fl=new THREE.Mesh(new THREE.PlaneGeometry(28,28),new THREE.MeshLambertMaterial({map:ct}));fl.rotation.x=-Math.PI/2;fl.position.set(0,AY+.02,ACZ);scene.add(fl);
+  const ring=new THREE.Mesh(new THREE.RingGeometry(5.6,6.1,48),new THREE.MeshBasicMaterial({color:0xff6a2a,transparent:true,opacity:.35,blending:THREE.AdditiveBlending,depthWrite:false}));ring.rotation.x=-Math.PI/2;ring.position.set(0,AY+.05,ACZ);scene.add(ring);}
+/* crenellated walls on three sides and the gate side, solid and tall enough that nobody hops out */
+{const wallSeg=(x0,z0,x1,z1)=>{const len=Math.hypot(x1-x0,z1-z0),cx=(x0+x1)/2,cz=(z0+z1)/2,ry=Math.atan2(x1-x0,z1-z0);const w=new THREE.Mesh(kBoxGeo(.8,1.4,len,2),side);w.position.set(cx,AY+.7,cz);w.rotation.y=ry;c1Add(w);
+    for(let t=.5;t<len;t+=2){const m=new THREE.Mesh(kBoxGeo(.9,.8,.9,1.6),side);const k=t/len;m.position.set(x0+(x1-x0)*k,AY+1.8,z0+(z1-z0)*k);c1Add(m);}
+    c1Solid(Math.min(x0,x1)-.4,Math.max(x0,x1)+.4,AY,AY+9,Math.min(z0,z1)-.4,Math.max(z0,z1)+.4);};
+  wallSeg(-14.6,-132,-14.6,-160.6);wallSeg(14.6,-132,14.6,-160.6);wallSeg(-14.6,-160.6,14.6,-160.6);wallSeg(-14.6,-132,-3.6,-132);wallSeg(3.6,-132,14.6,-132);}
+for(const [x,z] of[[-12.6,-134],[12.6,-134],[-12.6,-158.4],[12.6,-158.4]])brazier(x,z,AY,1.2);
+for(const x of[-9,-3,3,9])c1Banner(x,AY+1.6,-160.1,0,'#9a1a1a',4.6);
+/* the fortress beyond the courtyard */
+{const keep=new THREE.Mesh(kBoxGeo(44,26,12,3),side);keep.position.set(0,AY+13,-172);c1Add(keep);const roofM=c1Lam('cwRoof',null,{color:0x5a1418});
+  for(const x of[-22,-11,0,11,22]){const t=new THREE.Mesh(new THREE.CylinderGeometry(3,3.3,34,10),side);t.position.set(x,AY+17,-170);c1Add(t);const r=new THREE.Mesh(new THREE.ConeGeometry(3.8,7,10),roofM);r.position.set(x,AY+37.5,-170);c1Add(r);}
+  for(let i=0;i<14;i++){const w=new THREE.Mesh(new THREE.PlaneGeometry(1.4,2.6),c1M('cwWin',()=>new THREE.MeshBasicMaterial({color:0xffb04a})));w.position.set(-18+(i%7)*6,AY+9+((i/7)|0)*8,-165.9);c1Add(w);}
+  const door=new THREE.Mesh(kBoxGeo(7,9,.6,2),iron);door.position.set(0,AY+4.5,-165.9);c1Add(door);for(const x of[-14,14])c1Banner(x,AY+12,-165.7,0,'#9a1a1a',7);}
+/* ===================== THE CROSSING'S WORLD: mountains, lava falls, embers ===================== */
+const ROCKS=[];{const ash=c1Lam('cwAsh',KT.rock(),{color:0x6a5a7a});const rock=(x,z,w,h,d,seed)=>{const g=kRockMass(x,-8,z,w,h,d,seed,{blocks:3});g.traverse(o=>{if(o.isMesh&&o.material&&o.material.map===KT.moss())o.material=ash;});ROCKS.push(g);return g;};
+  for(const sx of[-1,1])for(let z=20;z>-230;z-=R(20,30)){rock(sx*R(34,60),z,R(14,24),R(22,46),R(14,22),(z*7+sx*3)|0);}
+  for(const sx of[-1,1])for(let z=0;z>-125;z-=R(24,34)){rock(sx*R(17,24),z,R(6,9),R(9,15),R(6,9),(z*11+sx)|0);}}
+/* lava falls pouring off the far cliffs */
+const FALLS=[];for(const [x,z,h] of[[-36,-30,30],[40,-70,34],[-42,-110,28],[38,-150,30],[-30,-190,26]]){const t=LAVA.clone();t.needsUpdate=true;t.repeat.set(1,h/6);const m=new THREE.Mesh(new THREE.PlaneGeometry(5,h),new THREE.MeshBasicMaterial({map:t,color:0xffffff}));m.position.set(x,-8+h/2,z);m.rotation.y=x<0?Math.PI/2:-Math.PI/2;scene.add(m);
+  const gl=spr(glowTex,0xff7a2a,14,h*1.1,x,-8+h/2,z);gl.material.opacity=.4;scene.add(gl);FALLS.push(t);}
+C1.upd.push(dt=>{for(const t of FALLS)t.offset.y+=dt*.6;});
+c1Finish();
+/* ===================== THE EMBER ROAD (opening course, reached first) ===================== */
+COURSE[13]={w:5.4,killY:-5,noReeds:true,noProps:true,bonus:.47,pop:{enP:.3,enGap:26,noFly:true,step:7.5,skip:['chase','ride','lily','fork','bridge','blade','gear','bramble','sq1','sq2','jet','crumble','dive','plaque1','plaque2','plaque3']},
+  look:{top:'rock',water:true},
+  cmds:[{s:12,w:9,tag:'bramble'},{s:3,w:5.4},{arc:-45,r:12,dh:1.5},{s:8,dh:1.5},{arc:70,r:10},{s:4},{gap:1,s:3},{s:4},{s:12,w:8.5,tag:'sq1'},{s:3,w:5.4},
+    {arc:-60,r:11,dh:-2},{s:12,tag:'jet'},{s:7,tag:'plaque1'},{arc:50,r:12},{gap:1,s:12,tag:'crumble'},{s:6},{s:8},
+    {arc:-80,r:9,dh:2},{s:10,dh:2},{arc:120,r:7,dh:2.5},{s:9,tag:'plaque2'},
+    {s:6,tag:'dive'},{arc:-40,r:14,tag:'dive'},{s:16,tag:'dive'},{arc:50,r:12,dh:-2,tag:'dive'},{s:14,tag:'dive'},{gap:1,s:2.6,tag:'dive'},{s:10,tag:'dive'},{s:6},
+    {arc:-50,r:11},{s:12,w:8,tag:'sq2'},{s:3,w:5.4},{arc:40,r:12,dh:-1.5},{gap:1,s:12,tag:'crumble'},{s:6},{s:9,tag:'plaque3'},{arc:-30,r:14},{s:8,tag:'end'}]};
+L.courseMats=()=>{const t=new THREE.MeshLambertMaterial({map:COB,side:THREE.DoubleSide}),sk=new THREE.MeshLambertMaterial({map:KT.masonry(),color:0xa898c0,side:THREE.DoubleSide});return {top:t,side:sk,rim:sk,skirt:26};};
+let ROAD=null;
+L.courseDress=(path,{mn,mx,tagRuns})=>{ROAD=path;const at=(s,lat=0)=>crsAt(path,s,lat);const free=(x,z,pad)=>!crsInside(x,z,pad);
+  /* the fire river under the road */
+  if(CRS.water){CRS.water.scale.set(3,3,1);CRS.water.position.y=-6;const W=(mx.x-mn.x+160)*3,H=(mx.z-mn.z+160)*3;const t=LAVA.clone();t.needsUpdate=true;t.repeat.set(W/8,H/8);CRS.water.material=new THREE.MeshBasicMaterial({map:t,color:0xe8c8b8});C1.upd.push(dt=>{t.offset.y+=dt*.02;t.offset.x+=dt*.008;});}
+  CRS.killY=-5;
+  /* mountains rising out of the river, kept to the outside of bends */
+  for(let s=10;s<path.len-6;s+=R(14,22))for(const sd of[-1,1]){if(Math.random()<.35)continue;const p=at(s).p;if(p.ks*sd>.015)continue;const ww=R(9,15);const lat=sd*(p.w/2+R(18,32));const q=at(s,lat);if(!free(q.x,q.z,ww/2+11))continue;
+    const g=kRockMass(q.x,-6,q.z,ww,R(14,30)+Math.max(0,p.y),ww*R(.8,1.1),(s*13+sd*7)|0,{blocks:3});g.traverse(o=>{if(o.isMesh&&o.material&&o.material.map===KT.moss())o.material=c1Lam('cwAsh',KT.rock(),{color:0x6a5a7a});});}
+  /* spiked iron posts on the parapets */
+  for(let s=2;s<path.len-1;s+=2.6){const p=at(s).p;if(p.gap||!p.wall)continue;for(const sd of[-1,1]){const q=at(s,sd*(p.w/2+.3));const sp=new THREE.Mesh(new THREE.ConeGeometry(.15,.5,4),rust);sp.position.set(q.x,q.y+1.15,q.z);c1Add(sp);}}
+  /* braziers along the road */
+  {let k=0;for(let s=8;s<path.len-4;s+=14,k++){const q0=at(s);if(q0.p.gap||!q0.p.wall)continue;const sd=k%2?1:-1;const q=at(s,sd*(q0.p.w/2+.3));brazier(q.x,q.z,q.y+.9,.8);}}
+  /* the rest stop: campfire, log benches, Bramble's banner */
+  {const r=tagRuns('bramble')[0];const q=at(r[0]+6,-2.2);const fire=grp(spr(glowTex,0xff8a2a,3.4,3.4,0,.7,0),spr(glowTex,0xffe08a,1.2,1.8,0,.6,0));fire.position.set(q.x,q.y,q.z);scene.add(fire);FIRES.push({f:fire,ph:1,x:q.x,y:q.y+.6,z:q.z,s:1.2});
+    for(let i=0;i<5;i++){const a=i/5*TAU;const st=new THREE.Mesh(kBoxGeo(.5,.3,.5,1),side);st.position.set(q.x+Math.cos(a)*.8,q.y+.15,q.z+Math.sin(a)*.8);c1Add(st);}
+    for(const [dl,ds] of[[-1.2,-2],[1.4,1.8]]){const b=at(r[0]+6+ds,-2.2+dl);const lg=new THREE.Mesh(new THREE.CylinderGeometry(.3,.3,2,8),c1Lam('wood',KT.wood()));lg.rotation.z=Math.PI/2;lg.rotation.y=-b.a;lg.position.set(b.x,b.y+.3,b.z);c1Add(lg);}
+}
+  /* lava jets erupt through cracks in the road: watch the ring */
+  {let i=0;for(const [a,b] of tagRuns('jet'))for(let s=a+2;s<b;s+=3.4,i++){const q=at(s,(i%2?1:-1)*1.3);const d=new THREE.Mesh(new THREE.CircleGeometry(.9,18),new THREE.MeshBasicMaterial({color:0x3a0a04}));d.rotation.x=-Math.PI/2;d.position.set(q.x,q.y+.03,q.z);scene.add(d);CRS.items.push({k:'jet',x:q.x,y:q.y,z:q.z,t:i*.9,per:2.7});}}
+  /* crumbling stones over the river */
+  for(const [a,b] of tagRuns('crumble'))for(let s=a+1.2,k=0;s<b-.4;s+=2.15,k++){{const q=at(s,k%2?.95:-.95);const m=new THREE.Mesh(boxGeo(1.7,.5,1.7,2.5),side);m.position.set(q.x,q.y-.25,q.z);scene.add(m);const sd=addSolid(q.x-.85,q.x+.85,q.y-.5,q.y,q.z-.85,q.z+.85,'ground',null,{surf:'stone'});CRS.items.push({k:'crumble',s:sd,m,x:q.x,y:q.y,z:q.z,ct:0,vy:0,rt:0});}}
+  /* the Warden's logbook on three stands */
+  const LOG=[[["Year 212 of the Crossing. Another storm. I flew forty travelers over the fire river tonight. A child paid me with an apple. Best wage I ever earned.",7.4],["Sir Bramble says I should rest. Rest is for knights with smaller bridges.  — Cinderwing, Warden",5.6]],
+    [["A sorcerer in a crooked blue hat offered me a star. 'With this,' he said, 'your bridge will never fall again.' Its fire is so hot. My wings have never been stronger.",7.6],["But in its light every traveler looks like a thief. I have started turning them away.",5.2]],
+    [["I sealed the Crossing today. No one can be trusted with my bridge. Not even Bramble.",5.4],["Why does the star feel heavier every night?",4]]];
+  ['plaque1','plaque2','plaque3'].forEach((tg,k)=>{const r=tagRuns(tg)[0];if(!r)return;const q0=at(r[0]+3);const sd=k%2?1:-1;const q=at(r[0]+3,sd*(q0.p.w/2-1.05));c2Lore(q.x,q.y,q.z,-q.a,"THE WARDEN'S LOGBOOK · PAGE "+(k+1),LOG[k],{col:0xffa04a,pageCol:0xffe0b0});});
+  /* Sir Bramble at the rest stop */
+  {const r=tagRuns('bramble')[0];const q=at(r[0]+6,1.6);L.bramC=npc('bramble',q.x,q.z,q.y,-q.a-Math.PI/2,1.75,[
+    ['SIR BRAMBLE VALE',"Ho there, small traveler! Sir Bramble Vale, knight of the Ember Road. Sit, warm your paws a moment.",6,'talk'],
+    ['SIR BRAMBLE VALE',"Headed for the Crossing? Then take this. An apple, for the road.",4.4,'give'],
+    ['FLINT',"Thanks! I'll save it for later.",2.4],
+    ['SIR BRAMBLE VALE',"Wise. Apples taste better after a victory.",3.2,'talk'],
+    ['SIR BRAMBLE VALE',"Baroness Cinderwing was Warden of this road. She flew travelers over the fire river through every storm. Then Vesper Quill gave her a star.",7.6,'talk'],
+    ['SIR BRAMBLE VALE',"Now she seals the Crossing and calls everyone a thief. Her Soot Squires charge in straight lines: step aside, then strike while they skid.",7.4,'point'],
+    ['SIR BRAMBLE VALE',"Her old logbook is scattered on the stands along the road. And there's a portal at the end. I'll take the bridge supports and meet you at the watchtower.",7.6,'wave']],
+    {name:'SIR BRAMBLE VALE',r:4.4,after:()=>{try{localStorage.setItem('wt-apple','1');}catch(e){}banner("BRAMBLE'S APPLE",'SAVED FOR LATER');showHint('FOLLOW THE EMBER ROAD · READ THE LOGBOOK',3);}});}
+  /* Squires: one alone on the broad approach, one on the far landing */
+  for(const tg of['sq1','sq2']){const r=tagRuns(tg)[0];if(!r)continue;const q=at(r[1]-2,0);const e=squire(q.x,q.z,q.y);if(e){e.sect=true;e.face=Math.PI-q.a;}}
+  /* the Baroness: a course-only copy for the strafing run */
+  CWR.g=c2Make('cinderwing',3.4);if(CWR.g){CWR.g.g.visible=false;scene.add(CWR.g.g);}
+  {const r=tagRuns('dive');if(r.length){CWR.a=r[0][0];CWR.b=r[r.length-1][1];}}
+  c1Finish();};
+/* ===================== STRAFING RUN on the Ember Road =====================
+   Cinderwing spots Flint (short scene), then every ~2.4 s paints a red line on the road ahead and streaks along it.
+   1.1 s tell; the line is narrow, so a sidestep or a jump clears it. */
+const CWR={g:null,a:0,b:0,t:1.5,lines:[],fly:null};
+const lineM=()=>new THREE.MeshBasicMaterial({color:red,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false});
+function cwLine(){const m=new THREE.Mesh(new THREE.PlaneGeometry(1.5,1),lineM());m.rotation.x=-Math.PI/2;m.renderOrder=3;scene.add(m);m.visible=false;return m;}
+function placeLine(m,x0,y,z0,x1,z1,w){const dx=x1-x0,dz=z1-z0,L2=Math.hypot(dx,dz)||1;m.scale.set(w/1.5,L2,1);m.position.set((x0+x1)/2,y+.06,(z0+z1)/2);m.rotation.z=Math.atan2(dx/L2,dz/L2)+Math.PI;m.visible=true;}
+function segDist(px,pz,x0,z0,x1,z1){const dx=x1-x0,dz=z1-z0,l2=dx*dx+dz*dz||1;const t=clamp(((px-x0)*dx+(pz-z0)*dz)/l2,0,1);return Math.hypot(px-(x0+dx*t),pz-(z0+dz*t));}
+function strafe(q){const s0=q.s+R(6.5,9.5);const p=crsAt(ROAD,s0).p;if(p.gap||crsAt(ROAD,s0-4).p.gap||crsAt(ROAD,s0+4).p.gap)return;
+  const diag=Math.random()<.45;const lat=pick([-1.6,0,1.6]);const A=diag?crsAt(ROAD,s0-2.6,-2.3):crsAt(ROAD,s0-4.6,lat),E=diag?crsAt(ROAD,s0+2.6,2.3):crsAt(ROAD,s0+4.6,lat);
+  const m=CWR.lines.find(l=>!l.on)||(()=>{const l={m:cwLine(),on:false};CWR.lines.push(l);return l;})();
+  Object.assign(m,{on:true,t:0,x0:A.x,z0:A.z,x1:E.x,z1:E.z,y:Math.max(A.y,E.y)});placeLine(m.m,A.x,m.y,A.z,E.x,E.z,1.5);blip(700,1100,.18,'square',.05);}
+function updStrafe(dt){const g=CWR.g;for(const l of CWR.lines){if(!l.on)continue;l.t+=dt;const k=l.t/1.1;
+    if(k<1){l.m.material.opacity=.2+.55*k*(.6+.4*Math.sin(time*30));}
+    else if(k<1.32){const u=(l.t-1.1)/.22;l.m.material.opacity=.85;if(g){g.g.visible=true;c2Play(g,'dive');const x=lerp(l.x0,l.x1,u),z=lerp(l.z0,l.z1,u);g.g.position.set(x,l.y+1.2,z);g.g.rotation.y=Math.atan2(l.x1-l.x0,l.z1-l.z0);c2Anim(g,dt);}
+      if(Math.random()<.9)emit(V3(lerp(l.x0,l.x1,u),l.y+.4,lerp(l.z0,l.z1,u)),{vy:R(1,3),life:.6,size:.7,size1:.1,color:pick([0xff7a1a,0xffd27a,0xff3a1a])});
+      if(state==='play'&&!P.dead&&segDist(P.pos.x,P.pos.z,l.x0,l.z0,lerp(l.x0,l.x1,u),lerp(l.z0,l.z1,u))<.95&&P.pos.y<l.y+1.7)hurt();if(!l.boom){l.boom=1;sfx.boom();shakeT=Math.max(shakeT,.25);}}
+    else{l.m.material.opacity=Math.max(0,.85-(l.t-1.32)*2);if(g&&l.t<1.9){const u=(l.t-1.32)/.6;g.g.position.y+=dt*16;g.g.position.x+=(l.x1-l.x0)*dt*1.5;g.g.position.z+=(l.z1-l.z0)*dt*1.5;}else if(g&&!CWR.lines.some(o=>o.on&&o!==l&&o.t>1.05))g.g.visible=false;if(l.t>1.9){l.on=false;l.boom=0;l.m.visible=false;}}}}
+function strafeTick(dt){if(!ROAD||!SEC.on||SEC.bonus)return;const q=crsNear(P.pos.x,P.pos.z);const inZ=q&&q.path===ROAD&&q.tag==='dive';
+  if(inZ&&!L.diveCine&&state==='play'&&!P.dead&&P.onGround){L.diveCine=1;const g=CWR.g;const f=crsFwd(q);const ah=crsAt(ROAD,q.s+14);
+    c2Scene([['BARONESS CINDERWING',"A lantern? On MY crossing?",3],['BARONESS CINDERWING',"No one crosses while I hold the star. Turn back, little light... or burn!",4.6]],
+      (t,i)=>{const p=P.pos;return [V3(p.x-f.x*5+f.z*2.4,p.y+2.6,p.z-f.z*5-f.x*2.4),V3(ah.x,ah.y+3.6+Math.max(0,6-t*3),ah.z)];},()=>{L.diveCine=2;CWR.t=1.4;if(g)g.g.visible=false;showHint('WATCH THE RED LINES · SIDESTEP!',2.6);},
+      {tick:(dt,t)=>{if(!g)return;g.g.visible=true;g.g.position.set(ah.x,ah.y+3+Math.max(0,8-t*4)+Math.sin(time*2)*.2,ah.z);g.g.rotation.y=Math.atan2(P.pos.x-ah.x,P.pos.z-ah.z);c2Play(g,t<2?'flap':'talk');c2Anim(g,dt);}});return;}
+  if(inZ&&L.diveCine===2&&state==='play'&&!P.dead){CWR.t-=dt;if(CWR.t<=0){CWR.t=R(2.1,2.6);strafe(q);}}
+  updStrafe(dt);}
+/* ===================== SOOT SQUIRE (minion) =====================
+   A little bucket-helmet knight with torn banner wings. Waddles toward Flint, then leans and scrapes a boot (0.8 s, facing locked)
+   while a red dust streak paints the charge line; charges straight along it, then skids for 1.0 s: strike it then. */
+ANIM.squire=ANIM.squire||{idle:t=>({y:Math.abs(Math.sin(t*2.5))*.02,rz:Math.sin(t*1.5)*.04}),walk:t=>({y:Math.abs(Math.sin(t*10))*.08,rz:Math.sin(t*10)*.1,rx:.06}),
+  lean:(t,k)=>({rx:.32*k,y:-.04*k,rz:Math.sin(t*40)*.03*k}),charge:t=>({rx:.42,y:Math.abs(Math.sin(t*22))*.06}),skid:(t,k)=>({rx:-.25*(1-k),rz:Math.sin(t*18)*.12*(1-k)}),hurt:(t,k)=>({rx:-.4*(1-k)})};
+ANIM.bramble=ANIM.bramble||{idle:t=>({y:Math.abs(Math.sin(t*1.3))*.008,rz:Math.sin(t*.8)*.02}),talk:t=>({y:Math.abs(Math.sin(t*4.5))*.015,rz:Math.sin(t*2)*.035}),point:(t,k)=>({rz:-.07*k,rx:-.04*k}),
+  give:(t,k)=>({rx:.12*Math.sin(Math.min(1,k)*Math.PI),y:-.02*k}),wave:t=>({rz:Math.sin(t*6)*.05}),walk:t=>({y:Math.abs(Math.sin(t*7))*.04,rz:Math.sin(t*7)*.05})};
+ANIM.cinderwing.flap=ANIM.cinderwing.flap||(t=>{const w=Math.sin(t*9);return {pose:{wingL:[0,.25*w,.5*w],wingR:[0,-.25*w,-.5*w],head:[.05,0,0],sword:[.1,0,0]},y:.02*w};});
+ANIM.cinderwing.dive=ANIM.cinderwing.dive||((t,k)=>({pose:{wingL:[0,-1.1,-.4],wingR:[0,1.1,.4],head:[-.2,0,0],sword:[-1.1,0,.2]},rx:.85}));
+ANIM.cinderwing.stuck=ANIM.cinderwing.stuck||((t,k)=>{const e=ease(Math.min(1,k*3));return {pose:{wingL:[0,-.4*e,.35*e],wingR:[0,.4*e,-.35*e],head:[.35*e,0,Math.sin(t*3)*.05],sword:[-.55*e,0,.15*e]},y:-.08*e,rx:.38*e};});
+ANIM.cinderwing.sweep=ANIM.cinderwing.sweep||((t,k)=>{const e=ease(Math.min(1,k));return {pose:{sword:[0,-1.6+3.2*e,-1.2],wingL:[0,.3,.3],wingR:[0,-.3,-.3],head:[0,.4-.8*e,0]},y:-.05,rx:.2};});
+ANIM.cinderwing.kneel=ANIM.cinderwing.kneel||((t,k)=>{const e=ease(Math.min(1,k));return {pose:{wingL:[0,-.5*e,.3*e],wingR:[0,.5*e,-.3*e],head:[.45*e,0,0],sword:[-.3*e,0,.4*e]},y:-.12*e,rx:.25*e};});
+const SQ=[];
+function squire(x,z,y=BY){const e=c2Enemy('squire','squire',x,z,y,1.3,{upd:updSquire});if(!e)return null;
+  const streak=new THREE.Mesh(new THREE.PlaneGeometry(1.3,1),lineM());streak.rotation.x=-Math.PI/2;streak.renderOrder=3;streak.visible=false;scene.add(streak);e.streak=streak;e.mt=R(.6,1.2);SQ.push(e);return e;}
+function sqBlocked(x,y,z){for(const s of solids){if(!s.alive||(s.type!=='wall'&&s.type!=='block'&&s.type!=='gate'))continue;if(x>s.min.x-.35&&x<s.max.x+.35&&z>s.min.z-.35&&z<s.max.z+.35&&y>s.min.y&&y<s.max.y)return true;}return false;}
+function chargeLen(e,ux,uz){let L2=0;for(let s=.5;s<=11;s+=.5){const x=e.pos.x+ux*s,z=e.pos.z+uz*s;const gy=groundBelow(x,z,e.pos.y+.6,.3);if(Math.abs(gy-e.pos.y)>.45||sqBlocked(x,e.pos.y+.8,z))break;L2=s;}return L2;}
+function updSquire(e,dt){const a=e.an;e.mt-=dt;const dx=P.pos.x-e.pos.x,dz=P.pos.z-e.pos.z,d=Math.hypot(dx,dz);const same=Math.abs(P.pos.y-e.pos.y)<2.2;const aware=d<15&&same&&state==='play'&&!P.dead;
+  const stepTo=(ang,sp)=>{const nx=e.pos.x+Math.sin(ang)*sp,nz=e.pos.z+Math.cos(ang)*sp;const gy=groundBelow(nx,nz,e.pos.y+.6,.35);if(Math.abs(gy-e.pos.y)<.45&&!sqBlocked(nx,e.pos.y+.8,nz)&&Math.hypot(nx-e.base.x,nz-e.base.z)<14){e.pos.x=nx;e.pos.z=nz;e.pos.y=gy;return true;}return false;};
+  if(e.mode==='idle'||e.mode==='walk'){if(aware)e.face=lerpAngle(e.face,Math.atan2(dx,dz),Math.min(1,dt*5));
+    if(aware&&d>7.5){e.mode='walk';c2Play(a,'walk');stepTo(e.face,2.4*dt);}
+    else if(!aware&&Math.hypot(e.pos.x-e.base.x,e.pos.z-e.base.z)>.6){e.mode='walk';c2Play(a,'walk');e.face=lerpAngle(e.face,Math.atan2(e.base.x-e.pos.x,e.base.z-e.pos.z),Math.min(1,dt*4));stepTo(e.face,1.6*dt);}
+    else{e.mode='idle';c2Play(a,'idle');}
+    if(e.mt<=0&&aware&&d<9.5){const lf=Math.atan2(dx,dz),ux=Math.sin(lf),uz=Math.cos(lf);const L2=chargeLen(e,ux,uz);
+      if(L2>=3){e.mode='tell';e.mt=.8;e.lf=lf;e.ux=ux;e.uz=uz;e.len=L2;e.face=lf;c2Play(a,'lean',.8);blip(260,180,.25,'square',.05);}else e.mt=.4;}}
+  else if(e.mode==='tell'){e.face=e.lf;const k=1-e.mt/.8;e.streak.visible=true;e.streak.scale.set(1,e.len,1);e.streak.position.set(e.pos.x+e.ux*e.len/2,e.pos.y+.05,e.pos.z+e.uz*e.len/2);e.streak.rotation.z=Math.atan2(e.ux,e.uz)+Math.PI;
+    e.streak.material.opacity=.15+.5*k*(.6+.4*Math.sin(time*30));if(Math.random()<dt*24)emit(e.pos.clone().add(V3(-e.ux*.5+R(-.3,.3),.1,-e.uz*.5+R(-.3,.3))),{vy:R(.5,1.5),life:.35,size:.3,color:0x8a6a5a});
+    if(e.mt<=0){e.mode='charge';e.mt=e.len/12;c2Play(a,'charge');blip(320,120,.3,'sawtooth',.07);}}
+  else if(e.mode==='charge'){const sp=12*dt;const nx=e.pos.x+e.ux*sp,nz=e.pos.z+e.uz*sp;const gy=groundBelow(nx,nz,e.pos.y+.6,.3);if(Math.abs(gy-e.pos.y)<.45){e.pos.x=nx;e.pos.z=nz;e.pos.y=gy;}else e.mt=0;
+    if(Math.random()<.8)emit(e.pos.clone().add(V3(R(-.3,.3),.15,R(-.3,.3))),{vy:R(.5,2),life:.4,size:.45,color:pick([0xff4a2a,0x8a3a2a])});
+    if(state==='play'&&!P.dead&&Math.hypot(P.pos.x-e.pos.x,P.pos.z-e.pos.z)<1.15&&Math.abs(P.pos.y-e.pos.y)<1.3)hurt();
+    if(e.mt<=0){e.mode='skid';e.mt=1;e.sv=4.5;c2Play(a,'skid',1);blip(900,300,.2,'square',.04);}}
+  else if(e.mode==='skid'){e.sv=Math.max(0,e.sv-dt*7);stepTo(Math.atan2(e.ux,e.uz),e.sv*dt);e.streak.material.opacity=Math.max(0,e.streak.material.opacity-dt*.8);if(e.sv>0&&Math.random()<.6)emit(e.pos.clone().add(V3(0,.1,0)),{vx:R(-1,1),vy:R(1,2.5),vz:R(-1,1),life:.3,size:.18,color:0xffd27a});
+    if(e.mt<=0){e.mode='idle';e.mt=R(.9,1.4);e.streak.visible=false;}}
+  c2Anim(a,dt);e.obj.rotation.y=e.face;e.obj.position.copy(e.pos);}
+L.minion=(x,z,y)=>squire(x,z,y);
+L.summon=(x,z,y)=>{const a=R(0,TAU);const e=squire(Math.sin(a)*8,ACZ+Math.cos(a)*8,AY);if(e){e.summoned=true;e.base.set(0,AY,ACZ);}return e;};
+/* ===================== BARONESS CINDERWING (boss) =====================
+   A winged bronze knight with a scarlet mantle and a broad sword. Everything she does is aimed at where Flint stands:
+   · FEATHER VOLLEY — hovering, she beats her wings (0.8 s, thin red lines show each feather's path) and throws a fan of burning feathers
+   · EMBERS        — burning embers fall where Flint stands, one after another (orange rings mark them)
+   · DIVE          — she climbs to the far edge, folds her wings and paints a bright red line through Flint (1.1 s), then dives along it
+   · BURNING TRAIL — from phase 2 a dive leaves its line on fire for a moment
+   · LOW SWEEP     — phase 3: from where she lands, the sword tip sparks, then a low ring of fire sweeps out (jump it)
+   The last dive of each pattern sticks her blade in the stones: strike her then. Three hits free the Ember Star. */
+let cw=null;const CW={x:0,z:ACZ-6,h:7,face:0};const CWH=5.2;
+const DLINE=cwLine(),TRAIL=new THREE.Mesh(new THREE.PlaneGeometry(1.8,1),new THREE.MeshBasicMaterial({color:0xff8a2a,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));TRAIL.rotation.x=-Math.PI/2;TRAIL.renderOrder=3;scene.add(TRAIL);TRAIL.visible=false;
+const FL=[];for(let i=0;i<5;i++)FL.push(cwLine());
+const FEA=[];{const fm=new THREE.MeshBasicMaterial({color:0xff5a2a});for(let i=0;i<14;i++){const g=grp(new THREE.Mesh(new THREE.ConeGeometry(.22,1.2,4),fm),spr(glowTex,0xff7a2a,1.8,1.8,0,0,0));g.children[0].rotation.x=Math.PI/2;g.visible=false;scene.add(g);FEA.push({g,on:false});}}
+const EMB=[];for(let i=0;i<8;i++){const ring=new THREE.Mesh(new THREE.RingGeometry(1.15,1.5,28),new THREE.MeshBasicMaterial({color:orange,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;scene.add(ring);
+  const dr=grp(spr(glowTex,0xff7a1a,1.8,1.8,0,0,0),spr(glowTex,0xffe08a,.7,.7,0,0,0));scene.add(dr);ring.visible=dr.visible=false;EMB.push({ring,dr,on:false});}
+const SPARK=spr(glowTex,0xffe08a,2.2,2.2,0,0,0);SPARK.visible=false;scene.add(SPARK);
+const SWT=new THREE.Mesh(new THREE.RingGeometry(.9,1,48),new THREE.MeshBasicMaterial({color:0xff5a1a,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));SWT.rotation.x=-Math.PI/2;scene.add(SWT);
+function clearCwFx(){DLINE.visible=false;TRAIL.visible=false;SPARK.visible=false;SWT.material.opacity=0;for(const l of FL)l.visible=false;for(const f of FEA){f.on=false;f.g.visible=false;}for(const e of EMB){e.on=false;e.ring.visible=e.dr.visible=false;}CW.trailT=0;}
+function setupCw(){cw=c2Make('cinderwing',CWH);if(!cw)return;cw.g.position.set(0,AY+30,ACZ-6);scene.add(cw.g);{const gs=spr(glowTex,0xff6a2a,1.4,1.4,0,.45,0);gs.material.opacity=.35;cw.g.add(gs);}
+  cw.mats=[];cw.g.traverse(o=>{if(o.isMesh)for(const m of[].concat(o.material))if(m&&m.emissive&&!cw.mats.includes(m)){cw.mats.push(m);m.userData.e0=m.emissive.clone();}});cw.flash=0;
+  boss.maxHp=85;boss.reset=()=>{boss.state='idle';boss.t=0;boss.kd=0;CW.x=0;CW.z=ACZ-6;CW.h=7;clearCwFx();if(cw)cw.g.visible=true;};}
+function rimPoint(ang,r=12){return {x:Math.sin(ang)*r,z:ACZ+Math.cos(ang)*r};}
+function farEnd(ax,az,ux,uz){/* where a line from (ax,az) along u leaves the 12.6 m circle */const ox=ax,oz=az-ACZ,b=ox*ux+oz*uz,c=ox*ox+oz*oz-12.6*12.6;const t=-b+Math.sqrt(Math.max(0,b*b-c));return Math.max(4,Math.min(26,t));}
+function emberAt(x,z,tell){const d=EMB.find(q=>!q.on);if(!d)return;d.on=true;d.t=0;d.tell=tell;d.x=clamp(x,-13,13);d.z=clamp(z,ACZ-13,ACZ+13);d.ring.position.set(d.x,AY+.07,d.z);d.ring.visible=true;d.dr.visible=true;d.dr.position.set(d.x,AY+15,d.z);blip(500,900,.08,'square',.04);}
+function cwPlan(){const ph=bossPhase();
+  if(ph===0)return {open:2.2,steps:[{k:'volley',fans:1,n:3},{k:'embers',n:4,gap:.62,tell:.85},{k:'dive',open:true}]};
+  if(ph===1)return {open:1.9,steps:[{k:'embers',n:5,gap:.55,tell:.8},{k:'volley',fans:2,n:3},{k:'dive'},{k:'dive',open:true,trail:true}]};
+  return {open:1.7,steps:[{k:'volley',fans:3,n:4},{k:'dive',trail:true},{k:'embers',n:6,gap:.5,tell:.75},{k:'dive',open:true,trail:true,sweep:true}]};}
+function cwStep(b,s){b.st=0;s.i=0;s.next=0;s.fan=0;b.sub=s.k==='dive'?'climb':s.k==='volley'?'rise':'go';if(s.k==='dive'){const pa=Math.atan2(P.pos.x,P.pos.z-ACZ);s.ang=pa+Math.PI+R(-.55,.55);s.from=[CW.x,CW.z,CW.h];}}
+L.setup=()=>{setupCw();
+  L.bram2=npc('bramble',-5,-53.4,BY,Math.PI/2,1.75,[],{name:'SIR BRAMBLE VALE',r:4.2,after:()=>showHint('ON TO THE BROKEN SPAN',2.6)});};
+L.bramLines=()=>{const a=[['SIR BRAMBLE VALE',"Through a portal, eh? I took the old bridge supports. Knights don't fit through portals.",5.4,'talk'],
+    ['SIR BRAMBLE VALE',"The span is broken past here, then it's the stair up to her courtyard.",4.2,'point']];
+  if(C2.pages>=3)a.push(['SIR BRAMBLE VALE',"You read her logbook? 'Not even Bramble.' Hm. She never could admit she was tired.",5.6,'talk']);
+  a.push(['SIR BRAMBLE VALE',"When she folds her wings, she's about to dive. Find the red line and step off it. While her blade is stuck in the stones, that's your moment.",7.4,'talk']);return a;};
+L.startBoss=()=>{if(L._pre===1)return;const go=st=>{bossIntro(L.bossName);boss.reset();boss.state=st;boss.t=0;if(st==='idle')showHint('WATCH THE RED LINES · STRIKE WHEN HER BLADE STICKS',3.6);};
+  if(L._pre===2||!cw){go('intro');return;}L._pre=1;
+  const lines=[['BARONESS CINDERWING',"So the little light crossed my bridge after all.",3.6],['FLINT',"Travelers need this crossing. And the sky needs that star.",3.6],
+    ['BARONESS CINDERWING',"Vesper's star keeps my fire burning! Without it my bridge falls, and everyone on it falls too!",5.6]];
+  if(C2.pages>=3)lines.push(['FLINT',"Your logbook says the star feels heavier every night.",3.4],['BARONESS CINDERWING',"...Silence!",2]);
+  lines.push(['BARONESS CINDERWING',"En garde, lantern-bearer. Watch the red lines... if you can.",4.2]);
+  c2Scene(lines,(t,i)=>{const who=lines[i][0];const A=V3(CW.x,AY+CW.h+3,CW.z);
+      if(i===0)return [V3(-8+t*.6,AY+3.2,ACZ+11),V3(0,AY+CW.h+1.5,ACZ-6)];
+      if(who==='FLINT'){const f=P.pos;return [f.clone().add(V3(1.8,1.9,-3.4)),f.clone().add(V3(0,1.2,0))];}
+      return [V3(A.x+3+Math.sin(t*.2)*2,AY+CW.h+1.5,A.z+10),A];},
+    ()=>{L._pre=2;go('idle');},
+    {tick:(dt,t)=>{const k=Math.min(1,t/2.8);CW.x=0;CW.z=ACZ-6;CW.h=lerp(17,7,ease(k));cw.g.position.set(CW.x,AY+CW.h+Math.sin(time*2)*.15,CW.z);cw.g.rotation.y=lerpAngle(cw.g.rotation.y,Math.atan2(P.pos.x-CW.x,P.pos.z-CW.z),Math.min(1,dt*3));c2Play(cw,k<1?'flap':'talk');c2Anim(cw,dt);}});};
+L.hitBoss=()=>{if(boss.state!=='sleep')return;const m=boss.maxHp,tgt=boss.hp>m*2/3+.5?m*2/3:boss.hp>m/3+.5?m/3:0;NEXTDMG=Math.max(1,Math.ceil(boss.hp-tgt));
+  if(bossDamage(0xffa04a)){boss.state='dead';boss.t=0;clearCwFx();sfx.life();return;}
+  boss.state='hurt';boss.t=0;clearCwFx();const ph=bossPhase();showHint(ph===1?'TWO DIVES NOW · WATCH FOR THE NEW LINE':'SHE SWEEPS AFTER LANDING · JUMP THE FIRE RING',2.8);};
+L.updBoss=dt=>{const b=boss;if(b.state==='off'||!cw)return;b.t+=dt;const g=cw.g;const PL=state==='play'&&!P.dead;let anim='flap',faceTo=Math.atan2(P.pos.x-CW.x,P.pos.z-CW.z);
+  if(b.state==='intro'){CW.h=lerp(25,7,Math.min(1,b.t/2));if(b.t>2.3){b.state='idle';b.t=0;showHint('WATCH THE RED LINES · STRIKE WHEN HER BLADE STICKS',3.6);}}
+  else if(b.state==='idle'){/* circles above, keeping her distance */CW.h=lerp(CW.h,6.5,dt*2);const a=Math.atan2(CW.x,CW.z-ACZ)+dt*.4;CW.x=lerp(CW.x,Math.sin(a)*8,dt*1.5);CW.z=lerp(CW.z,ACZ+Math.cos(a)*8,dt*1.5);if(b.t>.9){b.state='act';b.t=0;b.pl=cwPlan();b.si=0;cwStep(b,b.pl.steps[0]);}}
+  else if(b.state==='act'){const s=b.pl.steps[b.si];b.st+=dt;let done=false;
+    if(s.k==='volley'){if(b.sub==='rise'){CW.h=lerp(CW.h,5.5,dt*3);const tx=clamp(CW.x,-9,9),tz=ACZ+clamp(CW.z-ACZ,-9,9);CW.x=lerp(CW.x,tx,dt*2);CW.z=lerp(CW.z,tz,dt*2);if(b.st>.5){b.sub='tell';b.st=0;}}
+      else if(b.sub==='tell'){anim='flap';if(b.st<=dt){const base=Math.atan2(P.pos.x-CW.x,P.pos.z-CW.z);s.dirs=[];for(let i=0;i<s.n;i++)s.dirs.push(base+(i-(s.n-1)/2)*(s.n>3?.3:.34));s.dirs.forEach((a,i)=>{if(FL[i])placeLine(FL[i],CW.x,AY,CW.z,CW.x+Math.sin(a)*24,CW.z+Math.cos(a)*24,.45);});blip(800,1300,.2,'square',.05);}
+        const k=Math.min(1,b.st/.8);for(let i=0;i<s.n;i++)if(FL[i])FL[i].material.opacity=.15+.45*k*(.6+.4*Math.sin(time*30));faceTo=s.dirs?s.dirs[(s.n-1)>>1]:faceTo;
+        if(b.st>=.8){for(const l of FL)l.visible=false;for(const a of s.dirs){const f=FEA.find(q=>!q.on);if(!f)break;Object.assign(f,{on:true,x:CW.x,z:CW.z,dx:Math.sin(a),dz:Math.cos(a),t:0});f.g.visible=true;f.g.rotation.y=a;}sfx.boom();s.fan++;b.st=0;b.sub=s.fan<s.fans?'gap':'wait';}}
+      else if(b.sub==='gap'){if(b.st>.45){b.sub='tell';b.st=0;}}
+      else if(b.sub==='wait'){if(!FEA.some(f=>f.on)||b.st>2)done=true;}}
+    else if(s.k==='embers'){anim='flap';CW.h=lerp(CW.h,7,dt*2);s.next-=dt;if(s.i<s.n&&s.next<=0){emberAt(P.pos.x,P.pos.z,s.tell);s.i++;s.next=s.gap;}if(s.i>=s.n&&!EMB.some(e=>e.on)&&b.st>.4)done=true;}
+    else if(s.k==='dive'){
+      if(b.sub==='climb'){/* flies up to the far edge, opposite Flint */const rp=rimPoint(s.ang,12);const k=Math.min(1,b.st/.75);CW.x=lerp(s.from[0],rp.x,ease(k));CW.z=lerp(s.from[1],rp.z,ease(k));CW.h=lerp(s.from[2],6.8,k);if(k>=1){b.sub='tell';b.st=0;}}
+      else if(b.sub==='tell'){anim='fold';if(b.st<=dt){const tx=clamp(P.pos.x,-13,13),tz=clamp(P.pos.z,ACZ-13,ACZ+13);let ux=tx-CW.x,uz=tz-CW.z;const l=Math.hypot(ux,uz)||1;ux/=l;uz/=l;s.ux=ux;s.uz=uz;s.len=farEnd(CW.x,CW.z,ux,uz);s.x0=CW.x;s.z0=CW.z;s.x1=CW.x+ux*s.len;s.z1=CW.z+uz*s.len;placeLine(DLINE,s.x0,AY,s.z0,s.x1,s.z1,2.3);blip(600,1000,.3,'square',.06);}
+        const k=Math.min(1,b.st/1.1);DLINE.material.opacity=.2+.6*k*(.6+.4*Math.sin(time*30));faceTo=Math.atan2(s.ux,s.uz);if(b.st>=1.1){b.sub='dive';b.st=0;s.px=CW.x;s.pz=CW.z;blip(300,80,.5,'sawtooth',.08);}}
+      else if(b.sub==='dive'){anim='dive';faceTo=Math.atan2(s.ux,s.uz);const T=s.len/24,k=Math.min(1,b.st/T);const px=CW.x,pz=CW.z;CW.x=s.x0+s.ux*s.len*k;CW.z=s.z0+s.uz*s.len*k;CW.h=lerp(6.8,1.1,Math.min(1,k/.3));DLINE.material.opacity=.9;
+        if(Math.random()<.9)emit(V3(CW.x,AY+CW.h+.5,CW.z),{vx:R(-1,1),vy:R(0,2),vz:R(-1,1),life:.5,size:.8,size1:.1,color:pick([0xff7a1a,0xffd27a,0xff3a1a])});
+        if(PL&&CW.h<2.6&&segDist(P.pos.x,P.pos.z,px,pz,CW.x,CW.z)<1.7&&P.pos.y<AY+2.6)hurt();
+        if(k>=1){DLINE.visible=false;burst(V3(CW.x,AY+.4,CW.z),0xff8a2a,30,8,.6);sfx.boom();shakeT=Math.max(shakeT,.5);
+          if(s.trail){placeLine(TRAIL,s.x0,AY+.01,s.z0,s.x1,s.z1,1.8);TRAIL.material.opacity=.75;CW.trailT=1.6;CW.tr=[s.x0,s.z0,s.x1,s.z1];}
+          b.sub=s.sweep?'spark':s.open?'stick':'recover';b.st=0;}}
+      else if(b.sub==='spark'){anim='stuck';CW.h=lerp(CW.h,0,Math.min(1,dt*10));faceTo=Math.atan2(s.ux,s.uz);const k=Math.min(1,b.st/.9);SPARK.visible=true;SPARK.position.set(CW.x+s.ux*1.9,AY+.35,CW.z+s.uz*1.9);SPARK.material.opacity=.5+.5*Math.sin(time*40);SWT.position.set(CW.x,AY+.08,CW.z);SWT.scale.setScalar(1+8*k);SWT.material.opacity=.25+.4*k;
+        if(b.st<=dt)showHint('THE SWORD SPARKS · JUMP THE FIRE!',1.4);if(b.st>=.9){SPARK.visible=false;SWT.material.opacity=0;shockRing(CW.x,AY,CW.z,8.5,13,0xff5a1a,0,false);c2Play(cw,'sweep',.4);b.sub='stick';b.st=0;}}
+      else if(b.sub==='stick'){CW.h=lerp(CW.h,0,Math.min(1,dt*10));if(b.st>.25){b.state='sleep';b.t=0;}anim='stuck';}
+      else if(b.sub==='recover'){anim='stuck';CW.h=lerp(CW.h,0,Math.min(1,dt*10));if(b.st>.7){b.sub='rise';b.st=0;}}
+      else if(b.sub==='rise'){CW.h=lerp(CW.h,6.5,dt*4);anim='flap';if(b.st>.55)done=true;}}
+    if(done){b.si++;if(b.si>=b.pl.steps.length){b.state='idle';b.t=0;}else cwStep(b,b.pl.steps[b.si]);}}
+  else if(b.state==='sleep'){/* blade stuck in the stones */anim='stuck';CW.h=lerp(CW.h,0,Math.min(1,dt*10));faceTo=g.rotation.y;{const cap=Math.ceil(boss.maxHp*.15);if((boss.kd||0)<cap-.5)boss.kd=cap-.5;}
+    if(!b.kHint){b.kHint=1;showHint('HER BLADE IS STUCK · STRIKE!',2);}if(Math.random()<.3)emit(V3(CW.x+R(-.6,.6),AY+.3,CW.z+R(-.6,.6)),{vy:R(1,2),life:.4,size:.3,color:0xffd27a});
+    if(b.t>b.pl.open){b.state='hurt2';b.t=0;b.kHint=0;}
+    else if(spinNear(CW.x,CW.z,3.2,AY)||stompOn(CW.x,CW.z,2,AY+3))L.hitBoss();}
+  else if(b.state==='hurt2'||b.state==='hurt'){/* pulls the sword free and takes to the air again */anim=b.t<.5?'stuck':'flap';CW.h=lerp(CW.h,6.5,Math.min(1,dt*(b.t<.5?0:3)));if(b.t>1.2){b.state='idle';b.t=0;}}
+  else if(b.state==='dead'){clearCwFx();anim='kneel';CW.h=lerp(CW.h,0,Math.min(1,dt*3));
+    if(b.t>1.4&&!b.cine){b.cine=1;let br=c2Make('bramble',1.75);if(br){br.g.position.set(0,AY,-133);scene.add(br.g);}
+      const lines=[['BARONESS CINDERWING',"...The star was never holding up my bridge. It was only burning me.",4.8],
+        ['SIR BRAMBLE VALE',"The bridge always stood because you kept it, Baroness. The lamps were yours to light.",5.4],
+        ['BARONESS CINDERWING',"Bramble... you old fool. You kept them lit for me.",3.8],
+        ['BARONESS CINDERWING',"Take the star, little lantern. Let the travelers cross again.",4.2]];
+      c2Scene(lines,(t,i)=>{const sp=lines[i][0];if(sp==='SIR BRAMBLE VALE'&&br){const bp=br.g.position;return [V3(bp.x+2.6,AY+2.2,bp.z-3.6),V3(bp.x,AY+1.4,bp.z)];}return [V3(CW.x+2.4,AY+2.8,CW.z+5.6),V3(CW.x,AY+2,CW.z)];},
+        ()=>{b.freed=true;b.ft=0;burst(V3(CW.x,AY+2,CW.z),0xffa04a,60,10,.9);sfx.check();if(br)scene.remove(br.g);c2Star(0,AY+2.4,ACZ,'EMBER STAR',()=>bossDefeated());showHint('GRAB THE EMBER STAR',3);},
+        {tick:(dt,t)=>{if(br){const k=Math.min(1,t/3);br.g.position.set(lerp(0,CW.x*.6,k),AY,lerp(-133,CW.z+lerp(13,4,k),k));br.g.rotation.y=Math.atan2(CW.x-br.g.position.x,CW.z-br.g.position.z);c2Play(br,t<3?'walk':'talk');c2Anim(br,dt);}
+          c2Play(cw,'kneel',1);c2Anim(cw,dt);cw.g.position.set(CW.x,AY,CW.z);for(const m of cw.mats)m.emissive.copy(m.userData.e0);}});}
+    if(b.freed){b.ft=(b.ft||0)+dt;if(b.ft>1.2&&g.visible){g.visible=false;burst(V3(CW.x,AY+2,CW.z),0xff8a2a,40,8,.7);}}}
+  /* feathers */
+  for(const f of FEA){if(!f.on)continue;f.t+=dt;f.x+=f.dx*13*dt;f.z+=f.dz*13*dt;f.g.position.set(f.x,AY+.9,f.z);if(Math.random()<.4)emit(V3(f.x,AY+.9,f.z),{life:.3,size:.4,size1:.05,color:0xff7a2a});
+    if(PL&&Math.hypot(P.pos.x-f.x,P.pos.z-f.z)<.85&&P.pos.y<AY+1.6)hurt();if(f.t>2.2||Math.abs(f.x)>14.4||Math.abs(f.z-ACZ)>14.4){f.on=false;f.g.visible=false;}}
+  /* embers */
+  for(const d of EMB){if(!d.on)continue;d.t+=dt;const k=d.t/d.tell;if(k<1){d.ring.material.opacity=.3+.5*k;d.ring.scale.setScalar(1.3-.3*k);d.dr.position.y=AY+.4+15*(1-Math.max(0,(k-.55)/.45));}
+    else if(!d.hit){d.hit=true;d.dr.visible=false;burst(V3(d.x,AY+.3,d.z),0xff7a1a,16,6,.45);blip(200,80,.2,'sawtooth',.05);if(PL&&Math.hypot(P.pos.x-d.x,P.pos.z-d.z)<1.6&&P.pos.y<AY+2.2)hurt();}
+    if(k>1.3){d.on=false;d.hit=false;d.ring.visible=false;d.dr.visible=false;}}
+  /* burning trail */
+  if(CW.trailT>0){CW.trailT-=dt;TRAIL.material.opacity=Math.min(.75,CW.trailT*.8);const [x0,z0,x1,z1]=CW.tr;if(Math.random()<.8){const u=Math.random();emit(V3(lerp(x0,x1,u),AY+.2,lerp(z0,z1,u)),{vy:R(1,3),life:.5,size:.6,size1:.1,color:pick([0xff7a1a,0xffb03a])});}
+    if(PL&&segDist(P.pos.x,P.pos.z,x0,z0,x1,z1)<.85&&P.pos.y<AY+.9)hurt();if(CW.trailT<=0)TRAIL.visible=false;}
+  /* hit reaction */
+  if(cw.lastHp!==undefined&&b.hp<cw.lastHp&&b.state!=='intro'){cw.flash=1;burst(V3(CW.x,AY+2.4,CW.z),0xffa04a,36,9,.7);hitStop(.12);shakeT=Math.max(shakeT,.5);blip(1200,500,.4,'square',.08);}cw.lastHp=b.hp;
+  if(cw.flash>0){cw.flash=Math.max(0,cw.flash-dt*3.2);for(const m of cw.mats)m.emissive.copy(m.userData.e0).lerp(new THREE.Color(1,.85,.6),cw.flash*.8);}
+  if(!(b.state==='dead'&&b.cine)){c2Play(cw,anim==='fold'?'fold':anim,anim==='stuck'||anim==='fold'?.4:1);g.position.set(CW.x,AY+CW.h+(CW.h>1.5?Math.sin(time*2.2)*.18:0),CW.z);g.rotation.y=lerpAngle(g.rotation.y,faceTo,Math.min(1,dt*(anim==='dive'?12:4)));c2Anim(cw,dt);}
+  b.pos.set(CW.x,AY+CW.h+1.6,CW.z);};
+L.inArena=p=>p.x<SX-120&&p.z<ARENA.z0&&p.z>ARENA.z1&&p.y>AY-1;
+L.onRespawn=()=>{clearCwFx();for(const l of CWR.lines){l.on=false;l.m.visible=false;}if(CWR.g)CWR.g.g.visible=false;CWR.t=1.6;};
+L.update=dt=>{c2Tick(dt);strafeTick(dt);for(const e of SQ)if(!e.alive&&e.streak.visible)e.streak.visible=false;
+  if(SEC.done&&!SEC.on&&!L.arr){L.arr=1;setTimeout(()=>banner("CINDERWING'S CROSSING",'THE BRIDGE OVER THE FIRE RIVER'),700);}if(L.bram2&&!L.bram2.said)L.bram2.lines=L.bramLines();
+  if(cw&&boss.state==='off'){c2Play(cw,'flap');c2Anim(cw,dt);cw.g.position.set(0,AY+30,ACZ-6);}
+  for(const f of FIRES){const k=1+Math.sin(time*9+f.ph)*.12+Math.sin(time*23+f.ph)*.06;f.f.scale.setScalar(k);if(Math.random()<dt*6)emit(V3(f.x+R(-.2,.2),f.y,f.z+R(-.2,.2)),{vy:R(1.5,3),life:.6,size:.35*f.s,size1:.05,color:pick([0xff8a2a,0xffd27a])});}};
+L.populate=()=>{
+  orbLine(0,6,0,-1,4,BY+1.4);makeCrate('crate',-2,-6);makeCrate('crate',2,-6);
+  /* bridge A: the Squire guards the middle; the alcoves are where you dodge */
+  squire(0,-27,BY);orbLine(0,-12,0,-24,5,BY+1.2);makeCrate('lucky',5.4,-18);makeCrate('crate',5.4,-33);orbLine(0,-36,0,-44,4,BY+1.2);
+  /* the old supports */
+  for(const [x,z] of[[-7.2,-13.6],[-7.4,-19.2],[-7.2,-24.8],[-7.4,-30.2],[-7.2,-35.6]])spawnOrb(x,BY+.6,z);makeCrate('lucky',-5,-42.8,BY-1);spawnShard(-5,BY+.4,-7.2,'supports');
+  /* watchtower */
+  makeCrate('check',0,-48.5,BY);makeCrate('crate',4,-60,BY);makeCrate('boom',-4,-60,BY);
+  /* broken span */
+  for(const [x,z] of[[-1.2,-73.2],[1.4,-77.6],[-1,-82],[.6,-86.4]])spawnOrb(x,BY+1.4,z);
+  /* bridge B: two Squires, alcoves on both sides */
+  squire(0,-97,BY);squire(0,-112,BY);makeCrate('crate',-5.2,-102);makeCrate('lucky',5.2,-111);orbLine(0,-92,0,-116,7,BY+1.2);
+  /* the stair */
+  makeCrate('check',0,-116.8,BY);for(let i=0;i<4;i++)spawnOrb(0,BY+1.4+i*.75,-119.5-i*2.2);};
+}
+
+else if(LV===14){
+/* ===================== CHAPTER 2 · LEVEL 14: THE STAR-CAGE CITADEL =====================
+   Opening course (the Star Road): Nettle, Mara and Bramble see Flint off as the four freed stars stitch a road through the clouds;
+   floating isles, falling stars, crumbling stones, Vesper's star charts on three stands, a bonus portal, and Vesper's projection
+   taunting Flint halfway up. The road's portal opens below the citadel (hub, forward = -Z): a last causeway of drifting isles →
+   a broad platform (an Orbit Imp alone) → a short bridge with a wide landing (another Imp) → the castle stairs → the open observatory,
+   where Vesper Quill swings the stolen stars around his staff. Breaking the cage frees every star and ends the chapter. */
+const ACZ=-136,AY=12;
+ARENA={x0:-14,x1:14,z0:-122,z1:-150,cz:ACZ,y:AY,cx:0};
+Object.assign(L,{num:14,name:'THE STAR-CAGE CITADEL',start:V3(0,0,6),killY:-9,mus:LVMUS[14][0],bossMus:LVMUS[14][1],bossName:'VESPER QUILL',hemiI:1.05,
+  hint:'CLIMB TO THE OBSERVATORY',grade:{sat:1.2,vig:.92,tint:[1.04,.96,1.14]},
+  clampP:p=>{if(p.x>SX-120)return;p.z=Math.min(p.z,9.4);if(p.z<-122.4&&p.y>AY-1){const dx=p.x,dz=p.z-ACZ,d=Math.hypot(dx,dz);if(d>13.2){p.x=dx/d*13.2;p.z=ACZ+dz/d*13.2;}}},
+  clampCam:c=>{if(c.x<SX-120)c.z=Math.min(c.z,16);}});
+/* ---- sky: violet night, a crescent moon, a sea of cloud ---- */
+scene.background=skyTex(g=>{grad(g,512,1024,[[0,'#04020e'],[.22,'#120838'],[.42,'#2a1470'],[.55,'#4a2a9a'],[.61,'#2a1660'],[1,'#0a0420']]);stars(g,512,1024,900,.6);clouds(g,512,1024,10,['#3a2280','#24105a','#5a3aa8'],.3,.6,20);
+  const mx=330,my=200;g.fillStyle='#e8e0ff';g.beginPath();g.arc(mx,my,58,0,TAU);g.fill();g.fillStyle='#120838';g.beginPath();g.arc(mx+26,my-14,52,0,TAU);g.fill();
+  const gr=g.createRadialGradient(mx,my,40,mx,my,140);gr.addColorStop(0,'rgba(200,180,255,.25)');gr.addColorStop(1,'rgba(120,80,255,0)');g.fillStyle=gr;g.fillRect(mx-140,my-140,280,280);});
+scene.fog=new THREE.Fog(0x24124a,36,160);hemi.color.setHex(0xc8b0ff);hemi.groundColor.setHex(0x1a0a3a);hemi.intensity=1.05;
+const VIO=c1Stone('vcStone',['#5a4a8e','#52427f','#64529c','#483a72','#5e4c8a'],'#160e2a');
+const top=new THREE.MeshLambertMaterial({map:VIO}),side=new THREE.MeshLambertMaterial({map:KT.masonry(),color:0xb0a0d8}),dark=c1Lam('vcDark',KT.masonry(),{color:0x7a6aa0});
+const violet=0xb06aff,gold=0xffd27a;
+const CLOUD=c1T('vcCloud',()=>{const t=texSmooth(256,256,g=>{g.fillStyle='rgba(0,0,0,0)';g.fillRect(0,0,256,256);for(let i=0;i<46;i++){const x=R(0,256),y=R(0,256),r=R(26,70);const gr=g.createRadialGradient(x,y,0,x,y,r);gr.addColorStop(0,'rgba(190,160,255,.55)');gr.addColorStop(1,'rgba(90,60,180,0)');g.fillStyle=gr;g.fillRect(x-r,y-r,r*2,r*2);}});t.wrapS=t.wrapT=THREE.RepeatWrapping;return t;});
+/* ---- kit pieces ---- */
+const POSTS=[];
+function crystalPost(x,y,z,h=1.5){const g=new THREE.Group();const b=new THREE.Mesh(kBoxGeo(.7,h,.7,1.4),side);b.position.y=h/2;g.add(b);const cap=new THREE.Mesh(new THREE.ConeGeometry(.62,.8,4),dark);cap.position.y=h+.4;cap.rotation.y=Math.PI/4;g.add(cap);
+  const gem=new THREE.Mesh(new THREE.OctahedronGeometry(.2,0),c1M('vcGem',()=>new THREE.MeshBasicMaterial({color:0xd8a0ff})));gem.position.set(0,h*.6,.36);gem.scale.set(1,1.6,.4);g.add(gem);const gem2=gem.clone();gem2.position.z=-.36;g.add(gem2);
+  g.position.set(x,y,z);c1Add(g);const gl=spr(glowTex,violet,1.6,1.6,x,y+h*.6,z);gl.material.opacity=.55;scene.add(gl);POSTS.push({gl,ph:Math.random()*9});}
+function isle(x,y,z,r,o={}){/* a floating rock island: flat top, tapering rocky underside */const g=new THREE.Group();const topm=new THREE.Mesh(new THREE.CylinderGeometry(r,r*.92,1,9),[side,top,side]);topm.position.y=-.53;g.add(topm);
+  const under=new THREE.Mesh(new THREE.ConeGeometry(r*.92,r*2.2,9),c1Lam('vcRock',KT.rock(),{color:0x8a7ab0}));under.rotation.x=Math.PI;under.position.y=-1-r*1.1;g.add(under);g.position.set(x,y,z);if(o.live){g.userData.live=true;scene.add(g);}else c1Add(g);return g;}
+function farIsle(x,y,z,r){isle(x,y,z,r);if(Math.random()<.7){const t=c1Tower(x,y,z,{pal:'lilac',w:r*.5,floors:2+((Math.random()*2)|0),seed:(x*13+z)|0});}}
+const FALLS=[];function lightFall(x,y,z,h,w=4){const t=c1T('vcFallT',()=>{const tt=texSmooth(32,128,g=>{for(let y=0;y<128;y++){g.fillStyle=`rgba(${200+((y*7)%55)},${190+((y*3)%60)},255,${.35+.3*Math.sin(y*.4)})`;g.fillRect(0,y,32,1);}});tt.wrapS=tt.wrapT=THREE.RepeatWrapping;return tt;}).clone();t.needsUpdate=true;t.repeat.set(1,h/8);
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:t,color:0xb8a0ff,transparent:true,opacity:.55,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));m.position.set(x,y-h/2,z);m.lookAt(0,y-h/2,ACZ);scene.add(m);FALLS.push(t);}
+/* ---- the cloud sea and the distant isles ---- */
+{for(const [y,op,rep] of[[-16,.55,10],[-11,.28,6]]){const t=CLOUD.clone();t.needsUpdate=true;t.repeat.set(rep,rep);const m=new THREE.Mesh(new THREE.PlaneGeometry(900,900),new THREE.MeshBasicMaterial({map:t,color:0x9a84e0,transparent:true,opacity:op,depthWrite:false}));m.rotation.x=-Math.PI/2;m.position.set(0,y,-100);scene.add(m);C1.upd.push(dt=>{t.offset.x+=dt*.004;});}
+  const base=new THREE.Mesh(new THREE.PlaneGeometry(900,900),new THREE.MeshBasicMaterial({color:0x160a34}));base.rotation.x=-Math.PI/2;base.position.set(0,-18,-100);scene.add(base);}
+for(let i=0;i<14;i++){const sd=i%2?1:-1;farIsle(sd*R(40,90),R(-6,14),R(30,-240),R(5,11));}
+for(const [x,z,h] of[[-46,-40,46],[52,-90,52],[-58,-150,48],[60,-30,40],[44,-200,50]])lightFall(x,R(26,36),z,h,R(3,5));
+C1.upd.push(dt=>{for(const t of FALLS)t.offset.y-=dt*.4;});
+/* ===================== 00 · THE LAST CAUSEWAY (portal arrival) ===================== */
+deck(-4,4,10,-6,0,top,side,3);for(const z of[8,2,-4])for(const sx of[-1,1])crystalPost(sx*4.3,0,z,1.6);
+for(const sx of[-1,1])addSolid(sx<0?-4.6:4,sx<0?-4:4.6,-2,6,-6,10,'wall',null);
+/* drifting isles: left, right, then a moving one */
+deck(-6.5,-1.5,-8.6,-15.6,0,top,side,1.2);isle(-4,0,-12.1,3.4);
+deck(1,6,-18.4,-25.4,1,top,side,1.2);isle(3.5,1,-21.9,3.4);
+{const g=isle(-2,2,-30,3,{live:true});g.children[0].position.y=-.5;platform(-2,-30,4.6,4.6,1,0,1.8,1,.9,2,0,g);}
+deck(-3,3,-35,-42,2.6,top,side,1.4);isle(0,2.6,-38.5,3.6);
+/* ===================== 01 · THE BROAD PLATFORM (an Orbit Imp, alone) ===================== */
+deck(-9,9,-42,-60,3,top,side,3);for(const [x,z] of[[-8.4,-43],[8.4,-43],[-8.4,-59],[8.4,-59]])crystalPost(x,3,z,1.8);
+ramp(-3,3,-35,-42,2.6,3);
+/* ===================== 02 · THE SHORT BRIDGE AND THE WIDE LANDING ===================== */
+deck(-1.7,1.7,-60,-71,3,top,side,1.4);for(let z=-61;z>-71;z-=2.5)for(const sx of[-1,1])crystalPost(sx*2,3,z,1.1);
+deck(-9,9,-71,-86,3,top,side,3);for(const [x,z] of[[-8.4,-72],[8.4,-72]])crystalPost(x,3,z,1.8);
+/* ===================== 03 · THE CASTLE STAIRS ===================== */
+ramp(-4,4,-86,-98,3,7.5);deck(-6,6,-98,-104,7.5,top,side,6);for(const sx of[-1,1]){crystalPost(sx*5.5,7.5,-99,1.8);crystalPost(sx*5.5,7.5,-103,1.8);}
+ramp(-4,4,-104,-116,7.5,AY);deck(-4,4,-116,-122.6,AY,top,side,8);
+for(const [z0,z1,y0,y1] of[[-86,-98,3,7.5],[-104,-116,7.5,AY]])for(const sx of[-1,1]){addSolid(sx<0?-4.8:4,sx<0?-4:4.8,y0-1,y1+7,z1,z0,'wall',null);const len=Math.hypot(z0-z1,y1-y0);const w=new THREE.Mesh(kBoxGeo(.8,1.2,len,2),side);w.position.set(sx*4.4,(y0+y1)/2+.6,(z0+z1)/2);w.rotation.x=Math.atan2(y1-y0,z0-z1);c1Add(w);}
+for(const sx of[-1,1])addSolid(sx<0?-4.8:4,sx<0?-4:4.8,AY-1,AY+7,-122.6,-116,'wall',null);
+gate=addSolid(-4,4,AY,AY+3,-122.4,-121.4,'gate',null);gate.alive=false;gateMesh=new THREE.Mesh(boxGeo(8,3,1,2.5),dark);gateMesh.position.set(0,AY-2,-121.9);scene.add(gateMesh);
+/* ===================== 04 · THE OPEN OBSERVATORY ===================== */
+{const ct=VIO.clone();ct.needsUpdate=true;ct.repeat.set(7,7);const dais=new THREE.Mesh(new THREE.CylinderGeometry(14,13.6,10,48),[side,new THREE.MeshLambertMaterial({map:ct}),side]);dais.position.set(0,AY-5,ACZ);scene.add(dais);
+  addSolid(-14,14,AY-10,AY,-150,-122,'ground',null);
+  /* the brass orrery ring inlaid in the floor */const ring=new THREE.Mesh(new THREE.RingGeometry(7.6,8,64),new THREE.MeshBasicMaterial({color:gold,transparent:true,opacity:.35,blending:THREE.AdditiveBlending,depthWrite:false}));ring.rotation.x=-Math.PI/2;ring.position.set(0,AY+.03,ACZ);scene.add(ring);
+  const ring2=ring.clone();ring2.scale.setScalar(.5);scene.add(ring2);
+  for(let i=0;i<16;i++){const a=i/16*TAU;if(Math.cos(a)>.92)continue;crystalPost(Math.sin(a)*13.6,AY,ACZ+Math.cos(a)*13.6,1.4);}
+  const under=new THREE.Mesh(new THREE.ConeGeometry(13.6,26,12),c1Lam('vcRock',KT.rock(),{color:0x8a7ab0}));under.rotation.x=Math.PI;under.position.set(0,AY-10-13,ACZ);c1Add(under);}
+/* the citadel beyond */
+{const keep=new THREE.Mesh(kBoxGeo(46,30,14,3),side);keep.position.set(0,AY+11,-182);c1Add(keep);const roofM=c1Lam('vcRoof',null,{color:0x3a2470});
+  for(const [x,h] of[[-24,40],[-12,46],[0,56],[12,46],[24,40]]){const t=new THREE.Mesh(new THREE.CylinderGeometry(3,3.4,h,10),side);t.position.set(x,AY+h/2-4,-180);c1Add(t);const r=new THREE.Mesh(new THREE.ConeGeometry(3.9,9,10),roofM);r.position.set(x,AY+h+.5,-180);c1Add(r);
+    for(let k=0;k<3;k++){const w=new THREE.Mesh(new THREE.PlaneGeometry(1,2),c1M('vcWin',()=>new THREE.MeshBasicMaterial({color:0xc070ff})));w.position.set(x,AY-4+h*(.35+k*.2),-176.55);c1Add(w);}}
+  for(let i=0;i<12;i++){const w=new THREE.Mesh(new THREE.PlaneGeometry(1.4,2.8),c1M('vcWin',()=>new THREE.MeshBasicMaterial({color:0xc070ff})));w.position.set(-17.5+(i%6)*7,AY+4+((i/6)|0)*9,-174.9);c1Add(w);}
+  const under=new THREE.Mesh(new THREE.ConeGeometry(30,40,12),c1Lam('vcRock',KT.rock(),{color:0x8a7ab0}));under.rotation.x=Math.PI;under.position.set(0,AY-24,-184);c1Add(under);}
+c1Finish();
+/* ===================== THE STAR ROAD (opening course, reached first) ===================== */
+COURSE[14]={w:5.2,noReeds:true,noProps:true,bonus:.55,pop:{enP:.28,enGap:26,noFly:true,step:7.5,skip:['chase','ride','lily','fork','bridge','blade','gear','allies','imp1','imp2','isles','fall','crumble','vesper','chart1','chart2','chart3']},
+  look:{top:'moon',sky:true},
+  cmds:[{s:14,w:9,tag:'allies'},{s:3,w:5.2},{arc:35,r:14},{s:8,dh:1.5},{gap:1,s:3},{s:6},{arc:-70,r:10,dh:1},{s:12,w:8.5,tag:'imp1'},{s:3,w:5.2},
+    {arc:60,r:12,dh:-1.5},{s:3},{gap:1,s:11,tag:'isles'},{s:7,tag:'chart1'},{arc:-45,r:12},{s:10,tag:'fall'},{s:8,tag:'fall'},{arc:90,r:9,dh:2,tag:'fall'},{s:8},
+    {gap:1,s:12,tag:'crumble'},{s:7,tag:'chart2'},{arc:-60,r:11,dh:2},{s:8,dh:2},{arc:120,r:7,dh:2},{s:10,tag:'vesper'},{arc:-40,r:13},{gap:1,s:2.8},{s:6},{s:12,w:8,tag:'imp2'},{s:3,w:5.2},
+    {arc:50,r:12,dh:-2},{s:3},{gap:1,s:11,tag:'isles'},{s:8,tag:'chart3'},{arc:-30,r:14},{s:8,tag:'end'}]};
+L.courseMats=()=>{const t=new THREE.MeshLambertMaterial({map:VIO,side:THREE.DoubleSide}),sk=new THREE.MeshLambertMaterial({map:KT.masonry(),color:0xa898d0,side:THREE.DoubleSide});return {top:t,side:sk,rim:sk,skirt:5};};
+let ROAD=null;const RSTARS=[];
+L.courseDress=(path,{tagRuns})=>{ROAD=path;const at=(s,lat=0)=>crsAt(path,s,lat);
+  /* the road floats: a rocky underside beneath every stretch */
+  for(let s=1;s<path.len;s+=4){const q=at(s);if(q.p.gap)continue;const u=new THREE.Mesh(new THREE.ConeGeometry(q.p.w*.62,R(5,9),7),c1Lam('vcRock',KT.rock(),{color:0x8a7ab0}));u.rotation.x=Math.PI;u.position.set(q.x,q.y-5-u.geometry.parameters.height/2+1.2,q.z);c1Add(u);}
+  /* crystal posts along the parapets */
+  {let k=0;for(let s=4;s<path.len-3;s+=7,k++){const q0=at(s);if(q0.p.gap||!q0.p.wall)continue;for(const sd of[-1,1]){const q=at(s,sd*(q0.p.w/2+.3));crystalPost(q.x,q.y+.9,q.z,1.1);}}}
+  /* drifting isles across the gaps */
+  {let i=0;for(const [a,b] of tagRuns('isles'))for(let s=a+1.7;s<b-.6;s+=3.4,i++){const q=at(s,i%2?1:-1);const g=isle(q.x,q.y,q.z,1.25,{live:true});g.children[0].position.y=-.5;platform(q.x,q.z,2.3,2.3,i%2?1:0,i%2?0:1,.8,1.1,i*1.3,q.y,.35,g);}}
+  /* crumbling stones */
+  for(const [a,b] of tagRuns('crumble'))for(let s=a+1.2,k=0;s<b-.4;s+=2.15,k++){const q=at(s,k%2?.95:-.95);const m=new THREE.Mesh(boxGeo(1.7,.5,1.7,2.5),side);m.position.set(q.x,q.y-.25,q.z);scene.add(m);const sd=addSolid(q.x-.85,q.x+.85,q.y-.5,q.y,q.z-.85,q.z+.85,'ground',null,{surf:'stone'});CRS.items.push({k:'crumble',s:sd,m,x:q.x,y:q.y,z:q.z,ct:0,vy:0,rt:0});}
+  /* falling stars: Vesper flicks spare stars at the road; a violet ring marks each one */
+  {const r=tagRuns('fall');if(r.length)CRS.items.push({k:'stars',path,t:1,tag:'fall'});}
+  /* Vesper's star charts on three stands */
+  const CH=[[["CHART OF THE DREAM, VERSION 1,204. Every village, every road, every star. Nobody asked for it. Nobody ever does.",6.4],["The Moon laughed when I showed it to her. She said, 'A map isn't the place, Vesper.'  — V.Q., Royal Astronomer",6.6]],
+    [["If the stars hold the roads together, then whoever holds the stars decides where the roads go.",5.6],["Four guardians, four stars. The Bellwarden, the Root Regent, the Abbess, the Baroness. Each wanted something only a star could give.",6.8]],
+    [["Once every star is in my cage, the dream will finally sit still. No more wandering. No more getting lost.",6],["No more being laughed at.",3]]];
+  ['chart1','chart2','chart3'].forEach((tg,k)=>{const r=tagRuns(tg)[0];if(!r)return;const q0=at(r[0]+3);const sd=k%2?1:-1;const q=at(r[0]+3,sd*(q0.p.w/2-1.05));c2Lore(q.x,q.y,q.z,-q.a,"VESPER'S STAR CHART · PAGE "+(k+1),CH[k],{col:0xc08aff,pageCol:0xe8d8ff});});
+  /* the four freed stars hang over the start of the road */
+  {const r=tagRuns('allies')[0];for(let i=0;i<4;i++){const q=at(r[0]+4+i*3.2,(i%2?1:-1)*3.4);const st=grp(spr(glowTex,gold,3.2,3.2,0,0,0),spr(glowTex,0xffffff,1,1,0,0,0));st.position.set(q.x,q.y+5.5+i*.4,q.z);scene.add(st);RSTARS.push({g:st,y:q.y+5.5+i*.4,ph:i});}}
+  /* Nettle, Mara and Bramble see Flint off */
+  {const r=tagRuns('allies')[0];const P0=at(r[0]+8,2.6),P1=at(r[0]+10,-2.6),P2=at(r[0]+12,2.4);
+    L.netC=npc('nettle',P0.x,P0.z,P0.y,-P0.a-Math.PI/2,1.35,[
+      ['NETTLE COGFOOT',"There you are! Four stars back in the sky, and look what they made: a road straight to Vesper's door!",6.2,'wave'],
+      ['MARA WICKMEND',"The Railway Star, the Forest Star, the Archive Star and the Ember Star. They're stitching the sky road back together.",6.6],
+      ['SIR BRAMBLE VALE',"Every guardian you faced was someone Vesper talked into keeping a star. He's the one holding the rest.",6.2],
+      ['NETTLE COGFOOT',"His Orbit Imps swing a star around themselves. Wait for the star to pass, then hop inside the ring and bop 'em.",6.6,'point'],
+      ['FLINT',"Let's bring the rest of the stars home.",2.8],
+      ['SIR BRAMBLE VALE',"Go on, small traveler. And don't forget that apple.",3.6]],{name:'NETTLE COGFOOT',r:4.6,after:()=>{showHint('FOLLOW THE STAR ROAD · READ VESPER\'S CHARTS',3);}});
+    const m=c2Make('mara',1.55);if(m){m.g.position.set(P1.x,P1.y,P1.z);m.g.rotation.y=-P1.a+Math.PI/2;scene.add(m.g);L.maraC=m;}
+    const b=c2Make('bramble',1.75);if(b){b.g.position.set(P2.x,P2.y,P2.z);b.g.rotation.y=-P2.a-Math.PI/2;scene.add(b.g);L.bramC=b;}}
+  /* Orbit Imps: one alone on the wide platform, one on the far landing */
+  for(const tg of['imp1','imp2']){const r=tagRuns(tg)[0];if(!r)continue;const q=at((r[0]+r[1])/2+2,0);const e=imp(q.x,q.z,q.y);if(e){e.sect=true;e.face=Math.PI-q.a;}}
+  /* Vesper's projection waits on the high bend */
+  {const r=tagRuns('vesper')[0];if(r){L.vpS=r[0];L.vpE=r[1];const q=at(r[1]+6,0);VPROJ.g=c2Make('vesper',4.2);if(VPROJ.g){VPROJ.g.g.visible=false;VPROJ.g.g.position.set(q.x,q.y+2.6,q.z);scene.add(VPROJ.g.g);VPROJ.g.g.traverse(o=>{if(o.isMesh){const cl=m=>{const c=m.clone();c.transparent=true;c.opacity=.6;return c;};o.material=Array.isArray(o.material)?o.material.map(cl):cl(o.material);}});}}}
+  c1Finish();};
+const VPROJ={g:null};
+function vesperTick(dt){if(!ROAD||!SEC.on||SEC.bonus)return;const q=crsNear(P.pos.x,P.pos.z);if(!q||q.path!==ROAD)return;
+  if(!L.vpDone&&q.tag==='vesper'&&state==='play'&&!P.dead&&P.onGround&&VPROJ.g){L.vpDone=1;const v=VPROJ.g;v.g.visible=true;const vp=v.g.position.clone();
+    c2Scene([['VESPER QUILL',"Ah. The little lantern who keeps putting my stars back.",4],['VESPER QUILL',"Do you know how long it took to catch them? Every road in the dream, finally going exactly where I say.",6.2],
+      ['FLINT',"Roads aren't yours to keep. People need them to get home.",3.8],['VESPER QUILL',"Home is wherever I put it. Come up to my observatory, and I'll show you.",4.4]],
+      (t,i)=>{const p=P.pos;return lines4(i)==='FLINT'?[p.clone().add(V3(1.6,1.8,-3.2)),p.clone().add(V3(0,1.2,0))]:[p.clone().add(V3(-(vp.x-p.x)*.35+2,2.4,-(vp.z-p.z)*.35+2)),vp.clone().add(V3(0,2.4,0))];},
+      ()=>{let k=1;const f=()=>{k-=.05;if(VPROJ.g){VPROJ.g.g.traverse(o=>{if(o.isMesh)for(const mm of[].concat(o.material))if(mm)mm.opacity=.6*Math.max(0,k);});}if(k>0)requestAnimationFrame(f);else if(VPROJ.g)VPROJ.g.g.visible=false;};f();burst(vp.clone().add(V3(0,2,0)),violet,40,8,.7);showHint('ON TO THE CITADEL',2.4);},
+      {tick:(dt,t,i)=>{c2Play(v,i===1?'laugh':'talk');c2Anim(v,dt);v.g.rotation.y=Math.atan2(P.pos.x-vp.x,P.pos.z-vp.z);v.g.position.y=vp.y+Math.sin(time*1.6)*.2;}});}}
+function lines4(i){return ['VESPER QUILL','VESPER QUILL','FLINT','VESPER QUILL'][i]||'';}
+/* ===================== ORBIT IMP (minion) =====================
+   A faceted violet spirit in copper astrolabe rings. It drifts toward Flint; its rings tilt and chime for 0.8 s while its star glows
+   at a fixed point; then the star makes one bright orbit (watch the trail). Step inside behind the star and bop it, or wait outside
+   and hit it during its 1.0 s reset. */
+ANIM.orbit=ANIM.orbit||{idle:t=>({y:Math.sin(t*2.2)*.05,rz:Math.sin(t*1.5)*.05}),tell:(t,k)=>({rz:Math.sin(t*28)*.12*k,rx:.1*k,y:.03*k}),spin:t=>({y:Math.sin(t*6)*.03,rz:Math.sin(t*9)*.06}),reset:(t,k)=>({y:-.1,rz:Math.sin(t*5)*.1})};
+const IMPS=[];
+function imp(x,z,y){const e=c2Enemy('orbit','orbit',x,z,y,1.3,{upd:updImp});if(!e)return null;const st=grp(spr(glowTex,gold,1.6,1.6,0,0,0),spr(glowTex,0xffffff,.6,.6,0,0,0));st.visible=false;scene.add(st);e.star=st;
+  e.trail=[];for(let i=0;i<10;i++){const s=spr(glowTex,0xd8a0ff,.9-i*.06,.9-i*.06,0,0,0);s.visible=false;scene.add(s);e.trail.push(s);}e.mt=R(.8,1.4);e.R0=3.2;IMPS.push(e);return e;}
+function updImp(e,dt){const a=e.an;e.mt-=dt;const dx=P.pos.x-e.pos.x,dz=P.pos.z-e.pos.z,d=Math.hypot(dx,dz);const aware=d<15&&Math.abs(P.pos.y-e.pos.y)<3&&state==='play'&&!P.dead;let hov=1;
+  if(e.mode==='idle'||e.mode==='drift'){c2Play(a,'idle');if(aware){e.face=lerpAngle(e.face,Math.atan2(dx,dz),Math.min(1,dt*4));if(d>5){e.mode='drift';const sp=1.8*dt,nx=e.pos.x+dx/d*sp,nz=e.pos.z+dz/d*sp;const gy=groundBelow(nx,nz,e.pos.y+.6,.4);if(Math.abs(gy-e.pos.y)<.5&&Math.hypot(nx-e.base.x,nz-e.base.z)<11){e.pos.x=nx;e.pos.z=nz;}}else e.mode='idle';}
+    if(e.mt<=0&&aware&&d<7.5){e.mode='tell';e.mt=.8;e.a0=e.face+Math.PI/2;c2Play(a,'tell',.8);blip(1300,1700,.12,'sine',.05);blip(1700,2100,.12,'sine',.04,.18);}}
+  else if(e.mode==='tell'){/* the star glows at a fixed, visible starting point */e.star.visible=true;e.star.position.set(e.pos.x+Math.sin(e.a0)*e.R0,e.pos.y+1,e.pos.z+Math.cos(e.a0)*e.R0);e.star.scale.setScalar(.6+.6*(1-e.mt/.8)+Math.sin(time*30)*.1);
+    if(e.mt<=0){e.mode='spin';e.mt=1.3;e.ang=e.a0;c2Play(a,'spin');blip(900,1500,.4,'sine',.06);}}
+  else if(e.mode==='spin'){e.ang+=dt*TAU/1.3;const sx=e.pos.x+Math.sin(e.ang)*e.R0,sz=e.pos.z+Math.cos(e.ang)*e.R0;e.star.position.set(sx,e.pos.y+1,sz);e.star.scale.setScalar(1);
+    for(let i=0;i<e.trail.length;i++){const aa=e.ang-(i+1)*.13;e.trail[i].visible=true;e.trail[i].position.set(e.pos.x+Math.sin(aa)*e.R0,e.pos.y+1,e.pos.z+Math.cos(aa)*e.R0);e.trail[i].material.opacity=.7*(1-i/e.trail.length);}
+    if(state==='play'&&!P.dead&&Math.hypot(P.pos.x-sx,P.pos.z-sz)<.95&&P.pos.y<e.pos.y+1.9&&P.pos.y>e.pos.y-1)hurt();
+    if(e.mt<=0){e.mode='reset';e.mt=1;e.star.visible=false;for(const t of e.trail)t.visible=false;c2Play(a,'reset',1);}}
+  else if(e.mode==='reset'){hov=.55;if(e.mt<=0){e.mode='idle';e.mt=R(1,1.5);}}
+  c2Anim(a,dt);e.obj.rotation.y=e.face;e.obj.position.set(e.pos.x,e.pos.y+hov+Math.sin(time*2+e.ph)*.1,e.pos.z);}
+L.minion=(x,z,y)=>imp(x,z,y);
+L.summon=(x,z,y)=>{const a=R(0,TAU);const e=imp(Math.sin(a)*10,ACZ+Math.cos(a)*10,AY);if(e){e.summoned=true;e.base.set(Math.sin(a)*10,AY,ACZ+Math.cos(a)*10);}return e;};
+/* ===================== VESPER QUILL (final boss) =====================
+   A lanky sorcerer with a forked white beard, a crooked cobalt hat, a broken brass astrolabe halo and a staff with a star cage.
+   He never stands still (think Bowser on his planetoid): every phase is a long chain of moves, all aimed at Flint.
+   · LEAP & SLAM  — crouches (0.55 s, a violet ring marks where he'll land: right where Flint stood), leaps, slams, and sends out
+                    1–3 shockwave rings. Jump each ring.
+   · BLINK        — vanishes in a puff; a glow marks where he'll reappear on the far side; then a STAR BURST down a marked line at Flint.
+   · ORBIT CHASE  — the cage flashes (1.0 s), stars swing round him with bright trails while he glides after Flint. Slip through the gap.
+   · STAR WHEEL   — he plants his staff and long arms of stars sweep the floor (faint for 1 s first). Jump each arm. Phase 3 reverses it.
+   · HOMING BOLTS — star bolts that chase Flint for a moment, then fly straight (outrun or jump them).
+   · STARFALL     — stars dropped where Flint stands (violet rings).
+   The chain ends with a big slam that leaves him DIZZY: the cage lowers, stars circle his hat. Strike the cage. Miss the window and he
+   shakes it off with a shockwave and runs the chain again. Third hit breaks the cage, frees the stars, ends the chapter. */
+let vq=null;const V={x:0,z:ACZ-1.5,h:0,sc:1};const VQH=4.2;
+const OST=[];for(let i=0;i<3;i++){const g=grp(spr(glowTex,gold,2.4,2.4,0,0,0),spr(glowTex,0xffffff,.9,.9,0,0,0));g.visible=false;scene.add(g);const tr=[];for(let k=0;k<12;k++){const s=spr(glowTex,0xffe08a,1.3-k*.08,1.3-k*.08,0,0,0);s.visible=false;scene.add(s);tr.push(s);}OST.push({g,tr,on:false});}
+const CBL=(()=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(1.8,1),new THREE.MeshBasicMaterial({color:violet,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));m.rotation.x=-Math.PI/2;m.renderOrder=3;m.visible=false;scene.add(m);return m;})();
+const SF=[];for(let i=0;i<8;i++){const ring=new THREE.Mesh(new THREE.RingGeometry(1.15,1.5,28),new THREE.MeshBasicMaterial({color:violet,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;scene.add(ring);
+  const dr=grp(spr(glowTex,gold,1.8,1.8,0,0,0),spr(glowTex,0xffffff,.7,.7,0,0,0));scene.add(dr);ring.visible=dr.visible=false;SF.push({ring,dr,on:false});}
+const CAGE=grp(spr(glowTex,0xffe08a,2.2,2.2,0,0,0),spr(glowTex,violet,3.8,3.8,0,0,0));CAGE.visible=false;scene.add(CAGE);
+const BURST=[];for(let i=0;i<6;i++){const g=spr(glowTex,0xe0b0ff,1.8,1.8,0,0,0);g.visible=false;scene.add(g);BURST.push({g,on:false});}
+const TGT=(()=>{const m=new THREE.Mesh(new THREE.RingGeometry(1.9,2.3,40),new THREE.MeshBasicMaterial({color:violet,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));m.rotation.x=-Math.PI/2;m.visible=false;scene.add(m);return m;})();
+const BLINKG=grp(spr(glowTex,violet,4,6,0,2,0),spr(glowTex,0xffffff,1.4,2.4,0,2,0));BLINKG.visible=false;scene.add(BLINKG);
+const ARMS=[];for(let a=0;a<4;a++){const st=[];for(let k=0;k<8;k++){const s=grp(spr(glowTex,gold,1.7,1.7,0,0,0),spr(glowTex,0xffffff,.6,.6,0,0,0));s.visible=false;scene.add(s);st.push(s);}ARMS.push(st);}
+const BOLTS=[];for(let i=0;i<8;i++){const g=grp(spr(glowTex,0xe0b0ff,1.6,1.6,0,0,0),spr(glowTex,0xffffff,.6,.6,0,0,0));g.visible=false;scene.add(g);BOLTS.push({g,on:false});}
+const DIZ=[];for(let i=0;i<4;i++){const s=spr(glowTex,gold,.8,.8,0,0,0);s.visible=false;scene.add(s);DIZ.push(s);}
+function clearVqFx(){for(const o of OST){o.on=false;o.g.visible=false;for(const t of o.tr)t.visible=false;}CBL.visible=false;for(const s of SF){s.on=false;s.ring.visible=s.dr.visible=false;}for(const b of BURST){b.on=false;b.g.visible=false;}CAGE.visible=false;
+  TGT.visible=false;BLINKG.visible=false;for(const a of ARMS)for(const s of a)s.visible=false;for(const b of BOLTS){b.on=false;b.g.visible=false;}for(const d of DIZ)d.visible=false;if(boss)boss.bl=null;}
+function setupVq(){vq=c2Make('vesper',VQH);if(!vq)return;vq.g.position.set(V.x,AY,V.z);scene.add(vq.g);{const gs=spr(glowTex,violet,1.2,1.2,0,.5,0);gs.material.opacity=.3;vq.g.add(gs);}
+  vq.mats=[];vq.g.traverse(o=>{if(o.isMesh)for(const m of[].concat(o.material))if(m&&m.emissive&&!vq.mats.includes(m)){vq.mats.push(m);m.userData.e0=m.emissive.clone();}});vq.flash=0;
+  boss.maxHp=100;boss.reset=()=>{boss.state='idle';boss.t=0;boss.kd=0;clearVqFx();V.x=0;V.z=ACZ-1.5;V.h=0;V.sc=1;if(vq){vq.g.visible=true;vq.g.scale.setScalar(VQH);}};}
+ANIM.vesper.lower=ANIM.vesper.lower||((t,k)=>{const e=ease(Math.min(1,k*3));return {pose:{staff:[.75*e,0,-.25*e,0,-.08*e,.1*e],head:[.3*e,0,Math.sin(t*2)*.05],armR:[.4*e,0,-.2]},y:-.02*e,rx:.15*e};});
+ANIM.vesper.fall=ANIM.vesper.fall||((t,k)=>{const e=ease(Math.min(1,k));return {pose:{staff:[1.1*e,0,-.6*e,0,-.2*e,.2*e],head:[.5*e,0,.2*e],armR:[.6*e,0,-.5*e]},y:-.12*e,rx:.3*e};});
+ANIM.vesper.crouch=ANIM.vesper.crouch||((t,k)=>{const e=ease(Math.min(1,k*2));return {pose:{staff:[-.3*e,0,.2*e],head:[.2*e,0,0],armR:[-.5*e,0,-.3*e]},y:-.06*e,rx:.18*e};});
+ANIM.vesper.leap=ANIM.vesper.leap||(t=>({pose:{staff:[-1.2,0,.3],armR:[-1.6,0,-.6],head:[-.2,0,0]},y:0,rx:-.15}));
+ANIM.vesper.plant=ANIM.vesper.plant||((t,k)=>({pose:{staff:[-.2,0,.1+Math.sin(t*20)*.04],armR:[-.9,0,-.5],head:[-.25,Math.sin(t*1.5)*.3,0]},y:0}));
+ANIM.vesper.dizzy=ANIM.vesper.dizzy||((t,k)=>{const e=ease(Math.min(1,k*3));return {pose:{staff:[.75*e,0,-.25*e,0,-.08*e,.1*e],head:[.3*e,Math.sin(t*4)*.3,Math.sin(t*3)*.15],armR:[.4*e,0,-.2]},y:-.04*e,rx:.18*e,rz:Math.sin(t*3)*.08};});
+function cagePos(){if(!vq)return V3(V.x,AY+4,V.z);vq.g.updateMatrixWorld(true);return vq.g.localToWorld(V3(-.24,.92,.06));}
+const R_MAX=10.2;function inRing(x,z,r=R_MAX){const dx=x,dz=z-ACZ,d=Math.hypot(dx,dz);if(d>r){x=dx/d*r;z=ACZ+dz/d*r;}return [x,z];}
+function vqPlan(){const ph=bossPhase();
+  if(ph===0)return {open:2.2,steps:[{k:'leap',n:2,waves:1},{k:'orbit',n:1,r0:4.6,r1:4.6,dur:3.2,chase:2.2},{k:'homing',n:3},{k:'leap',n:1,waves:2},{k:'fall',n:4,gap:.6,tell:.85},{k:'slam',waves:2}]};
+  if(ph===1)return {open:1.9,steps:[{k:'blink',burst:1},{k:'wheel',arms:2,w:.9,dur:5},{k:'leap',n:3,waves:2},{k:'orbit',n:2,r0:5,r1:5,dur:3.6,chase:3,burst:1},{k:'homing',n:4},{k:'fall',n:5,gap:.55,tell:.8},{k:'slam',waves:2}]};
+  return {open:1.7,steps:[{k:'blink',burst:1},{k:'blink',burst:1},{k:'wheel',arms:3,w:1.15,dur:6,rev:1},{k:'leap',n:3,waves:3},{k:'orbit',n:3,r0:3,r1:8.5,dur:4.2,chase:3.6,stag:1,burst:1},{k:'homing',n:5,fall:6},{k:'blink',burst:1},{k:'slam',waves:3}]};}
+function vqStep(b,s){b.st=0;s.i=0;s.next=0;s.burstDone=false;b.sub={orbit:'flash',leap:'crouch',slam:'crouch',blink:'out',wheel:'tell',homing:'go',fall:'go'}[s.k];if(s.k==='slam')s.n=1;}
+function sfAt(x,z,tell){const d=SF.find(q=>!q.on);if(!d)return;d.on=true;d.t=0;d.tell=tell;[x,z]=inRing(x,z,12.6);d.x=x;d.z=z;d.ring.position.set(x,AY+.07,z);d.ring.visible=true;d.dr.visible=true;d.dr.position.set(x,AY+16,z);blip(1500,1900,.08,'sine',.04);}
+function startBurst(b){const tx=P.pos.x,tz=P.pos.z;let ux=tx-V.x,uz=tz-V.z;const l=Math.hypot(ux,uz)||1;ux/=l;uz/=l;b.bl={x0:V.x,z0:V.z,ux,uz,len:18,t:0};placeLineV(CBL,V.x,AY,V.z,V.x+ux*18,V.z+uz*18,1.8);blip(900,1400,.2,'square',.05);}
+L.setup=()=>{setupVq();};
+L.startBoss=()=>{if(L._pre===1)return;const go=st=>{bossIntro(L.bossName);boss.reset();boss.state=st;boss.t=0;if(st==='idle')showHint('HE NEVER STOPS · JUMP THE SHOCKWAVES · STRIKE THE CAGE WHEN HE\'S DIZZY',4);};
+  if(L._pre===2||!vq){go('intro');return;}L._pre=1;
+  const lines=[['VESPER QUILL',"Welcome to my observatory, little lantern. Mind the stars. They bite.",4.4],['FLINT',"I've come for the rest of them, Vesper.",3],
+    ['VESPER QUILL',"The rest? These stars are the whole map! With them in my cage, every road goes where I say, and nobody ever gets lost again.",6.6]];
+  if(C2.pages>=3)lines.push(['FLINT',"Nobody laughs at you again, you mean.",3],['VESPER QUILL',"...You've been reading my charts.",3]);
+  lines.push(['VESPER QUILL',"Let's see how your little lantern does against a sky full of them!",4.2]);
+  c2Scene(lines,(t,i)=>{const who=lines[i][0];
+      if(i===0)return [V3(-7+t*.5,AY+3.6,ACZ+10),V3(V.x,AY+3,V.z)];
+      if(who==='FLINT'){const f=P.pos;return [f.clone().add(V3(1.8,1.9,-3.4)),f.clone().add(V3(0,1.2,0))];}
+      return [V3(V.x+2.6+Math.sin(t*.2)*1.5,AY+3.6,V.z+7.5),V3(V.x,AY+3.2,V.z)];},
+    ()=>{L._pre=2;go('idle');},
+    {tick:(dt,t,i)=>{c2Play(vq,i===2?'raise':i===lines.length-1?'laugh':'talk');c2Anim(vq,dt);vq.g.rotation.y=lerpAngle(vq.g.rotation.y,Math.atan2(P.pos.x-V.x,P.pos.z-V.z),Math.min(1,dt*3));
+      for(let k=0;k<3;k++){const o=OST[k];o.g.visible=true;const a=time*1.4+k*TAU/3;o.g.position.set(V.x+Math.sin(a)*2.2,AY+4.6+Math.sin(time*2+k)*.3,V.z+Math.cos(a)*2.2);}}});};
+L.hitBoss=()=>{if(boss.state!=='sleep')return;const m=boss.maxHp,tgt=boss.hp>m*2/3+.5?m*2/3:boss.hp>m/3+.5?m/3:0;NEXTDMG=Math.max(1,Math.ceil(boss.hp-tgt));
+  if(bossDamage(0xe0b0ff)){boss.state='dead';boss.t=0;clearVqFx();sfx.life();return;}
+  boss.state='hurt';boss.t=0;clearVqFx();const ph=bossPhase();showHint(ph===1?'HE\'S ANGRY · THE STAR WHEEL IS COMING':'LAST PHASE · THE WHEEL REVERSES · STAY LIGHT ON YOUR FEET',3);};
+L.updBoss=dt=>{const b=boss;if(b.state==='off'||!vq)return;b.t+=dt;const g=vq.g;const PL=state==='play'&&!P.dead;let anim='idle',face=Math.atan2(P.pos.x-V.x,P.pos.z-V.z);
+  const leapTo=(s,tx,tz,dur)=>{s.x0=V.x;s.z0=V.z;[s.tx,s.tz]=inRing(tx,tz);s.dur=dur;TGT.visible=true;TGT.position.set(s.tx,AY+.06,s.tz);};
+  if(b.state==='intro'){anim='laugh';if(b.t>1.6){b.state='idle';b.t=0;showHint('HE NEVER STOPS · JUMP THE SHOCKWAVES · STRIKE THE CAGE WHEN HE\'S DIZZY',4);}}
+  else if(b.state==='idle'){anim='laugh';if(b.t>.7){b.state='act';b.t=0;b.pl=vqPlan();b.si=0;vqStep(b,b.pl.steps[0]);}}
+  else if(b.state==='act'){const s=b.pl.steps[b.si];b.st+=dt;let done=false;
+    if(s.k==='leap'||s.k==='slam'){const big=s.k==='slam';
+      if(b.sub==='crouch'){anim='crouch';const T0=big?.8:.55;if(b.st<=dt){leapTo(s,P.pos.x,P.pos.z,big?1.05:.85);blip(400,900,.2,'square',.05);}TGT.position.set(s.tx,AY+.06,s.tz);TGT.material.opacity=.3+.5*Math.min(1,b.st/T0)*(.6+.4*Math.sin(time*25));TGT.scale.setScalar(big?1.4:1);
+        if(b.st>=T0){b.sub='air';b.st=0;blip(300,1200,.3,'sine',.07);}}
+      else if(b.sub==='air'){anim='leap';const k=Math.min(1,b.st/s.dur);V.x=lerp(s.x0,s.tx,k);V.z=lerp(s.z0,s.tz,k);V.h=4*(big?9:7)*k*(1-k);TGT.material.opacity=.5+.4*Math.sin(time*30);face=Math.atan2(s.tx-s.x0,s.tz-s.z0);
+        if(k>=1){V.h=0;TGT.visible=false;sfx.boom();shakeT=Math.max(shakeT,big?.8:.5);burst(V3(V.x,AY+.3,V.z),0xc08aff,36,9,.6);
+          for(let w=0;w<s.waves;w++)shockRing(V.x,AY,V.z,big?8:7.4,16,violet,w*.5,false);
+          if(PL&&Math.hypot(P.pos.x-V.x,P.pos.z-V.z)<2.3&&P.pos.y<AY+2.5)hurt();
+          s.i++;b.sub=big?'stun':'land';b.st=0;}}
+      else if(b.sub==='land'){anim='crouch';if(b.st>.35+(s.waves>1?.25:0)){if(s.i<s.n){b.sub='crouch';b.st=0;}else done=true;}}
+      else if(b.sub==='stun'){anim='dizzy';if(b.st>.3){b.state='sleep';b.t=0;}}}
+    else if(s.k==='blink'){
+      if(b.sub==='out'){anim='raise';const k=Math.min(1,b.st/.35);V.sc=1-k;if(b.st<=dt){const pa=Math.atan2(P.pos.x,P.pos.z-ACZ)+Math.PI+R(-.8,.8);s.tx=Math.sin(pa)*8.5;s.tz=ACZ+Math.cos(pa)*8.5;BLINKG.visible=true;BLINKG.position.set(s.tx,AY,s.tz);burst(V3(V.x,AY+2,V.z),violet,24,6,.4);blip(1800,600,.25,'sine',.06);}
+        BLINKG.children[0].material.opacity=.4+.3*Math.sin(time*20);if(k>=1){V.x=s.tx;V.z=s.tz;b.sub='in';b.st=0;}}
+      else if(b.sub==='in'){const k=Math.min(1,b.st/.4);V.sc=k;anim='laugh';if(k>=1){BLINKG.visible=false;burst(V3(V.x,AY+2,V.z),violet,24,6,.4);if(s.burst){startBurst(b);b.sub='wait';b.st=0;}else done=true;}}
+      else if(b.sub==='wait'){anim='raise';if(!b.bl||b.st>1.7)done=true;}}
+    else if(s.k==='orbit'){
+      if(b.sub==='flash'){anim='raise';const c=cagePos();CAGE.visible=true;CAGE.position.copy(c);CAGE.children[0].material.opacity=.4+.6*Math.abs(Math.sin(time*18));
+        const base=face+Math.PI;for(let k=0;k<s.n;k++){const o=OST[k];o.on=true;o.g.visible=true;const a=base+k*TAU/s.n*(s.stag?.82:1);o.a0=a;const k2=Math.min(1,b.st/1);o.g.position.set(lerp(c.x,V.x+Math.sin(a)*s.r0,k2),lerp(c.y,AY+1,k2),lerp(c.z,V.z+Math.cos(a)*s.r0,k2));}
+        if(b.st<=dt)blip(1200,2400,.5,'sine',.07);if(b.st>=1){b.sub='spin';b.st=0;CAGE.visible=false;}}
+      else if(b.sub==='spin'){anim='talk';const k=Math.min(1,b.st/s.dur);const r=s.stag&&s.r1<s.r0?lerp(s.r0,s.r1,ease(k)):s.stag?(k<.5?lerp(s.r0,s.r1,ease(k*2)):lerp(s.r1,3.2,ease((k-.5)*2))):s.r0;const spd=TAU/2.4;
+        /* he glides after Flint while the stars swing round him */const dx=P.pos.x-V.x,dz=P.pos.z-V.z,d=Math.hypot(dx,dz)||1;if(d>1.6){[V.x,V.z]=inRing(V.x+dx/d*s.chase*dt,V.z+dz/d*s.chase*dt);}
+        for(let i=0;i<s.n;i++){const o=OST[i];const a=o.a0+b.st*spd;const rr=s.stag?r*(1-.12*i):r;const x=V.x+Math.sin(a)*rr,z=V.z+Math.cos(a)*rr;o.g.position.set(x,AY+1,z);
+          for(let q=0;q<o.tr.length;q++){const aa=a-(q+1)*.09;o.tr[q].visible=true;o.tr[q].position.set(V.x+Math.sin(aa)*rr,AY+1,V.z+Math.cos(aa)*rr);o.tr[q].material.opacity=.75*(1-q/o.tr.length);}
+          if(PL&&Math.hypot(P.pos.x-x,P.pos.z-z)<1.05&&P.pos.y<AY+2)hurt();}
+        if(PL&&d<1.3&&P.pos.y<AY+2.2)hurt();
+        if(s.burst&&!s.burstDone&&k>.65){s.burstDone=true;startBurst(b);}
+        if(k>=1){for(const o of OST){o.on=false;o.g.visible=false;for(const t of o.tr)t.visible=false;}done=true;}}}
+    else if(s.k==='wheel'){/* staff planted, arms of stars sweep the floor */anim='plant';
+      if(b.sub==='tell'){V.x=lerp(V.x,0,Math.min(1,dt*4));V.z=lerp(V.z,ACZ,Math.min(1,dt*4));if(b.st<=dt){s.th=Math.atan2(P.pos.x-V.x,P.pos.z-V.z)+Math.PI/s.arms;s.w0=s.w;blip(600,1500,.6,'sine',.07);showHint('STAR WHEEL · JUMP THE ARMS',1.6);}
+        for(let a=0;a<s.arms;a++){const th=s.th+a*TAU/s.arms;ARMS[a].forEach((st,k)=>{st.visible=true;const rr=2.2+k*1.45;st.position.set(V.x+Math.sin(th)*rr,AY+.9,V.z+Math.cos(th)*rr);st.children[0].material.opacity=.25+.2*Math.sin(time*20);});}
+        if(b.st>=1){b.sub='spin';b.st=0;}}
+      else if(b.sub==='spin'){let w=s.w;if(s.rev){const h=s.dur/2;if(b.st>h-.35&&b.st<h+.35)w=s.w*(h-b.st)/.35;else if(b.st>=h+.35)w=-s.w;}s.th+=w*dt;
+        const pr=Math.hypot(P.pos.x-V.x,P.pos.z-V.z),pa=Math.atan2(P.pos.x-V.x,P.pos.z-V.z);
+        for(let a=0;a<s.arms;a++){const th=s.th+a*TAU/s.arms;ARMS[a].forEach((st,k)=>{const rr=2.2+k*1.45;st.position.set(V.x+Math.sin(th)*rr,AY+.9,V.z+Math.cos(th)*rr);st.children[0].material.opacity=1;});
+          let da=((pa-th+Math.PI)%TAU+TAU)%TAU-Math.PI;if(PL&&pr>1.4&&pr<12.8&&Math.abs(da)*pr<.8&&P.pos.y<AY+1.5)hurt();}
+        if(PL&&pr<1.4&&P.pos.y<AY+2.2)hurt();
+        if(b.st>=s.dur){for(const arm of ARMS)for(const st of arm)st.visible=false;done=true;}}}
+    else if(s.k==='homing'){anim='raise';s.next-=dt;if(s.i<s.n&&s.next<=0){const c=cagePos();const bo=BOLTS.find(q=>!q.on);if(bo){let ux=P.pos.x-c.x,uz=P.pos.z-c.z;const l=Math.hypot(ux,uz)||1;Object.assign(bo,{on:true,x:c.x,z:c.z,ux:ux/l,uz:uz/l,t:0});bo.g.visible=true;}s.i++;s.next=.42;blip(1400,2000,.12,'sine',.05);}
+      if(s.fall&&s.i<=s.n&&Math.random()<dt*2.2&&(s.fi||0)<s.fall){s.fi=(s.fi||0)+1;sfAt(P.pos.x+R(-1,1),P.pos.z+R(-1,1),.8);}
+      if(s.i>=s.n&&!BOLTS.some(q=>q.on)&&!SF.some(q=>q.on)&&b.st>.6)done=true;}
+    else if(s.k==='fall'){anim='raise';s.next-=dt;if(s.i<s.n&&s.next<=0){sfAt(P.pos.x,P.pos.z,s.tell);s.i++;s.next=s.gap;}if(s.i>=s.n&&!SF.some(q=>q.on)&&b.st>.4)done=true;}
+    if(done){b.si++;if(b.si>=b.pl.steps.length){b.state='sleep';b.t=0;}else vqStep(b,b.pl.steps[b.si]);}}
+  else if(b.state==='sleep'){/* dizzy after the big slam: the cage is low */anim='dizzy';V.h=0;face=g.rotation.y;const c=cagePos();CAGE.visible=true;CAGE.position.copy(c);CAGE.children[0].material.opacity=.7+Math.sin(time*14)*.3;{const cap=Math.ceil(boss.maxHp*.15);if((boss.kd||0)<cap-.5)boss.kd=cap-.5;}
+    DIZ.forEach((d,i)=>{d.visible=true;const a=time*4+i*TAU/4;d.position.set(V.x+Math.sin(a)*.9,AY+VQH*.98,V.z+Math.cos(a)*.9);});
+    if(!b.kHint){b.kHint=1;showHint('HE\'S DIZZY · STRIKE THE CAGE!',2);}
+    if(b.t>b.pl.open){b.state='recover';b.t=0;CAGE.visible=false;b.kHint=0;for(const d of DIZ)d.visible=false;}
+    else if(spinNear(V.x,V.z,3.4,AY)||stompOn(c.x,c.z,2,c.y))L.hitBoss();}
+  else if(b.state==='recover'){/* shakes it off with a shockwave (the glow warns you) */anim='raise';if(b.t<=dt)blip(500,1500,.3,'sine',.06);if(b.t>.45&&!b.rw){b.rw=1;shockRing(V.x,AY,V.z,7,9,violet,0,false);}if(b.t>.9){b.rw=0;b.state='idle';b.t=0;}}
+  else if(b.state==='hurt'){/* reels, then blinks back to the middle */anim=b.t<.6?'fall':'laugh';if(b.t>.6&&b.t<.95){V.sc=Math.max(0,1-(b.t-.6)/.35);}else if(b.t>=.95&&b.t<1.3){if(!b.mv){b.mv=1;V.x=0;V.z=ACZ;burst(V3(0,AY+2,ACZ),violet,30,7,.5);}V.sc=Math.min(1,(b.t-.95)/.35);}if(b.t>1.5){b.mv=0;V.sc=1;b.state='idle';b.t=0;b.kHint=0;}}
+  else if(b.state==='dead'){clearVqFx();anim='fall';V.h=0;V.sc=1;
+    if(b.t>1.2&&!b.cine){b.cine=1;ending();}}
+  /* star burst along the marked line */
+  if(b.bl){const l=b.bl;l.t+=dt;if(l.t<.85){CBL.material.opacity=.2+.55*(l.t/.85)*(.6+.4*Math.sin(time*30));}
+    else if(l.t<1.2){const u=(l.t-.85)/.35;CBL.material.opacity=.9;for(let i=0;i<BURST.length;i++){const bb=BURST[i];bb.g.visible=true;const uu=clamp(u-i*.05,0,1);bb.g.position.set(l.x0+l.ux*l.len*uu,AY+1,l.z0+l.uz*l.len*uu);}
+      const hx=l.x0+l.ux*l.len*u,hz=l.z0+l.uz*l.len*u;if(PL&&Math.hypot(P.pos.x-hx,P.pos.z-hz)<1.2&&P.pos.y<AY+2)hurt();if(!l.snd){l.snd=1;sfx.boom();}}
+    else{CBL.material.opacity=Math.max(0,.9-(l.t-1.2)*3);for(const bb of BURST)bb.g.visible=false;if(l.t>1.55){CBL.visible=false;b.bl=null;}}}
+  /* homing bolts: chase for 1.2 s, then fly straight */
+  for(const bo of BOLTS){if(!bo.on)continue;bo.t+=dt;if(bo.t<1.2){let dx=P.pos.x-bo.x,dz=P.pos.z-bo.z;const l=Math.hypot(dx,dz)||1;dx/=l;dz/=l;const cur=Math.atan2(bo.ux,bo.uz),want=Math.atan2(dx,dz);const na=lerpAngle(cur,want,Math.min(1,dt*2.4));bo.ux=Math.sin(na);bo.uz=Math.cos(na);}
+    bo.x+=bo.ux*7.5*dt;bo.z+=bo.uz*7.5*dt;bo.g.position.set(bo.x,AY+1.1,bo.z);if(Math.random()<.5)emit(V3(bo.x,AY+1.1,bo.z),{life:.3,size:.4,size1:.05,color:0xd8a0ff});
+    if(PL&&Math.hypot(P.pos.x-bo.x,P.pos.z-bo.z)<.9&&P.pos.y<AY+2.1){hurt();bo.on=false;bo.g.visible=false;burst(V3(bo.x,AY+1.1,bo.z),0xe0b0ff,12,5,.3);}
+    if(bo.t>3.6||Math.hypot(bo.x,bo.z-ACZ)>14.5){bo.on=false;bo.g.visible=false;}}
+  /* starfall */
+  for(const d of SF){if(!d.on)continue;d.t+=dt;const k=d.t/d.tell;if(k<1){d.ring.material.opacity=.3+.5*k;d.ring.scale.setScalar(1.3-.3*k);d.dr.position.y=AY+.4+16*(1-Math.max(0,(k-.55)/.45));}
+    else if(!d.hit){d.hit=true;d.dr.visible=false;burst(V3(d.x,AY+.3,d.z),0xe0b0ff,16,6,.45);blip(1800,600,.2,'sine',.05);if(PL&&Math.hypot(P.pos.x-d.x,P.pos.z-d.z)<1.6&&P.pos.y<AY+2.2)hurt();}
+    if(k>1.3){d.on=false;d.hit=false;d.ring.visible=false;d.dr.visible=false;}}
+  if(vq.lastHp!==undefined&&b.hp<vq.lastHp&&b.state!=='intro'){vq.flash=1;burst(cagePos(),0xffe08a,40,9,.7);hitStop(.12);shakeT=Math.max(shakeT,.5);blip(1600,500,.4,'sine',.1);}vq.lastHp=b.hp;
+  if(vq.flash>0){vq.flash=Math.max(0,vq.flash-dt*3.2);for(const m of vq.mats)m.emissive.copy(m.userData.e0).lerp(new THREE.Color(1,.9,1),vq.flash*.8);}
+  if(!(b.state==='dead'&&b.cine)){c2Play(vq,anim,anim==='lower'||anim==='raise'||anim==='crouch'||anim==='dizzy'?.5:1);g.position.set(V.x,AY+V.h+(V.h<.05?Math.sin(time*1.4)*.05:0),V.z);g.scale.setScalar(VQH*Math.max(.02,V.sc));g.visible=V.sc>.03;
+    g.rotation.y=lerpAngle(g.rotation.y,face,Math.min(1,dt*(b.sub==='air'?10:4)));c2Anim(vq,dt);}
+  b.pos.copy(cagePos());};
+function placeLineV(m,x0,y,z0,x1,z1,w){const dx=x1-x0,dz=z1-z0,L2=Math.hypot(dx,dz)||1;m.scale.set(w/1.8,L2,1);m.position.set((x0+x1)/2,y+.06,(z0+z1)/2);m.rotation.z=Math.atan2(dx/L2,dz/L2)+Math.PI;m.visible=true;}
+/* ===================== THE ENDING =====================
+   The cage breaks; every stolen star bursts free and climbs back into the sky. The roads knit together. Flint finally eats Bramble's apple.
+   Behind the clouds, the Moon laughs. */
+function ending(){const c=cagePos();const stars=[];for(let i=0;i<24;i++){const s=grp(spr(glowTex,gold,2,2,0,0,0),spr(glowTex,0xffffff,.7,.7,0,0,0));s.position.copy(c);scene.add(s);stars.push({s,vx:R(-6,6),vy:R(8,16),vz:R(-6,6)});}
+  burst(c,0xffe08a,80,12,1);sfx.check();shakeT=.8;const moon=new THREE.Group();{const m=new THREE.Mesh(new THREE.CircleGeometry(9,40),new THREE.MeshBasicMaterial({color:0xf0e8ff,transparent:true,opacity:0,fog:false}));moon.add(m);
+    const sh=new THREE.Mesh(new THREE.CircleGeometry(8.2,40),new THREE.MeshBasicMaterial({color:0x1a0c40,transparent:true,opacity:0,fog:false}));sh.position.set(4,1.6,.05);moon.add(sh);const gl=spr(glowTex,0xc8b0ff,22,22,0,0,-.1);gl.material.opacity=0;gl.material.fog=false;moon.add(gl);
+    moon.position.set(-80,AY+30,ACZ-24);moon.lookAt(V.x,AY+2,V.z+20);scene.add(moon);}
+  const apple=grp(new THREE.Mesh(new THREE.SphereGeometry(.16,10,8),new THREE.MeshLambertMaterial({color:0xd82a2a,emissive:0x3a0606})),new THREE.Mesh(new THREE.CylinderGeometry(.015,.015,.12,4),new THREE.MeshLambertMaterial({color:0x4a2a10})));apple.children[1].position.y=.16;apple.visible=false;scene.add(apple);
+  const hadApple=(()=>{try{return localStorage.getItem('wt-apple')==='1';}catch(e){return true;}})();
+  const lines=[['VESPER QUILL',"No... no, no! My stars! My beautiful map!",3.6],
+    ['VESPER QUILL',"Every road, every village... I only wanted them to stay where I put them. Where nobody could laugh.",6],
+    ['FLINT',"Roads aren't for keeping. They're for going places.",3.6],
+    ['NARRATOR',"One by one, the stolen stars climbed back into the sky, and the sky roads knit themselves whole again.",6],
+    ['NARRATOR',hadApple?"And Flint, at last, remembered the apple in his pocket.":"And Flint, at last, sat down to rest.",4.6],
+    ['FLINT',hadApple?"Mm. Bramble was right. It does taste better after a victory.":"Phew. What a night.",4.2],
+    ['NARRATOR',"Somewhere behind the clouds, the Moon began to laugh.",4.4],['THE MOON',"Ha... ha ha ha ha!",3.4]];
+  c2Scene(lines,(t,i)=>{const f=P.pos;
+      if(i<=1)return [V3(V.x+3.4,AY+3.4,V.z+7),V3(V.x,AY+2.6,V.z)];
+      if(i===2)return [f.clone().add(V3(1.8,1.8,-3.2)),f.clone().add(V3(0,1.2,0))];
+      if(i===3)return [V3(V.x+6,AY+5+t*.6,V.z+14),V3(V.x,AY+16+t*1.6,V.z-10)];
+      if(i===4||i===5)return [f.clone().add(V3(1.4,1.4,-2.6)),f.clone().add(V3(0,1.1,0))];
+      return [f.clone().add(V3(4,3,6)),moon.position.clone()];},
+    ()=>{for(const s of stars)scene.remove(s.s);apple.visible=false;try{localStorage.setItem('wt-ch2done','1');}catch(e){}c2Star(V.x,AY+2.4,V.z+4,'LAST STAR',()=>bossDefeated());showHint('GRAB THE LAST STAR',3);},
+    {tick:(dt,t,i)=>{c2Play(vq,i<=1?'fall':'fall',1);c2Anim(vq,dt);
+      for(const s of stars){if(t<6)s.s.position.add(V3(s.vx*dt,s.vy*dt,s.vz*dt));s.vy+=dt*1.5;s.s.visible=s.s.position.y<AY+120;}
+      if(i===3&&vq.g.visible&&t>18){}
+      if(i>=4&&hadApple){apple.visible=i<=5;const f=P.pos;apple.position.set(f.x+.35,f.y+1.15+Math.sin(time*3)*.03,f.z-.25);if(i===5&&!L.crunch){L.crunch=1;blip(300,120,.12,'square',.08);blip(260,100,.12,'square',.07,.25);}}
+      if(i>=6){const k=Math.min(1,(t-28)/2);for(const ch of moon.children){if(ch.material)ch.material.opacity=ch.isSprite?.5*Math.max(0,k):Math.max(0,k);}
+        if(i===7){moon.rotation.z=Math.sin(time*14)*.05;if(Math.random()<dt*8)blip(R(180,260),R(120,160),.12,'triangle',.06);}}}});}
+L.inArena=p=>p.x<SX-120&&p.z<ARENA.z0&&p.z>ARENA.z1&&p.y>AY-1;
+L.onRespawn=()=>{clearVqFx();};
+L.update=dt=>{c2Tick(dt);vesperTick(dt);for(const e of IMPS)if(!e.alive&&e.star.visible){e.star.visible=false;for(const t of e.trail)t.visible=false;}
+  if(SEC.done&&!SEC.on&&!L.arr){L.arr=1;setTimeout(()=>banner('THE STAR-CAGE CITADEL','THE LAST CAUSEWAY'),700);}
+  for(const p of POSTS)p.gl.material.opacity=.45+.2*Math.sin(time*2+p.ph);for(const s of RSTARS)s.g.position.y=s.y+Math.sin(time*1.3+s.ph)*.3;
+  for(const a of[L.maraC,L.bramC])if(a){c2Play(a,'idle');c2Anim(a,dt);}
+  if(vq&&boss.state==='off'){c2Play(vq,'idle');c2Anim(vq,dt);vq.g.rotation.y=lerpAngle(vq.g.rotation.y,Math.atan2(P.pos.x-V.x,P.pos.z-V.z),Math.min(1,dt*2));}};
+L.populate=()=>{
+  orbLine(0,6,0,-4,4,1.4);for(const [x,z,y] of[[-4,-12,0],[3.5,-22,1],[-2,-30,2],[0,-38.5,2.6]])spawnOrb(x,y+1.4,z);makeCrate('crate',-4.6,-14,0);makeCrate('lucky',4.6,-24,1);
+  /* the broad platform: one Imp, alone */
+  makeCrate('check',0,-43.6,3);imp(0,-53,3);orbLine(-6,-46,-6,-58,5,4.4);orbLine(6,-46,6,-58,5,4.4);makeCrate('crate',-7,-56,3);makeCrate('boom',7,-50,3);
+  /* the short bridge and the wide landing: the second Imp waits past the bridge with plenty of room */
+  orbLine(0,-61,0,-70,4,4.4);imp(1.5,-79,3);makeCrate('crate',-6,-78,3);makeCrate('lucky',6.4,-82,3);
+  /* the stairs */
+  makeCrate('check',0,-101,7.5);for(let i=0;i<5;i++)spawnOrb(0,8.9+i*.8,-106-i*2.2);};
 }
 
 
