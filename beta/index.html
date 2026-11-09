@@ -343,7 +343,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
-<script>window.WT_AREF={"assets.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets1.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets2.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets3.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets4.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets5.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets_moon.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets6.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets7.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets8.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets9.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets_bosses.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets10.js": "e19924241b5a9ee76ccefb394aa258475327b287", "assets_c2i.js": "e19924241b5a9ee76ccefb394aa258475327b287"};</script>
+<script>window.WT_AREF={"assets.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets1.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets2.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets3.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets4.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets5.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets_moon.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets6.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets7.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets8.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets9.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets_bosses.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets10.js": "e19924241b5a9ee76ccefb394aa258475327b287", "assets_c2i.js": "e19924241b5a9ee76ccefb394aa258475327b287", "assets11.js": "d7bede7c35f6402f3fb2d465f4b4f96474137d24"};</script>
 <script>
 (() => {
 'use strict';
@@ -724,7 +724,8 @@ const LVMUS={
  7:[vary(MUSIC[4],{seed:701,root:47,bpm:100,drums:'heavy'}),vary(MUSIC[2],{seed:709,root:45,bpm:128,organ:true}).boss],
  8:[vary(MUSIC[0],{seed:801,root:55,bpm:120,scale:[0,2,3,7,8],lead:'square',leadCut:1800}),vary(MUSIC[4],{seed:807,root:50,bpm:122,lead:'sawtooth'}).boss],
  9:[vary(MUSIC[1],{seed:901,root:50,bpm:102,lead:'square',leadCut:1500,drums:'drive'}),vary(MUSIC[2],{seed:911,root:46,bpm:132,organ:true}).boss],
- 10:[null,vary(MUSIC[4],{seed:1003,root:49,bpm:118,lead:'square',leadCut:1700}).boss]};
+ 10:[null,vary(MUSIC[4],{seed:1003,root:49,bpm:118,lead:'square',leadCut:1700}).boss],
+ 11:[vary(MUSIC[1],{seed:1101,root:52,bpm:94,lead:'triangle',leadVib:true,arp:2,arpWave:'sine'}),vary(MUSIC[4],{seed:1107,root:47,bpm:122,lead:'sawtooth',leadCut:1600}).boss]};
 const seq={on:false,cfg:null,step:0,next:0};
 function schedule(){if(!AC||!seq.on||AC.state!=='running')return;const c=seq.cfg,spb=60/c.bpm/4;if(seq.next<AC.currentTime-.2)seq.next=AC.currentTime+.05;
   while(seq.next<AC.currentTime+.14){playStep(c,seq.step,seq.next,spb);seq.next+=spb*(seq.step%2===0?1+c.swing:1-c.swing);seq.step=(seq.step+1)%64;}}
@@ -781,7 +782,7 @@ function groundSeg(z0,z1,x0=-4.6,x1=4.6,walls=true){addSolid(x0,x1,-4,0,z1,z0,'g
   if(walls){addSolid(x0-.9,x0,0,.75,z1,z0,'wall',wallMat);addSolid(x1,x1+.9,0,.75,z1,z0,'wall',wallMat);}}
 
 /* ---------- level layout ---------- */
-const MAXLV=10;/* Chapter 2 levels open as they are finished */
+const MAXLV=11;/* Chapter 2 levels open as they are finished */
 const UNLOCK=(()=>{try{return clamp(+localStorage.getItem('wt-unlocked')||1,1,MAXLV);}catch(e){return 1;}})();
 function lvLabel(n){return n>=10?'Chapter 2 · Level '+(n-9):'Level '+n;}function lvHash(n){return n>=10?'chapter2-level'+(n-9):'level'+n;}
 const LV=(()=>{const h=(location.hash||'').toLowerCase();const m=h.match(/^#level(\d+)/),m2=h.match(/^#chapter2-level(\d+)/);let n=m2?+m2[1]+9:m?+m[1]:0;if(!n){try{n=+localStorage.getItem('wt-level')||1;}catch(e){n=1;}}return clamp(n,1,Math.min(MAXLV,UNLOCK));})();
@@ -1652,9 +1653,9 @@ function c1MushHouse(x,y,z,s=1,ry=0){const g=new THREE.Group();const capT=c1T('m
   const live=new THREE.Group();live.userData.live=true;live.add(spr(glowTex,0xb080ff,7,3,0,2.9,0));g.add(live);
   g.position.set(x,y,z);g.rotation.y=ry;g.scale.setScalar(s);c1Add(g);kPool(x,y+.02,z+1.6*s,4*s,.5);return g;}
 /* crystal cluster: elongated faceted shards with an inner glow */
-function c1CrystalCluster(x,y,z,s=1,col=0xb070ff){const g=new THREE.Group();const m=c1M('cry'+col,()=>new THREE.MeshLambertMaterial({color:col,emissive:new THREE.Color(col).multiplyScalar(.55),flatShading:true}));
+function c1CrystalCluster(x,y,z,s=1,col=0xb070ff,gop=1){const g=new THREE.Group();const m=c1M('cry'+col,()=>new THREE.MeshLambertMaterial({color:col,emissive:new THREE.Color(col).multiplyScalar(.55),flatShading:true}));
   const n=5+((Math.random()*3)|0);for(let i=0;i<n;i++){const h=(1.2+Math.random()*2.4)*(i===0?1.5:1);const c=new THREE.Mesh(new THREE.ConeGeometry(.32+Math.random()*.25,h,5),m);c.position.set((Math.random()-.5)*1.1,h/2-.1,(Math.random()-.5)*1.1);c.rotation.set((Math.random()-.5)*.8,Math.random()*3,(Math.random()-.5)*.8);g.add(c);}
-  const live=new THREE.Group();live.userData.live=true;live.add(spr(glowTex,col,5,5,0,1.4,0));g.add(live);g.position.set(x,y,z);g.scale.setScalar(s);c1Add(g);return g;}
+  const live=new THREE.Group();live.userData.live=true;const gs=spr(glowTex,col,5,5,0,1.4,0);gs.material.opacity=gop;live.add(gs);g.add(live);g.position.set(x,y,z);g.scale.setScalar(s);c1Add(g);return g;}
 /* wheat: crossed cards of golden stalks with heavy heads (instanced like the grass tufts) */
 function c1Wheat(list){const t=c1T('wheat',()=>{const tt=kTex(kCanvas(32,32,(g,w,h,r)=>{g.clearRect(0,0,w,h);for(let i=0;i<22;i++){let x=2+r()*(w-4),y=h-1;const len=16+r()*14,lean=(r()-.5)*.35,c=pick(['#b0a03a','#c8b44a','#9a8a2a','#d8c45a']);
     for(let k=0;k<len&&y>3;k++){g.fillStyle=c;g.fillRect(Math.round(x),Math.round(y),1,1);y--;x+=lean;}g.fillStyle=pick(['#f0d870','#e8c85a','#ffe890']);g.fillRect(Math.round(x)-1,Math.round(y)-3,2,4);}},77));tt.wrapS=tt.wrapT=THREE.ClampToEdgeWrapping;return tt;});
@@ -2526,7 +2527,7 @@ function gfxUI(){const QL={auto:'AUTO',low:'LOW',medium:'MEDIUM',high:'HIGH',ult
 
 function S2(){return MENU.root||MENU.scene;}
 
-const WT_VERSION='v1.16';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
+const WT_VERSION='v1.17';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
 
 /* ---------- beta feedback: opens an email with the details filled in ---------- */
 const FEEDBACK_TO='mike.jose.rodrigues@gmail.com';
@@ -3635,6 +3636,204 @@ L.populate=()=>{
   for(const [x,z] of[[0,-221.4],[2.4,-224.2],[-.6,-227],[-3,-229.8],[0,-232.6]])spawnOrb(x,1.4,z);makeCrate('check',0,-236);orbArc(0,-238,0,-246,5,2.5);
   {const e=clapper(-4,-250,3,18);if(e)e.trk=TU[-4];}{const e=clapper(4,-253.5,3,16);if(e)e.trk=TU[4];}{const e=clapper(0,-258.5,3,16);if(e)e.trk=TU[0];}
   makeCrate('boom',4,-252,3);makeCrate('crate',-4,-260,3);makeCrate('iron',0,-264,3);makeCrate('check',-4,-268,3);};
+}
+
+else if(LV===11){
+/* ===================== CHAPTER 2 · LEVEL 11: REGENT'S HOLLOW =====================
+   Route (forward = -Z): the end of the Moonline tracks → a shallow gully crossed on roots → level ground (first Bristle Bud)
+   → the raised trail (a Bud lashes along it, another watches from a side ledge) → displaced path stones → checkpoint at the
+   foot of the root staircase → the Root Regent's clearing. Cobalt forest, cyan moss, enormous trunks, red eyes in the dark. */
+ARENA={x0:-13,x1:13,z0:-137,z1:-163,cz:-150,y:5,cx:0};
+Object.assign(L,{num:11,name:"REGENT'S HOLLOW",start:V3(0,0,5),killY:-5,mus:LVMUS[11][0],bossMus:LVMUS[11][1],bossName:'THE ROOT REGENT',hemiI:1.05,
+  hint:'INTO THE HOLLOW · JUMP THE ROOT LASHES',grade:{sat:1.2,vig:.9,tint:[.96,1,1.14]},
+  clampP:p=>{if(p.z>-14)p.z=Math.min(p.z,9);if(p.z<-136&&p.y>4)p.x=clamp(p.x,-12.6,12.6);},clampCam:c=>{c.z=Math.min(c.z,14);}});
+SEC.built=true;/* no bonus course here: the hollow starts where the tracks end */
+/* ---- sky, fog, light: cold blue starlight ---- */
+scene.background=skyTex(g=>{grad(g,512,1024,[[0,'#02031a'],[.25,'#081248'],[.45,'#14227a'],[.56,'#2a2a8a'],[.62,'#101a5a'],[1,'#060a2a']]);stars(g,512,1024,520,.6);
+  for(let i=0;i<6;i++){const x=R(40,470),y=R(80,460),r=R(60,150);const gr=g.createRadialGradient(x,y,0,x,y,r);gr.addColorStop(0,'rgba(80,140,255,.28)');gr.addColorStop(1,'rgba(40,60,200,0)');g.fillStyle=gr;g.fillRect(x-r,y-r,r*2,r*2);}});
+scene.fog=new THREE.Fog(0x0a1450,26,118);hemi.color.setHex(0x9ab4ff);hemi.groundColor.setHex(0x101040);hemi.intensity=1.05;
+/* ---- materials: blue flagstones with cyan moss, blue-violet bark, cyan glow ---- */
+const HB=c1T('hbark',()=>kTex(kCanvas(32,64,(g,w,h,r)=>{g.fillStyle='#2a2a5a';g.fillRect(0,0,w,h);const pal=['#34346a','#2a2a5c','#3e3e7a','#22224e','#46468a'];for(let x=0;x<w;x+=2+((r()*3)|0)){const c=pal[(r()*pal.length)|0];for(let y=0;y<h;y++)if(r()<.85)kRect(g,w,h,x,y,2,2+((r()*5)|0),c);for(let y=0;y<h;y+=6+((r()*10)|0))kRect(g,w,h,x,y,1,3+((r()*5)|0),'#14143a');}
+  for(let i=0;i<22;i++)kRect(g,w,h,(r()*w)|0,(r()*h)|0,2,1+((r()*2)|0),pick(['#2ad8c0','#3af0d0','#1aa89a']));},111)));
+const barkM=c1Lam('hbarkM',HB),mossCy=c1M('mossCy',()=>new THREE.MeshLambertMaterial({map:C1TEX.swamp(),alphaTest:.5,side:THREE.DoubleSide,color:0x60fff0,emissive:0x0a4a48}));
+const FLAG=c1T('hflag',()=>kTex(kCanvas(64,64,(g,w,h,r)=>{kStones(g,w,h,r,{nx:5,ny:5,jit:.8,gap:1.3,shade:.1,noise:.1,mortar:'#0c1030',pal:['#3a4a8a','#34427e','#425498','#2e3a72','#4a5aa2'],moss:0});
+  for(let k=0;k<3;k++){const cx=r()*w,cy=r()*h,rad=2+r()*5;for(let i=0;i<rad*rad*2;i++){const a=r()*TAU,d=Math.sqrt(r())*rad;kRect(g,w,h,(cx+Math.cos(a)*d)|0,(cy+Math.sin(a)*d)|0,1,1,pick(['#2ad8c0','#1aa89a','#3af0d0','#16786e']));}}},112)));
+const flag=new THREE.MeshLambertMaterial({map:FLAG}),soil=new THREE.MeshLambertMaterial({map:KT.rock(),color:0x8a94d8});
+const cyan=0x4af0e0;
+/* ---- kit pieces ---- */
+function trunk(x,z,y=0,r=2.4,h=34,o={}){/* an enormous tree: tapering bark column, flared roots, cyan moss skirts and drapes */const g=new THREE.Group();
+  const t=new THREE.Mesh(new THREE.CylinderGeometry(r*.62,r,h,9,4),barkM);const p=t.geometry.attributes.position;for(let i=0;i<p.count;i++){const vy=p.getY(i);const n=1+Math.sin(vy*.4+x)*.06+Math.cos(Math.atan2(p.getZ(i),p.getX(i))*3+z)*.07;p.setX(i,p.getX(i)*n);p.setZ(i,p.getZ(i)*n);}t.geometry.computeVertexNormals();
+  const uv=t.geometry.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)*r*2.2,uv.getY(i)*h/4);t.position.y=h/2;g.add(t);
+  const nr=o.roots??6;for(let i=0;i<nr;i++){const a=i/nr*TAU+(x*.3),len=r*(1.6+Math.random()*.9);const rt=new THREE.Mesh(new THREE.CylinderGeometry(r*.18,r*.42,len,6),barkM);rt.position.set(Math.cos(a)*(r*.7+len*.32),len*.18,Math.sin(a)*(r*.7+len*.32));rt.rotation.set(0,0,0);rt.lookAt(Math.cos(a)*(r*3),-len*.5,Math.sin(a)*(r*3));rt.rotateX(Math.PI/2);g.add(rt);
+    const mc=new THREE.Mesh(new THREE.PlaneGeometry(r*.9,r*.8),mossCy);mc.position.set(Math.cos(a)*r*1.05,r*.55,Math.sin(a)*r*1.05);mc.rotation.y=-a+Math.PI/2;g.add(mc);}
+  for(let i=0;i<5;i++){const a=Math.random()*TAU,yy=h*(.25+Math.random()*.5);const mc=new THREE.Mesh(new THREE.PlaneGeometry(r*.8,2+Math.random()*3),mossCy);mc.position.set(Math.cos(a)*r*.8,yy,Math.sin(a)*r*.8);mc.rotation.y=-a+Math.PI/2;g.add(mc);}
+  if(o.branches!==false)for(let i=0;i<3;i++){const a=Math.random()*TAU,yy=h*(.55+Math.random()*.35),bl=r*3;const b=new THREE.Mesh(new THREE.CylinderGeometry(r*.12,r*.26,bl,5),barkM);b.position.set(Math.cos(a)*(r*.5+bl*.4),yy+bl*.25,Math.sin(a)*(r*.5+bl*.4));b.lookAt(Math.cos(a)*r*6,yy+bl*1.2,Math.sin(a)*r*6);b.rotateX(Math.PI/2);g.add(b);
+    const mc=new THREE.Mesh(new THREE.PlaneGeometry(1.6,3.2),mossCy);mc.position.copy(b.position).add(V3(Math.cos(a)*bl*.3,-1.4,Math.sin(a)*bl*.3));mc.rotation.y=-a;g.add(mc);}
+  g.position.set(x,y,z);g.rotation.y=Math.random()*TAU;c1Add(g);return g;}
+function rootLog(x0,x1,z0,z1,top){/* walkable root: a solid deck dressed as a gnarled root with moss on top */const s=addSolid(x0,x1,top-.8,top,z1,z0,'ground',null);
+  const len=Math.abs(z0-z1),w=x1-x0;const m=new THREE.Mesh(new THREE.CylinderGeometry(w*.5,w*.62,len+.6,7),barkM);m.rotation.x=Math.PI/2;m.position.set((x0+x1)/2,top-w*.5,(z0+z1)/2);const uv=m.geometry.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)*w*1.6,uv.getY(i)*len/3);c1Add(m);
+  for(let i=0;i<Math.round(len/1.6);i++){const mc=new THREE.Mesh(new THREE.PlaneGeometry(w*.7,.9),mossCy);mc.position.set((x0+x1)/2+(Math.random()<.5?-1:1)*w*.48,top-.4,z0-(i+.5)*1.6);mc.rotation.y=Math.PI/2;c1Add(mc);}return s;}
+function rootArch(z,y=0,r=6.5,ry=0){const m=new THREE.Mesh(new THREE.TorusGeometry(r,.7,7,14,Math.PI),barkM);m.position.set(0,y-.6,z);m.rotation.y=ry;c1Add(m);for(let i=0;i<5;i++){const a=.35+i/4*(Math.PI-.7);const mc=new THREE.Mesh(new THREE.PlaneGeometry(1.2,1.8+Math.random()*1.5),mossCy);mc.position.set(Math.cos(a)*r,y-.6+Math.sin(a)*r-1.1,z+.75);c1Add(mc);}}
+function ruinWall(x,z,y,len,ry,h=7){/* ruined castle wall with arched openings, like the left side of the reference */const g=new THREE.Group();const st=c1Lam('hruin',c1Stone('hruin',['#4a5290','#3e4682','#565ea0','#343c72'],'#10142e'));const n=Math.max(1,Math.round(len/5));
+  for(let i=0;i<n;i++){const px=i*5-len/2+2.5;const hh=h*(.6+Math.random()*.5);for(const sx of[-1,1]){const p=new THREE.Mesh(kBoxGeo(1,hh,1.4,2.2),st);p.position.set(px+sx*2,hh/2,0);g.add(p);}const top=new THREE.Mesh(kBoxGeo(5,1,1.4,2.2),st);top.position.set(px,hh-.5,0);if(Math.random()<.75)g.add(top);
+    const ar=new THREE.Mesh(new THREE.CylinderGeometry(1.5,1.5,1.42,10,1,false,0,Math.PI),st);ar.rotation.z=Math.PI/2;ar.rotation.y=Math.PI/2;ar.position.set(px,hh-1.6,0);ar.scale.set(1,1,.7);if(Math.random()<.7)g.add(ar);}
+  const base=new THREE.Mesh(kBoxGeo(len+1,1.2,1.8,2.2),st);base.position.y=.6;g.add(base);g.position.set(x,y,z);g.rotation.y=ry;c1Add(g);}
+/* ===================== 01 · WHERE THE TRACKS END (z 9 → -14) ===================== */
+deck(-4.5,4.5,10,-14,0,flag,soil,5);
+kTrack([[0,9.5],[0,5.4]],-.05,{bed:true});{const bs=new THREE.Mesh(kBoxGeo(2.2,.9,.6,1),c1Lam('buffer',KT.wood()));bs.position.set(0,.45,5.1);c1Add(bs);const lamp=c1Lantern(1.9,0,6,{h:2.4,ry:Math.PI});}
+for(const sx of[-1,1])addSolid(sx<0?-6:4.5,sx<0?-4.5:6,0,4,-14,10,'wall',null);
+/* ===================== 02 · THE GULLY, CROSSED ON ROOTS (z -14 → -40) ===================== */
+const gullyT=c1T('gully',()=>kTex(kCanvas(64,64,(g,w,h,r)=>{g.fillStyle='#062a3a';g.fillRect(0,0,w,h);for(let i=0;i<w*h*.5;i++)kRect(g,w,h,(r()*w)|0,(r()*h)|0,2+((r()*3)|0),1,pick(['#0a3a4a','#083444','#0e4a5a','#042030']));
+  for(let i=0;i<14;i++){const cx=r()*w,cy=r()*h,rad=2+r()*6;for(let a=0;a<TAU;a+=.2)kRect(g,w,h,Math.round(cx+Math.cos(a)*rad),Math.round(cy+Math.sin(a)*rad*.7),1,1,r()<.5?'#4af0e0':'#2ab8c0');}},113)));
+liquidPool(-60,60,40,-200,-3.2,gullyT,0x9affff);
+rootLog(-1.3,1.3,-14,-21.5,0);platform(0,-24,2.6,2.2,1,0,1.8,1,0,0);rootLog(-1,1.6,-26.5,-31.5,0);platform(-1,-34,2.4,2.4,0,0,0,1,0,0,.45);rootLog(-2.4,.2,-36.6,-40.4,0);
+for(const [x,z] of[[-6,-26],[7,-30],[-8,-36],[5,-18]])c1CrystalCluster(x,-3.2,z,1.2,cyan,.6);
+/* gully walls: mossy earth banks */
+for(const sx of[-1,1])for(let z=-16;z>-40;z-=8){const m=kRockMass(sx*R(11,15),-4,z,R(8,11),R(5,7),9,(z*sx+40)|0,{tile:5,ledges:false});m.children[0].material=soil;m.children[1].material=flag;c1Add(m);}
+/* ===================== 03 · LEVEL GROUND (z -40 → -62): the first Bristle Bud ===================== */
+deck(-9,9,-40,-62,0,flag,soil,5);for(const sx of[-1,1])addSolid(sx<0?-10:9,sx<0?-9:10,0,5,-62,-40,'wall',null);
+rootArch(-47,0,7);
+/* ===================== 04 · THE RAISED TRAIL (z -62 → -100) + side ledge ===================== */
+ramp(-4,4,-62,-68,0,2.5);deck(-4,4,-68,-100,2.5,flag,soil,6);deck(-11.5,-5.2,-72,-93,4,flag,soil,7);
+for(const sx of[1])addSolid(4,5,2.5,6,-100,-62,'wall',null);
+rootArch(-78,2.5,6.5);rootArch(-96,2.5,6);
+/* ===================== 05 · DISPLACED PATH STONES (z -100 → -118) ===================== */
+const stoneM=[soil,flag,soil];const sg=new THREE.CylinderGeometry(1.3,1.1,1,7);
+function pathStone(x,z,top,o={}){const m=new THREE.Mesh(sg,stoneM);m.position.set(x,top-.5,z);m.rotation.set((Math.random()-.5)*.12,Math.random()*3,(Math.random()-.5)*.12);scene.add(m);const s=platform(x,z,2.3,2.3,o.ax||0,o.az||0,o.amp||0,o.spd||1,o.ph||0,top,o.ay||0,m);if(o.sink)s.sink=top;return s;}
+pathStone(-1,-102.6,2.5);pathStone(1.5,-105.8,2.5,{sink:2.5});pathStone(-.6,-109,2.5,{ax:1,amp:2,spd:1.1});pathStone(1.2,-112.2,2.5,{ay:.5,spd:1.2});pathStone(-.4,-115.4,2.5,{sink:2.5});
+/* ===================== 06 · FOOT OF THE ROOT STAIRCASE (checkpoint) and the climb ===================== */
+deck(-5,5,-117.8,-124,2.5,flag,soil,6);ramp(-3,3,-124,-134,2.5,5);deck(-3,3,-134,-137,5,flag,soil,8);
+for(const sx of[-1,1])addSolid(sx<0?-4:3,sx<0?-3:4,2.5,9,-137,-124,'wall',null);
+for(let i=0;i<9;i++){const z=-124.6-i*1.1,y=2.5+i*.28;const st=new THREE.Mesh(new THREE.CylinderGeometry(.42,.48,6.4,6),barkM);st.rotation.z=Math.PI/2;st.position.set(0,y-.25,z);c1Add(st);}
+for(const sx of[-1,1]){const rr=new THREE.Mesh(new THREE.CylinderGeometry(.5,1,12,6),barkM);rr.position.set(sx*3.6,3.4,-130);rr.rotation.x=Math.PI/2-.22;c1Add(rr);}
+gate=addSolid(-3,3,5,8,-137.6,-136.6,'gate',null);gate.alive=false;gateMesh=new THREE.Mesh(boxGeo(6,3,1,2.5),soil);gateMesh.position.set(0,3,-137.1);scene.add(gateMesh);
+/* ===================== 07 · THE REGENT'S CLEARING ===================== */
+deck(ARENA.x0-1,ARENA.x1+1,-137,-170,5,flag,soil,10);
+for(const sx of[-1,1])addSolid(sx<0?ARENA.x0-2:ARENA.x1,sx<0?ARENA.x0:ARENA.x1+2,5,12,-170,-137,'wall',null);addSolid(ARENA.x0,ARENA.x1,5,14,-170,-164.5,'wall',null);
+/* the ring of the clearing: huge trunks, a crown of roots, crystals, a cyan glow behind the Regent */
+for(const [x,z,r] of[[-17,-140,3],[17,-142,3.2],[-18,-156,3.4],[18,-158,3],[-11,-173,3.6],[11,-174,3.4],[0,-180,4.2]])trunk(x,z,-3.2,r,50);
+for(let i=0;i<9;i++){const a=-1.2+i/8*2.4;const rr=new THREE.Mesh(new THREE.CylinderGeometry(.3,.9,9,6),barkM);rr.position.set(Math.sin(a)*8,5.6,-167+Math.cos(a)*3.2);rr.rotation.set(Math.PI/2-.15,0,-a);c1Add(rr);}
+for(const [x,z] of[[-12.4,-139],[12.4,-139],[-12.6,-160],[12.6,-160],[-6,-163.6],[6,-163.6]])c1CrystalCluster(x,5,z,.75,cyan,.5);
+for(const sx of[-1,1])for(const z of[-140,-150,-160])c1Torch(sx*12.4,5,z,{h:2.2});
+{const d=spr(glowTex,cyan,10,8,0,8,-169);d.material.opacity=.55;scene.add(d);const kl=new THREE.PointLight(0x7ae8ff,1.4,26,1.6);kl.position.set(0,10,-158);scene.add(kl);}
+/* ===================== THE HOLLOW: trunks, blue pines, ruins, root arches, moss, crystals everywhere ===================== */
+for(const [x,z,r] of[[-9,6,2.6],[9,-2,3],[-10,-12,2.4],[11,-14,2.8],[-15,-44,3.2],[14,-50,3],[-13,-60,2.6],[10,-66,2.8],[9,-84,3],[-18,-98,3.4],[10,-108,3],[-10,-114,2.8],[9,-126,2.6],[-9,-128,2.6],
+  [-22,0,3.6],[22,-20,3.8],[-24,-34,4],[24,-60,4],[-26,-70,4.2],[24,-92,3.8],[-24,-118,4],[24,-126,4]])trunk(x,z,-3.2,r,z<-100?40:36);
+{const pm=c1M('bluePine',()=>new THREE.MeshLambertMaterial({map:KT.pine(),color:0x8aa4ff}));const far=[];for(let i=0;i<260;i++){const sx=pick([-1,1]);far.push([sx*R(26,80),R(-6,2),R(-190,30),R(1,1.8),R(0,TAU)]);}for(let i=0;i<40;i++)far.push([R(-60,60),R(0,6),R(-200,-186),R(1.4,2),R(0,TAU)]);
+ kInstanced(kPineGeo(0),pm,far,90);}
+ruinWall(-20,-78,-3.2,26,Math.PI/2+.1,13);ruinWall(-26,-48,-3.2,18,Math.PI/2-.2,13);ruinWall(22,-110,-3.2,16,-Math.PI/2+.2,11);
+c1Reeds(c1Scatter(-9,9,-60,-41,10,0,(x,z)=>Math.abs(x)<4,.6,1,121),cyan);
+for(const [x,y,z,s] of[[-4,0,-4,.55],[4.1,0,-10,.5],[-8,0,-58,.7],[8,0,-44,.65],[-3.8,2.5,-88,.5],[3.8,2.5,-70,.55],[-10.9,4,-90,.6],[4.6,2.5,-121,.6],[-4.6,2.5,-119,.55]])c1CrystalCluster(x,y,z,s,cyan,.45);
+c1Bushes([[-3.9,0,0,.7,0],[3.9,0,-6,.8,1],[-8.2,0,-50,.9,2],[8.2,0,-56,1,3],[-10.8,4,-76,.8,4]],false);
+kGrass(c1Scatter(-8.5,8.5,-61,-41,40,0,(x,z)=>Math.abs(x)<3.5,.8,1.4,122));
+for(const [x,y,z,ry] of[[3.9,0,3,Math.PI],[-3.9,0,-8,0],[8.6,0,-48,Math.PI],[-8.6,0,-60,0],[3.7,2.5,-80,Math.PI],[-3.7,2.5,-96,0],[4.6,2.5,-120,Math.PI]])c1Lantern(x,y,z,{h:2.6,ry,col:0x9af0ff});
+c1Finish();
+/* ===================== BRISTLE BUD (minion) =====================
+   digs in its root feet and raises its tail (0.75 s), then a thin root lashes along the ground the way it faced: jump it, then strike
+   while it recovers (0.9 s). The lash keeps the direction it had when it planted its feet. */
+ANIM.bud=ANIM.bud||{idle:t=>({y:Math.abs(Math.sin(t*3))*.03,rz:Math.sin(t*1.6)*.04}),dig:(t,k)=>({y:-.06*k,rx:-.25*k+Math.sin(t*40)*.02}),lash:(t,k)=>({y:.04,rx:.3*(1-k)}),recover:(t,k)=>({y:-.04,rx:.15,rz:Math.sin(t*9)*.08}),hurt:(t,k)=>({rx:-.4*(1-k)})};
+const lashM=c1M('lash',()=>new THREE.MeshLambertMaterial({map:HB,emissive:0x0a5a50}));
+function bud(x,z,y=0,face=0,len=6.5){const e=c2Enemy('bud','bud',x,z,y,1.35,{upd:updBud,face,lashLen:len,guard:(e,dir,stomp)=>!stomp&&e.mode!=='recover'&&e.mode!=='idle'});if(!e)return null;
+  const gl=spr(glowTex,0x6af0ff,2.6,2.6,0,1,-.4);gl.material.opacity=.35;e.obj.add(gl);
+  const lash=new THREE.Group();const seg=new THREE.Mesh(new THREE.BoxGeometry(.34,.3,1),lashM);seg.position.z=.5;lash.add(seg);const tip=new THREE.Mesh(new THREE.ConeGeometry(.2,.7,5),lashM);tip.rotation.x=Math.PI/2;tip.position.z=1.1;lash.add(tip);
+  const warn=new THREE.Mesh(new THREE.PlaneGeometry(.9,1),new THREE.MeshBasicMaterial({color:0x6aff9a,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));warn.rotation.x=-Math.PI/2;warn.position.set(0,.03,.5);lash.add(warn);
+  lash.visible=false;scene.add(lash);e.lash=lash;e.seg=seg;e.tip=tip;e.warn=warn;e.lk=0;BUDS.push(e);return e;}
+const BUDS=[];
+function updBud(e,dt){const a=e.an;e.mt-=dt;const dx=P.pos.x-e.pos.x,dz=P.pos.z-e.pos.z,d=Math.hypot(dx,dz);const near=d<e.lashLen+2&&Math.abs(P.pos.y-e.pos.y)<2.5;
+  const place=()=>{e.lash.position.set(e.pos.x,e.pos.y+.16,e.pos.z);e.lash.rotation.y=e.lf;};
+  if(e.mode==='idle'){c2Play(a,'idle');if(near)e.face=lerpAngle(e.face,Math.atan2(dx,dz),Math.min(1,dt*4));if(e.mt<=0&&near&&state==='play'){e.mode='dig';e.mt=.75;e.lf=e.face;c2Play(a,'dig',.75);blip(240,180,.2,'square',.05);e.lash.visible=true;e.lk=0;place();}}
+  else if(e.mode==='dig'){const k=1-e.mt/.75;e.warn.material.opacity=.15+.45*k*(.6+.4*Math.sin(time*30));e.warn.scale.set(1,e.lashLen,1);e.warn.position.z=e.lashLen/2;e.seg.scale.set(1,1,.01);e.tip.position.z=.2;place();if(Math.random()<dt*20)emit(e.pos.clone().add(V3(R(-.4,.4),.1,R(-.4,.4))),{vy:R(1,2),life:.3,size:.18,color:0x6af0ff});
+    if(e.mt<=0){e.mode='lash';e.mt=.42;c2Play(a,'lash',.42);blip(520,180,.14,'sawtooth',.06);e.warn.material.opacity=0;}}
+  else if(e.mode==='lash'){const k=clamp(1-(e.mt-.2)/.22,0,1);const L2=e.lashLen*k;e.seg.scale.set(1,1,Math.max(.01,L2));e.tip.position.z=L2+.3;place();
+    /* damage: anyone standing on the line it whips along (jump it!) */const sx=Math.sin(e.lf),sz=Math.cos(e.lf),along=dx*sx+dz*sz,lat=Math.abs(dx*sz-dz*sx);
+    if(state==='play'&&!P.dead&&along>.3&&along<L2+.4&&lat<.7&&Math.abs(P.pos.y-e.pos.y)<.75)hurt();
+    if(e.mt<=0){e.mode='recover';e.mt=.9;c2Play(a,'recover',.9);}}
+  else if(e.mode==='recover'){const k=1-e.mt/.9;e.seg.scale.set(1,1,Math.max(.01,e.lashLen*(1-k)));e.tip.position.z=e.lashLen*(1-k)+.3;place();if(e.mt<=0){e.mode='idle';e.mt=R(.6,1.2);e.lash.visible=false;}}
+  if(!e.alive&&e.lash)e.lash.visible=false;
+  c2Anim(a,dt);e.obj.rotation.y=e.face;e.obj.position.copy(e.pos);}
+L.minion=(x,z,y)=>bud(x,z,y);
+L.summon=(x,z,y)=>{const sd=pick([-1,1]);const e=bud(sd*9,-141,ARENA.y,sd<0?Math.PI*.65:-Math.PI*.65,6);if(e)e.summoned=true;return e;};
+/* ===================== THE ROOT REGENT (boss) =====================
+   A living cedar stump: draws its rake-like root arm back while the moss on the striking root lights up, then sweeps the root
+   low across the clearing (jump it). Then it sags and the glowing knot at its base is open.
+   Phase 1: one sweep (1.1 s wind-up) · knot open 1.5 s
+   Phase 2: a sweep, then a raised-arm cue and a return sweep · knot open 1.3 s
+   Phase 3: two floor strips flash green and roots jab up out of them, then a final sweep · knot open 1.2 s */
+const RX=0,RZ=-166.4,RY=ARENA.y,KZ=-162.6,LEN=34;let rg=null;
+const rake=new THREE.Group();rake.position.set(RX,RY+.45,RZ);scene.add(rake);
+{const arm=new THREE.Mesh(new THREE.CylinderGeometry(.34,.62,LEN-3,7),new THREE.MeshLambertMaterial({map:HB,emissive:0x000000}));arm.rotation.x=Math.PI/2;arm.position.z=(LEN-3)/2+3;rake.add(arm);rake.userData.arm=arm;
+  for(let i=0;i<9;i++){const c=new THREE.Mesh(new THREE.ConeGeometry(.3,1.4,5),arm.material);c.position.set((i%2?.5:-.5),0,5+i*3.2);c.rotation.set(Math.PI/2,0,(i%2?-1:1)*.9);rake.add(c);}
+  const glow=new THREE.Mesh(new THREE.PlaneGeometry(1.8,LEN-3),new THREE.MeshBasicMaterial({color:0x6aff9a,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));glow.rotation.x=-Math.PI/2;glow.position.set(0,-.4,(LEN-3)/2+3);rake.add(glow);rake.userData.glow=glow;}
+rake.visible=false;
+const knot=grp(spr(glowTex,0x6aff9a,5,5,0,0,0),spr(glowTex,0xffffff,1.6,1.6,0,0,0));{const kb=new THREE.Mesh(new THREE.IcosahedronGeometry(.75,0),new THREE.MeshBasicMaterial({color:0x8affb0}));knot.add(kb);}knot.position.set(RX,RY+1.2,KZ);knot.visible=false;scene.add(knot);
+/* three floor strips for the root jabs */
+const STRIPS=[[-13,-4.33],[-4.33,4.33],[4.33,13]].map(([x0,x1])=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(x1-x0,24),new THREE.MeshBasicMaterial({color:0x6aff7a,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));m.rotation.x=-Math.PI/2;m.position.set((x0+x1)/2,RY+.05,-149);m.renderOrder=3;scene.add(m);
+  const sp=new THREE.Group();const sm=new THREE.MeshLambertMaterial({map:HB,emissive:0x0a3a30});for(let i=0;i<14;i++){const c=new THREE.Mesh(new THREE.ConeGeometry(.45,2.6,5),sm);c.position.set(x0+.8+Math.random()*(x1-x0-1.6),1.3,-138.5-Math.random()*21);sp.add(c);}sp.position.y=RY-3;sp.visible=false;scene.add(sp);return {x0,x1,m,sp};});
+function setupRegent(){rg=c2Make('regent',9.5);if(!rg)return;rg.g.position.set(RX,RY,RZ-1);scene.add(rg.g);
+  rg.mats=[];rg.g.traverse(o=>{if(o.isMesh)for(const m of[].concat(o.material))if(m&&m.emissive&&!rg.mats.includes(m)){rg.mats.push(m);m.userData.e0=m.emissive.clone();}});rg.flash=0;
+  boss.maxHp=60;boss.reset=()=>{boss.state='idle';boss.t=0;boss.n=0;boss.kd=0;rake.visible=false;knot.visible=false;rake.userData.glow.material.opacity=0;for(const s of STRIPS){s.m.material.opacity=0;s.sp.visible=false;}};}
+L.setup=()=>{setupRegent();};
+L.startBoss=()=>{bossIntro(L.bossName);boss.reset();boss.state='intro';boss.t=0;};
+/* one knockdown = one third of its life (three punish windows, as designed) */
+L.hitBoss=()=>{if(boss.state!=='sleep')return;const m=boss.maxHp,tgt=boss.hp>m*2/3+.5?m*2/3:boss.hp>m/3+.5?m/3:0;NEXTDMG=Math.max(1,Math.ceil(boss.hp-tgt));
+  if(bossDamage(0x6aff9a)){boss.state='dead';boss.t=0;knot.visible=false;rake.visible=false;sfx.life();return;}
+  boss.state='hurt';boss.t=0;knot.visible=false;const ph=bossPhase();showHint(ph===1?'TWO SWEEPS NOW · WATCH THE ARM RISE':'MIND THE GREEN STRIPS · THEN JUMP THE SWEEP',2.8);};
+function sweepPlan(){const ph=bossPhase();const from=P.pos.x<0?1:-1;/* sweep starts on the side away from you, so you see it coming */
+  if(ph===0)return {ph,steps:[{k:'sweep',wind:1.1,a0:from*1.5,a1:-from*1.5,dur:.8}],open:1.5};
+  if(ph===1)return {ph,steps:[{k:'sweep',wind:1.1,a0:from*1.5,a1:-from*1.5,dur:.75},{k:'sweep',wind:.9,a0:-from*1.5,a1:from*1.5,dur:.75,raise:true}],open:1.3};
+  const safe=(Math.random()*3)|0;return {ph,steps:[{k:'jab',strips:[0,1,2].filter(i=>i!==safe),wind:1,hold:.7},{k:'sweep',wind:.8,a0:from*1.5,a1:-from*1.5,dur:.7}],open:1.2};}
+function playerAng(){return Math.atan2(P.pos.x-RX,P.pos.z-RZ);}
+let prevA=0;
+L.updBoss=dt=>{const b=boss;if(b.state==='off'||!rg)return;b.t+=dt;const g=rg.g;
+  if(b.state==='intro'){c2Play(rg,'talk');g.position.y=RY+Math.max(0,Math.sin(b.t*3))*.25*(1-b.t/2.4);if(b.t>.5&&!b.roared){b.roared=1;blip(90,50,1.4,'sawtooth',.12);shakeT=.7;}if(b.t>2.4){b.roared=0;b.state='idle';b.t=0;showHint('JUMP THE SWEEPING ROOT · THEN HIT THE GLOWING KNOT',3.4);}}
+  else if(b.state==='idle'){c2Play(rg,'idle');if(b.t>.9){b.state='act';b.t=0;b.pl=sweepPlan();b.si=0;b.st=0;b.sub='wind';}}
+  else if(b.state==='act'){const s=b.pl.steps[b.si];b.st+=dt;const glow=rake.userData.glow.material,arm=rake.userData.arm.material;
+    if(s.k==='sweep'){rake.visible=true;
+      if(b.sub==='wind'){const k=Math.min(1,b.st/s.wind);rake.rotation.y=s.a0;rake.position.y=RY+.45+(s.raise?Math.sin(k*Math.PI)*1.2:0);glow.opacity=.2+.55*k*(.6+.4*Math.sin(time*(14+k*20)));arm.emissive.setHex(0x0a6a50).multiplyScalar(.4+k*.6);c2Play(rg,'sweep',s.wind);rg.r.root.rotation.y=-.5*Math.sign(s.a1-s.a0)*k;
+        if(s.raise&&b.st<.05)showHint('THE ARM RISES · ANOTHER SWEEP!',1.2);if(b.st>=s.wind){b.sub='go';b.st=0;prevA=s.a0;blip(160,60,.5,'sawtooth',.1);shakeT=Math.max(shakeT,.3);glow.opacity=0;}}
+      else if(b.sub==='go'){const k=Math.min(1,b.st/s.dur),e=k*k*(3-2*k);const ang=s.a0+(s.a1-s.a0)*e;rake.rotation.y=ang;rake.position.y=RY+.45;arm.emissive.setHex(0x0a6a50);rg.r.root.rotation.y=.5*Math.sign(s.a1-s.a0)*(e*2-1);
+        const pa=playerAng(),pd=Math.hypot(P.pos.x-RX,P.pos.z-RZ);const lo=Math.min(prevA,ang)-.04,hi=Math.max(prevA,ang)+.04;
+        if(state==='play'&&!P.dead&&pa>lo&&pa<hi&&pd>2.5&&pd<LEN+.5&&P.pos.y<RY+1.05)hurt();prevA=ang;
+        if(Math.random()<.6){const r0=R(4,LEN-2);emit(V3(RX+Math.sin(ang)*r0,RY+.3,RZ+Math.cos(ang)*r0),{vx:R(-2,2),vy:R(1,3),vz:R(-2,2),g:8,life:.5,size:.3,color:pick([0x6aff9a,0x8a94d8])});}
+        if(k>=1){b.sub='rest';b.st=0;shakeT=Math.max(shakeT,.25);sfx.boom();}}
+      else if(b.st>.35){b.si++;b.st=0;b.sub='wind';if(b.si>=b.pl.steps.length){b.state='sleep';b.t=0;rg.r.root.rotation.y=0;boss.kd=Math.ceil(boss.maxHp*.15)-.5;}}}
+    else if(s.k==='jab'){rake.visible=false;
+      if(b.sub==='wind'){const k=Math.min(1,b.st/s.wind);for(const i of s.strips)STRIPS[i].m.material.opacity=.12+.4*k*(.6+.4*Math.sin(time*(12+k*24)));c2Play(rg,'talk');if(b.st<.05)blip(300,700,.3,'triangle',.06);
+        if(b.st>=s.wind){b.sub='go';b.st=0;sfx.boom();shakeT=Math.max(shakeT,.45);for(const i of s.strips){STRIPS[i].sp.visible=true;STRIPS[i].sp.position.y=RY-3;}}}
+      else if(b.sub==='go'){const up=Math.min(1,b.st/.12);for(const i of s.strips){STRIPS[i].sp.position.y=RY-3+3*up;STRIPS[i].m.material.opacity=.5;const S=STRIPS[i];if(state==='play'&&!P.dead&&P.pos.x>S.x0&&P.pos.x<S.x1&&P.pos.z<-137&&P.pos.z>-161&&P.pos.y<RY+2.4)hurt();}
+        if(b.st>s.hold){b.sub='down';b.st=0;}}
+      else if(b.sub==='down'){const k=Math.min(1,b.st/.3);for(const i of s.strips){STRIPS[i].sp.position.y=RY-3*k;STRIPS[i].m.material.opacity=.5*(1-k);}if(k>=1){for(const i of s.strips)STRIPS[i].sp.visible=false;b.sub='rest';b.st=0;}}
+      else if(b.st>.5){b.si++;b.st=0;b.sub='wind';}}}
+  else if(b.state==='sleep'){/* worn out: it sags forward, the rake lies still, the knot at its base glows */c2Play(rg,'idle');g.rotation.x=lerp(g.rotation.x,.12,dt*4);knot.visible=true;knot.children[0].material.opacity=.6+Math.sin(time*14)*.35;if(Math.random()<dt*16)emit(V3(RX+R(-.6,.6),RY+1.2,KZ),{vy:R(1,3),life:.4,size:.3,color:0x6aff9a});
+    if(!b.kHint){b.kHint=1;showHint('NOW! HIT THE GLOWING KNOT AT ITS ROOTS',2.4);}
+    if(b.t>b.pl.open){b.state='idle';b.t=0;knot.visible=false;rake.visible=false;g.rotation.x=0;}
+    else if(spinNear(RX,KZ,3.2,RY)||stompOn(RX,KZ,2.2,RY+2.2))L.hitBoss();}
+  else if(b.state==='hurt'){g.rotation.x=lerp(g.rotation.x,0,dt*4);rake.visible=false;if(b.t>1.1){b.state='idle';b.t=0;}}
+  else if(b.state==='dead'){rake.visible=false;for(const s of STRIPS){s.sp.visible=false;s.m.material.opacity=0;}if(Math.random()<.8)emit(V3(RX+R(-3,3),RY+R(1,9),RZ+R(-1,2)),{vx:R(-4,4),vy:R(1,6),vz:R(0,4),g:8,life:1,size:.7,color:pick([0x6aff9a,0x4af0e0,0x8a94d8])});shakeT=Math.max(shakeT,.12);
+    if(b.t>2.2)g.position.y-=dt*3;if(b.t>3.4&&!b.done){b.done=true;g.visible=false;c2Star(0,RY+2.4,-152,'FOREST STAR',()=>bossDefeated());showHint('GRAB THE FOREST STAR',3);}}
+  if(b.state!=='sleep'&&b.state!=='hurt')g.rotation.x=lerp(g.rotation.x,0,dt*3);
+  /* every damaging hit gets the full reaction: white-green flash, splinters, a stagger */
+  if(rg.lastHp!==undefined&&b.hp<rg.lastHp&&b.state!=='intro'){rg.flash=1;rg.stag=.35;burst(V3(RX,RY+1.5,KZ),0x6aff9a,36,9,.7);burst(V3(RX,RY+2,KZ),0x8a6a4a,16,6,.5,true);hitStop(.12);shakeT=Math.max(shakeT,.5);blip(160,70,.4,'square',.1);}rg.lastHp=b.hp;
+  if(rg.flash>0){rg.flash=Math.max(0,rg.flash-dt*3.2);for(const m of rg.mats)m.emissive.copy(m.userData.e0).lerp(new THREE.Color(.8,1,.85),rg.flash*.8);}
+  if(rg.stag>0){rg.stag-=dt;g.position.x=RX+Math.sin(rg.stag*60)*.1;}else g.position.x=RX;
+  c2Anim(rg,dt);b.pos.copy(knot.visible?knot.position:V3(RX,RY+5,RZ));
+  };
+L.inArena=p=>p.z<ARENA.z0+1&&p.z>ARENA.z1&&p.y>4;
+L.onRespawn=()=>{for(const s of STRIPS){s.sp.visible=false;s.m.material.opacity=0;}rake.visible=false;for(const e of enemies)if(e.lash){e.lash.visible=false;e.mode='idle';e.mt=1;}};
+L.update=dt=>{c2Tick(dt);for(const e of BUDS)if(!e.alive&&e.lash.visible)e.lash.visible=false;if(rg&&boss.state==='off'){c2Play(rg,'idle');c2Anim(rg,dt);}};
+L.populate=()=>{
+  orbLine(0,3,0,-11,5,1);makeCrate('crate',-3,-6);makeCrate('crate',3,-9);makeCrate('crate',3,-9,1);makeCrate('lucky',-3,-12);
+  /* gully roots */
+  for(const z of[-16,-19])spawnOrb(0,1.2,z);spawnOrb(0,1.6,-24);for(const z of[-28,-30.5])spawnOrb(.3,1.2,z);spawnOrb(-1,1.8,-34);spawnOrb(-1.1,1.2,-38.5);
+  /* level ground: the first Bud, alone */
+  makeCrate('check',0,-42.5);{bud(0,-54,0,0,6.5);}orbLine(-5,-44,-5,-58,5);makeCrate('crate',6,-46);makeCrate('boom',-6,-50);makeCrate('crate',6,-60);
+  /* raised trail: a Bud lashes along it; another watches from the side ledge */
+  orbLine(0,-63,0,-67,3,1.6);bud(1.6,-86,2.5,0,7);bud(-8.4,-86,4,0,5.5);makeCrate('crate',-2.6,-74,2.5);makeCrate('lucky',2.6,-76,2.5);orbLine(-8.4,-74,-8.4,-91,6,5);makeCrate('crate',-9.6,-91,4);makeCrate('ward',-7.2,-91,4);
+  for(const z of[-92,-95,-98])spawnOrb(0,3.6,z);
+  /* path stones */
+  for(const [x,z] of[[-1,-102.6],[1.5,-105.8],[-.6,-109],[1.2,-112.2],[-.4,-115.4]])spawnOrb(x,3.8,z);
+  /* foot of the root staircase: checkpoint, then two Buds guard the climb */
+  makeCrate('check',0,-120.5,2.5);makeCrate('crate',-4,-122,2.5);makeCrate('crate',4,-122,2.5);bud(-2,-131,4.2,0,5);for(let i=0;i<4;i++)spawnOrb(0,3.6+i*.5,-125-i*2.2);};
 }
 
 
