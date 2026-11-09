@@ -1188,7 +1188,7 @@ function w2Instances(geo,list,mat){/* chunked so each patch of forest can be fru
     L2.forEach((t,i)=>{o.position.set(t[0]-cx,t[1]-cy,t[2]-cz);o.rotation.set(t[6]||0,t[4]||0,t[7]||0);o.scale.set(t[3],t[3]*(t[5]||1),t[3]);o.updateMatrix();m.setMatrixAt(i,o.matrix);const k=t[8]||(.5+Math.random()*.38);c.setRGB(k,k,k*1.06);m.setColorAt(i,c);});
     m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;scene.add(m);out.push(m);}
   return out;}
-function w2Forest(list){/* PS2-kit pines with bark + layered needles; two silhouettes mixed */const a=[],b=[];list.forEach((t,i)=>{const u=t.slice();u[3]*=.62;(i%3===0?b:a).push(u);});return kPines(a,0).concat(kPines(b,1));}
+function w2Forest(list,near){/* PS2-kit pines: the background forest uses a light far-LOD silhouette; trees near the track get the full layered model */const a=[],b=[];list.forEach(t=>{const u=t.slice();u[3]*=.62;(near&&near(t)?a:b).push(u);});return kPines(a,0).concat(kPinesFar(b));}
 function w2Rocks(list){return kBoulders(list);}
 /* pixel waterfall sheet with a scrolling texture, foam glow and spray mist */
 function w2FallTex(){const c=document.createElement('canvas');c.width=16;c.height=64;const g=c.getContext('2d');for(let y=0;y<64;y++)for(let x=0;x<16;x++){g.fillStyle=['#8ab0ff','#6a8ae8','#b8d0ff','#5a70d0','#9ac0ff','#dfe8ff'][(Math.random()*6)|0];g.fillRect(x,y,1,1);}
@@ -1213,7 +1213,7 @@ function w2House(x,y,z,s,ry,smoke){w2Mats();const g=new THREE.Group();const wl=n
   const rf=new THREE.Mesh(new THREE.ConeGeometry(2.45*s,1.9*s,4),W2.rm);rf.rotation.y=Math.PI/4;rf.position.y=3.35*s;rf.scale.set(1.08,1,.94);g.add(rf);
   const ch=new THREE.Mesh(new THREE.BoxGeometry(.5*s,1.4*s,.5*s),W2.hm);ch.position.set(.8*s,3.6*s,-.4*s);g.add(ch);
   for(const sz of[-1,1])for(const sx of[-.7,.7]){const w=new THREE.Mesh(new THREE.PlaneGeometry(.55*s,.65*s),W2.wm);w.position.set(sx*s,1.3*s,sz*1.31*s);if(sz<0)w.rotation.y=Math.PI;g.add(w);}
-  g.add(spr(glowTex,0xffb84a,4*s,3*s,0,1.3*s,1.8*s));g.position.set(x,y,z);g.rotation.y=ry;scene.add(g);if(smoke&&typeof steam==='function')steam(x+.8*s,y+4.4*s,z,2);return g;}
+  g.add(spr(glowTex,0xffb84a,4*s,3*s,0,1.3*s,1.8*s));g.position.set(x,y,z);g.rotation.y=ry;scene.add(g);kMergeGroup(g);if(smoke&&typeof steam==='function')steam(x+.8*s,y+4.4*s,z,2);return g;}
 function w2Village(cx,cz,n,H,face){for(let i=0;i<n;i++){const a=i/n*TAU+R(-.3,.3),r=i?R(5,11):0,x=cx+Math.cos(a)*r,z=cz+Math.sin(a)*r;w2House(x,H(x,z)-.2,z,R(.9,1.35),face+R(-.4,.4),i%3===0);}
   for(let i=0;i<8;i++){const a=R(0,TAU),r=R(3,14),x=cx+Math.cos(a)*r,z=cz+Math.sin(a)*r;scene.add(spr(glowTex,0xffb84a,1.6,1.6,x,H(x,z)+1.6,z));}}
 /* distant stone viaduct with lanterns, and a lit train shuttling across it */
@@ -1221,17 +1221,21 @@ function w2Viaduct(ax,az,bx,bz,y,H,train){const L0=Math.hypot(bx-ax,bz-az),n=Mat
   for(let i=0;i<=n;i++){const k=i/n,x=lerp(ax,bx,k),z=lerp(az,bz,k),gy=Math.min(y-2,H?H(x,z):y-30),ph=y-gy;const p=new THREE.Mesh(new THREE.BoxGeometry(2.2,ph,2.2),st);p.position.set(x,gy+ph/2-1,z);g.add(p);
     if(i<n){const a=new THREE.Mesh(new THREE.TorusGeometry(2.6,.7,4,10,Math.PI),st);a.position.set(lerp(ax,bx,(i+.5)/n),y-3.2,lerp(az,bz,(i+.5)/n));a.rotation.y=yaw+Math.PI/2;g.add(a);}
     if(i%2===0)g.add(spr(glowTex,0xffb84a,2.4,2.4,x,y+1.6,z));}
-  const d=new THREE.Mesh(new THREE.BoxGeometry(3.2,1.1,L0),st);d.position.set((ax+bx)/2,y-.55,(az+bz)/2);d.rotation.y=yaw;g.add(d);scene.add(g);
+  const d=new THREE.Mesh(new THREE.BoxGeometry(3.2,1.1,L0),st);d.position.set((ax+bx)/2,y-.55,(az+bz)/2);d.rotation.y=yaw;g.add(d);scene.add(g);kMergeGroup(g);
   if(train){const tr=new THREE.Group(),bodyM=new THREE.MeshLambertMaterial({color:0x5a2234}),roofM=new THREE.MeshLambertMaterial({color:0x2a1830});
     for(let c=0;c<4;c++){const car=new THREE.Group();car.add(mesh(G.box,bodyM,2.4,2.2,5.2,0,1.1,0));car.add(mesh(G.box,roofM,2.6,.4,5.4,0,2.4,0));for(const sx of[-1.22,1.22]){const w=new THREE.Mesh(new THREE.PlaneGeometry(4.2,.7),W2.wm||new THREE.MeshBasicMaterial({color:0xffc66a}));w.position.set(sx,1.4,0);w.rotation.y=sx>0?Math.PI/2:-Math.PI/2;car.add(w);}car.position.z=-c*5.8;tr.add(car);}
     tr.add(spr(glowTex,0xfff2c8,4,4,0,1.4,3));tr.add(spr(glowTex,0xffb84a,10,4,0,1.2,-10));scene.add(tr);let k=Math.random(),dir=1;
     W2.upd.push(dt=>{k+=dir*dt*12/L0;if(k>1.15){k=1.15;dir=-1;}if(k<-.15){k=-.15;dir=1;}const kk=clamp(k,0,1);tr.position.set(lerp(ax,bx,kk),y,lerp(az,bz,kk));tr.rotation.y=yaw+(dir<0?Math.PI:0);tr.visible=k>=0&&k<=1;});}
   return g;}
 /* far mountain ridge silhouettes beyond the playable world */
-function w2Ridges(cx,cz,r0,r1,n,y){const m=new THREE.MeshLambertMaterial({color:0x221c50,flatShading:true});for(let i=0;i<n;i++){const a=i/n*TAU+R(-.1,.1),r=R(r0,r1),h=R(70,150),c=new THREE.Mesh(new THREE.ConeGeometry(R(45,80),h,5),m);c.position.set(cx+Math.cos(a)*r,y+h/2-10,cz+Math.sin(a)*r);c.rotation.y=R(0,TAU);scene.add(c);
-  if(Math.random()<.5){const s=new THREE.Mesh(new THREE.ConeGeometry(c.geometry.parameters.radius*.28,h*.26,5),new THREE.MeshLambertMaterial({color:0x8a86c8,flatShading:true}));s.position.set(c.position.x,y+h-10-h*.13+.5,c.position.z);s.rotation.y=c.rotation.y;scene.add(s);}}}
+function w2Ridges(cx,cz,r0,r1,n,y){const RG=new THREE.Group();const m=new THREE.MeshLambertMaterial({color:0x221c50,flatShading:true});for(let i=0;i<n;i++){const a=i/n*TAU+R(-.1,.1),r=R(r0,r1),h=R(70,150),c=new THREE.Mesh(new THREE.ConeGeometry(R(45,80),h,5),m);c.position.set(cx+Math.cos(a)*r,y+h/2-10,cz+Math.sin(a)*r);c.rotation.y=R(0,TAU);RG.add(c);
+  if(Math.random()<.5){const s=new THREE.Mesh(new THREE.ConeGeometry(c.geometry.parameters.radius*.28,h*.26,5),new THREE.MeshLambertMaterial({color:0x8a86c8,flatShading:true}));s.position.set(c.position.x,y+h-10-h*.13+.5,c.position.z);s.rotation.y=c.rotation.y;RG.add(s);}}scene.add(RG);kMergeGroup(RG);}
 function w2LanternTrail(pts,H){for(let i=0;i<pts.length;i++){const [x,z]=pts[i];scene.add(spr(glowTex,0xffb84a,1.8,1.8,x,H(x,z)+1.8,z));}}
-function c2WorldTick(dt){for(const f of W2.upd)f(dt);}
+function c2WorldTick(dt){for(const f of W2.upd)f(dt);
+  /* distance culling: far enemies (high-poly rigs) and far orb sprites are skipped by the renderer */
+  W2.cullT=(W2.cullT||0)-dt;if(W2.cullT<=0&&typeof camera!=='undefined'){W2.cullT=.2;const cp=camera.position;
+    for(const e of enemies){if(!e.obj||e.dying||e.alive===false)continue;const d=Math.hypot(e.pos.x-cp.x,e.pos.z-cp.z);e.obj.visible=d<78;}
+    for(const m of orbsArr){if(!m.alive||!m.o)continue;const d=Math.hypot(m.o.position.x-cp.x,m.o.position.z-cp.z);m.o.visible=d<70;}}}
 
 /* ---------- the Moonline gorge (main level) ---------- */
 function w2RailWorld(LATE){const cx=z=>7*Math.sin(z*.017+.6);
@@ -1239,11 +1243,11 @@ function w2RailWorld(LATE){const cx=z=>7*Math.sin(z*.017+.6);
     if(z>26)h=Math.max(h,-19+(z-26)*2.4+w2Noise(x,z)*4);if(z<-322)h=Math.max(h,-19+(-322-z)*1.25+w2Noise(x*1.3,z)*7);return h;};
   W2.H=H;w2Terrain(-240,240,90,-470,4,H,w2Pal);w2River(cx,80,-330,-17.6,9);
   /* forest: thick on the slopes, tall giants rising out of the gorge beside the track */
-  const F=[];let tries=0;const NF=Math.round(3200*w2Dens());while(F.length<NF&&tries<20000){tries++;const x=R(-235,235),z=R(85,-465),ax=Math.abs(x);if(ax<15)continue;const h=H(x,z);if(h>95)continue;
+  const F=[];let tries=0;const NF=Math.round(2400*w2Dens());while(F.length<NF&&tries<20000){tries++;const x=R(-235,235),z=R(85,-465),ax=Math.abs(x);if(ax<15)continue;const h=H(x,z);if(h>95)continue;
     const sl=Math.abs(H(x+2,z)-H(x-2,z))+Math.abs(H(x,z+2)-H(x,z-2));if(sl>15)continue;if(Math.abs(x-cx(z))<7.5)continue;
     if(z<-262&&z>-318&&ax<24&&h>-12)continue;F.push([x,h-.3,z,R(1.3,2.6)*(h<-12?1.45:1),R(0,TAU),R(.9,1.25)]);}
   for(let z=4;z>-320;z-=R(6,10))for(const sd of[-1,1]){const x=sd*R(18,27),h=H(x,z);F.push([x,h-.3,z,R(3.4,4.8),R(0,TAU),R(1,1.2)]);}
-  w2Forest(F);
+  w2Forest(F,t=>Math.abs(t[0])<30&&t[2]<20&&t[2]>-330);
   /* boulders scattered at the forest edge and in the gorge */
   const RK=[];for(let i=0;i<180;i++){const x=R(-90,90),z=R(60,-340);if(Math.abs(x)<14)continue;const h=H(x,z);RK.push([x,h,z,R(1,3.4),R(0,TAU),R(.5,.8),R(-.3,.3),R(-.3,.3)]);}w2Rocks(RK);
   /* waterfalls pouring down the gorge walls */
@@ -1265,8 +1269,8 @@ function w2CourseWorld(path,mn,mx){const P2=path.pts.filter((p,i)=>i%3===0),base
   const x0=mn.x-150,x1=mx.x+150,z0=mx.z+150,z1=mn.z-150;const cache=new Map();
   const H=(x,z)=>{const k=Math.round(x)+','+Math.round(z);let d=cache.get(k);if(d===undefined){d=dist(x,z);cache.set(k,d);}const w=Math.max(0,d-15);return base+w2Noise(x,z)*1.2+Math.pow(Math.min(1,w/42),1.5)*58+Math.max(0,d-70)*.4+w2Noise(x*1.6,z*1.6)*Math.min(1,w/16)*10;};
   w2Terrain(x0,x1,z0,z1,4,H,w2Pal);
-  const F=[];let tries=0;const NC=Math.round(1500*w2Dens());while(F.length<NC&&tries<9000){tries++;const x=R(x0+5,x1-5),z=R(z1+5,z0-5),d=dist(x,z);if(d<11)continue;const h=H(x,z);const sl=Math.abs(H(x+2,z)-H(x-2,z))+Math.abs(H(x,z+2)-H(x,z-2));if(sl>15)continue;F.push([x,h-.3,z,R(1.4,2.8)*(d<24?1.7:1),R(0,TAU),R(.9,1.25)]);}
-  w2Forest(F);
+  const F=[];let tries=0;const NC=Math.round(1000*w2Dens());while(F.length<NC&&tries<9000){tries++;const x=R(x0+5,x1-5),z=R(z1+5,z0-5),d=dist(x,z);if(d<11)continue;const h=H(x,z);const sl=Math.abs(H(x+2,z)-H(x-2,z))+Math.abs(H(x,z+2)-H(x,z-2));if(sl>15)continue;F.push([x,h-.3,z,R(1.4,2.8)*(d<24?1.7:1),R(0,TAU),R(.9,1.25)]);}
+  w2Forest(F,t=>t[3]>2.45);
   /* waterfalls and a village or two on the walls; a viaduct with a train in the distance */
   let k=0;for(let i=8;i<P2.length-8&&k<4;i+=Math.floor(P2.length/5)){const p=P2[i],a=p.a||0,sd=k%2?1:-1;const nx=Math.cos(a)*sd,nz=Math.sin(a)*sd;const x=p.x+nx*60,z=p.z+nz*60;w2Cascade(x,z,p.x+nx*16,p.z+nz*16,6,H);k++;}
   {const p=P2[Math.floor(P2.length*.45)],a=p.a||0;w2Village(p.x+Math.cos(a)*80,p.z+Math.sin(a)*80,6,H,a+Math.PI);}
@@ -1344,9 +1348,13 @@ function kBoxGeo(w,h,d,tile=2.2,seg){const g=new THREE.BoxGeometry(w,h,d,seg?seg
 function kRockMass(x,y,z,w,h,d,seed=1,o={}){const r=kRng(seed);const grp=new THREE.Group();const side=kMat('rock',()=>new THREE.MeshLambertMaterial({map:KT.rock()})),top=kMat('mossTop',()=>new THREE.MeshLambertMaterial({map:KT.moss()}));
   const blocks=[[0,0,0,w,h,d]];const nb=o.blocks??3;for(let i=0;i<nb;i++){const bw=w*(.35+r()*.4),bh=h*(.2+r()*.35),bd=d*(.35+r()*.4);blocks.push([(r()-.5)*(w-bw)*.9,h/2+bh/2-.2,(r()-.5)*(d-bd)*.9,bw,bh,bd]);}
   if(o.ledges!==false)for(let i=0;i<2;i++){const bw=w*(.25+r()*.25),bh=h*(.25+r()*.3),bd=d*(.3+r()*.3);const sx=r()<.5?-1:1;blocks.push([sx*(w/2+bw*.25),-h/2+bh/2+r()*h*.3,(r()-.5)*d*.5,bw,bh,bd]);}
-  for(const [bx,by,bz,bw,bh,bd] of blocks){const g=kBoxGeo(bw,bh,bd,o.tile||3,[3,4,3]);const p=g.attributes.position;
+  const SIDES=[],TOPS=[];for(const [bx,by,bz,bw,bh,bd] of blocks){const g=kBoxGeo(bw,bh,bd,o.tile||3,[3,4,3]);const p=g.attributes.position;
     for(let i=0;i<p.count;i++){const vx=p.getX(i),vy=p.getY(i),vz=p.getZ(i);const n=Math.sin(vx*.9+seed)*Math.cos(vz*.8+vy*.5)*.6+Math.sin(vy*1.3+vx*.4+seed*.3)*.4;const k=vy>-bh/2+.01?1:0;p.setXYZ(i,vx*(1+n*.24*k),vy+(vy>bh/2-.01?n*bh*.12:0),vz*(1+n*.24*k));}
-    g.computeVertexNormals();const m=new THREE.Mesh(g,[side,side,top,side,side,side]);m.position.set(bx,by,bz);m.rotation.y=(r()-.5)*.25;grp.add(m);}
+    g.computeVertexNormals();const m=new THREE.Matrix4().compose(new THREE.Vector3(bx,by,bz),new THREE.Quaternion().setFromEuler(new THREE.Euler(0,(r()-.5)*.25,0)),new THREE.Vector3(1,1,1));
+    const ng=g.toNonIndexed();ng.applyMatrix4(m);let off=0;for(let gi=0;gi<g.groups.length;gi++){const cnt=g.groups[gi].count;(gi===2?TOPS:SIDES).push([ng,off,cnt]);off+=cnt;}}
+  const build=(list)=>{let n=0;for(const [,,c] of list)n+=c;const P=new Float32Array(n*3),N=new Float32Array(n*3),U=new Float32Array(n*2);let k=0;for(const [g,o0,c] of list){P.set(g.attributes.position.array.subarray(o0*3,(o0+c)*3),k*3);N.set(g.attributes.normal.array.subarray(o0*3,(o0+c)*3),k*3);U.set(g.attributes.uv.array.subarray(o0*2,(o0+c)*2),k*2);k+=c;}
+    const G2=new THREE.BufferGeometry();G2.setAttribute('position',new THREE.BufferAttribute(P,3));G2.setAttribute('normal',new THREE.BufferAttribute(N,3));G2.setAttribute('uv',new THREE.BufferAttribute(U,2));return G2;};
+  grp.add(new THREE.Mesh(build(SIDES),side));grp.add(new THREE.Mesh(build(TOPS),top));
   grp.position.set(x,y+h/2,z);grp.rotation.y=o.ry??(r()-.5)*.3;scene.add(grp);return grp;}
 /* --- pine trees: trunk + drooping layered skirts, one atlas texture, instanced --- */
 function kPineGeo(v=0){const key='pine'+v;if(KIT.geo[key])return KIT.geo[key];const P=[],U=[];const r=kRng(31+v);
@@ -1359,6 +1367,12 @@ function kPineGeo(v=0){const key='pine'+v;if(KIT.geo[key])return KIT.geo[key];co
     const under=[0,yb+.25,0];
     for(let j=0;j<m;j++){const A=ring[j],B=ring[(j+1)%m];const u0=.25+.75*j/m,u1=.25+.75*(j+1)/m;tri(top,B,A,[(u0+u1)/2,1],[u1,.03],[u0,.03]);tri(under,A,B,[(u0+u1)/2,.55],[u0,.2],[u1,.2]);}}
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));g.computeVertexNormals();g.computeBoundingSphere();return KIT.geo[key]=g;}
+function kPineFarGeo(){if(KIT.geo.pineFar)return KIT.geo.pineFar;const P=[],U=[];const tri=(a,b,c,ua,ub,uc)=>{P.push(...a,...b,...c);U.push(...ua,...ub,...uc);};const H=11;
+  for(let i=0;i<4;i++){const a0=i/4*TAU,a1=(i+1)/4*TAU,p=(a,rr,y)=>[Math.cos(a)*rr,y,Math.sin(a)*rr];tri(p(a0,.3,0),p(a1,.3,0),p(a1,.12,H*.9),[0,0],[.25,0],[.25,1]);tri(p(a0,.3,0),p(a1,.12,H*.9),p(a0,.12,H*.9),[0,0],[.25,1],[0,1]);}
+  for(let t=0;t<4;t++){const k=t/3,yb=2.4+k*(H-3.8),rad=2.3*(1-k*.8),th=1.6+(1-k)*1.2,m=8,top=[0,yb+th,0];const ring=[];for(let j=0;j<m;j++){const a=j/m*TAU+t,tip=j%2===0,rr=rad*(tip?1:.6);ring.push([Math.cos(a)*rr,yb-(tip?.45:0),Math.sin(a)*rr]);}
+    for(let j=0;j<m;j++){const A=ring[j],B=ring[(j+1)%m],u0=.25+.75*j/m,u1=.25+.75*(j+1)/m;tri(top,B,A,[(u0+u1)/2,1],[u1,.03],[u0,.03]);}}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));g.computeVertexNormals();g.computeBoundingSphere();return KIT.geo.pineFar=g;}
+function kPinesFar(list){return kInstanced(kPineFarGeo(),kPineMat(),list,140);}
 function kPineMat(){return kMat('pine',()=>new THREE.MeshLambertMaterial({map:KT.pine()}));}
 /* instanced, chunked per 60 m so off-screen patches are culled */
 function kInstanced(geo,mat,list,cell=60){const cells=new Map();for(const t of list){const k=Math.floor(t[0]/cell)+','+Math.floor(t[2]/cell);if(!cells.has(k))cells.set(k,[]);cells.get(k).push(t);}
@@ -1367,7 +1381,7 @@ function kInstanced(geo,mat,list,cell=60){const cells=new Map();for(const t of l
     const g=geo.clone();g.boundingSphere=new THREE.Sphere(new THREE.Vector3(),rad+2);const m=new THREE.InstancedMesh(g,mat,L2.length);m.position.set(cx,cy,cz);
     L2.forEach((t,i)=>{o.position.set(t[0]-cx,t[1]-cy,t[2]-cz);o.rotation.set(t[6]||0,t[4]||0,t[7]||0);o.scale.set(t[3]*(t[8]||1),t[3]*(t[5]||1),t[3]*(t[8]||1));o.updateMatrix();m.setMatrixAt(i,o.matrix);const k=t[9]||(.62+Math.random()*.38);c.setRGB(k,k*(.95+Math.random()*.1),k*(1+Math.random()*.08));m.setColorAt(i,c);});
     m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;scene.add(m);out.push(m);}return out;}
-function kPines(list,v=0){return kInstanced(kPineGeo(v),kPineMat(),list);}
+function kPines(list,v=0){return kInstanced(kPineGeo(v),kPineMat(),list,90);}
 /* grass tufts: three crossed cards with a cut-out texture */
 function kGrassGeo(){if(KIT.geo.grass)return KIT.geo.grass;const P=[],U=[];for(let i=0;i<3;i++){const a=i/3*Math.PI,c=Math.cos(a)*.6,s=Math.sin(a)*.6;P.push(-c,0,-s,c,0,s,c,1,s,-c,0,-s,c,1,s,-c,1,-s);U.push(0,0,1,0,1,1,0,0,1,1,0,1);}
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2));g.setAttribute('normal',new THREE.Float32BufferAttribute(new Array(P.length).fill(0).map((_,i)=>i%3===1?1:0),3));return KIT.geo.grass=g;}
@@ -1408,6 +1422,16 @@ function kMist(x0,x1,z0,z1,y,layers=2,op=.5){const out=[];for(let i=0;i<layers;i
 /* blue crescent moon that stays put in the sky (follows the camera like the sky dome) */
 function kMoonSprite(dir=[.42,.36,-1],size=34,dist=125){const m=new THREE.Sprite(new THREE.SpriteMaterial({map:KT.moon(),transparent:true,depthWrite:false,fog:false}));m.scale.set(size,size,1);m.renderOrder=-5;scene.add(m);const d=new THREE.Vector3(...dir).normalize().multiplyScalar(dist);
   if(typeof W2!=='undefined')W2.upd.push(()=>{m.position.copy(camera.position).add(d);});m.position.copy(d);return m;}
+/* --- draw-call diet: bake a group's static child meshes into one mesh per material --- */
+function kMergeGroup(grp,keep){grp.updateMatrixWorld(true);const inv=new THREE.Matrix4().copy(grp.matrixWorld).invert();const byMat=new Map();const drop=[];
+  grp.traverse(o=>{if(!o.isMesh||o.isInstancedMesh||o.isSkinnedMesh||(keep&&keep(o)))return;if(Array.isArray(o.material))return;let p=o.parent;while(p&&p!==grp){if(p.userData&&p.userData.live)return;p=p.parent;}
+    const g=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone();const m=new THREE.Matrix4().multiplyMatrices(inv,o.matrixWorld);g.applyMatrix4(m);if(!g.attributes.uv){const n=g.attributes.position.count;g.setAttribute('uv',new THREE.Float32BufferAttribute(new Float32Array(n*2),2));}
+    if(!byMat.has(o.material))byMat.set(o.material,[]);byMat.get(o.material).push(g);drop.push(o);});
+  for(const o of drop)o.parent.remove(o);
+  for(const [mat,gs] of byMat){let n=0;for(const g of gs)n+=g.attributes.position.count;const P=new Float32Array(n*3),N=new Float32Array(n*3),U=new Float32Array(n*2);let k=0;
+    for(const g of gs){const c=g.attributes.position.count;P.set(g.attributes.position.array,k*3);if(g.attributes.normal)N.set(g.attributes.normal.array,k*3);U.set(g.attributes.uv.array.subarray(0,c*2),k*2);k+=c;}
+    const G2=new THREE.BufferGeometry();G2.setAttribute('position',new THREE.BufferAttribute(P,3));G2.setAttribute('normal',new THREE.BufferAttribute(N,3));G2.setAttribute('uv',new THREE.BufferAttribute(U,2));G2.computeBoundingSphere();grp.add(new THREE.Mesh(G2,mat));}
+  return grp;}
 
 /* ===================== CHAPTER 2 OPENING CUTSCENE — "The Stolen Stars" ===================== */
 function c2IntroSeen(){try{return localStorage.getItem('wt-c2intro')==='1';}catch(e){return false;}}
@@ -3018,8 +3042,8 @@ scene.background=sky;scene.fog=new THREE.Fog(0x060a24,46,250);hemi.color.setHex(
 const LITT=[];function rails(x,y,z0,z1,glow,bed=true){const t=kTrack([[x,z0],[x,z1]],y,{bed});LITT.push(t);return t;}
 function railsPts(pts,y,bed=true){const t=kTrack(pts,y,{bed});LITT.push(t);return t;}
 function lit(t,k){if(!t||t._k===k)return;t._k=k;if(t.glow)t.glow.material.opacity=k*.95;}
-function lampPillar(x,z,y=0,h=1.5){const g=new THREE.Group();g.add(mesh(G.box,stone,.9,h,.9,0,h/2,0));g.add(mesh(G.box,stoneS,1.1,.22,1.1,0,h+.11,0));const lt=new THREE.Group();lt.add(mesh(G.box,iron,.5,.08,.5,0,.68,0),mesh(G.box,gold,.38,.55,.38,0,.36,0),mesh(G.box,iron,.46,.06,.46,0,.06,0));lt.add(spr(glowTex,0xffb84a,2,2,0,.36,0));lt.position.y=h+.2;g.add(lt);g.position.set(x,y,z);scene.add(g);kPool(x,y,z,6,.9);addSolid(x-.45,x+.45,y,y+h+.3,z-.45,z+.45,'block',null);L.lamps=(L.lamps||[]).concat([lt]);return g;}
-function fence(x,z0,z1,y=0){const g=new THREE.Group();const n=Math.max(2,Math.round(Math.abs(z1-z0)/2.2));for(let i=0;i<=n;i++){const z=lerp(z0,z1,i/n);g.add(mesh(G.box,wood,.28,1.5,.28,x,y+.75,z));}for(const h of[.6,1.15])g.add(mesh(G.box,wood,.16,.2,Math.abs(z1-z0),x,y+h,(z0+z1)/2));scene.add(g);addSolid(x-.2,x+.2,y,y+1.4,Math.min(z0,z1),Math.max(z0,z1),'wall',null);}
+function lampPillar(x,z,y=0,h=1.5){const g=new THREE.Group();g.add(mesh(G.box,stone,.9,h,.9,0,h/2,0));g.add(mesh(G.box,stoneS,1.1,.22,1.1,0,h+.11,0));const lt=new THREE.Group();lt.add(mesh(G.box,iron,.5,.08,.5,0,.68,0),mesh(G.box,gold,.38,.55,.38,0,.36,0),mesh(G.box,iron,.46,.06,.46,0,.06,0));lt.add(spr(glowTex,0xffb84a,2,2,0,.36,0));lt.position.y=h+.2;lt.userData.live=1;g.add(lt);g.position.set(x,y,z);scene.add(g);kMergeGroup(g);kPool(x,y,z,6,.9);addSolid(x-.45,x+.45,y,y+h+.3,z-.45,z+.45,'block',null);L.lamps=(L.lamps||[]).concat([lt]);return g;}
+function fence(x,z0,z1,y=0){const g=new THREE.Group();const n=Math.max(2,Math.round(Math.abs(z1-z0)/2.2));for(let i=0;i<=n;i++){const z=lerp(z0,z1,i/n);g.add(mesh(G.box,wood,.28,1.5,.28,x,y+.75,z));}for(const h of[.6,1.15])g.add(mesh(G.box,wood,.16,.2,Math.abs(z1-z0),x,y+h,(z0+z1)/2));scene.add(g);kMergeGroup(g);addSolid(x-.2,x+.2,y,y+1.4,Math.min(z0,z1),Math.max(z0,z1),'wall',null);}
 function signalPost(x,z,y=0,flip=1){const g=new THREE.Group();g.add(mesh(G.box,wood,.35,4.8,.35,0,2.4,0));g.add(mesh(G.box,wood,1.8,.3,.3,flip*.6,4.5,0));const head=new THREE.Group();head.add(mesh(G.box,iron,.9,.9,.4,0,0,0));const li=grp(new THREE.Mesh(new THREE.CircleGeometry(.3,16),glowMat(magenta)),spr(glowTex,magenta,2.6,2.6,0,0,.1));li.position.z=.22;head.add(li);head.position.set(-flip*.1,4.1,.1);g.add(head);
   const ban=new THREE.Mesh(new THREE.PlaneGeometry(.9,1.7,1,4),new THREE.MeshPhongMaterial({side:THREE.DoubleSide,map:(()=>{const c=document.createElement('canvas');c.width=32;c.height=64;const x=c.getContext('2d');x.fillStyle='#4a2a7a';x.fillRect(0,0,32,64);x.fillStyle='#e8b03a';x.beginPath();x.moveTo(4,30);x.lineTo(16,42);x.lineTo(28,30);x.lineTo(28,38);x.lineTo(16,50);x.lineTo(4,38);x.fill();x.fillStyle='#3a1e60';x.beginPath();x.moveTo(0,64);x.lineTo(16,52);x.lineTo(32,64);x.fill();const t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;return t;})()}));
   ban.position.set(flip*1.2,3.4,0);g.add(ban);L.flags=(L.flags||[]).concat([ban]);g.position.set(x,y,z);scene.add(g);addSolid(x-.25,x+.25,y,y+4.8,z-.25,z+.25,'block',null);L.signals=(L.signals||[]).concat([li]);return g;}
@@ -3028,10 +3052,10 @@ const PINES=[];function pine(x,y,z,s){PINES.push([x,y-.2,z,s*.6,R(0,TAU),R(.9,1.
 function cliff(x,z,y,w,h,d,pines=1){const m=kRockMass(x,y,z,w,h,d,Math.abs((x*7+z*3)|0)+1,{tile:7,ledges:Math.abs(x)>16,blocks:Math.abs(x)>16?3:2});if(pines)for(let i=0;i<Math.round(w*d/26);i++)pine(x+R(-w/2+1.5,w/2-1.5),y+h,z+R(-d/2+1.5,d/2-1.5),R(1,1.7));return m;}
 function waterfall(x,y,z,w,h,ry=0){const c=document.createElement('canvas');c.width=16;c.height=64;const g=c.getContext('2d');for(let y2=0;y2<64;y2++)for(let x2=0;x2<16;x2++){g.fillStyle=pick(['#8ab0ff','#6a8ae8','#b8d0ff','#5a70d0','#9ac0ff']);g.fillRect(x2,y2,1,1);}const t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(w/3,h/8);
   const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:t,color:0x6a78c0,transparent:true,opacity:.8}));m.position.set(x,y+h/2,z);m.rotation.y=ry;scene.add(m);L.falls=(L.falls||[]).concat([t]);mist(x-6,x+6,z-3,z+3,y+1,3);}
-function viaductBG(x,y,z,len,ry){const g=new THREE.Group();const n=Math.round(len/5);for(let i=0;i<n;i++){const px=i*5-len/2;g.add(mesh(G.box,stone,1.2,12,1.6,px,-6,0));const arch=new THREE.Mesh(new THREE.TorusGeometry(1.9,.5,4,12,Math.PI),stone);arch.position.set(px+2.5,0,0);g.add(arch);if(i%2===0){g.add(spr(glowTex,0xffb84a,1.6,1.6,px,1.4,.9));}}g.add(mesh(G.box,stone,len,.9,1.8,0,1.9,0));g.position.set(x,y,z);g.rotation.y=ry;scene.add(g);return g;}
+function viaductBG(x,y,z,len,ry){const g=new THREE.Group();const n=Math.round(len/5);for(let i=0;i<n;i++){const px=i*5-len/2;g.add(mesh(G.box,stone,1.2,12,1.6,px,-6,0));const arch=new THREE.Mesh(new THREE.TorusGeometry(1.9,.5,4,12,Math.PI),stone);arch.position.set(px+2.5,0,0);g.add(arch);if(i%2===0){g.add(spr(glowTex,0xffb84a,1.6,1.6,px,1.4,.9));}}g.add(mesh(G.box,stone,len,.9,1.8,0,1.9,0));g.position.set(x,y,z);g.rotation.y=ry;scene.add(g);kMergeGroup(g);return g;}
 /* a stone viaduct deck with arches under it, out over the gorge */
-function viaduct(x0,x1,z0,z1,top){deck(x0,x1,z0,z1,top,gravel,stone,1.4);for(let z=z0-2;z>z1;z-=6){for(const sx of[x0+1.2,x1-1.2]){const p=new THREE.Mesh(new THREE.BoxGeometry(1.6,16,1.6),stoneS);p.position.set(sx,top-9.4,z);scene.add(p);}const a=new THREE.Mesh(new THREE.TorusGeometry((x1-x0)/2-1.2,.6,4,14,Math.PI),stoneS);a.position.set((x0+x1)/2,top-4.5,z);scene.add(a);}
-  for(let z=z0-1;z>z1;z-=3.2)for(const sx of[x0+.15,x1-.15]){scene.add(mesh(G.box,stone,.3,.7,.3,sx,top+.35,z));}}
+function viaduct(x0,x1,z0,z1,top){deck(x0,x1,z0,z1,top,gravel,stone,1.4);const vg=new THREE.Group();for(let z=z0-2;z>z1;z-=6){for(const sx of[x0+1.2,x1-1.2]){const p=new THREE.Mesh(new THREE.BoxGeometry(1.6,16,1.6),stoneS);p.position.set(sx,top-9.4,z);vg.add(p);}const a=new THREE.Mesh(new THREE.TorusGeometry((x1-x0)/2-1.2,.6,4,14,Math.PI),stoneS);a.position.set((x0+x1)/2,top-4.5,z);vg.add(a);}
+  for(let z=z0-1;z>z1;z-=3.2)for(const sx of[x0+.15,x1-.15]){vg.add(mesh(G.box,stone,.3,.7,.3,sx,top+.35,z));}scene.add(vg);kMergeGroup(vg);}
 
 /* =============== 01 · THE DEPOT (z 9 → -16) — the old purple-roof station behind you =============== */
 deck(-11,11,10,-16,0,gravel,stoneS,4);
@@ -3054,7 +3078,7 @@ plank(0,-54.4,0);plank(-2.2,-57.6,0);plank(1.6,-60.6,0);
 /* =============== 03 · GHOST-TRAIN YARD (z -62 → -98) =============== */
 viaduct(-6,6,-62,-98,0);const TY={};for(const x of[-4,0,4])TY[x]=rails(x,0,-62,-98,true);
 const yardGlow={};for(const x of[-4,0,4]){const m=new THREE.Mesh(new THREE.PlaneGeometry(3.9,36),new THREE.MeshBasicMaterial({color:magenta,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));m.rotation.x=-Math.PI/2;m.position.set(x,.1,-80);scene.add(m);yardGlow[x]=m;}
-{/* tunnel portal the trains burst out of */const g=new THREE.Group();for(const sx of[-1,1])g.add(mesh(G.box,stone,2,9,3,sx*7,4.5,0));g.add(mesh(G.box,stone,16,2.4,3,0,8.8,0));const a=new THREE.Mesh(new THREE.TorusGeometry(6,.9,4,16,Math.PI),stoneS);a.position.set(0,6,1.55);g.add(a);g.position.set(0,0,-99.5);scene.add(g);
+{/* tunnel portal the trains burst out of */const g=new THREE.Group();for(const sx of[-1,1])g.add(mesh(G.box,stone,2,9,3,sx*7,4.5,0));g.add(mesh(G.box,stone,16,2.4,3,0,8.8,0));const a=new THREE.Mesh(new THREE.TorusGeometry(6,.9,4,16,Math.PI),stoneS);a.position.set(0,6,1.55);g.add(a);g.position.set(0,0,-99.5);scene.add(g);kMergeGroup(g);
   for(const sx of[-1,1])addSolid(sx*7-1,sx*7+1,0,9,-101,-98,'block',null);}
 LATE.push(()=>ghostTrain({lanes:[-4,0,4],y:0,zFrom:-100,zTo:-58,spd:24,warn:1.35,period:1.5,phase:1.2,lg:yardGlow}));
 /* =============== 04 · ROCK CUTTING (z -101 → -124) =============== */
@@ -3063,7 +3087,7 @@ for(const sx of[-1,1]){cliff(sx*10.5,-112,-2,8,8.5,26,1);}
 swingBell(0,0,-116,{len:4.4,amp:1,spd:2.1,ph:1.3,w:12.6});
 /* =============== 05 · BOARDING + RAILCAR RIDE OVER THE GORGE (z -124 → -216) =============== */
 deck(-6,6,-124,-129,0,stone,stoneS,4);lampPillar(-5.2,-125);lampPillar(5.2,-125);
-{const tr=new THREE.Group();for(let z=-130;z>-214;z-=4){for(const sx of[-1.5,1.5])tr.add(mesh(G.box,wood,.4,18,.4,sx,-9.6,z));tr.add(mesh(G.box,wood,3.6,.3,.3,0,-3,z));tr.add(mesh(G.box,wood,3.6,.3,.3,0,-8,z));}scene.add(tr);}
+{const tr=new THREE.Group();for(let z=-130;z>-214;z-=4){for(const sx of[-1.5,1.5])tr.add(mesh(G.box,wood,.4,18,.4,sx,-9.6,z));tr.add(mesh(G.box,wood,3.6,.3,.3,0,-3,z));tr.add(mesh(G.box,wood,3.6,.3,.3,0,-8,z));}scene.add(tr);kMergeGroup(tr);}
 addSolid(-1.8,1.8,-1.4,-.5,-216,-129,'ground',[wood,wood,wood,wood,wood,wood]);
 /* ---- THE POINTS: a lever on the boarding deck sets the switch. The visible blades and the cart's route always agree. ---- */
 const SW={main:false,t:0,lx:3.3,lz:-127.6};
@@ -3072,7 +3096,7 @@ const spurP=[[0,-128.8],[0,TOE]].concat(kArc(0,TOE,0,20,-.42,.5).slice(1));{cons
 railsPts(MAINP,-.5,false);railsPts(spurP.slice(1),-.5,false);
 {/* the siding's trestle, walk boards and a buffer stop at the dead end */const tr=new THREE.Group();const S=kSample(spurP.slice(2),1.5);for(let i=0;i<S.length;i++){const q=S[i];if(i%2===0){for(const sd of[-1.3,1.3]){const px=q.x-q.tz*sd,pz=q.z+q.tx*sd;tr.add(mesh(G.box,wood,.4,17,.4,px,-9.6,pz));}}
     if(q.z<TOE-2.5)addSolid(q.x-1.1,q.x+1.1,-1.4,-.5,q.z-.8,q.z+.8,'ground',null,{surf:'wood'});}
-  scene.add(tr);const e=spurP[spurP.length-1],e2=spurP[spurP.length-2],h=Math.atan2(e[0]-e2[0],e[1]-e2[1]);const bs=new THREE.Group();bs.add(mesh(G.box,wood,2.6,.5,.5,0,.35,0),mesh(G.box,iron,.3,.3,.4,-.8,.35,.4),mesh(G.box,iron,.3,.3,.4,.8,.35,.4),mesh(G.box,wood,.3,1.1,.3,-1,.1,-.3),mesh(G.box,wood,.3,1.1,.3,1,.1,-.3));
+  scene.add(tr);kMergeGroup(tr);const e=spurP[spurP.length-1],e2=spurP[spurP.length-2],h=Math.atan2(e[0]-e2[0],e[1]-e2[1]);const bs=new THREE.Group();bs.add(mesh(G.box,wood,2.6,.5,.5,0,.35,0),mesh(G.box,iron,.3,.3,.4,-.8,.35,.4),mesh(G.box,iron,.3,.3,.4,.8,.35,.4),mesh(G.box,wood,.3,1.1,.3,-1,.1,-.3),mesh(G.box,wood,.3,1.1,.3,1,.1,-.3));
   const bl=grp(new THREE.Mesh(new THREE.CircleGeometry(.18,10),glowMat(magenta)),spr(glowTex,magenta,1.3,1.3,0,0,.05));bl.position.set(0,.95,.12);bs.add(bl);bs.position.set(e[0],-.5,e[1]);bs.rotation.y=h;scene.add(bs);}
 /* switch blades: two short movable rails at the toe that swing between the two routes */
 const BLADES=new THREE.Group();for(const sd of[-.8,.8]){const b=mesh(G.box,railM,.16,.18,3.4,sd,.4,-1.7);BLADES.add(b);}BLADES.position.set(0,-.5,TOE+.2);scene.add(BLADES);
