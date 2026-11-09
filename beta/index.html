@@ -1978,6 +1978,13 @@ function buildCourseSection(){const D=COURSE[LV];SEC.built=true;const rng=srng(L
     let i=0;for(const [a,b] of tagRuns('pend'))for(let s=a+2;s<b-1;s+=4.5,i++)lanternSwing(path,s,i*1.6,true);}
   if(LV===10){let i=0;for(const [a,b] of tagRuns('bells'))for(let s=a+2;s<b-1;s+=5,i++)lanternSwing(path,s,i*1.7);}
   /* Moonline path: a real railway runs down the middle of the path (ballast, sleepers, iron rails), broken only where the path breaks */
+  if(LV===10&&typeof kPines==='function'){/* the banks get the same layered pines, bushes, grass and boulders as the main line */const T1=[],GR=[],BU=[],BO=[];
+    for(let s=5;s<path.len-3;s+=2.3)for(const sd of[-1,1]){const q0=crsAt(path,s);const p=q0.p;if(p.gap)continue;const ks=p.ks*sd,cap=ks>0?.85/ks:99;const by=p.y+2.6+1.3*Math.sin(p.s*.09+sd*2.1)+.6*Math.sin(p.s*.31+sd);
+      const r=Math.random();if(r<.72){const lat=p.w/2+R(6.8,12.2);if(lat<cap-1){const q=crsAt(path,s,sd*lat);T1.push([q.x,by-.2,q.z,R(.95,1.45),R(0,TAU),R(.9,1.15)]);}}
+      if(Math.random()<.55){const lat=p.w/2+R(5.4,7);if(lat<cap-1){const q=crsAt(path,s,sd*lat);GR.push([q.x,by,q.z,R(.8,1.3),R(0,TAU),R(.8,1.3)]);}}
+      if(Math.random()<.18){const lat=p.w/2+R(1.2,4);if(lat<cap-1){const q=crsAt(path,s,sd*lat);BU.push([q.x,p.y+1.4,q.z,R(.6,.95),R(0,TAU),.8]);}}
+      if(Math.random()<.12){const lat=p.w/2+R(8,12);if(lat<cap-1){const q=crsAt(path,s,sd*lat);BO.push([q.x,by,q.z,R(.8,1.8),R(0,TAU),R(.5,.8),R(-.3,.3),R(-.3,.3)]);}}}
+    kPines(T1.filter((t,i)=>i%3),0);kPines(T1.filter((t,i)=>!(i%3)),1);kGrass(GR);kBushes(BU);kBoulders(BO);}
   if(LV===10&&typeof kTrack==='function'){let run=[];const flush=()=>{if(run.length>3)kTrack(run,0,{bed:true});run=[];};for(const p of path.pts){if(p.gap||p.tag==='crumble'){flush();continue;}run.push([p.x,p.z,p.y]);}flush();}
   if(LV===7||LV===10){for(const [a,b] of tagRuns('crumble'))for(let s=a+1.1;s<b-.3;s+=1.75){const q=crsAt(path,s,0);const w=path.pts[0].w-.6;const m=new THREE.Mesh(boxGeo(1.6,.5,1.6,2.5),crsMat(wallMat,1,false));m.position.set(q.x,q.y-.25,q.z);scene.add(m);const sd=addSolid(q.x-.8,q.x+.8,q.y-.5,q.y,q.z-.8,q.z+.8,'ground',null,{surf:'stone'});CRS.items.push({k:'crumble',s:sd,m,x:q.x,y:q.y,z:q.z,ct:0,vy:0,rt:0});
       for(const sd2 of[-1.75,1.75]){const q2=crsAt(path,s,sd2);const m2=new THREE.Mesh(boxGeo(1.6,.5,1.6,2.5),crsMat(wallMat,1,false));m2.position.set(q2.x,q2.y-.25,q2.z);scene.add(m2);const s2=addSolid(q2.x-.8,q2.x+.8,q2.y-.5,q2.y,q2.z-.8,q2.z+.8,'ground',null,{surf:'stone'});CRS.items.push({k:'crumble',s:s2,m:m2,x:q2.x,y:q2.y,z:q2.z,ct:0,vy:0,rt:0});}}
@@ -3036,7 +3043,7 @@ const magenta=0xff4ad8,LATE=[];
 /* ---- sky: deep blue night, crescent moon, magenta band on the horizon ---- */
 const sky=skyTex(g=>{grad(g,512,1024,[[0,'#02020e'],[.22,'#050826'],[.4,'#0b1046'],[.52,'#141c66'],[.585,'#2a1a5e'],[.615,'#6a1e5a'],[.64,'#a02a5a'],[.665,'#3a1648'],[.7,'#0c0a26'],[1,'#05040f']]);stars(g,512,1024,900,.58);
   for(let i=0;i<40;i++){const x=Math.random()*512,y=Math.random()*560;g.fillStyle='rgba(200,215,255,.9)';g.fillRect(x,y,2,2);g.fillStyle='rgba(160,180,255,.45)';g.fillRect(x-2,y,6,1);g.fillRect(x,y-2,1,6);}});
-scene.background=sky;scene.fog=new THREE.Fog(0x060a24,46,250);hemi.color.setHex(0xb8c4ff);hemi.groundColor.setHex(0x1a1238);hemi.intensity=1;kMoonSprite([.4,.25,-1],26,120);
+scene.background=sky;scene.fog=new THREE.Fog(0x060a24,46,250);hemi.color.setHex(0xb8c4ff);hemi.groundColor.setHex(0x1a1238);hemi.intensity=1;kMoonSprite([.5,.13,-1],22,120);
 /* the gorge, forests, river, villages and trains outside the track live in ch2world.js */
 /* ---- kit pieces ---- */
 const LITT=[];function rails(x,y,z0,z1,glow,bed=true){const t=kTrack([[x,z0],[x,z1]],y,{bed});LITT.push(t);return t;}
@@ -3142,7 +3149,7 @@ signalPost(9.4,-289.5,3,1);{/* the yard switch from the cover: masonry plinth wi
   g.position.set(3.1,3,-273.2);g.rotation.y=-.3;scene.add(g);addSolid(2.55,3.65,3,3.8,-273.75,-272.65,'block',null);kPool(3.1,3,-273.2,3.5,.35);}
 gate=addSolid(-6.6,6.6,3,6,-262.9,-261.9,'gate',null);gate.alive=false;gateMesh=new THREE.Mesh(boxGeo(13,3,1,2.5),stone);gateMesh.position.set(0,1,-262.4);scene.add(gateMesh);
 cliff(-26,-292,-14,18,34,46);cliff(26,-282,-14,18,24,40);for(let i=0;i<16;i++)pine(R(-36,-12),R(16,20),R(-310,-262),R(1.8,2.8)),pine(R(12,36),R(14,16),R(-310,-262),R(1.8,2.8));
-/* hero pines rising out of the gorge to frame the yard, as on the cover */for(const [x,z,s] of[[-11.5,-268,3.6],[-13,-279,3.9],[11.5,-266,3.5],[13.4,-277,4],[-16.5,-292,3.4],[17,-290,3.6],[-9.8,-250,3.2],[10.2,-252,3.3]])pine(x,-14,z,s);
+/* hero pines rising out of the gorge to frame the yard, as on the cover */for(const [x,z,s] of[[-9.4,-267,3.7],[-10.4,-276.5,3.9],[9.5,-265.5,3.6],[10.6,-275,4],[-15.5,-293,3.4],[16,-291,3.6],[-9.6,-250,3.2],[9.9,-253,3.3]])pine(x,-14,z,s);
 kBoulders([[-6.2,3,-268.5,.7,1,.8],[6.4,3,-270,.8,2,.7],[-6.6,3,-279,.55,3,.9],[6.5,3,-277.5,.6,4,.8],[-13,3,-283,1.2,5,.8],[12.6,3,-284,1.3,1,.7],[-15,3,-306,1.6,2,.8],[15.2,3,-304,1.4,0,.8]]);
 kGrass([[-6.3,3,-272,.9],[-6.4,3,-275.5,1.1],[6.4,3,-273.5,1],[6.3,3,-279,1.2],[-12,3,-289,1.3],[11.8,3,-288,1.2],[-10.5,3,-299,1.4],[10.7,3,-298,1.3],[-6.4,3,-266,.9],[6.4,3,-265,1],[-5.6,3,-250,.9],[5.7,3,-256,1]].map(t=>[t[0],t[1],t[2],t[3],R(0,TAU),R(.8,1.3)]));
 kBushes([[-12.8,3,-293,1.1],[12.9,3,-292,1],[-9.5,3,-284,.8],[9.6,3,-283,.8]].map(t=>[t[0],t[1],t[2],t[3],R(0,TAU),.8]));
@@ -3168,14 +3175,14 @@ L.setup=()=>{for(const f of LATE)f();
 const BZ0=-297,BTZ=-287.4,BTY=3;let BZ=BZ0,bw=null;
 function laneOf(x){return x<-2?-4:x>2?4:0;}
 function setLanes(map){for(const x of[-4,0,4]){const k=map[x]||0;laneGlow[x].material.opacity=k*.16;lit(AT[x],k);}}
-function setupBell(){bw=c2Make('bellwarden',6.4);if(!bw)return;bw.g.position.set(0,-9,BZ0);scene.add(bw.g);
+function setupBell(){bw=c2Make('bellwarden',6.4);if(!bw)return;/* he waits in the station doorway, like the cover, until you step into the yard */bw.g.position.set(0,3+PH,-302.6);scene.add(bw.g);
   const pist=grp(spr(glowTex,0xffd27a,3,3,0,0,0),spr(glowTex,0xffffff,1,1,0,0,0));pist.visible=false;scene.add(pist);bw.pist=pist;
   bw.mats=[];bw.g.traverse(o=>{if(o.isMesh)for(const m of[].concat(o.material))if(m&&m.emissive&&!bw.mats.includes(m)){bw.mats.push(m);m.emissive.lerp(new THREE.Color(.09,.07,.14),.6);m.userData.e0=m.emissive.clone();}});bw.flash=0;
   {/* warm key light on the stage so he reads against the dark doorway */const kl=new THREE.PointLight(0xffd0a0,1.5,20,1.6);kl.position.set(0,9.5,-288.5);scene.add(kl);}
   const ch=grp(spr(glowTex,magenta,3,3,0,0,0),spr(glowTex,0xffffff,1.1,1.1,0,0,0));ch.visible=false;scene.add(ch);bw.charge=ch;
   const rw=new THREE.Mesh(new THREE.RingGeometry(.86,1,56),new THREE.MeshBasicMaterial({color:0xffb84a,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));rw.rotation.x=-Math.PI/2;rw.renderOrder=4;scene.add(rw);bw.ringWarn=rw;
   boss.maxHp=60;boss.reset=()=>{boss.state='idle';boss.t=0;BZ=BZ0;boss.landed=false;clearPulses();setLanes({});if(bw){bw.g.position.set(0,3+PH,BZ);bw.g.visible=true;}bw.pist.visible=false;};}
-L.startBoss=()=>{bossIntro(L.bossName);boss.reset();boss.state='intro';boss.t=0;bw.g.position.y=-6;clearPulses();};
+L.startBoss=()=>{bossIntro(L.bossName);boss.reset();boss.state='intro';boss.t=0;bw.g.position.set(0,3+PH,-302.6);BZ=-302.6;clearPulses();};
 /* attack plans per phase: shots [lane, time], then a bell-swing ring you must jump */
 function plan(){const ph=bossPhase(),p=laneOf(P.pos.x),o=[-4,0,4].filter(x=>x!==p);
   if(ph===0)return {tell:.95,shots:[[p,.95],[pick([-4,0,4]),1.95]],rings:1,open:1.7};
@@ -3187,7 +3194,7 @@ L.hitBoss=()=>{if(boss.state!=='sleep')return;if(bossDamage(0xffd27a)){boss.stat
   boss.state='hurt';boss.t=0;c2Play(bw,'hurt',.7);bw.pist.visible=false;const ph=bossPhase();if(ph>0)showHint(ph===1?'THREE PULSES NOW · KEEP MOVING':'OUTER TRACKS, CENTRE, THEN YOU',2.6);};
 L.summon=(x,z,y)=>{const e=clapper(pick([-6,6]),PZ-1.2,3+PH,22);return e;};
 L.updBoss=dt=>{const b=boss;bWard.alive=!!(inBoss&&b.state!=='off'&&b.state!=='dead');if(b.state==='off'||!bw)return;b.t+=dt;const g=bw.g,Y=3+PH;
-  if(b.state==='intro'){g.position.y=lerp(g.position.y,Y,dt*2.2);g.position.z=BZ;c2Play(bw,'idle');if(b.t>.4&&!b.tolled){b.tolled=true;blip(220,110,1.2,'triangle',.12);shakeT=.6;}
+  if(b.state==='intro'){/* steps out of the doorway onto the platform edge */g.position.y=Y;BZ=lerp(BZ,BZ0,Math.min(1,dt*1.6));g.position.z=BZ;c2Play(bw,b.t<1.6?'walk':'idle');if(b.t>.4&&!b.tolled){b.tolled=true;blip(220,110,1.2,'triangle',.12);shakeT=.6;}
     if(b.t>2.2){b.tolled=false;b.state='idle';b.t=0;showHint('DODGE THE LANE PULSES · JUMP THE BELL RING · HIT THE PISTON',3.4);}}
   else if(b.state==='idle'){c2Play(bw,'walk');g.position.x=lerp(g.position.x,clamp(P.pos.x*.4,-3.5,3.5),dt*1.5);if(b.t>.8){b.state='wind';b.t=0;b.pl=plan();b.fired=[];b.rung=0;c2Play(bw,'windup',b.pl.tell);blip(330,660,.4,'triangle',.06);}}
   else if(b.state==='wind'){const lit2={};let near=0;b.pl.shots.forEach(([x,d],i)=>{const lead=i===0?b.pl.tell:.7;if(!b.fired[i]&&b.t>d-lead){const k=clamp(1-(d-b.t)/lead,0,1);lit2[x]=Math.max(lit2[x]||0,.35+.65*k*(.6+.4*Math.sin(time*(10+k*22))));near=Math.max(near,k);}});setLanes(lit2);
@@ -3218,7 +3225,7 @@ L.updBoss=dt=>{const b=boss;bWard.alive=!!(inBoss&&b.state!=='off'&&b.state!=='d
   if(state==='play'&&(b.state==='idle'||b.state==='wind'||b.state==='intro'||b.state==='hopback')&&Math.hypot(P.pos.x-g.position.x,P.pos.z-BZ)<2.5&&P.pos.y<g.position.y+5&&P.pos.y>g.position.y-1)hurt();};
 L.inArena=p=>p.z<ARENA.z0+1&&p.z>ARENA.z1&&p.y>2;
 L.onRespawn=()=>{clearPulses();for(const p of PL){p.sd.alive=true;p.m.visible=true;p.m.position.set(p.x,p.y-.2,p.z);p.ct=0;p.rt=0;p.vy=0;}if(C2.car&&checkpoint.z>-135)resetCar();for(const t of C2.trains||[]){t.st='wait';t.t=1.5;}};
-L.update=dt=>{c2Tick(dt);
+L.update=dt=>{c2Tick(dt);if(bw&&boss.state==='off'){c2Play(bw,'idle');c2Anim(bw,dt);if(L.cjack){c2Play(L.cjack,'idle');c2Anim(L.cjack,dt);}}
   for(const s of L.signals||[])s.children[1].material.opacity=.6+Math.sin(time*3+s.position.y)*.4;for(const f of L.falls||[])f.offset.y+=dt*1.6;for(const b of L.flags||[])b.rotation.y=Math.sin(time*1.7+b.position.x)*.15;
   for(const l of L.lamps||[])l.children[3].material.opacity=.85+Math.sin(time*9+l.id)*.12;
   /* crumbling planks */
