@@ -1073,7 +1073,9 @@ function c2Prop(k,h){const p=C2.prop[k];if(!p)return null;const g=p.clone(true);
 /* a posable instance: outer group (world placement, size) > rig root (animated) */
 /* v1.21 · skinned characters: Higgsfield/Meshy-rigged models with real skeletons and animation clips.
    Clips are made in-place (root motion stripped) and mapped onto the game's own clip names below. */
-C2.skin={};const SKIN_NEED={10:['nettle','bellwarden','vesper'],11:['nettle'],13:['bramble','squire'],14:['nettle','bramble','vesper']};
+/* v1.24: the rigged skeletons only suit human-shaped models, so they're now used only where they look right: the Soot Squires (always),
+   Vesper in the opening cutscene, and the bosses' death falls (Bellwarden, Vesper). Everyone else is back on their own hand-built rigs. */
+C2.skin={};const SKIN_NEED={10:['bellwarden','vesper'],13:['squire'],14:['vesper']},SK_ALWAYS={squire:1};
 /* game clip -> [skinned clip, mode]   mode: 'loop' | 'once' (holds last frame) | 'fit' (stretched to the requested duration) ; ts = speed */
 const SKMAP={
   squire:{idle:['idle','loop',1],walk:['walk','loop',1.5],lean:['idle','loop',1.8],tell:['idle','loop',1.8],charge:['run','loop',1.3],skid:['breath','fit'],hurt:['breath','fit']},
@@ -1096,12 +1098,15 @@ async function c2LoadSkins(step){const need=SKIN_NEED[LV]||[];for(const k of nee
 function c2MakeSkin(key,size){const S=C2.skin[key];const inst=THREE.SkeletonUtils.clone(S.scene);inst.scale.multiplyScalar(S.k);inst.position.copy(S.off);const root=new THREE.Group();root.add(inst);
   const g=new THREE.Group();g.rotation.order='YXZ';g.add(root);g.scale.setScalar(size);const mixer=new THREE.AnimationMixer(inst);const acts={};for(const n in S.clips)acts[n]=mixer.clipAction(S.clips[n]);
   const a={g,r:{root,p:{},rest:{},h:1},key,clip:'',t:0,ct:0,dur:1,skin:S,mixer,acts,cur:null};c2Play(a,'idle');return a;}
-function c2Make(key,size){if(C2.skin[key]&&THREE.SkeletonUtils)return c2MakeSkin(key,size);const base=C2.rig[key];if(!base)return null;const r=rigClone(base);const g=new THREE.Group();g.rotation.order='YXZ';g.add(r.root);g.scale.setScalar(size);return {g,r,key,clip:'idle',t:0,ct:0,dur:1};}
-function c2Play(a,clip,dur){const ch=a.clip!==clip;if(ch){a.clip=clip;a.ct=0;}a.dur=dur||1;if(a.skin&&ch)skStart(a);}
+function c2Make(key,size,useSkin){if(C2.skin[key]&&THREE.SkeletonUtils&&(useSkin||SK_ALWAYS[key]))return c2MakeSkin(key,size);const base=C2.rig[key];if(!base)return null;const r=rigClone(base);const g=new THREE.Group();g.rotation.order='YXZ';g.add(r.root);g.scale.setScalar(size);return {g,r,key,clip:'idle',t:0,ct:0,dur:1};}
+/* tw=true: play this one clip on the character's rigged twin (swapped in for the moment, e.g. a death fall); any other clip swaps the hand-built rig back */
+function c2Play(a,clip,dur,tw){if(tw&&!a.skin&&C2.skin[a.key]&&THREE.SkeletonUtils){if(!a.tw){a.tw=c2MakeSkin(a.key,1);a.g.add(a.tw.g);}if(!a.twOn){a.twOn=true;a.tw.g.visible=true;a.r.root.visible=false;}if(a.clip!==clip){a.clip=clip;a.ct=0;}a.dur=dur||1;c2Play(a.tw,clip,dur);return;}
+  if(a.twOn){a.twOn=false;a.tw.g.visible=false;a.r.root.visible=true;}
+  const ch=a.clip!==clip;if(ch){a.clip=clip;a.ct=0;}a.dur=dur||1;if(a.skin&&ch)skStart(a);}
 function skStart(a){const M=SKMAP[a.key]||{};const m=M[a.clip]||M.idle||['idle','loop',1];const act=a.acts[m[0]]||a.acts.idle;if(!act)return;a.sm=m;
   if(a.cur!==act||m[1]!=='loop'){const prev=a.cur;act.reset();act.enabled=true;act.setEffectiveWeight(1);act.clampWhenFinished=true;act.setLoop(m[1]==='loop'?THREE.LoopRepeat:THREE.LoopOnce,Infinity);
     act.timeScale=m[1]==='fit'?0:(m[2]||1);if(m[1]==='fit')act.time=(m[3]||0)*act.getClip().duration;act.play();if(prev&&prev!==act)prev.crossFadeTo(act,.18,false);a.cur=act;}}
-function c2Anim(a,dt){a.t+=dt;a.ct+=dt;if(a.skin){const m=a.sm;if(m&&m[1]==='fit'&&a.cur){const d=a.cur.getClip().duration,k=Math.min(1,a.ct/(a.dur||1));a.cur.time=d*((m[3]||0)+((m[4]==null?1:m[4])-(m[3]||0))*k);}a.mixer.update(dt);return;}
+function c2Anim(a,dt){a.t+=dt;a.ct+=dt;if(a.twOn){c2Anim(a.tw,dt);return;}if(a.skin){const m=a.sm;if(m&&m[1]==='fit'&&a.cur){const d=a.cur.getClip().duration,k=Math.min(1,a.ct/(a.dur||1));a.cur.time=d*((m[3]||0)+((m[4]==null?1:m[4])-(m[3]||0))*k);}a.mixer.update(dt);return;}
   rigAnim(a.r,a.key,a.clip,a.t,Math.min(1,a.ct/a.dur));}
 
 /* ---------- minions: rigid-rig enemies that plug into the normal enemy loop ---------- */
@@ -1902,7 +1907,7 @@ function buildObservatory(){const O=V3(-4000,0,-600),g=new THREE.Group();g.posit
   const castle=c2Prop('castle',70);if(castle){castle.position.set(26,-62,-70);castle.rotation.y=-.5;castle.traverse(m=>{if(m.isMesh)m.material.fog=false;});g.add(castle);}
   const cl=[];for(let i=0;i<16;i++){const c=spr(glowTex,0x6a4aa8,R(18,34),R(6,10),R(-60,60),R(-14,-6),R(-80,20),false);c.material.opacity=.35;g.add(c);cl.push(c);}
   /* cast */
-  const cast={};const put=(k,size,x,z,face)=>{const a=c2Make(k,size);if(!a)return null;a.g.position.set(x,0,z);a.g.rotation.y=face;g.add(a.g);cast[k]=a;return a;};
+  const cast={};const put=(k,size,x,z,face)=>{/* v1.24: only Vesper uses his rigged skeleton here; the four guardians are on their own rigs */const a=c2Make(k,size,k==='vesper');if(!a)return null;a.g.position.set(x,0,z);a.g.rotation.y=face;g.add(a.g);cast[k]=a;return a;};
   put('vesper',3.4,0,-6,0);if(cast.vesper)cast.vesper.g.position.y=.6;
   const spots={bellwarden:[-60,9,6.4],regent:[-22,10,6.6],abbess:[22,10,5.2],cinderwing:[60,9,4.8]};
   for(const k in spots){const [deg,r,size]=spots[k];const a=deg*Math.PI/180;const x=Math.sin(a)*r,z=-6+Math.cos(a)*r;put(k,size,x,z,Math.atan2(-x,-6-z));}
@@ -1944,10 +1949,10 @@ function playCh2Intro(cb){$('title').hidden=true;const B=buildBedroom(),Ob=build
      P.pos.copy(BO).add(V3(3.4,0,2.4));P.face=-Math.PI/2;P.vel.set(-2,0,0);if(fl())fl().visible=true;},
    update:(dt,t,i)=>{if(scn!==C2I.last){C2I.last=scn;CINE.cp=null;}c2UpdFly(Ob,dt);for(const k in C)c2Anim(C[k],dt);Ob.rings.forEach((r,j)=>{r.rotation.x=time*(.2+j*.13);r.rotation.y=time*(.15+j*.1);});
      if(scn<=1){/* bedroom */const tt=t;
-       if(scn===0){walkT+=dt;const k=Math.min(1,walkT/4.2);const from=V3(3.4,0,2.4),to=V3(.35,0,-2.3);P.pos.copy(BO).add(from.clone().lerp(to,k));{const dd=to.clone().sub(from);const sp=dd.length()/4.2;dd.normalize();P.vel.set(k<1?dd.x*Math.max(1.6,sp):0,0,k<1?dd.z*Math.max(1.6,sp):0);}P.onGround=true;/* v1.19: he walks to bed (run cycle at walking pace), no more gliding */if(k<1){try{playAct('run',.15);actions.run.timeScale=.55;}catch(e){}}else{try{playAct('idle',.25);}catch(e){}}P.face=k<1?Math.atan2(to.x-from.x,to.z-from.z):Math.PI*1.25;
+       if(scn===0){walkT+=dt;const k=Math.min(1,walkT/4.2);const from=V3(3.4,0,2.4),to=V3(.35,0,-2.3);P.pos.copy(BO).add(from.clone().lerp(to,k));{const dd=to.clone().sub(from);const sp=dd.length()/4.2;dd.normalize();P.vel.set(k<1?dd.x*Math.max(1.6,sp):0,0,k<1?dd.z*Math.max(1.6,sp):0);}P.onGround=true;/* v1.24: a real walk cycle to the bed, not a slowed-down run */P.walk=k<1;if(k<1){try{if(actions.walk){playAct('walk',.15);actions.walk.timeScale=1;}else{playAct('run',.15);actions.run.timeScale=.55;}}catch(e){}}else{try{playAct('idle',.25);}catch(e){}}P.face=k<1?Math.atan2(to.x-from.x,to.z-from.z):Math.PI*1.25;
          if(walkT>5&&!B.lan.visible){B.lan.visible=true;B.lamp.intensity=1.6;if(fl())fl().visible=false;blip(700,900,.12,'triangle',.04);}
          cam(BO.clone().add(V3(.2+Math.sin(tt*.2)*.3,2.5,3.6-k*.6)),P.pos.clone().add(V3(-.5,1,-.6)),Math.min(1,dt*2.5));}
-       else{if(!slept){slept=true;P.castT=99;P.vel.set(0,0,0);P.pos.copy(BO).add(V3(-1.8,.72,-2.5));P.face=0;try{playAct('sleep',.3,true);}catch(e){}}
+       else{if(!slept){slept=true;P.walk=false;P.castT=99;P.vel.set(0,0,0);P.pos.copy(BO).add(V3(-1.8,.72,-2.5));P.face=0;try{playAct('sleep',.3,true);}catch(e){}}
          if(flint){flint.position.copy(P.pos);flint.rotation.y=0;}const k=Math.min(1,(t-8.1)/10.8);B.lamp.intensity=Math.max(.15,1.6-k*2.2);B.lglow.material.opacity=Math.max(.2,1-k*1.4);
          const out=Math.floor(Math.max(0,(t-11)/7)*B.stars.length);while(starOut<out&&starOut<B.stars.length){const s=B.stars[starOut++];s.visible=false;blip(R(900,1400),R(400,600),.15,'sine',.02);}
          const cp=k<.35?BO.clone().add(V3(-.2,2.2,.6)):BO.clone().add(V3(.5,2.3,-1.4)),lk=k<.35?P.pos.clone().add(V3(0,.3,0)):BO.clone().add(V3(.6,3.4,-9));cam(cp,lk,Math.min(1,dt*1.2));}}
@@ -1959,12 +1964,12 @@ function playCh2Intro(cb){$('title').hidden=true;const B=buildBedroom(),Ob=build
        if(scn%2===0){for(const kk in C)C[kk].g.visible=true;/* over Vesper's shoulder toward the boss */const vp=Vq?Vq.g.position.clone().add(OO):OO.clone();const bp=a?a.g.position.clone().add(OO):OO.clone();const dir=bp.clone().sub(vp).setY(0).normalize();
          cam(vp.clone().addScaledVector(dir,-6.5).add(V3(dir.z*3,5.6,-dir.x*3)),bp.clone().add(V3(0,a?a.g.scale.y*.5:3,0)),Math.min(1,dt*2));}
        else if(a){/* boss close-up: only the speaker is shown, so neither Vesper's hat wheel nor a neighbour can block the camera */for(const kk in C)C[kk].g.visible=(kk===who);const bp=a.g.position.clone().add(OO);const h=a.g.scale.y;const toV=OO.clone().add(V3(0,0,-6)).sub(bp).setY(0).normalize();cam(bp.clone().addScaledVector(toV,h*1.25+2).add(V3(0,h*.6,0)),bp.clone().add(V3(0,h*.62,0)),Math.min(1,dt*2.4));}}
-     else if(scn===12){const k=Math.min(1,(t-(LN.slice(0,12).reduce((s,l)=>s+l[2],0)))/6.9);cam(OO.clone().add(V3(0,4+k*14,12+k*18)),OO.clone().add(V3(0,3,-6)),Math.min(1,dt*1.4));
+     else if(scn===12){/* v1.24: the wide shot shows Vesper and every guardian again (the close-up before it had hidden all but the speaker), so each one is there to be seen before it vanishes */for(const kk in C)if(!bossGone[kk])C[kk].g.visible=true;const k=Math.min(1,(t-(LN.slice(0,12).reduce((s,l)=>s+l[2],0)))/6.9);cam(OO.clone().add(V3(0,4+k*14,12+k*18)),OO.clone().add(V3(0,3,-6)),Math.min(1,dt*1.4));
        for(const kk of['bellwarden','regent','abbess','cinderwing'])if(!bossGone[kk]&&k>.3+['bellwarden','regent','abbess','cinderwing'].indexOf(kk)*.12&&C[kk]){bossGone[kk]=1;burst(C[kk].g.position.clone().add(OO).setY(3),0xb07aff,40,8,.8);C[kk].g.visible=false;sfx.boom();}}
      else if(scn===13){const k=Math.min(1,(t-(LN.slice(0,13).reduce((s,l)=>s+l[2],0)))/7.2);cam(L0.clone().add(V3(-6+k*6,6-k*2.6,10-k*3)),L0.clone().add(V3(0,1.2,-2)),Math.min(1,dt*1.6));if(flint){flint.position.copy(P.pos);}}
    },
    end:()=>{setScene(null);B.g.parent&&scene.remove(B.g);Ob.g.parent&&scene.remove(Ob.g);if(CINE.skyMap&&typeof SKYD!=='undefined'&&SKYD){SKYD.material.map=CINE.skyMap;SKYD.material.needsUpdate=true;}if(scene.fog&&sav.fog){scene.fog.near=sav.fog[0];scene.fog.far=sav.fog[1];}
-     P.castT=0;P.vel.set(0,0,0);P.pos.copy(L0);P.face=Math.PI;if(flint){flint.rotation.x=0;flint.visible=true;}if(fl())fl().visible=true;for(const f of Ob.fly||[])scene.remove(f.s);if(cb)cb();}});}
+     P.walk=false;P.castT=0;P.vel.set(0,0,0);P.pos.copy(L0);P.face=Math.PI;if(flint){flint.rotation.x=0;flint.visible=true;}if(fl())fl().visible=true;for(const f of Ob.fly||[])scene.remove(f.s);if(cb)cb();}});}
 
 const CAUL_SPOTS=[];function placeCauldrons(){if(typeof cauldronProto==='undefined'||!cauldronProto)return;for(const c of CAUL_SPOTS){if(c.done)continue;c.done=true;if(c.old)c.old.visible=false;const m=cauldronProto.clone(true);m.scale.multiplyScalar(c.s/3.6);m.position.set(c.x,c.y,c.z);m.rotation.y=c.ry||R(0,TAU);scene.add(m);}}
 /* ===================== v3 SYSTEMS: minion HP, boss phases, pickups, Crash-style path sections ===================== */
@@ -2529,7 +2534,8 @@ function preloadVO(keys){for(const k of keys){if(VO[k])continue;const e=VO[k]={k
 function voReady(keys,ms){return Promise.race([Promise.all(keys.map(k=>{const e=VO[k];if(!e)return 0;return Promise.resolve(e.ld).then(()=>voDecode(k));})),new Promise(r=>setTimeout(r,ms||6000))]);}
 function voStart(k,gen){const e=VO[k];if(!e||!e.buf||gen!==voGen||muted)return;if(!voNodes())return;try{if(AC.state!=='running')AC.resume();const s=AC.createBufferSource();s.buffer=e.buf;s.connect(/^([nmb]|nar)\d+$/.test(k)?voDry:voBus);s.start(0);voCur=s;}catch(x){}}
 /* Chapter 2: only the female cast keeps a recorded voice for now (the male parts are left for the author to voice) */
-const VO_CUT=new Set(['n1','n2','n3','n4','n5','n6','nar1','nar2','nar3','c4','c5','c6','c7','c8','c9','c10','c12','c14']);
+/* v1.24: Vesper Quill's own lines (c4,c5,c6,c8,c10,c12,c14) are back; the other Chapter 2 male voices stay cut until they're recorded */
+const VO_CUT=new Set(['n1','n2','n3','n4','n5','n6','nar1','nar2','nar3','c7','c9']);
 function playVO(k){if(VO_CUT.has(k))return false;const e=VO[k];if(!e||VO_OK[k]===0)return false;stopVO();const gen=++voGen,t0=performance.now();if(e.buf){voStart(k,gen);return true;}
   /* not decoded yet: start it when ready, but only if the line is still current (no late overlaps) */
   Promise.resolve(e.ld).then(()=>voDecode(k)).then(()=>{if(performance.now()-t0<1800)voStart(k,gen);});return true;}
@@ -2739,7 +2745,7 @@ function gfxUI(){const QL={auto:'AUTO',low:'LOW',medium:'MEDIUM',high:'HIGH',ult
 
 function S2(){return MENU.root||MENU.scene;}
 
-const WT_VERSION='v1.23.3';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
+const WT_VERSION='v1.24';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
 
 /* ---------- beta feedback: opens an email with the details filled in ---------- */
 const FEEDBACK_TO='mike.jose.rodrigues@gmail.com';
@@ -3794,7 +3800,7 @@ function plan(){const ph=bossPhase(),p=laneOf(P.pos.x),o=[-4,0,4].filter(x=>x!==
   return {tell:.8,shots:[[-4,.8],[4,.8],[0,1.6],[p,2.35]],rings:2,open:1.25};}
 /* hit reaction: white-hot flash, sparks, a heavy clang, a stagger and a brief freeze so every hit reads */
 function bwHitFx(){if(!bw)return;bw.flash=1;bw.stag=.35;const p=bw.pist.position.clone();burst(p,0xffd27a,40,9,.7);burst(p,0xffffff,16,6,.4);hitStop(.12);shakeT=Math.max(shakeT,.5);bellTone(true,bw.g.position.x,BZ);blip(1400,700,.12,'square',.06);}
-L.hitBoss=()=>{if(boss.state!=='sleep')return;if(bossDamage(0xffd27a)){boss.state='dead';boss.t=0;clearPulses();setLanes({});bw.pist.visible=false;c2Play(bw,'die',2.4);sfx.life();return;}
+L.hitBoss=()=>{if(boss.state!=='sleep')return;if(bossDamage(0xffd27a)){boss.state='dead';boss.t=0;clearPulses();setLanes({});bw.pist.visible=false;c2Play(bw,'die',2.4,true);sfx.life();return;}
   boss.state='hurt';boss.t=0;c2Play(bw,'hurt',.7);bw.pist.visible=false;const ph=bossPhase();if(ph>0)showHint(ph===1?'THREE PULSES NOW · KEEP MOVING':'OUTER TRACKS, CENTRE, THEN YOU',2.6);};
 L.summon=(x,z,y)=>{const e=clapper(pick([-6,6]),PZ-1.2,3+PH,22);return e;};
 L.updBoss=dt=>{const b=boss;bWard.alive=!!(inBoss&&b.state!=='off'&&b.state!=='dead');if(b.state==='off'||!bw)return;b.t+=dt;const g=bw.g,Y=3+PH;
@@ -5291,7 +5297,7 @@ L.updBoss=dt=>{const b=boss;if(b.state==='off'||!vq)return;b.t+=dt;const g=vq.g;
     if(k>1.3){d.on=false;d.hit=false;d.ring.visible=false;d.dr.visible=false;}}
   if(vq.lastHp!==undefined&&b.hp<vq.lastHp&&b.state!=='intro'){vq.flash=1;burst(cagePos(),0xffe08a,40,9,.7);hitStop(.12);shakeT=Math.max(shakeT,.5);blip(1600,500,.4,'sine',.1);}vq.lastHp=b.hp;
   if(vq.flash>0){vq.flash=Math.max(0,vq.flash-dt*3.2);for(const m of vq.mats)m.emissive.copy(m.userData.e0).lerp(new THREE.Color(1,.9,1),vq.flash*.8);}
-  if(!(b.state==='dead'&&b.cine)){c2Play(vq,anim,anim==='lower'||anim==='raise'||anim==='crouch'||anim==='dizzy'?.5:1);g.position.set(V.x,AY+V.h+(V.h<.05?Math.sin(time*1.4)*.05:0),V.z);g.scale.setScalar(VQH*Math.max(.02,V.sc));g.visible=V.sc>.03;
+  if(!(b.state==='dead'&&b.cine)){c2Play(vq,anim,anim==='lower'||anim==='raise'||anim==='crouch'||anim==='dizzy'?.5:1,b.state==='dead');g.position.set(V.x,AY+V.h+(V.h<.05?Math.sin(time*1.4)*.05:0),V.z);g.scale.setScalar(VQH*Math.max(.02,V.sc));g.visible=V.sc>.03;
     g.rotation.y=lerpAngle(g.rotation.y,face,Math.min(1,dt*(b.sub==='air'?10:4)));c2Anim(vq,dt);}
   b.pos.copy(cagePos());};
 function placeLineV(m,x0,y,z0,x1,z1,w){const dx=x1-x0,dz=z1-z0,L2=Math.hypot(dx,dz)||1;m.scale.set(w/1.8,L2,1);m.position.set((x0+x1)/2,y+.06,(z0+z1)/2);m.rotation.z=Math.atan2(dx/L2,dz/L2)+Math.PI;m.visible=true;}
@@ -5318,7 +5324,7 @@ function ending(){const c=cagePos();const stars=[];for(let i=0;i<24;i++){const s
       if(i===4||i===5)return [f.clone().add(V3(1.4,1.4,-2.6)),f.clone().add(V3(0,1.1,0))];
       return [f.clone().add(V3(4,3,6)),moon.position.clone()];},
     ()=>{for(const s of stars)scene.remove(s.s);apple.visible=false;try{localStorage.setItem('wt-ch2done','1');}catch(e){}c2Star(V.x,AY+2.4,V.z+4,'LAST STAR',()=>bossDefeated());showHint('GRAB THE LAST STAR',3);},
-    {tick:(dt,t,i)=>{c2Play(vq,i<=1?'fall':'fall',1);c2Anim(vq,dt);
+    {tick:(dt,t,i)=>{c2Play(vq,'fall',1,true);c2Anim(vq,dt);
       for(const s of stars){if(t<6)s.s.position.add(V3(s.vx*dt,s.vy*dt,s.vz*dt));s.vy+=dt*1.5;s.s.visible=s.s.position.y<AY+120;}
       if(i===3&&vq.g.visible&&t>18){}
       if(i>=4&&hadApple){apple.visible=i<=5;const f=P.pos;apple.position.set(f.x+.35,f.y+1.15+Math.sin(time*3)*.03,f.z-.25);if(i===5&&!L.crunch){L.crunch=1;blip(300,120,.12,'square',.08);blip(260,100,.12,'square',.07,.25);}}
@@ -5459,6 +5465,8 @@ function playAct(name,fade=.15,once){const a=actions[name];if(!a||curAct===a&&!o
   a.enabled=true;a.setEffectiveWeight(1);if(curAct&&curAct!==a)curAct.crossFadeTo(a,fade,false);else a.fadeIn(fade);a.play();curAct=a;}
 function setupFlint(gl){flint=gl.scene;brighten(flint,.28);flint.scale.setScalar(1.6/1.2);flint.traverse(c=>{if(c.isMesh){c.frustumCulled=false;if(c.material.map){c.material.map.magFilter=THREE.NearestFilter;}}});scene.add(flint);
   mixer=new THREE.AnimationMixer(flint);for(const clip of gl.animations){if(!['sleep','wake'].includes(clip.name))clip.tracks=clip.tracks.filter(t=>!t.name.endsWith('.position'));actions[clip.name]=mixer.clipAction(clip);}
+  /* v1.24: a walk cycle made from the run: every joint swings under half as far from the standing pose, at a strolling tempo */
+  try{const rc=gl.animations.find(c=>c.name==='run'),ic=gl.animations.find(c=>c.name==='idle');if(rc&&ic){const wc=rc.clone();wc.name='walk';const qa=new THREE.Quaternion(),qb=new THREE.Quaternion();for(const tr of wc.tracks){if(!tr.name.endsWith('.quaternion'))continue;const it=ic.tracks.find(t=>t.name===tr.name);if(!it)continue;qa.fromArray(it.values,0);const v=tr.values;for(let i=0;i<v.length;i+=4){qb.fromArray(v,i);qb.copy(qa.clone().slerp(qb,.42)).toArray(v,i);}for(let i=0;i<tr.times.length;i++)tr.times[i]*=2;}wc.duration*=2;actions.walk=mixer.clipAction(wc);}}catch(e){console.error(e);}
   actions.run.timeScale=1.1;playAct('idle',0);
   const lan=new THREE.Group();{const brass=new THREE.MeshPhongMaterial({color:0x8a5a1c,emissive:0x2a1404,shininess:40}),dark=new THREE.MeshPhongMaterial({color:0x3a2410});
    const h=new THREE.Mesh(new THREE.TorusGeometry(.07,.013,6,16,Math.PI),brass);h.position.y=.17;lan.add(h);
@@ -5872,7 +5880,7 @@ function frame(){requestAnimationFrame(frame);if(capSkip())return;let dt=Math.mi
     {const gy=groundBelow(P.pos.x,P.pos.z,P.pos.y+.1),h=P.pos.y-gy;landRing.visible=!P.onGround&&h>.4&&gy>-50&&state==='play';if(landRing.visible){landRing.position.set(P.pos.x,gy+.05,P.pos.z);const k=clamp(.5+h*.12,.5,1.3);landRing.scale.set(k,k,k);landRing.material.opacity=clamp(.35+h*.08,.35,.8);}}let tr=P.face;if(P.spinT>0)tr+=(1-P.spinT/.45)*TAU*2;flint.rotation.y=P.spinT>0?tr:lerpAngle(flint.rotation.y,tr,Math.min(1,dt*14));
     flint.visible=!(P.invuln>0&&Math.floor(time*14)%2)||P.dead;
     if(state==='title'){playAct('idle');}
-    else if(!P.dead&&P.spinT<=0&&P.castT<=0&&P.hurtT<=0){if(!P.onGround){if(curAct!==actions.jump){playAct('jump',.1,true);actions.jump.time=.55;actions.jump.timeScale=1.3;}}else if(sp>1.2&&!L.riding){playAct('run',.12);actions.run.timeScale=.6+sp/7.2*.6;}else playAct('idle',.2);}
+    else if(!P.dead&&P.spinT<=0&&P.castT<=0&&P.hurtT<=0){if(!P.onGround){if(curAct!==actions.jump){playAct('jump',.1,true);actions.jump.time=.55;actions.jump.timeScale=1.3;}}else if(sp>1.2&&!L.riding){if(P.walk&&actions.walk){playAct('walk',.15);actions.walk.timeScale=1;}else{playAct('run',.12);actions.run.timeScale=.6+sp/7.2*.6;}}else playAct('idle',.2);}
     mixer.update(dt);const lan=flint.userData.lan;const fd=V3(Math.sin(P.face),0,Math.cos(P.face));if(flint.userData.hand){flint.updateMatrixWorld();flint.userData.hand.getWorldPosition(lan.position);lan.position.y-=.2;}else lan.position.copy(P.pos).add(V3(fd.z*-.35,.85,-fd.x*-.35)).addScaledVector(fd,.2);lan.rotation.y=P.face;lan.userData.sw+=( -sp*.05-lan.userData.sw)*Math.min(1,dt*6);lan.rotation.x=lan.userData.sw+Math.sin(time*7)*.08*Math.min(1,sp/3);flint.userData.light.position.copy(lan.position);flint.userData.light.intensity=1.3+Math.sin(time*13)*.12;
     if(Math.random()<dt*10)emit(lan.position.clone(),{vx:R(-.3,.3),vy:R(.4,1.1),life:R(.4,.8),size:.12,size1:.02,color:0xffb84a});
     const gy=groundBelow(P.pos.x,P.pos.z,P.pos.y+.1);pShadow.visible=gy>-50;pShadow.position.set(P.pos.x,gy+.03,P.pos.z);const ss=clamp(1-(P.pos.y-gy)*.15,.35,1)*1.1;pShadow.scale.set(ss,ss,1);
@@ -5927,7 +5935,7 @@ const LVPLAY=GO==='play'||GO==='retry';if(GO==='retry'){let lv=0;try{lv=+session
     for(const k of['mimic','gremlin','mill','crank','king','gnawer','gate','comet','moon'])if(WT_ASSETS[k]){step(84,'Dreaming up the '+k+'…');const gk=await loadGLB(WT_ASSETS[k]);PROTO[k]=norm(gk.scene,1,false);if(gk.animations&&gk.animations.length)PANIM[k]=gk.animations;}
     if(LV===10&&GO!=='retry'&&typeof c2IntroSeen==='function'){try{step(84,'Gathering the stolen stars…');await loadAsset('assets_c2i.js');Object.assign(WT_ASSETS,window.WT_C2I||{});window.C2I_OK=1;}catch(e){}}
     if(typeof c2Load==='function')await c2Load(step);
-    if(L.setup)L.setup();try{preloadMoon();preloadVO(LV===1?['i1','i2','i3','i4','i5','i6','i7']:LV===9?['e1','e2','e3']:LV===10?['b101','b102']:LV===12?['m201','m202','m203','m204','m205','m206','m207','m208','m209','m210','m211','m212','m213','b201','b202','b203','b204','b205','b206','b207']:LV===13?['b301','b302','b303','b304','b305','b306','b307','b308','b309']:LV===14?['m401']:[]);}catch(e){}
+    if(L.setup)L.setup();try{preloadMoon();preloadVO(LV===1?['i1','i2','i3','i4','i5','i6','i7']:LV===9?['e1','e2','e3']:LV===10?['c4','c5','c6','c8','c10','c12','c14','b101','b102']:LV===12?['m201','m202','m203','m204','m205','m206','m207','m208','m209','m210','m211','m212','m213','b201','b202','b203','b204','b205','b206','b207']:LV===13?['b301','b302','b303','b304','b305','b306','b307','b308','b309']:LV===14?['m401']:[]);}catch(e){}
     if(gateMesh){gateMesh.material=new THREE.MeshBasicMaterial({color:0xc8a0ff,transparent:true,opacity:.07,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide});gateMesh.scale.y=.8;}
     step(88,'Building '+L.name.toLowerCase()+'…');try{v6Init();}catch(e){}populate();try{autoSolid();}catch(err){console.error(err);}setupSeal();try{buildSection();}catch(err){console.error(err);}try{if(typeof w2RidgeFlush==='function')w2RidgeFlush();}catch(err){console.error(err);}try{if(LV<10&&typeof c1Finish==='function')c1Finish();}catch(err){console.error(err);}try{v6Prep();}catch(err){console.error(err);}updHUD();step(100,'Ready');}
   catch(err){txt.textContent='Could not load: '+err;return;}
