@@ -137,7 +137,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .card .cn{font:800 10px/1 var(--ui);letter-spacing:.2em;color:var(--gold)}
 .card .ct{font:900 15px/1.2 var(--head);letter-spacing:.04em;min-height:2.4em}
 .card .cs{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font:800 12px/1.2 var(--ui);color:var(--mute)}
-.card.cur{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,207,106,.45)}
+.card.cur{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,207,106,.45)}.card.next{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,207,106,.6),0 0 22px rgba(255,190,90,.3)}
 .card.locked{cursor:not-allowed}.card.shake{animation:hpShake .4s}.card.locked .ci{filter:grayscale(1) brightness(.35) blur(1px)}
 .card.locked::after{content:"🔒";position:absolute;left:50%;top:32%;transform:translate(-50%,-50%);font-size:28px}
 .gem{display:inline-block;width:12px;height:12px;transform:rotate(45deg);background:linear-gradient(135deg,#bff,#3ad0ff 50%,#1a5aff);box-shadow:0 0 8px #3ad0ff;border-radius:2px}
@@ -243,7 +243,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 .tbGear:hover,.tbGear:focus-visible{color:#fff;border-color:var(--rimS);background:rgba(255,255,255,.06);outline:none}
 .title-screen.splash .topbar,.title-screen.splash .chInfo{display:none}
 .chInfo{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:5px;margin-top:4px}
-.chBg{position:absolute;inset:0;z-index:-2;background:#07031a url(art/l10.jpg) center/cover no-repeat;opacity:0;transition:opacity .45s;pointer-events:none}.title-screen.ch2 .chBg{opacity:1}.title-screen.splash .chBg{opacity:0}
+.chBg{position:absolute;inset:0;z-index:-2;background:#07031a url(art/l10.jpg) center/cover no-repeat;opacity:0;transition:opacity .45s;pointer-events:none}.title-screen.splash .chBg{opacity:0}
 .chT{font:900 clamp(20px,2.6vw,30px)/1.05 var(--head);letter-spacing:.04em;color:#fff3d6;text-shadow:0 2px 10px rgba(0,0,0,.7)}
 .chN{font:800 11px/1.3 var(--ui);letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
 .title-screen:not(.splash) .tcol{padding-top:48px}
@@ -326,7 +326,6 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
     <div class="chInfo" id="chInfo"><div class="chT" id="chT">The Moon's Teeth</div><div class="chN" id="chN">Next · Level 1 · Sleepy-Sun Village</div></div>
     <div class="menu">
       <button id="resumeCp" class="mbtn primary" type="button" hidden>RESUME CHECKPOINT</button><button id="playBtn" class="mbtn primary" type="button">PLAY</button>
-      <button id="levelsBtn" class="mbtn glass" type="button">LEVELS</button>
       <button id="quitGame" class="mbtn glass" type="button" hidden>QUIT GAME</button>
     </div>
   </div>
@@ -2789,32 +2788,60 @@ function camOrbit(dt,h,d,sk){const p=P.pos;if(!ORB.piv)ORB.piv=p.clone();ORB.piv
   const fw=V3(-Math.sin(camYaw),0,-Math.cos(camYaw));camLook.copy(head).addScaledVector(fw,3.4*Math.max(0,Math.cos(el)));camLook.y-=.15;camera.lookAt(camLook);}
 /* ===================== fixed main menu: Flint on a mossy ledge under the night sky ===================== */
 const MENU={scene:null,t:0,on:false};
-function buildMenu(){if(MENU.scene)return MENU.scene;const SC=new THREE.Scene();MENU.scene=SC;const S=new THREE.Group();SC.add(S);MENU.root=S;
+function buildMenu(){if(MENU.scene)return MENU.scene;const SC=new THREE.Scene();MENU.scene=SC;const S=new THREE.Group();SC.add(S);MENU.root=S;const G1=new THREE.Group(),G2=new THREE.Group();G2.visible=false;S.add(G1,G2);MENU.g1=G1;MENU.g2=G2;
   SC.background=skyTex((g,w,h)=>{grad(g,w,h,[[0,'#05021a'],[.35,'#1a0a4a'],[.62,'#4a1e8a'],[.8,'#8a3aa8'],[1,'#2a0c4a']]);stars(g,w,h,520,.6);clouds(g,w,h,10,['#6a3ab8','#3a1a7a','#a85ac8'],.55,.85,18);});
-  SC.fog=new THREE.Fog(0x2a0f5a,18,70);
+  MENU.bg1=SC.background;SC.fog=new THREE.Fog(0x2a0f5a,18,70);
   S.add(new THREE.HemisphereLight(0xc8b8ff,0x1a0a30,.9));const moon=new THREE.DirectionalLight(0xd8d0ff,.9);moon.position.set(-6,10,-4);S.add(moon);
   const warm=new THREE.PointLight(0xffb04a,1.4,9,2);warm.position.set(.5,2,.9);S.add(warm);MENU.warm=warm;
   /* rock ledge */
   const rg=new THREE.CylinderGeometry(3.4,2.2,2.4,14,3);const pos=rg.attributes.position;for(let i=0;i<pos.count;i++){const y=pos.getY(i);if(y<1.19)pos.setXYZ(i,pos.getX(i)*R(.85,1.12),y+R(-.2,.2),pos.getZ(i)*R(.85,1.12));}rg.computeVertexNormals();
   const rock=new THREE.Mesh(rg,new THREE.MeshLambertMaterial({map:stoneTex('#120a22',['#3a2a5a','#2a1e46','#4a3870'],4,3,2,1),flatShading:true}));rock.position.y=-1.2;S.add(rock);
-  const moss=new THREE.Mesh(new THREE.CylinderGeometry(3.5,3.4,.16,14),new THREE.MeshLambertMaterial({map:grassTex('#2a5a1a',['#3a7a22','#4a8a2a','#1e4a12','#5a9a3a'],3,3)}));moss.position.y=.02;S.add(moss);
-  for(let i=0;i<60;i++){const a=R(0,TAU),r=R(.9,3.3);const b=new THREE.Mesh(new THREE.ConeGeometry(.035,R(.14,.3),3),new THREE.MeshBasicMaterial({color:pick([0x2a5a16,0x346a1c,0x3e7a22])}));b.position.set(Math.cos(a)*r,.15,Math.sin(a)*r);b.rotation.set(R(-.3,.3),0,R(-.3,.3));S.add(b);}
+  const moss=new THREE.Mesh(new THREE.CylinderGeometry(3.5,3.4,.16,14),new THREE.MeshLambertMaterial({map:grassTex('#2a5a1a',['#3a7a22','#4a8a2a','#1e4a12','#5a9a3a'],3,3)}));moss.position.y=.02;G1.add(moss);
+  for(let i=0;i<60;i++){const a=R(0,TAU),r=R(.9,3.3);const b=new THREE.Mesh(new THREE.ConeGeometry(.035,R(.14,.3),3),new THREE.MeshBasicMaterial({color:pick([0x2a5a16,0x346a1c,0x3e7a22])}));b.position.set(Math.cos(a)*r,.15,Math.sin(a)*r);b.rotation.set(R(-.3,.3),0,R(-.3,.3));G1.add(b);}
   /* glowing mushrooms */
-  for(const [x,z,s,c] of[[-2.2,.6,1,0x7ad8ff],[-2.6,-.3,.7,0x9a7aff],[2.4,-1.2,.9,0x7ad8ff],[1.9,1.6,.6,0xff7ad8],[-1.4,-1.9,.8,0x9a7aff]]){const st=new THREE.Mesh(new THREE.CylinderGeometry(.06*s,.08*s,.4*s,6),new THREE.MeshLambertMaterial({color:0xe8e0d0}));st.position.set(x,.2*s+.08,z);const cap=new THREE.Mesh(new THREE.SphereGeometry(.24*s,10,6,0,TAU,0,Math.PI/2),new THREE.MeshBasicMaterial({color:c}));cap.position.set(x,.4*s+.08,z);S.add(st,cap);const gl=spr(glowTex,c,1.3*s,1.3*s,x,.45*s,z);S.add(gl);}
+  for(const [x,z,s,c] of[[-2.2,.6,1,0x7ad8ff],[-2.6,-.3,.7,0x9a7aff],[2.4,-1.2,.9,0x7ad8ff],[1.9,1.6,.6,0xff7ad8],[-1.4,-1.9,.8,0x9a7aff]]){const st=new THREE.Mesh(new THREE.CylinderGeometry(.06*s,.08*s,.4*s,6),new THREE.MeshLambertMaterial({color:0xe8e0d0}));st.position.set(x,.2*s+.08,z);const cap=new THREE.Mesh(new THREE.SphereGeometry(.24*s,10,6,0,TAU,0,Math.PI/2),new THREE.MeshBasicMaterial({color:c}));cap.position.set(x,.4*s+.08,z);G1.add(st,cap);const gl=spr(glowTex,c,1.3*s,1.3*s,x,.45*s,z);G1.add(gl);}
   /* lantern post */
   {const post=new THREE.Mesh(new THREE.CylinderGeometry(.06,.08,2.6,6),new THREE.MeshLambertMaterial({color:0x3a2412}));post.position.set(-2.8,1.3,-1.2);S.add(post);const arm=new THREE.Mesh(new THREE.BoxGeometry(.6,.06,.06),post.material);arm.position.set(-2.55,2.5,-1.2);S.add(arm);const lamp=spr(glowTex,0xffc060,1.6,1.6,-2.3,2.25,-1.2);S.add(lamp);const pl=new THREE.PointLight(0xffa040,.8,7,2);pl.position.set(-2.3,2.2,-1.2);S.add(pl);}
   /* distant floating islands + moon */
-  for(let i=0;i<9;i++){const a=R(-1.4,1.4)+Math.PI,d=R(26,48);const isl=new THREE.Mesh(new THREE.ConeGeometry(R(1.5,4),R(3,6),7),new THREE.MeshLambertMaterial({color:0x1a0c36,flatShading:true}));isl.rotation.x=Math.PI;isl.position.set(Math.sin(a)*d,R(-2,7),Math.cos(a)*d);S.add(isl);const top=new THREE.Mesh(new THREE.CylinderGeometry(isl.geometry.parameters.radius,isl.geometry.parameters.radius*.9,.3,7),new THREE.MeshLambertMaterial({color:0x2a4a2a}));top.position.copy(isl.position).add(V3(0,isl.geometry.parameters.height/2,0));S.add(top);}
-  const mg=spr(glowTex,0x9a6aff,30,30,8.5,10,-38);mg.material.opacity=.55;S.add(mg);menuMoon();const mlite=new THREE.PointLight(0xc8a8ff,1.2,60,1.5);mlite.position.set(6,10,-24);S.add(mlite);
+  MENU.isl=[];for(let i=0;i<9;i++){const a=R(-1.4,1.4)+Math.PI,d=R(26,48);MENU.isl.push(menuIsle(G1,Math.sin(a)*d,R(-2,7),Math.cos(a)*d,R(1.5,4),R(3,6),0x2a4a2a));}
+  const mg=spr(glowTex,0x9a6aff,30,30,8.5,10,-38);mg.material.opacity=.55;G1.add(mg);menuMoon();const mlite=new THREE.PointLight(0xc8a8ff,1.2,60,1.5);mlite.position.set(6,10,-24);G1.add(mlite);
   /* fireflies */
-  MENU.ff=[];for(let i=0;i<28;i++){const f=spr(glowTex,pick([0xffd27a,0xb8f0ff,0xffb0f0]),.22,.22,R(-4,4),R(.3,3),R(-3,3));f.userData.p=V3(f.position.x,f.position.y,f.position.z);f.userData.ph=R(0,TAU);S.add(f);MENU.ff.push(f);}
+  MENU.ff=[];for(let i=0;i<28;i++){const f=spr(glowTex,pick([0xffd27a,0xb8f0ff,0xffb0f0]),.22,.22,R(-4,4),R(.3,3),R(-3,3));f.userData.p=V3(f.position.x,f.position.y,f.position.z);f.userData.ph=R(0,TAU);G1.add(f);MENU.ff.push(f);}
   return SC;}
+/* Chapter 2: the same ledge under a star-crowded sky, with Vesper Quill's observatory floating in the distance */
+/* a floating rock island (bobs gently: it is floating) */
+function menuIsle(G,x,y,z,r,h,topC){const g=new THREE.Group();g.position.set(x,y,z);const isl=new THREE.Mesh(new THREE.ConeGeometry(r,h,7),new THREE.MeshLambertMaterial({color:0x1a0c36,flatShading:true}));isl.rotation.x=Math.PI;g.add(isl);const top=new THREE.Mesh(new THREE.CylinderGeometry(r,r*.9,.3,7),new THREE.MeshLambertMaterial({color:topC}));top.position.y=h/2;g.add(top);g.userData.y=y;g.userData.ph=R(0,TAU);G.add(g);return g;}
+function buildMenu2(){if(MENU.g2b)return;MENU.g2b=1;const G=MENU.g2;
+  MENU.bg2=skyTex((g,w,h)=>{grad(g,w,h,[[0,'#01020f'],[.3,'#080a32'],[.56,'#22145e'],[.78,'#4a2380'],[1,'#10051f']]);stars(g,w,h,1100,.85);clouds(g,w,h,7,['#2a3a8a','#3a1a7a','#7a4ab8'],.5,.8,14);});
+  const moss=new THREE.Mesh(new THREE.CylinderGeometry(3.5,3.4,.16,14),new THREE.MeshLambertMaterial({map:grassTex('#163a48',['#22566a','#1d4a5e','#2c667a','#14384a'],3,3)}));moss.position.y=.02;G.add(moss);
+  for(let i=0;i<60;i++){const a=R(0,TAU),r=R(.9,3.3);const b=new THREE.Mesh(new THREE.ConeGeometry(.035,R(.14,.3),3),new THREE.MeshBasicMaterial({color:pick([0x1e5a66,0x24687a,0x2e7a8a])}));b.position.set(Math.cos(a)*r,.15,Math.sin(a)*r);b.rotation.set(R(-.3,.3),0,R(-.3,.3));G.add(b);}
+  /* fallen star crystals instead of mushrooms */
+  MENU.cry=[];for(const [x,z,s,c] of[[-2.5,.4,1,0xffd27a],[-2.7,-.6,.7,0x8ae8ff],[2.5,-1.3,.9,0xffd27a],[2,1.5,.6,0xff9ae0],[-1.5,-2,.8,0x8ae8ff],[2.9,.3,.55,0x8ae8ff]]){
+    const cl=new THREE.Group();cl.position.set(x,.06,z);G.add(cl);const mat=new THREE.MeshLambertMaterial({color:c,emissive:c,emissiveIntensity:.75,flatShading:true});
+    for(let j=0;j<4;j++){const hh=(j?R(.22,.36):.5)*s,k=new THREE.Mesh(new THREE.CylinderGeometry(0,.07*s*(j?1:1.3),hh,5),mat);const tip=new THREE.Mesh(new THREE.CylinderGeometry(.07*s*(j?1:1.3),.05*s,.08*s,5),mat);k.add(tip);tip.position.y=-hh/2-.03*s;k.position.set(j?R(-.12,.12)*s:0,hh/2,j?R(-.12,.12)*s:0);k.rotation.set(j?R(-.55,.55):R(-.1,.1),R(0,TAU),j?R(-.55,.55):R(-.1,.1));cl.add(k);}
+    cl.userData.ph=R(0,TAU);MENU.cry.push(cl);const gl=spr(glowTex,c,.95*s,.95*s,x,.28*s,z);gl.material.opacity=.7;G.add(gl);}
+  /* the observatory glow until the model arrives, then behind it */
+  const og=spr(glowTex,0xff8ad8,46,46,MENU_OBS.x-2,MENU_OBS.y+18,MENU_OBS.z-4);og.material.opacity=.42;G.add(og);const ol=new THREE.PointLight(0xd8a8ff,1.1,60,1.5);ol.position.set(8,9,-26);G.add(ol);
+  MENU.ff2=[];for(let i=0;i<30;i++){const f=spr(glowTex,pick([0xffe6a0,0xffffff,0xb8e8ff]),.2,.2,R(-4,4),R(.2,3.4),R(-3,3));f.userData.p=V3(f.position.x,f.position.y,f.position.z);f.userData.ph=R(0,TAU);G.add(f);MENU.ff2.push(f);}
+  /* a shooting star now and then */
+  const sg=new THREE.PlaneGeometry(1,1);const sm=new THREE.MeshBasicMaterial({map:glowTex,color:0xfff2c8,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,fog:false});MENU.shoot=new THREE.Mesh(sg,sm);MENU.shoot.scale.set(7,.18,1);MENU.shoot.userData.t=2;G.add(MENU.shoot);
+  MENU.isl2=[];for(const [x,y,z,r,h] of[[-30,9,-40,3,5],[-14,13,-48,2.2,4],[-44,3,-30,3.6,6],[4,15,-52,1.8,3.4],[22,-1,-48,2.4,4],[-6,5,-34,1.4,2.6]]){const g=menuIsle(G,x,y,z,r,h,0x1e4e5e);MENU.isl2.push(g);if(r>2){const k=new THREE.Mesh(new THREE.CylinderGeometry(0,.35*r/3,1.6*r/3,5),new THREE.MeshLambertMaterial({color:0xffd27a,emissive:0xffd27a,emissiveIntensity:.8,flatShading:true}));k.position.set(r*.2,h/2+.7*r/3,0);g.add(k);}}
+  menuObs();}
+function menuObs(){if(MENU.obsReq)return;MENU.obsReq=1;loadAsset('assets_obs.js').then(async()=>{try{const g=await loadGLB(window.WT_OBS.castle);window.WT_OBS=null;const m=norm(g.scene,1,false);m.traverse(o=>{if(o.isMesh&&o.material){o.material=o.material.clone();o.material.fog=false;}});const w=new THREE.Group();w.add(m);m.scale.multiplyScalar(MENU_OBS.h);w.position.set(MENU_OBS.x,MENU_OBS.y-4,MENU_OBS.z);w.rotation.y=MENU_OBS.ry;MENU.g2.add(w);MENU.obsM=w;MENU.obsIn=0;}catch(e){}}).catch(()=>{});}
+const MENU_OBS={h:28,x:46,y:-9,z:-40,ry:-.86};
+function menuTheme(c){buildMenu();const two=c===2;if(two)buildMenu2();MENU.g1.visible=!two;MENU.g2.visible=two;MENU.scene.background=two?MENU.bg2:MENU.bg1;MENU.scene.fog.color.setHex(two?0x16123e:0x2a0f5a);MENU.theme=c;}
 function menuEnter(){buildMenu();if(MENU.on)return;MENU.on=true;MENU.t=0;if(flint){MENU.scene.add(flint);if(flint.userData.lan)MENU.scene.add(flint.userData.lan);}MENU.o=L.start.clone();MENU.root.position.copy(MENU.o);P.pos.copy(L.start);P.vel.set(0,0,0);P.face=-.55;}
 function menuExit(){if(!MENU.on)return;MENU.on=false;if(flint){scene.add(flint);if(flint.userData.lan)scene.add(flint.userData.lan);}P.pos.copy(L.start);checkpoint.copy(L.start);P.vel.set(0,0,0);P.dead=false;P.face=Math.PI;}
 function menuCam(dt){MENU.t+=dt;const t=MENU.t,a=-.38+Math.sin(t*.12)*.12;const r=3.9+Math.sin(t*.09)*.2;const o=MENU.o||V3();P.pos.copy(o);P.vel.set(0,0,0);P.dead=false;P.face=-.55;camera.position.set(o.x+Math.sin(a)*r-.9,o.y+1.25+Math.sin(t*.17)*.08,o.z+Math.cos(a)*r);camera.lookAt(o.x-1.05,o.y+.95,o.z);
   for(const f of MENU.ff){const p=f.userData.p,ph=f.userData.ph;f.position.set(p.x+Math.sin(t*.6+ph)*.5,p.y+Math.sin(t*.9+ph*2)*.3,p.z+Math.cos(t*.5+ph)*.5);f.material.opacity=.5+Math.sin(t*3+ph)*.5;}
   if(MENU.moonM){MENU.moonM.rotation.y+=dt*.22;MENU.moonM.position.y=8.2+Math.sin(t*.4)*.35;}
-  if(MENU.warm)MENU.warm.intensity=1.3+Math.sin(t*9)*.12+Math.sin(t*23)*.06;}
+  if(MENU.warm)MENU.warm.intensity=1.3+Math.sin(t*9)*.12+Math.sin(t*23)*.06;
+  for(const g of (MENU.theme===2?MENU.isl2:MENU.isl)||[])g.position.y=g.userData.y+Math.sin(t*.45+g.userData.ph)*.35;
+  if(MENU.theme===2){if(MENU.ff2)for(const f of MENU.ff2){const p=f.userData.p,ph=f.userData.ph;f.position.set(p.x+Math.sin(t*.4+ph)*.4,p.y+((t*.25+ph)%1.6)-.4,p.z+Math.cos(t*.35+ph)*.4);f.material.opacity=.45+Math.sin(t*2.4+ph)*.45;}
+    
+    if(MENU.obsM){MENU.obsIn=Math.min(1,(MENU.obsIn||0)+dt*.6);const e=1-Math.pow(1-MENU.obsIn,3);MENU.obsM.position.y=MENU_OBS.y-4*(1-e)+Math.sin(t*.32)*.7;MENU.obsM.rotation.y=MENU_OBS.ry+Math.sin(t*.11)*.06;}
+    const sh=MENU.shoot;if(sh){sh.userData.t-=dt;if(sh.userData.t<=0){if(!sh.userData.on){sh.userData.on=1;sh.userData.k=0;sh.position.set(R(-14,10),R(10,17),R(-40,-30));sh.rotation.set(0,0,R(-.5,-.3));sh.userData.v=V3(Math.cos(sh.rotation.z),Math.sin(sh.rotation.z),0).multiplyScalar(R(16,22));}
+      sh.userData.k+=dt;sh.position.addScaledVector(sh.userData.v,dt);sh.lookAt(camera.position);sh.rotateZ(Math.atan2(sh.userData.v.y,sh.userData.v.x));sh.material.opacity=Math.sin(Math.min(1,sh.userData.k/.9)*Math.PI)*.9;if(sh.userData.k>.9){sh.userData.on=0;sh.material.opacity=0;sh.userData.t=R(2.5,5.5);}}}}}
 
 /* the Moon's Teeth hangs over the menu, slowly turning */
 function menuMoon(){if(MENU.moonReq)return;MENU.moonReq=1;loadAsset('assets_moon.js').then(async()=>{try{const g=await loadGLB(window.WT_MOON.moon);window.WT_MOON=null;const m=norm(g.scene,1,false);const w=new THREE.Group();w.add(m);m.scale.multiplyScalar(9);w.position.set(8.5,8.2,-34);w.rotation.y=-.5;S2().add(w);MENU.moonM=w;if(MENU.moonPH){MENU.moonPH.visible=false;}}catch(e){}}).catch(()=>{});}
@@ -2849,9 +2876,9 @@ function gfxUI(){const QL={auto:'AUTO',low:'LOW',medium:'MEDIUM',high:'HIGH',ult
   sync();}
 
 
-function S2(){return MENU.root||MENU.scene;}
+function S2(){return MENU.g1||MENU.root||MENU.scene;}
 
-const WT_VERSION='v1.26';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
+const WT_VERSION='v1.27';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
 
 /* ---------- beta feedback: opens an email with the details filled in ---------- */
 const FEEDBACK_TO='wicktail.support@gmail.com';
@@ -5881,14 +5908,14 @@ window.wtBack=()=>{try{const vis=id=>{const e=$(id);return !!(e&&!e.hidden);};
 $('pRestart').addEventListener('click',()=>goTo('play'));$('pQuit').addEventListener('click',()=>goTo('menu'));$('pSettings').addEventListener('click',()=>{$('pause').hidden=true;$('settingsScr').hidden=false;});
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>{$(b.dataset.close).hidden=true;if(b.dataset.close==='settingsScr'&&state==='paused')$('pause').hidden=false;}));
 $('settingsBtn').addEventListener('click',()=>{initAudio();$('settingsScr').hidden=false;});
-$('levelsBtn').addEventListener('click',()=>{initAudio();buildCards();$('levelsScr').hidden=false;});
+function openLevels(){initAudio();buildCards();$('levelsScr').hidden=false;const t=chTarget(CHSEL),c=$('cards').querySelector(`.card[data-lv="${t}"]`)||$('cards').querySelector('.card:not(.locked)');if(c){c.classList.add('next');try{c.scrollIntoView({inline:'center',block:'nearest'});c.focus({preventScroll:true});}catch(e){}}}
 function popupLock(n){const c=document.querySelector(`.card[data-lv="${n}"]`);if(c){c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');}blip(220,140,.15,'square',.05);}
 let CHSEL=LV>=10?2:1;const CHN={1:"CHAPTER 1 · THE MOON'S TEETH",2:'CHAPTER 2 · THE STOLEN STARS'};
 function chTarget(c){return c===2?Math.max(10,Math.min(MAXLV,UNLOCK)):Math.min(9,MAXLV,UNLOCK);}
 function showChCard(c){const k=$('chCard');if(!k)return;k.style.backgroundImage=`url(art/ch${c}.jpg)`;k.hidden=false;void k.offsetWidth;k.classList.add('on');clearTimeout(k._t);const off=()=>{k.classList.remove('on');setTimeout(()=>{if(!k.classList.contains('on'))k.hidden=true;},380);};k.onclick=off;k._t=setTimeout(off,1700);}
 function menuCh(c){const ch2ok=UNLOCK>=10;if(c===2&&!ch2ok)c=1;CHSEL=c;document.querySelectorAll('#tbTabs .tbTab').forEach(b=>{const k=+b.dataset.ch;b.classList.toggle('on',k===c);b.classList.toggle('lock',k===2&&!ch2ok);b.setAttribute('aria-selected',k===c?'true':'false');});
-  $('lvName').textContent='Chapter '+c;$('title').classList.toggle('ch2',c===2);$('chT').textContent=c===2?'The Stolen Stars':"The Moon's Teeth";const t=chTarget(c);$('chN').textContent='Next · '+lvLabel(t)+' · '+LEVELS[t-1].name;const rb=$('resumeCp');if(rb){const cp=cpGet(t);rb.hidden=!cp;rb.dataset.lv=t;$('playBtn').textContent=cp?'PLAY FROM START':'PLAY';$('playBtn').classList.toggle('primary',!cp);$('playBtn').classList.toggle('glass',!!cp);}}
-document.querySelectorAll('#tbTabs .tbTab').forEach(b=>b.addEventListener('click',()=>{initAudio();const c=+b.dataset.ch;if(c===2&&UNLOCK<10){b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');blip(220,140,.15,'square',.05);$('chN').textContent="Beat the Moon's Teeth to unlock Chapter 2";return;}if(c!==CHSEL){blip(700,1050,.08,'triangle',.05);showChCard(c);}menuCh(c);}));
+  try{menuTheme(c);}catch(e){}$('lvName').textContent='Chapter '+c;$('title').classList.toggle('ch2',c===2);$('chT').textContent=c===2?'The Stolen Stars':"The Moon's Teeth";const t=chTarget(c);$('chN').textContent='Next · '+lvLabel(t)+' · '+LEVELS[t-1].name;const rb=$('resumeCp');if(rb){const cp=cpGet(t);rb.hidden=!cp;rb.dataset.lv=t;$('playBtn').textContent='PLAY';$('playBtn').classList.toggle('primary',!cp);$('playBtn').classList.toggle('glass',!!cp);}}
+document.querySelectorAll('#tbTabs .tbTab').forEach(b=>b.addEventListener('click',()=>{initAudio();const c=+b.dataset.ch;if(c===2&&UNLOCK<10){b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');blip(220,140,.15,'square',.05);$('chN').textContent="Beat the Moon's Teeth to unlock Chapter 2";clearTimeout(menuCh._t);menuCh._t=setTimeout(()=>{if(!$('title').hidden)menuCh(CHSEL);},2400);return;}if(c!==CHSEL){blip(700,1050,.08,'triangle',.05);showChCard(c);}menuCh(c);}));
 function buildCards(){const best=getBest();const ch2ok=UNLOCK>=10;
   $('chTabs').innerHTML=[1,2].map(c=>`<button class="chtab${c===CHSEL?' on':''}${c===2&&!ch2ok?' lock':''}" type="button" data-ch="${c}">CHAPTER ${c}${c===2&&!ch2ok?' 🔒':''}</button>`).join('');
   $('chTabs').querySelectorAll('.chtab').forEach(b=>b.addEventListener('click',()=>{const c=+b.dataset.ch;if(c===2&&!ch2ok){b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');blip(220,140,.15,'square',.05);$('chSub').textContent='BEAT THE MOON\'S TEETH TO UNLOCK CHAPTER 2';return;}CHSEL=c;buildCards();menuCh(c);}));
@@ -6108,7 +6135,7 @@ const RESUME=GO==='resume'&&!!cpGet(LV);const LVPLAY=GO==='play'||GO==='retry'||
     let done=false;const start=e=>{if(done)return;done=true;removeEventListener('keydown',kk,true);T.removeEventListener('pointerdown',start);window._anyBtn=null;wake();playCfg(TITLE_MUS);setTimeout(toMenu,60);};const kk=e=>{if(e.key==='F11'||e.key==='Alt'||e.key==='Meta')return;e.preventDefault();start();};
     T.addEventListener('pointerdown',start);addEventListener('keydown',kk,true);window._anyBtn=start;}
   $('resumeCp').addEventListener('click',()=>goResume(+$('resumeCp').dataset.lv));
-  $('playBtn').addEventListener('click',()=>{const tgt=chTarget(CHSEL);if(tgt!==LV){goLevel(tgt);return;}levelCard();});
+  $('playBtn').addEventListener('click',()=>{openLevels();try{blip(700,1050,.08,'triangle',.05);}catch(e){}});
   window.levelCard=()=>{clearTimeout(window._hlT);$('title').hidden=true;const l=$('loader');l.hidden=false;l.style.transition='none';l.style.opacity='1';l.classList.add('lvload');const img=`url(art/l${LV}.jpg)`;$('lart').style.backgroundImage=img;$('lpic').style.backgroundImage=img;$('lcap').textContent=LEVELS[LV-1].name;$('lLogo').textContent=LEVELS[LV-1].name;$('lName').textContent=LV>=10?'CHAPTER 2 · LEVEL '+(LV-9):'LEVEL '+LV;$('ltip').innerHTML=pick(TIPS);
     setTimeout(()=>prompt(pcm?'PRESS ANY BUTTON':'TAP TO CONTINUE',()=>{initAudio();hideLoader();beginPlay();}),350);};})();
 function beginPlay(){menuExit();initAudio();lockPointer();try{const d=document.documentElement;if(matchMedia('(pointer:coarse)').matches&&d.requestFullscreen)d.requestFullscreen().then(()=>screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape')).catch(()=>{});}catch(e){}$('title').hidden=true;$('levelsScr').hidden=true;$('settingsScr').hidden=true;if(RESUME)startGame();else if(LV===1&&GO!=='retry'&&!introSeen())playIntro(()=>{markIntro();startGame();});else if(LV===10&&GO!=='retry'&&window.C2I_OK){fade(1,.01);voReady(['nar1','nar2','c4','c5','c6','c7','c8','c9','c10','c11','c12','c13','c14','nar3'],5000).then(()=>{fade(0,.4);playCh2Intro(()=>{c2MarkIntro();startGame();});});}else startGame();}
