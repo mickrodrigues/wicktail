@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Wicktail</string>
+    <string name="title_activity_main">Wicktail</string>
+    <string name="package_name">com.wicktail.game</string>
+    <string name="custom_url_scheme">com.wicktail.game</string>
+</resources>
