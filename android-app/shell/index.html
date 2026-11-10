@@ -2638,12 +2638,12 @@ function showCredits(cb){let e=$('c2Credits');if(e)e.remove();e=document.createE
   e.style.cssText='background:radial-gradient(ellipse at 50% 20%,#2a1a5a 0%,#0c0620 70%);overflow:hidden;display:block;z-index:60';
   const R=(h,t)=>'<div style="margin:0 0 30px"><div style="font:800 13px/1.4 var(--ui);letter-spacing:.28em;color:#c8a8ff;opacity:.9;margin-bottom:8px">'+h+'</div>'+t.map(x=>'<div style="font:700 19px/1.55 var(--ui);color:#f4ecff">'+x+'</div>').join('')+'</div>';
   e.innerHTML='<div id="c2roll" style="text-align:center;padding:0 16px;width:min(640px,92vw);margin:0 auto;position:relative;will-change:transform">'
-   +'<h2 class="logo" style="font-size:clamp(46px,9vw,92px);margin:0 0 4px">Wicktail</h2><div class="orn" style="margin-bottom:46px">CHAPTER 2 · THE STOLEN STARS</div>'
+   +'<h2 style="margin:0 0 10px;line-height:0"><img src="art/logo.png" alt="Wicktail" style="width:min(560px,86vw);height:auto"></h2><div class="orn" style="margin-bottom:46px">CHAPTER 2 · THE STOLEN STARS</div>'
    +R('A GAME BY',['Mike Rodrigues'])
    +R('THE LANTERN',['Flint Wicktail'])
    +R('FRIENDS ON THE ROAD',['Mara Wickmend · the archivist','Nettle Cogfoot · Moonline engineer','Sir Bramble Vale · the old knight'])
    +R('THE STAR THIEVES',['The Bellwarden','The Root Regent','Abbess Undertow','Baroness Cinderwing','Vesper Quill'])
-   +R('VOICES',['Baroness Cinderwing · Abbess Undertow · Mara Wickmend','voiced with Higgsfield (ElevenLabs v4)'])
+   +R('VOICES',['AI voices made with Higgsfield and Hedra (ElevenLabs)'])
    +R('CHARACTERS &amp; ANIMATION',['Models, rigs and motion · Higgsfield 3D','Hand-painted and pixel textures'])
    +R('ENGINE',['three.js','Music and sound synthesised live'])
    +R('MADE WITH',['Claude (Anthropic)'])
@@ -2773,7 +2773,7 @@ function gfxUI(){const QL={auto:'AUTO',low:'LOW',medium:'MEDIUM',high:'HIGH',ult
 
 function S2(){return MENU.root||MENU.scene;}
 
-const WT_VERSION='v1.25.1';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
+const WT_VERSION='v1.25.2';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
 
 /* ---------- beta feedback: opens an email with the details filled in ---------- */
 const FEEDBACK_TO='wicktail.support@gmail.com';
