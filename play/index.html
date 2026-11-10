@@ -355,7 +355,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
-<script>window.WT_AREF={"assets.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets1.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets2.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets3.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets4.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets5.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets_moon.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets6.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets7.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets8.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets9.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets_bosses.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets10.js": "e19924241b5a9ee76ccefb394aa258475327b287", "assets_c2i.js": "e19924241b5a9ee76ccefb394aa258475327b287", "assets11.js": "d7bede7c35f6402f3fb2d465f4b4f96474137d24", "assets12.js": "0e7ed9fb4aa4e96c9432af6955efed961802dbd5", "assets13.js": "0e7ed9fb4aa4e96c9432af6955efed961802dbd5", "assets14.js": "0e7ed9fb4aa4e96c9432af6955efed961802dbd5"};</script>
+<script>window.WT_AREF={"assets.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets1.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets2.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets3.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets4.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets5.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets_moon.js": "14b8d1422715c43b61809ae94a483f1bae5ad6a7", "assets6.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets7.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets8.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets9.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets_bosses.js": "b069c9789226fcfe657a95c7122c19682dcbe979", "assets10.js": "e19924241b5a9ee76ccefb394aa258475327b287", "assets_c2i.js": "e19924241b5a9ee76ccefb394aa258475327b287", "assets11.js": "d7bede7c35f6402f3fb2d465f4b4f96474137d24", "assets12.js": "0e7ed9fb4aa4e96c9432af6955efed961802dbd5", "assets13.js": "0e7ed9fb4aa4e96c9432af6955efed961802dbd5", "assets14.js": "0e7ed9fb4aa4e96c9432af6955efed961802dbd5", "assets_sk_nettle.js": "f0b50b8f3a2238a2f4b9c52076b4efac1dd65c9b", "assets_sk_bramble.js": "f0b50b8f3a2238a2f4b9c52076b4efac1dd65c9b", "assets_sk_squire.js": "f0b50b8f3a2238a2f4b9c52076b4efac1dd65c9b", "assets_sk_vesper.js": "f0b50b8f3a2238a2f4b9c52076b4efac1dd65c9b", "assets_sk_bellwarden.js": "f0b50b8f3a2238a2f4b9c52076b4efac1dd65c9b"};</script>
 <script>
 (() => {
 'use strict';
@@ -1065,14 +1065,43 @@ function rigAnim(o,key,clip,t,k){const f=ANIM[key]&&ANIM[key][clip];if(!f)return
 const C2KEYS=['nettle','mara','bramble','clapper','bud','ripple','squire','orbit','bellwarden','regent','abbess','cinderwing','vesper'];
 const C2={rig:{},npcs:[],pulses:[],talked:{},stars:[]};
 const C2PROPS=['station','loco','tower','car','bed','castle','bellhouse','carriage'];C2.prop={};
-async function c2Load(step){for(const k of C2KEYS){if(!WT_ASSETS[k]||C2.rig[k])continue;step&&step(85,'Waking '+k+'…');const gl=await loadGLB(WT_ASSETS[k]);brighten(gl.scene,.3);C2.rig[k]=rigSplit(gl.scene,RIGSPEC[k]||{parts:[]});}
+async function c2Load(step){await c2LoadSkins(step);for(const k of C2KEYS){if(C2.skin[k]&&!WT_ASSETS[k])continue;if(!WT_ASSETS[k]||C2.rig[k])continue;step&&step(85,'Waking '+k+'…');const gl=await loadGLB(WT_ASSETS[k]);brighten(gl.scene,.3);C2.rig[k]=rigSplit(gl.scene,RIGSPEC[k]||{parts:[]});}
   for(const k of C2PROPS){if(!WT_ASSETS[k]||C2.prop[k])continue;step&&step(86,'Building the '+k+'…');const gl=await loadGLB(WT_ASSETS[k]);brighten(gl.scene,.22);const o=gl.scene;o.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(o),sz=b.getSize(V3()),c=b.getCenter(V3());const k2=1/sz.y;o.scale.multiplyScalar(k2);o.position.set(-c.x*k2,-b.min.y*k2,-c.z*k2);const g=new THREE.Group();g.add(o);g.userData.r=[sz.x/sz.y,sz.z/sz.y];C2.prop[k]=g;}}
 /* a static prop scaled to height h, base at y=0, centred */
 function c2Prop(k,h){const p=C2.prop[k];if(!p)return null;const g=p.clone(true);g.scale.setScalar(h);g.userData.r=p.userData.r;return g;}
 /* a posable instance: outer group (world placement, size) > rig root (animated) */
-function c2Make(key,size){const base=C2.rig[key];if(!base)return null;const r=rigClone(base);const g=new THREE.Group();g.rotation.order='YXZ';g.add(r.root);g.scale.setScalar(size);return {g,r,key,clip:'idle',t:0,ct:0,dur:1};}
-function c2Play(a,clip,dur){if(a.clip!==clip){a.clip=clip;a.ct=0;}a.dur=dur||1;}
-function c2Anim(a,dt){a.t+=dt;a.ct+=dt;rigAnim(a.r,a.key,a.clip,a.t,Math.min(1,a.ct/a.dur));}
+/* v1.21 · skinned characters: Higgsfield/Meshy-rigged models with real skeletons and animation clips.
+   Clips are made in-place (root motion stripped) and mapped onto the game's own clip names below. */
+C2.skin={};const SKIN_NEED={10:['nettle','bellwarden','vesper'],11:['nettle'],13:['bramble','squire'],14:['nettle','bramble','vesper']};
+/* game clip -> [skinned clip, mode]   mode: 'loop' | 'once' (holds last frame) | 'fit' (stretched to the requested duration) ; ts = speed */
+const SKMAP={
+  squire:{idle:['idle','loop',1],walk:['walk','loop',1.5],lean:['idle','loop',1.8],tell:['idle','loop',1.8],charge:['run','loop',1.3],skid:['breath','fit'],hurt:['breath','fit']},
+  nettle:{idle:['idle','loop',1],talk:['talk','loop',1],point:['point','loop',1],wave:['wave','loop',1],walk:['walk','loop',1.2],run:['walk','loop',1.8]},
+  bramble:{idle:['idle','loop',1],talk:['talk','loop',1],point:['point','loop',1],walk:['walk','loop',1.1],kneel:['idle','loop',.6]},
+  vesper:{idle:['idle','loop',1],talk:['talk','loop',1],laugh:['taunt','loop',1.1],raise:['cast','loop',1],crouch:['jump','fit',1,0,.35],leap:['jump','fit',1,.35,.8],plant:['slam','fit',1,.55,1],lower:['idle','loop',1],dizzy:['dizzy','loop',1],fall:['knock','once',1],hurt:['dizzy','loop',1.4],slam:['slam','fit']},
+  bellwarden:{idle:['idle','loop',1],walk:['walk','loop',1],windup:['swing','fit',1,0,.45],slam:['swing','fit',1,.45,1],open:['breath','loop',1],hurt:['hit','fit'],die:['knock','once',.8],recover:['idle','loop',1]}};
+async function c2LoadSkins(step){const need=SKIN_NEED[LV]||[];for(const k of need){if(C2.skin[k])continue;try{if(!WT_ASSETS['sk_'+k]){await loadAsset('assets_sk_'+k+'.js');Object.assign(WT_ASSETS,window.WT_SK||{});}
+    if(!WT_ASSETS['sk_'+k])continue;step&&step(87,'Rigging '+k+'…');const gl=await loadGLB(WT_ASSETS['sk_'+k]);brighten(gl.scene,.3);const o=gl.scene;o.updateMatrixWorld(true);
+    /* true skinned bounds (bind pose) from a sample of vertices */let sm=null;o.traverse(m=>{if(m.isSkinnedMesh&&!sm)sm=m;});if(!sm)continue;const pos=sm.geometry.attributes.position,v=new THREE.Vector3(),bb=new THREE.Box3();
+    const nfOf=at=>at.normalized?(at.array instanceof Int16Array?1/32767:at.array instanceof Uint16Array?1/65535:at.array instanceof Int8Array?1/127:at.array instanceof Uint8Array?1/255:1):1;
+    /* CPU skinning of a vertex sample (r128's getters don't de-normalise quantised attributes, so read the arrays directly) */
+    const SI=sm.geometry.attributes.skinIndex,SW=sm.geometry.attributes.skinWeight,pf=nfOf(pos),wf=nfOf(SW),bones=sm.skeleton.bones,inv=sm.skeleton.boneInverses,M=new THREE.Matrix4(),acc=new THREE.Vector3(),t4=new THREE.Vector3();
+    sm.skeleton.update();const BMA=sm.skeleton.boneMatrices,BM=bones.map((bn,i)=>new THREE.Matrix4().fromArray(BMA,i*16));
+    for(let i=0;i<pos.count;i+=3){v.set(pos.array[i*pos.itemSize]*pf,pos.array[i*pos.itemSize+1]*pf,pos.array[i*pos.itemSize+2]*pf).applyMatrix4(sm.bindMatrix);acc.set(0,0,0);let ws=0;
+      for(let j=0;j<4;j++){const w=SW.array[i*SW.itemSize+j]*wf;if(w<=0)continue;ws+=w;const bmx=BM[SI.array[i*SI.itemSize+j]];if(!bmx)continue;t4.copy(v).applyMatrix4(bmx);acc.addScaledVector(t4,w);}if(ws>0){acc.multiplyScalar(1/ws);bb.expandByPoint(acc);}}const sz=bb.getSize(new THREE.Vector3()),c=bb.getCenter(new THREE.Vector3());const kk=1/sz.y;
+    o.traverse(m=>{if(m.isMesh){m.frustumCulled=false;m.castShadow=false;}});
+    const clips={};for(const cl of gl.animations){/* in-place: lock the hips' horizontal drift to its first key */for(const tr of cl.tracks){if(/Hips\.position$/.test(tr.name)){const vv=tr.values,x0=vv[0],z0=vv[2];for(let i=0;i<vv.length;i+=3){vv[i]=x0;vv[i+2]=z0;}}}clips[cl.name]=cl;}
+    C2.skin[k]={scene:o,k:kk,off:new THREE.Vector3(-c.x*kk,-bb.min.y*kk,-c.z*kk),clips};}catch(e){console.error('skin '+k+': '+(e&&e.message));}}}
+function c2MakeSkin(key,size){const S=C2.skin[key];const inst=THREE.SkeletonUtils.clone(S.scene);inst.scale.multiplyScalar(S.k);inst.position.copy(S.off);const root=new THREE.Group();root.add(inst);
+  const g=new THREE.Group();g.rotation.order='YXZ';g.add(root);g.scale.setScalar(size);const mixer=new THREE.AnimationMixer(inst);const acts={};for(const n in S.clips)acts[n]=mixer.clipAction(S.clips[n]);
+  const a={g,r:{root,p:{},rest:{},h:1},key,clip:'',t:0,ct:0,dur:1,skin:S,mixer,acts,cur:null};c2Play(a,'idle');return a;}
+function c2Make(key,size){if(C2.skin[key]&&THREE.SkeletonUtils)return c2MakeSkin(key,size);const base=C2.rig[key];if(!base)return null;const r=rigClone(base);const g=new THREE.Group();g.rotation.order='YXZ';g.add(r.root);g.scale.setScalar(size);return {g,r,key,clip:'idle',t:0,ct:0,dur:1};}
+function c2Play(a,clip,dur){const ch=a.clip!==clip;if(ch){a.clip=clip;a.ct=0;}a.dur=dur||1;if(a.skin&&ch)skStart(a);}
+function skStart(a){const M=SKMAP[a.key]||{};const m=M[a.clip]||M.idle||['idle','loop',1];const act=a.acts[m[0]]||a.acts.idle;if(!act)return;a.sm=m;
+  if(a.cur!==act||m[1]!=='loop'){const prev=a.cur;act.reset();act.enabled=true;act.setEffectiveWeight(1);act.clampWhenFinished=true;act.setLoop(m[1]==='loop'?THREE.LoopRepeat:THREE.LoopOnce,Infinity);
+    act.timeScale=m[1]==='fit'?0:(m[2]||1);if(m[1]==='fit')act.time=(m[3]||0)*act.getClip().duration;act.play();if(prev&&prev!==act)prev.crossFadeTo(act,.18,false);a.cur=act;}}
+function c2Anim(a,dt){a.t+=dt;a.ct+=dt;if(a.skin){const m=a.sm;if(m&&m[1]==='fit'&&a.cur){const d=a.cur.getClip().duration,k=Math.min(1,a.ct/(a.dur||1));a.cur.time=d*((m[3]||0)+((m[4]==null?1:m[4])-(m[3]||0))*k);}a.mixer.update(dt);return;}
+  rigAnim(a.r,a.key,a.clip,a.t,Math.min(1,a.ct/a.dur));}
 
 /* ---------- minions: rigid-rig enemies that plug into the normal enemy loop ---------- */
 function c2Enemy(key,type,x,z,y,size,o={}){const a=c2Make(key,size);if(!a)return null;scene.add(a.g);
@@ -1864,6 +1893,7 @@ function buildObservatory(){const O=V3(-4000,0,-600),g=new THREE.Group();g.posit
   for(const k in spots){const [deg,r,size]=spots[k];const a=deg*Math.PI/180;const x=Math.sin(a)*r,z=-6+Math.cos(a)*r;put(k,size,x,z,Math.atan2(-x,-6-z));}
   if(cast.abbess)cast.abbess.g.position.y=.8;
   let cage=null;if(cast.vesper&&cast.vesper.r.p.staff){cage=grp(spr(glowTex,0xfff2c8,.42,.42,0,0,0),spr(glowTex,0xb07aff,.8,.8,0,0,0));cage.position.set(-.04,.47,0);cage.scale.setScalar(1/3.4);cast.vesper.r.p.staff.add(cage);}
+  else if(cast.vesper&&cast.vesper.skin){/* rigged Vesper: the caged star rides his left hand (the staff hand is busy) */const hb=cast.vesper.r.root.getObjectByName('LeftHand');if(hb){cast.vesper.g.updateMatrixWorld(true);const ws=hb.getWorldScale(new THREE.Vector3()).x||1;cage=grp(spr(glowTex,0xfff2c8,.42,.42,0,0,0),spr(glowTex,0xb07aff,.8,.8,0,0,0));cage.scale.setScalar(1/ws*.9);cage.position.set(0,.15/ws,0);hb.add(cage);}}
   g.visible=false;return {g,O,cast,rings,cage,spots,clouds:cl,plat};}
 /* a little star that flies from the cage to a boss */
 function c2FlyStar(st,from,to,dur,cb){const s=grp(spr(glowTex,0xfff2c8,.55,.55,0,0,0),spr(glowTex,0xffd27a,1.2,1.2,0,0,0));s.position.copy(from);scene.add(s);st.fly=(st.fly||[]).concat([{s,from:from.clone(),to:to.clone(),t:0,dur,cb}]);blip(1200,1800,.3,'triangle',.06);}
@@ -2669,7 +2699,7 @@ function gfxUI(){const QL={auto:'AUTO',low:'LOW',medium:'MEDIUM',high:'HIGH',ult
 
 function S2(){return MENU.root||MENU.scene;}
 
-const WT_VERSION='v1.20';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
+const WT_VERSION='v1.21';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
 
 /* ---------- beta feedback: opens an email with the details filled in ---------- */
 const FEEDBACK_TO='mike.jose.rodrigues@gmail.com';
@@ -5115,7 +5145,7 @@ ANIM.vesper.crouch=ANIM.vesper.crouch||((t,k)=>{const e=ease(Math.min(1,k*2));re
 ANIM.vesper.leap=ANIM.vesper.leap||(t=>({pose:{staff:[-1.2,0,.3],armR:[-1.6,0,-.6],head:[-.2,0,0]},y:0,rx:-.15}));
 ANIM.vesper.plant=ANIM.vesper.plant||((t,k)=>({pose:{staff:[-.2,0,.1+Math.sin(t*20)*.04],armR:[-.9,0,-.5],head:[-.25,Math.sin(t*1.5)*.3,0]},y:0}));
 ANIM.vesper.dizzy=ANIM.vesper.dizzy||((t,k)=>{const e=ease(Math.min(1,k*3));return {pose:{staff:[.75*e,0,-.25*e,0,-.08*e,.1*e],head:[.3*e,Math.sin(t*4)*.3,Math.sin(t*3)*.15],armR:[.4*e,0,-.2]},y:-.04*e,rx:.18*e,rz:Math.sin(t*3)*.08};});
-function cagePos(){if(!vq)return V3(V.x,AY+4,V.z);vq.g.updateMatrixWorld(true);return vq.g.localToWorld(V3(-.24,.92,.06));}
+function cagePos(){if(!vq)return V3(V.x,AY+4,V.z);vq.g.updateMatrixWorld(true);if(vq.skin){const hb=vq.r.root.getObjectByName('RightHand');if(hb)return hb.getWorldPosition(V3()).add(V3(0,.35,0));}return vq.g.localToWorld(V3(-.24,.92,.06));}
 const R_MAX=10.2;function inRing(x,z,r=R_MAX){const dx=x,dz=z-ACZ,d=Math.hypot(dx,dz);if(d>r){x=dx/d*r;z=ACZ+dz/d*r;}return [x,z];}
 /* v1.20: 9 hits — three cycles per phase. He never stands still; every cycle ends in the big slam that leaves him dizzy. */
 function vqPlan(){const ph=bossPhase(),c=bossCycle();
