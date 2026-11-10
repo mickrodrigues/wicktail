@@ -277,6 +277,9 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 .chCard{position:absolute;inset:0;z-index:40;background:#07031a center/cover no-repeat;opacity:0;transition:opacity .35s;cursor:pointer}
 .chCard.on{opacity:1}
 @media (max-width:820px),(max-height:440px){.logoImg{width:min(40vw,380px)}.title-screen .tLogo .logoImg{width:min(38vw,360px)}.title-screen.splash .tLogo .logoImg{width:min(50vw,440px)}}
+
+/* v1.25: touch buttons sit back a little until pressed, so they hide less of the scene (same size tap targets) */
+@media (pointer:coarse){.btns .btn{opacity:.8}.btns .btn:active,.btns .btn.on,.btns .btn.down{opacity:1}#stick{opacity:.5}}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
@@ -2774,7 +2777,7 @@ function gfxUI(){const QL={auto:'AUTO',low:'LOW',medium:'MEDIUM',high:'HIGH',ult
 
 function S2(){return MENU.root||MENU.scene;}
 
-const WT_VERSION='v1.25';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
+const WT_VERSION='v1.25.1';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
 
 /* ---------- beta feedback: opens an email with the details filled in ---------- */
 const FEEDBACK_TO='wicktail.support@gmail.com';
@@ -4747,8 +4750,9 @@ L.courseDress=(path,{mn,mx,tagRuns})=>{ROAD=path;const at=(s,lat=0)=>crsAt(path,
    Cinderwing spots Flint (short scene), then every ~2.4 s paints a red line on the road ahead and streaks along it.
    1.1 s tell; the line is narrow, so a sidestep or a jump clears it. */
 const CWR={g:null,a:0,b:0,t:1.5,lines:[],fly:null};
-const lineM=()=>new THREE.MeshBasicMaterial({color:red,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false});
-function cwLine(){const m=new THREE.Mesh(new THREE.PlaneGeometry(1.5,1),lineM());m.rotation.x=-Math.PI/2;m.renderOrder=3;scene.add(m);m.visible=false;return m;}
+/* v1.25: Cinderwing's sword lane is drawn gold-white so it reads against the lava-lit stone (squire streaks stay red) */
+const lineM=(c=red)=>new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false});
+function cwLine(){const m=new THREE.Mesh(new THREE.PlaneGeometry(1.5,1),lineM(0xffe27a));m.rotation.x=-Math.PI/2;m.renderOrder=3;scene.add(m);m.visible=false;return m;}
 function placeLine(m,x0,y,z0,x1,z1,w){const dx=x1-x0,dz=z1-z0,L2=Math.hypot(dx,dz)||1;m.scale.set(w/1.5,L2,1);m.position.set((x0+x1)/2,y+.06,(z0+z1)/2);m.rotation.z=Math.atan2(dx/L2,dz/L2)+Math.PI;m.visible=true;}
 function segDist(px,pz,x0,z0,x1,z1){const dx=x1-x0,dz=z1-z0,l2=dx*dx+dz*dz||1;const t=clamp(((px-x0)*dx+(pz-z0)*dz)/l2,0,1);return Math.hypot(px-(x0+dx*t),pz-(z0+dz*t));}
 function strafe(q){const s0=q.s+R(6.5,9.5);const p=crsAt(ROAD,s0).p;if(p.gap||crsAt(ROAD,s0-4).p.gap||crsAt(ROAD,s0+4).p.gap)return;
@@ -5275,7 +5279,7 @@ L.updBoss=dt=>{const b=boss;if(b.state==='off'||!vq)return;b.t+=dt;const g=vq.g;
         if(b.st>=T0){b.sub='air';b.st=0;blip(300,1200,.3,'sine',.07);}}
       else if(b.sub==='air'){anim='leap';const k=Math.min(1,b.st/s.dur);V.x=lerp(s.x0,s.tx,k);V.z=lerp(s.z0,s.tz,k);V.h=4*(big?9:7)*k*(1-k);TGT.material.opacity=.5+.4*Math.sin(time*30);face=Math.atan2(s.tx-s.x0,s.tz-s.z0);
         if(k>=1){V.h=0;TGT.visible=false;sfx.boom();shakeT=Math.max(shakeT,big?.8:.5);burst(V3(V.x,AY+.3,V.z),0xc08aff,36,9,.6);
-          for(let w=0;w<s.waves;w++)shockRing(V.x,AY,V.z,big?8:7.4,16,violet,w*.5,false);
+          for(let w=0;w<s.waves;w++)shockRing(V.x,AY,V.z,big?8:7.4,16,0xffb8ff,w*.5,false);
           if(PL&&Math.hypot(P.pos.x-V.x,P.pos.z-V.z)<2.3&&P.pos.y<AY+2.5)hurt();
           s.i++;b.sub=big?'stun':'land';b.st=0;}}
       else if(b.sub==='land'){anim='crouch';if(b.st>.35+(s.waves>1?.25:0)){if(s.i<s.n){b.sub='crouch';b.st=0;}else done=true;}}
@@ -5317,7 +5321,7 @@ L.updBoss=dt=>{const b=boss;if(b.state==='off'||!vq)return;b.t+=dt;const g=vq.g;
     if(!b.kHint){b.kHint=1;showHint('HE\'S DIZZY · STRIKE THE CAGE!',2);}
     if(b.t>b.pl.open){b.state='recover';b.t=0;CAGE.visible=false;b.kHint=0;for(const d of DIZ)d.visible=false;}
     else if(spinNear(V.x,V.z,3.4,AY)||stompOn(c.x,c.z,2,c.y))L.hitBoss();}
-  else if(b.state==='recover'){/* shakes it off with a shockwave (the glow warns you) */anim='raise';if(b.t<=dt)blip(500,1500,.3,'sine',.06);if(b.t>.45&&!b.rw){b.rw=1;shockRing(V.x,AY,V.z,7,9,violet,0,false);}if(b.t>.9){b.rw=0;b.state='idle';b.t=0;}}
+  else if(b.state==='recover'){/* shakes it off with a shockwave (the glow warns you) */anim='raise';if(b.t<=dt)blip(500,1500,.3,'sine',.06);if(b.t>.45&&!b.rw){b.rw=1;shockRing(V.x,AY,V.z,7,9,0xffb8ff,0,false);}if(b.t>.9){b.rw=0;b.state='idle';b.t=0;}}
   else if(b.state==='hurt'){/* reels, then blinks back to the middle */anim=b.t<.6?'fall':'laugh';if(b.t>.6&&b.t<.95){V.sc=Math.max(0,1-(b.t-.6)/.35);}else if(b.t>=.95&&b.t<1.3){if(!b.mv){b.mv=1;V.x=0;V.z=ACZ;burst(V3(0,AY+2,ACZ),violet,30,7,.5);}V.sc=Math.min(1,(b.t-.95)/.35);}if(b.t>1.5){b.mv=0;V.sc=1;b.state='idle';b.t=0;b.kHint=0;}}
   else if(b.state==='dead'){clearVqFx();anim='fall';V.h=0;V.sc=1;
     if(b.t>1.2&&!b.cine){b.cine=1;ending();}}
@@ -5829,7 +5833,10 @@ $('setMusic').addEventListener('input',e=>{SET.music=e.target.value/100;applyAud
 $('setSens').addEventListener('input',e=>{SET.sens=e.target.value/100;saveSet();});
 $('setInvert').addEventListener('click',()=>{SET.invert=!SET.invert;setTog('setInvert',SET.invert);saveSet();});
 $('setGlow').addEventListener('click',()=>{SET.glow=!SET.glow;setTog('setGlow',SET.glow);saveSet();if(SET.glow){if(!composer)setupFX();}else{composer=null;renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));resize();}});
-function startGame(){camBehind();$('title').hidden=true;$('hud').hidden=false;$('controls').hidden=false;state='play';runTime=0;playCfg(L.mus);banner(lvLabel(LV).toUpperCase(),LEVELS[LV-1].name);setTimeout(()=>showHint(SEC.on?'FOLLOW THE PATH · SMASH EVERY CRATE':L.hint,3),2000);if(matchMedia('(pointer:fine)').matches&&SET.mouse!==false)setTimeout(()=>{if(!document.pointerLockElement)showHint('CLICK TO CAPTURE THE MOUSE · ESC TO PAUSE',3.2);},5600);lastOrbs=-1;lastCr=-1;if(RESUME&&!window._cpDone){window._cpDone=1;cpApply();}updHUD();showCtr('cOrbs',3200);showCtr('cCrates',3200);showCtr('cShards',3200);}
+function startGame(){camBehind();$('title').hidden=true;$('hud').hidden=false;$('controls').hidden=false;state='play';runTime=0;playCfg(L.mus);banner(lvLabel(LV).toUpperCase(),LEVELS[LV-1].name);setTimeout(()=>showHint(SEC.on?'FOLLOW THE PATH · SMASH EVERY CRATE':L.hint,3),2000);if(matchMedia('(pointer:fine)').matches&&SET.mouse!==false)setTimeout(()=>{if(!document.pointerLockElement)showHint('CLICK TO CAPTURE THE MOUSE · ESC TO PAUSE',3.2);},5600);lastOrbs=-1;lastCr=-1;if(RESUME&&!window._cpDone){window._cpDone=1;cpApply();}
+  /* v1.25: the first level also teaches the lantern and the dash, in the words of the device being used */
+  if(LV===1&&!RESUME){const how=k=>{const pad=typeof lastDev!=='undefined'&&lastDev==='pad',pc=document.body.classList.contains('pc');return k==='lan'?(pad?'Y / △ FIRES YOUR LANTERN AT THE NEAREST ENEMY':pc?'LEFT CLICK FIRES YOUR LANTERN AT THE NEAREST ENEMY':'TAP THE LANTERN BUTTON TO BLAST THE NEAREST ENEMY'):(pad?'B / ○ DASHES · JUMP, THEN SPIN IN THE AIR FOR EXTRA REACH':pc?'SHIFT DASHES · JUMP, THEN SPIN IN THE AIR FOR EXTRA REACH':'THE » BUTTON DASHES · JUMP, THEN SPIN IN THE AIR FOR EXTRA REACH');};
+    setTimeout(()=>{if(state==='play'&&LV===1)showHint(how('lan'),4);},9000);setTimeout(()=>{if(state==='play'&&LV===1)showHint(how('dash'),4);},17000);}updHUD();showCtr('cOrbs',3200);showCtr('cCrates',3200);showCtr('cShards',3200);}
 function gameOver(){state='over';stopMusic();$('overTitle').textContent='You Woke Up';$('overSub').textContent='Out of lives · the dream fades';$('nextBtn').hidden=true;showResults(false);}
 function bossDefeated(){const A=ARENA;$('bossBar').hidden=true;clearGlobs();if(typeof clearHaz==='function')clearHaz();boss.state='off';let px=clamp(P.pos.x*.3,A.x0+3,A.x1-3),pz=A.cz;
   /* v1.25: the portal never opens on top of Flint (who is usually standing where the star was): it goes to the far side of the arena from him */
