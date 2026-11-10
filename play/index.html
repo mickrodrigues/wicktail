@@ -2739,7 +2739,7 @@ function gfxUI(){const QL={auto:'AUTO',low:'LOW',medium:'MEDIUM',high:'HIGH',ult
 
 function S2(){return MENU.root||MENU.scene;}
 
-const WT_VERSION='v1.23.2';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
+const WT_VERSION='v1.23.3';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
 
 /* ---------- beta feedback: opens an email with the details filled in ---------- */
 const FEEDBACK_TO='mike.jose.rodrigues@gmail.com';
@@ -5477,10 +5477,14 @@ function physics(dt,inp){const p=P.pos,v=P.vel;
   const spd=7.2*(P.spinT>0?.85:1),tx=inp.x*spd,tz=inp.z*spd,k=Math.min(1,dt*(P.onGround?14:6));v.x=lerp(v.x,tx,k);v.z=lerp(v.z,tz,k);if(L.forceZ){v.z=L.forceZ;}if(L.speedCap){const hs=Math.hypot(v.x,v.z);if(hs>L.speedCap){v.x*=L.speedCap/hs;v.z*=L.speedCap/hs;}}
   if(P.dashT>0){v.x=P.dashDir.x*21;v.z=P.dashDir.z*21;}
   if(Math.hypot(inp.x,inp.z)>.15&&!(P.dashT>0))P.face=Math.atan2(inp.x,inp.z);rideVel(v,inp);
-  P.jumpBuf-=dt;P.coyote-=dt;if(P.jumpBuf>0&&(P.onGround||P.coyote>0)){v.y=11.4;P.onGround=false;P.coyote=0;P.jumpBuf=0;P.stand=null;sfx.jump();P.sq=.22;for(let i=0;i<5;i++)emit(p.clone().add(V3(R(-.3,.3),.1,R(-.3,.3))),{vx:R(-1,1),vy:R(.5,1.5),life:.4,size:.4,size1:.9,color:0xd8c8b8,normal:true});}
+  P.jumpBuf-=dt;P.coyote-=dt;if(P.jumpBuf>0&&(P.onGround||P.coyote>0)){v.y=11.4;P.onGround=false;P.coyote=0;P.jumpBuf=0;if(P.stand&&P.stand.type==='plat')P.airPlat=P.stand;P.stand=null;sfx.jump();P.sq=.22;for(let i=0;i<5;i++)emit(p.clone().add(V3(R(-.3,.3),.1,R(-.3,.3))),{vx:R(-1,1),vy:R(.5,1.5),life:.4,size:.4,size1:.9,color:0xd8c8b8,normal:true});}
   if(!inp.jumpHeld&&v.y>4)v.y-=dt*30;
   if(P.dashT>0)v.y=Math.max(v.y,-.5)*.6;else{v.y-=(v.y<0?38:30)*dt*(CRS.grav||1);}v.y=Math.max(v.y,-28);
-  if(P.stand&&P.stand.type==='plat'&&P._carry&&!(P.stand.car&&P.stand.car.lock)){p.x+=P.stand.dx;p.z+=P.stand.dz;p.y+=P.stand.dy||0;}P._carry=false;
+  /* v1.23.3: a moving platform keeps carrying Flint while he's in the air above it (jumping on the shooting star, a raft, a lift),
+     so a jump no longer leaves him behind; the carry ends once he's clear of the platform's edge or lands on something else */
+  if(P._carry){const ap=P.airPlat,cs=P.stand&&P.stand.type==='plat'?P.stand:(ap&&ap.alive!==false&&!P.onGround&&p.x>ap.min.x-.9&&p.x<ap.max.x+.9&&p.z>ap.min.z-.9&&p.z<ap.max.z+.9&&p.y>ap.max.y-1.2&&p.y<ap.max.y+7?ap:null);
+    if(cs&&!(cs.car&&cs.car.lock)){p.x+=cs.dx;p.z+=cs.dz;if(cs===P.stand)p.y+=cs.dy||0;else if((cs.dy||0)>0&&p.y<cs.max.y){p.y=cs.max.y;if(v.y<0)v.y=0;}}
+    if(P.stand&&P.stand.type==='plat')P.airPlat=P.stand;else if(!cs)P.airPlat=null;}P._carry=false;
   for(const ax of['x','z']){p[ax]+=v[ax]*dt;for(const s of solids){if(!s.alive||s.type==='ramp'||s.type==='ground'&&p.y>=s.max.y-.02)continue;if(p.y>=s.max.y-.3||p.y+PH<=s.min.y)continue;if(!overlapXZ(s,p.x,p.z,PR))continue;if(P.ram&&s.type==='crate'){if(s.kind==='boom')explode(s);else{s.bounces=99;breakCrate(s);}continue;}
       /* resolve along the shallower overlap, so dropping into a pit next to a wide block can't fling you sideways */{const o=ax==='x'?'z':'x',pa=Math.min(p[ax]+PR-s.min[ax],s.max[ax]-p[ax]+PR),pb=Math.min(p[o]+PR-s.min[o],s.max[o]-p[o]+PR);if(pa>pb+.02&&pb>0)continue;}
       const c=(s.min[ax]+s.max[ax])/2;if(p[ax]<c)p[ax]=s.min[ax]-PR-.001;else p[ax]=s.max[ax]+PR+.001;v[ax]=0;}}crsContain(p);
