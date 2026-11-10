@@ -1129,8 +1129,8 @@ async function c2LoadSkins(step){const need=SKIN_NEED[LV]||[];for(const k of nee
     C2.skin[k]={scene:o,k:kk,off:new THREE.Vector3(-c.x*kk,-bb.min.y*kk,-c.z*kk),clips};}catch(e){console.error('skin '+k+': '+(e&&e.message));}}}
 function c2MakeSkin(key,size){const S=C2.skin[key];const inst=THREE.SkeletonUtils.clone(S.scene);inst.scale.multiplyScalar(S.k);inst.position.copy(S.off);const root=new THREE.Group();root.add(inst);
   const g=new THREE.Group();g.rotation.order='YXZ';g.add(root);g.scale.setScalar(size);const mixer=new THREE.AnimationMixer(inst);const acts={};for(const n in S.clips)acts[n]=mixer.clipAction(S.clips[n]);
-  const a={g,r:{root,p:{},rest:{},h:1},key,clip:'',t:0,ct:0,dur:1,skin:S,mixer,acts,cur:null};c2Play(a,'idle');return a;}
-function c2Make(key,size,useSkin){if(C2.skin[key]&&THREE.SkeletonUtils&&(useSkin||SK_ALWAYS[key]))return c2MakeSkin(key,size);const base=C2.rig[key];if(!base)return null;const r=rigClone(base);const g=new THREE.Group();g.rotation.order='YXZ';g.add(r.root);g.scale.setScalar(size);return {g,r,key,clip:'idle',t:0,ct:0,dur:1};}
+  g.userData.dyn=1;const a={g,r:{root,p:{},rest:{},h:1},key,clip:'',t:0,ct:0,dur:1,skin:S,mixer,acts,cur:null};c2Play(a,'idle');return a;}
+function c2Make(key,size,useSkin){if(C2.skin[key]&&THREE.SkeletonUtils&&(useSkin||SK_ALWAYS[key]))return c2MakeSkin(key,size);const base=C2.rig[key];if(!base)return null;const r=rigClone(base);const g=new THREE.Group();g.rotation.order='YXZ';g.add(r.root);g.scale.setScalar(size);g.userData.dyn=1;return {g,r,key,clip:'idle',t:0,ct:0,dur:1};}
 /* tw=true: play this one clip on the character's rigged twin (swapped in for the moment, e.g. a death fall); any other clip swaps the hand-built rig back */
 function c2Play(a,clip,dur,tw){if(tw&&!a.skin&&C2.skin[a.key]&&THREE.SkeletonUtils){if(!a.tw){a.tw=c2MakeSkin(a.key,1);a.g.add(a.tw.g);}if(!a.twOn){a.twOn=true;a.tw.g.visible=true;a.r.root.visible=false;}if(a.clip!==clip){a.clip=clip;a.ct=0;}a.dur=dur||1;c2Play(a.tw,clip,dur);return;}
   if(a.twOn){a.twOn=false;a.tw.g.visible=false;a.r.root.visible=true;}
@@ -2181,8 +2181,86 @@ function updSection(dt){SEC.on=P.pos.x>SX-120;if(!SEC.built)return;updCourse(dt)
 const camRay=new THREE.Raycaster(),SEC_OCC=[];let camOccList=null,camOccN=-1;
 function camOcc(){if(camOccList&&camOccN===solids.length+SEC_OCC.length*1e4)return camOccList;camOccN=solids.length+SEC_OCC.length*1e4;camOccList=SEC_OCC.slice();
   for(const s of solids){if(!s.mesh||!s.mesh.isMesh||!s.alive)continue;if(s.type==='wall'||s.type==='block'||s.type==='ground'||s.type==='ramp')camOccList.push(s.mesh);}return camOccList;}
-function camAvoid(t){const head=V3(P.pos.x,P.pos.y+1.3,P.pos.z),dir=t.clone().sub(head),dist=dir.length();if(dist<.5)return false;dir.multiplyScalar(1/dist);camRay.set(head,dir);camRay.far=dist+.3;
-  const hits=camRay.intersectObjects(camOcc(),false);for(const h of hits){if(h.object.material&&h.object.material.transparent&&h.object.material.opacity<.5)continue;const d=Math.max(.9,h.distance-.45);t.copy(head).addScaledVector(dir,d);if(d<2.2)t.y+=(2.2-d)*.6;return true;}return false;}
+/* v1.26 · the camera treats the whole world as solid: every house, tower, cliff, mountain and arena wall stops it, so it always stays
+   in front of them and never looks through or from inside them. At level start the level's static, opaque geometry is baked (a few
+   thousand triangles a frame, so there is no hitch) into a grid of 2 m cells; each frame ONE short ray from Flint's head to the camera
+   walks only the cells it crosses. Anything that turns out to move (enemies, bosses, platforms, hazards) is left out or dropped again. */
+const CG={cell:4,act:null,b:null,meshes:[],pend:null,addPend:null,checkT:0,q:0,stamp:new Int32Array(0),get on(){return !!this.act;},get n(){return this.act?this.act.n:0;}};
+const CG_MOB=matchMedia('(pointer:coarse)').matches;
+function cgKey(x,y,z){return ((x+4096)*1024+(y+512))*8192+(z+4096);}
+function cgDynSet(){const S=new Set();const add=o=>{if(o)o.traverse(c=>S.add(c));};try{add(flint);}catch(e){}try{for(const e of enemies)add(e.obj);}catch(e){}try{add(boss.obj);add(boss.sprite);add(boss.halo);}catch(e){}
+  try{for(const s of solids){if(s.type==='plat'||s.type==='crate'||s.type==='gate'||s.moving){add(s.mesh);add(s.obj);}}}catch(e){}try{if(typeof gateMesh!=='undefined')add(gateMesh);}catch(e){}return S;}function cgCandidates(){const dyn=cgDynSet(),out=[],ws=new THREE.Vector3();
+  scene.traverse(o=>{if(!(o.isMesh)||o.isSkinnedMesh||dyn.has(o)||!o.geometry||!o.geometry.attributes||!o.geometry.attributes.position)return;
+    for(let p=o;p;p=p.parent){if(!p.visible||(p.userData&&p.userData.dyn))return;}
+    const m=Array.isArray(o.material)?o.material[0]:o.material;if(!m||m.side===THREE.BackSide||m.depthWrite===false||m.blending===THREE.AdditiveBlending||(m.transparent&&m.opacity<.6)||m.visible===false)return;
+    if(o.isInstancedMesh&&o.count>60)return;/* forests and grass: walking the camera through foliage is fine */
+    const g=o.geometry;if(!g.boundingSphere)g.computeBoundingSphere();o.getWorldScale(ws);const r=g.boundingSphere.radius*Math.max(ws.x,ws.y,ws.z);if(r<1.6||r>900)return;{const nt=(g.index?g.index.count:g.attributes.position.count)/3*(o.isInstancedMesh?o.count:1);if(nt>2500&&r<5)return;}/* small, dense props never hide the view */
+    out.push({o,e:o.matrixWorld.elements.slice(12,15).concat([o.matrixWorld.elements[0],o.matrixWorld.elements[10]])});});return out;}function cgStart(){CG.act=null;CG.b=null;CG.addPend=null;CG.meshes=[];CG.pend={t:1.4,c:cgCandidates()};}
+function cgMoved(c){const e=c.o.matrixWorld.elements;return Math.abs(e[12]-c.e[0])+Math.abs(e[13]-c.e[1])+Math.abs(e[14]-c.e[2])+Math.abs(e[0]-c.e[3])+Math.abs(e[10]-c.e[4])>.03;}/* scenery added later (boss arenas): rebuild with it; the old grid keeps working until the new one is ready */
+function cgAddNew(){const have=new Set(CG.meshes.map(c=>c.o));if(CG.pend)CG.pend.c.forEach(c=>have.add(c.o));if(CG.addPend)CG.addPend.c.forEach(c=>have.add(c.o));CG.addPend={t:1.6,c:cgCandidates().filter(c=>!have.has(c.o))};}
+function cgBegin(list){CG.b={queue:list.map(c=>({o:c.o})),tri:new Float32Array(9*8192),n:0,ph:0,i:0};}
+const _cgM=new THREE.Matrix4(),_cgI=new THREE.Matrix4(),_cgA=new THREE.Vector3(),_cgB=new THREE.Vector3(),_cgC=new THREE.Vector3();
+/* the cells a triangle's box touches (callback-free: x0..z1 written into _cgR) */
+const _cgR=new Int32Array(6);
+function cgBox(T,k){const C=CG.cell,R=_cgR;R[0]=Math.floor(Math.min(T[k],T[k+3],T[k+6])/C);R[1]=Math.floor(Math.max(T[k],T[k+3],T[k+6])/C);R[2]=Math.floor(Math.min(T[k+1],T[k+4],T[k+7])/C);R[3]=Math.floor(Math.max(T[k+1],T[k+4],T[k+7])/C);R[4]=Math.floor(Math.min(T[k+2],T[k+5],T[k+8])/C);R[5]=Math.floor(Math.max(T[k+2],T[k+5],T[k+8])/C);
+  return (R[1]-R[0]+1)*(R[3]-R[2]+1)*(R[5]-R[4]+1)<=3000;}
+/* three phases spread over frames: bake world triangles, count per cell, fill one packed index array */
+function cgStep(){const B=CG.b;if(!B)return;
+  if(B.ph===0){let budget=CG_MOB?7000:14000;
+    while(B.queue.length&&budget>0){const job=B.queue[0],o=job.o,g=o.geometry,pos=g.attributes.position,idx=g.index;
+      const nTri=(idx?idx.count:pos.count)/3,inst=o.isInstancedMesh?o.count:1;
+      if(job.ii===undefined){job.ii=0;job.t=0;}
+      if(job.t===0){_cgM.copy(o.matrixWorld);if(o.isInstancedMesh){o.getMatrixAt(job.ii,_cgI);_cgM.multiply(_cgI);}}
+      const end=Math.min(nTri,job.t+budget);if(B.tri.length<(B.n+(end-job.t))*9){const nt=new Float32Array(Math.max(B.tri.length*2,(B.n+(end-job.t))*9+9*4096));nt.set(B.tri.subarray(0,B.n*9));B.tri=nt;}
+      const T=B.tri;
+      for(let t=job.t;t<end;t++){const i0=idx?idx.getX(t*3):t*3,i1=idx?idx.getX(t*3+1):t*3+1,i2=idx?idx.getX(t*3+2):t*3+2;
+        _cgA.fromBufferAttribute(pos,i0).applyMatrix4(_cgM);_cgB.fromBufferAttribute(pos,i1).applyMatrix4(_cgM);_cgC.fromBufferAttribute(pos,i2).applyMatrix4(_cgM);
+        const k=B.n*9;T[k]=_cgA.x;T[k+1]=_cgA.y;T[k+2]=_cgA.z;T[k+3]=_cgB.x;T[k+4]=_cgB.y;T[k+5]=_cgB.z;T[k+6]=_cgC.x;T[k+7]=_cgC.y;T[k+8]=_cgC.z;B.n++;}
+      budget-=end-job.t;job.t=end;if(job.t>=nTri){job.t=0;job.ii++;if(job.ii>=inst)B.queue.shift();}}
+    if(!B.queue.length){B.ph=1;B.i=0;B.cnt=new Map();}return;}
+  const T=B.tri,R=_cgR,end=Math.min(B.n,B.i+(CG_MOB?12000:30000));
+  if(B.ph===1){const M=B.cnt;for(let i=B.i;i<end;i++){if(!cgBox(T,i*9))continue;for(let x=R[0];x<=R[1];x++)for(let y=R[2];y<=R[3];y++)for(let z=R[4];z<=R[5];z++){const key=cgKey(x,y,z);M.set(key,(M.get(key)||0)+1);}}
+    B.i=end;if(end>=B.n){const idx=new Map(),off=new Int32Array(M.size+1);let o=0,j=0;for(const [k,v] of M){idx.set(k,j);off[j]=o;o+=v;j++;}off[j]=o;B.idx=idx;B.off=off;B.cur=new Int32Array(j);B.ids=new Int32Array(o);B.cnt=null;B.ph=2;B.i=0;}return;}
+  if(B.ph===2){const I=B.idx,off=B.off,cur=B.cur,ids=B.ids;for(let i=B.i;i<end;i++){if(!cgBox(T,i*9))continue;for(let x=R[0];x<=R[1];x++)for(let y=R[2];y<=R[3];y++)for(let z=R[4];z<=R[5];z++){const j=I.get(cgKey(x,y,z));ids[off[j]+cur[j]++]=i;}}
+    B.i=end;if(end>=B.n){CG.act={tri:B.tri.length>B.n*9+9*4096?B.tri.slice(0,B.n*9):B.tri,n:B.n,idx:I,off,ids};if(CG.stamp.length<B.n)CG.stamp=new Int32Array(B.n+1024);CG.b=null;}}}
+function cgTick(dt){
+  if(CG.pend){CG.pend.t-=dt;if(CG.pend.t<=0){const keep=CG.pend.c.filter(c=>!cgMoved(c));CG.pend=null;CG.meshes=keep;cgBegin(keep);}return;}
+  if(CG.addPend){CG.addPend.t-=dt;if(CG.addPend.t<=0){const add=CG.addPend.c.filter(c=>!cgMoved(c));CG.addPend=null;if(add.length){CG.meshes=CG.meshes.concat(add);cgBegin(CG.meshes);}}}
+  if(CG.b){cgStep();return;}
+  /* anything baked that has since moved is dropped and the grid is rebuilt without it */
+  if(CG.act&&(CG.checkT-=dt)<=0){CG.checkT=2;const moved=CG.meshes.filter(cgMoved);if(moved.length){moved.forEach(c=>{c.o.userData.dyn=1;});CG.meshes=CG.meshes.filter(c=>!moved.includes(c));cgBegin(CG.meshes);}}}
+/* nearest hit along the segment a->b (fraction 0..1), or 2 */
+function cgRay(a,b){const A=CG.act;if(!A)return 2;if(++CG.q>2e9){CG.q=1;CG.stamp.fill(0);}const C=CG.cell,dx=b.x-a.x,dy=b.y-a.y,dz=b.z-a.z;let best=2;const T=A.tri,st=CG.stamp,q=CG.q,I=A.idx,off=A.off,ids=A.ids;
+  let x=Math.floor(a.x/C),y=Math.floor(a.y/C),z=Math.floor(a.z/C);const X=Math.floor(b.x/C),Y=Math.floor(b.y/C),Z=Math.floor(b.z/C);
+  const sx=dx>0?1:-1,sy=dy>0?1:-1,sz=dz>0?1:-1;const tdx=dx?Math.abs(C/dx):1e9,tdy=dy?Math.abs(C/dy):1e9,tdz=dz?Math.abs(C/dz):1e9;
+  let tmx=dx?((sx>0?(x+1)*C:x*C)-a.x)/dx:1e9,tmy=dy?((sy>0?(y+1)*C:y*C)-a.y)/dy:1e9,tmz=dz?((sz>0?(z+1)*C:z*C)-a.z)/dz:1e9;
+  for(let guard=0;guard<64;guard++){
+    const j=I.get(cgKey(x,y,z));
+    if(j!==undefined)for(let p=off[j],pe=off[j+1];p<pe;p++){const id=ids[p];if(st[id]===q)continue;st[id]=q;const k=id*9;
+      /* Moller-Trumbore, both faces */
+      const e1x=T[k+3]-T[k],e1y=T[k+4]-T[k+1],e1z=T[k+5]-T[k+2],e2x=T[k+6]-T[k],e2y=T[k+7]-T[k+1],e2z=T[k+8]-T[k+2];
+      const px=dy*e2z-dz*e2y,py=dz*e2x-dx*e2z,pz=dx*e2y-dy*e2x,det=e1x*px+e1y*py+e1z*pz;if(det>-1e-9&&det<1e-9)continue;const inv=1/det;
+      const tx=a.x-T[k],ty=a.y-T[k+1],tz=a.z-T[k+2],u=(tx*px+ty*py+tz*pz)*inv;if(u<0||u>1)continue;
+      const qx=ty*e1z-tz*e1y,qy=tz*e1x-tx*e1z,qz=tx*e1y-ty*e1x,v=(dx*qx+dy*qy+dz*qz)*inv;if(v<0||u+v>1)continue;
+      const tt=(e2x*qx+e2y*qy+e2z*qz)*inv;if(tt>0.02&&tt<best)best=tt;}
+    if(best<=Math.min(tmx,tmy,tmz))break;if(x===X&&y===Y&&z===Z)break;
+    if(tmx<tmy){if(tmx<tmz){x+=sx;tmx+=tdx;}else{z+=sz;tmz+=tdz;}}else{if(tmy<tmz){y+=sy;tmy+=tdy;}else{z+=sz;tmz+=tdz;}}}
+  return best;}
+/* distance from the head to the first solid thing on the way to point t (Infinity when clear) */
+function camHit(head,t){const dir=t.clone().sub(head),dist=dir.length();if(dist<.5)return Infinity;dir.multiplyScalar(1/dist);camRay.set(head,dir);camRay.far=dist+.3;
+  let hitD=Infinity;const hits=camRay.intersectObjects(camOcc(),false);for(const h of hits){if(h.object.material&&h.object.material.transparent&&h.object.material.opacity<.5)continue;hitD=h.distance;break;}
+  /* the world grid, aimed a little past the camera so the lens never sits right against a wall */
+  const far=head.clone().addScaledVector(dir,dist+.5);const f=cgRay(head,far);if(f<=1)hitD=Math.min(hitD,f*(dist+.5));return hitD;}
+/* after smoothing: if the real camera has drifted behind anything, pull it straight back in front at once */
+function camGuard(){const head=V3(P.pos.x,P.pos.y+1.3,P.pos.z),c=camera.position,hd=camHit(head,c);if(hd===Infinity)return;const dir=c.clone().sub(head),D=dir.length();if(D<.5)return;dir.multiplyScalar(1/D);c.copy(head).addScaledVector(dir,Math.max(.9,hd-.5));}
+/* side whiskers: ease the camera off a wall it is skimming so a face never fills half the screen */
+function camWhisk(head,t){if(!CG.act)return;const dx=t.x-head.x,dz=t.z-head.z,L=Math.hypot(dx,dz);if(L<.3)return;const sx=dz/L,sz=-dx/L,W=1.4;const fl=cgRay(t,V3(t.x+sx*W,t.y,t.z+sz*W)),fr=cgRay(t,V3(t.x-sx*W,t.y,t.z-sz*W));let push=0;if(fl<=1)push-=(1-fl)*W;if(fr<=1)push+=(1-fr)*W;if(Math.abs(push)<.05)return;const c=V3(t.x+sx*push,t.y,t.z+sz*push);if(camHit(head,c)===Infinity)t.copy(c);}
+/* keep the camera in open air on Flint's side of every wall. lift: first try swinging up over the obstacle (boss arenas) */
+function camAvoid(t,lift){const head=V3(P.pos.x,P.pos.y+1.3,P.pos.z);let hitD=camHit(head,t);camAvoid.lift=0;if(hitD===Infinity){camWhisk(head,t);return false;}
+  const v=t.clone().sub(head),D=v.length();if(D<.5)return false;
+  if(lift){const feet=V3(P.pos.x,P.pos.y+.35,P.pos.z),hz=Math.hypot(v.x,v.z)||1e-4,el0=Math.atan2(v.y,hz),ux=v.x/hz,uz=v.z/hz;
+    for(let k=1;k<=6;k++){const el=Math.min(1.38,el0+k*.16),c=V3(head.x+ux*Math.cos(el)*D,head.y+Math.sin(el)*D,head.z+uz*Math.cos(el)*D);if(camHit(head,c)===Infinity&&camHit(feet,c)===Infinity){t.copy(c);camAvoid.lift=k;camWhisk(head,t);return true;}if(el>=1.38)break;}}
+  const dir=v.multiplyScalar(1/D),d=Math.max(.9,hitD-.5);t.copy(head).addScaledVector(dir,d);if(d<2.2){const up=V3(t.x,t.y+(2.2-d)*.6,t.z);if(camHit(head,up)===Infinity)t.copy(up);}camWhisk(head,t);return true;}
 
 /* line of sight: enemies can't see, shoot or hit through walls */
 const LOS_T=['wall','block','gate','ground','ramp'];
@@ -2711,7 +2789,7 @@ function camOrbit(dt,h,d,sk){const p=P.pos;if(!ORB.piv)ORB.piv=p.clone();ORB.piv
   if(g>-50&&camTarget.y<g+.45){const need=g+.45;camTarget.y=need;}
   if(!SEC.on&&L.clampCam)L.clampCam(camTarget);camAvoid(camTarget);
   const want=camTarget.distanceTo(head);if(ORB.dist==null||want<ORB.dist)ORB.dist=want;else ORB.dist=lerp(ORB.dist,want,Math.min(1,dt*3.5));
-  const v=camTarget.clone().sub(head);if(v.lengthSq()>1e-6)v.normalize();camera.position.copy(head).addScaledVector(v,ORB.dist);camera.position.x+=R(-sk,sk);camera.position.y+=R(-sk,sk);
+  const v=camTarget.clone().sub(head);if(v.lengthSq()>1e-6)v.normalize();camera.position.copy(head).addScaledVector(v,ORB.dist);try{camGuard();}catch(e){}camera.position.x+=R(-sk,sk);camera.position.y+=R(-sk,sk);
   const fw=V3(-Math.sin(camYaw),0,-Math.cos(camYaw));camLook.copy(head).addScaledVector(fw,3.4*Math.max(0,Math.cos(el)));camLook.y-=.15;camera.lookAt(camLook);}
 /* ===================== fixed main menu: Flint on a mossy ledge under the night sky ===================== */
 const MENU={scene:null,t:0,on:false};
@@ -2777,7 +2855,7 @@ function gfxUI(){const QL={auto:'AUTO',low:'LOW',medium:'MEDIUM',high:'HIGH',ult
 
 function S2(){return MENU.root||MENU.scene;}
 
-const WT_VERSION='v1.25.2';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
+const WT_VERSION='v1.26';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
 
 /* ---------- beta feedback: opens an email with the details filled in ---------- */
 const FEEDBACK_TO='wicktail.support@gmail.com';
@@ -5572,7 +5650,7 @@ let inBoss=false;const boss={obj:null,hp:3,state:'off',t:0,fire:0,pos:V3(0,8,ARE
 boss.sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:VT.faces[0],transparent:true,depthWrite:false}));boss.sprite.scale.set(5,5,1);boss.sprite.visible=false;scene.add(boss.sprite);
 boss.halo=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex,color:0xff9a3a,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:.5}));boss.halo.scale.set(10,10,1);boss.halo.visible=false;scene.add(boss.halo);
 const ringMat=new THREE.MeshBasicMaterial({color:0xff3a1a,transparent:true,opacity:.85,side:THREE.DoubleSide,depthWrite:false});
-function startBoss(){if(L.startBoss)return L.startBoss();if(LV===2)return startGob();startSun();}
+function startBoss(){try{cgAddNew();}catch(e){}if(L.startBoss)return L.startBoss();if(LV===2)return startGob();startSun();}
 const zTex=labelTex('Z','#ffffff','#bfe8ff',110);const zs=[];function zzz(p){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:zTex,transparent:true,depthWrite:false}));s.position.copy(p);s.scale.setScalar(.6);scene.add(s);zs.push({s,t:0});}
 function updZ(dt){for(let i=zs.length-1;i>=0;i--){const z=zs[i];z.t+=dt;z.s.position.x+=dt*.7;z.s.position.y+=dt*1.4;z.s.position.x+=Math.sin(z.t*4)*dt*.6;const k=.6+z.t*.9;z.s.scale.set(k,k,1);z.s.material.opacity=Math.max(0,1-z.t/1.8);if(z.t>1.8){scene.remove(z.s);zs.splice(i,1);}}}
 function startSun(){inBoss=true;gate.alive=true;gateMesh.position.y=1.5;boss.hp=boss.maxHp;boss.reset();boss.state='intro';boss.t=0;boss.halo.visible=true;if(boss.obj){boss.obj.visible=true;if(skySun)skySun.visible=false;}else boss.sprite.visible=true;boss.pos.set(0,22,ARENA.cz-6);
@@ -5833,7 +5911,7 @@ $('setMusic').addEventListener('input',e=>{SET.music=e.target.value/100;applyAud
 $('setSens').addEventListener('input',e=>{SET.sens=e.target.value/100;saveSet();});
 $('setInvert').addEventListener('click',()=>{SET.invert=!SET.invert;setTog('setInvert',SET.invert);saveSet();});
 $('setGlow').addEventListener('click',()=>{SET.glow=!SET.glow;setTog('setGlow',SET.glow);saveSet();if(SET.glow){if(!composer)setupFX();}else{composer=null;renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));resize();}});
-function startGame(){camBehind();$('title').hidden=true;$('hud').hidden=false;$('controls').hidden=false;state='play';runTime=0;playCfg(L.mus);banner(lvLabel(LV).toUpperCase(),LEVELS[LV-1].name);setTimeout(()=>showHint(SEC.on?'FOLLOW THE PATH · SMASH EVERY CRATE':L.hint,3),2000);if(matchMedia('(pointer:fine)').matches&&SET.mouse!==false)setTimeout(()=>{if(!document.pointerLockElement)showHint('CLICK TO CAPTURE THE MOUSE · ESC TO PAUSE',3.2);},5600);lastOrbs=-1;lastCr=-1;if(RESUME&&!window._cpDone){window._cpDone=1;cpApply();}
+function startGame(){camBehind();camBossLook=null;try{cgStart();}catch(e){console.error(e);}$('title').hidden=true;$('hud').hidden=false;$('controls').hidden=false;state='play';runTime=0;playCfg(L.mus);banner(lvLabel(LV).toUpperCase(),LEVELS[LV-1].name);setTimeout(()=>showHint(SEC.on?'FOLLOW THE PATH · SMASH EVERY CRATE':L.hint,3),2000);if(matchMedia('(pointer:fine)').matches&&SET.mouse!==false)setTimeout(()=>{if(!document.pointerLockElement)showHint('CLICK TO CAPTURE THE MOUSE · ESC TO PAUSE',3.2);},5600);lastOrbs=-1;lastCr=-1;if(RESUME&&!window._cpDone){window._cpDone=1;cpApply();}
   /* v1.25: the first level also teaches the lantern and the dash, in the words of the device being used */
   if(LV===1&&!RESUME){const how=k=>{const pad=typeof lastDev!=='undefined'&&lastDev==='pad',pc=document.body.classList.contains('pc');return k==='lan'?(pad?'Y / △ FIRES YOUR LANTERN AT THE NEAREST ENEMY':pc?'LEFT CLICK FIRES YOUR LANTERN AT THE NEAREST ENEMY':'TAP THE LANTERN BUTTON TO BLAST THE NEAREST ENEMY'):(pad?'B / ○ DASHES · JUMP, THEN SPIN IN THE AIR FOR EXTRA REACH':pc?'SHIFT DASHES · JUMP, THEN SPIN IN THE AIR FOR EXTRA REACH':'THE » BUTTON DASHES · JUMP, THEN SPIN IN THE AIR FOR EXTRA REACH');};
     setTimeout(()=>{if(state==='play'&&LV===1)showHint(how('lan'),4);},9000);setTimeout(()=>{if(state==='play'&&LV===1)showHint(how('dash'),4);},17000);}updHUD();showCtr('cOrbs',3200);showCtr('cCrates',3200);showCtr('cShards',3200);}
@@ -5882,7 +5960,7 @@ function updAtmos(dt){const cp=camera.position;
   if(L.pad){L.padT=Math.max(0,(L.padT||0)-dt*4);L.pad.scale.set(1+L.padT*.25,1-L.padT*.6,1+L.padT*.25);}
   if(L.tick)L.tick(dt);}
 /* ---------- main loop ---------- */
-const clock=new THREE.Clock();const camTarget=V3();let camLook=V3();let titleA=0,camYaw=0,camDrag=0,camManualT=0,camPitch=0;
+const clock=new THREE.Clock();const camTarget=V3();let camLook=V3(),camBossLook=null;let titleA=0,camYaw=0,camDrag=0,camManualT=0,camPitch=0;
 {let drag=null;const st=$('stage')||renderer.domElement;
  const down=e=>{if(state!=='play'||document.pointerLockElement)return;const t=e.changedTouches?e.changedTouches[0]:e;if(e.target.closest&&(e.target.closest('button')||e.target.closest('#touchZone')||e.target.closest('#hud')))return;drag={id:t.identifier,x:t.clientX,y:t.clientY};};
  const move=e=>{if(!drag)return;const ts=e.changedTouches?[...e.changedTouches]:[e];for(const t of ts){if(e.changedTouches&&t.identifier!==drag.id)continue;camDrag+=(t.clientX-drag.x)*.008*SET.sens*(SET.invert?-1:1);camPitch=clamp(camPitch+(t.clientY-drag.y)*.006*SET.sens*(SET.pitchInv?-1:1),-.62,.95);drag.x=t.clientX;drag.y=t.clientY;camManualT=1.5;}};
@@ -5937,7 +6015,7 @@ function frame(){requestAnimationFrame(frame);if(capSkip())return;let dt=Math.mi
     else m.o.position.y=m.y+Math.sin(time*4+m.ph)*.12;
     if(state==='play'&&!P.dead&&m.o.position.distanceTo(P.pos.clone().setY(P.pos.y+.8))<1.05&&(!m.v||m.v.y<2)){m.alive=false;scene.remove(m.o);P.orbs++;sfx.orb(P.orbs);burst(m.o.position,0xffe14a,4,2,.25);
       if(P.orbs%100===0){P.lives++;popup('+1 LIFE','#7aff8a');sfx.life();}updHUD();}}
-  updBoss(dt);if(gate&&gate.alive)gateMesh.position.y=lerp(gateMesh.position.y,ARENA.y+1.5,dt*4);
+  try{cgTick(dt);}catch(e){}updBoss(dt);if(gate&&gate.alive)gateMesh.position.y=lerp(gateMesh.position.y,ARENA.y+1.5,dt*4);
   // flint visuals
   for(let i=fxRings.length-1;i>=0;i--){const f=fxRings[i];f.t+=dt;const k=f.t/.45;f.m.scale.setScalar(1+k*3.2);f.m.material.opacity=.9*(1-k);if(k>=1){scene.remove(f.m);fxRings.splice(i,1);}}
   if(flint){const sp=Math.hypot(P.vel.x,P.vel.z);flint.position.copy(P.pos);P.sq=lerp(P.sq||0,0,Math.min(1,dt*10));const bs=1.6/1.2;flint.scale.set(bs*(1-P.sq*.45),bs*(1+P.sq),bs*(1-P.sq*.45)*(P.dashT>0?1.35:1));flint.rotation.order='YXZ';flint.rotation.x=P.dashT>0?.5:lerp(flint.rotation.x,0,Math.min(1,dt*12));
@@ -5959,13 +6037,13 @@ function frame(){requestAnimationFrame(frame);if(capSkip())return;let dt=Math.mi
   else if(state==='title'&&MENU.on){menuCam(dt);}
   else if(state==='title'){titleA+=dt*.35;const a=Math.PI+Math.sin(titleA*.5)*.55,fx=-Math.sin(a),fz=-Math.cos(a);camera.position.set(P.pos.x+Math.sin(a)*3.6,P.pos.y+1.5,P.pos.z+Math.cos(a)*3.6);camera.lookAt(P.pos.x+fz*1.3,P.pos.y+1.15,P.pos.z-fx*1.3);}
   else{const por=innerWidth/innerHeight<.8;
-    if(inBoss){if(held('camL'))camDrag-=dt*2.4;if(held('camR'))camDrag+=dt*2.4;if(camDrag){camYaw-=camDrag;camDrag=0;}const bd=(por?13:9.6)*(1-Math.abs(camPitch)*.25),bh=(por?11:5.8)+camPitch*6,off=V3(Math.sin(camYaw)*bd,bh,Math.cos(camYaw)*bd),look=V3(lerp(P.pos.x,ARENA.cx||0,.4),ARENA.y+(por?0:1.6),lerp(P.pos.z,ARENA.cz,.4)).addScaledVector(V3(-Math.sin(camYaw),0,-Math.cos(camYaw)),3);camTarget.copy(P.pos).add(off);if(Math.abs(camYaw)<.05)camTarget.x=P.pos.x*.5;look.y-=camPitch*3;camFloor(camTarget);{const bl=camAvoid(camTarget);camera.position.lerp(camTarget,Math.min(1,dt*(bl?18:4)));}camera.position.x+=R(-sk,sk);camera.position.y+=R(-sk,sk);camera.lookAt(look);}
+    if(inBoss){if(held('camL'))camDrag-=dt*2.4;if(held('camR'))camDrag+=dt*2.4;if(camDrag){camYaw-=camDrag;camDrag=0;}const bd=(por?13:9.6)*(1-Math.abs(camPitch)*.25),bh=(por?11:5.8)+camPitch*6,off=V3(Math.sin(camYaw)*bd,bh,Math.cos(camYaw)*bd),look=V3(lerp(P.pos.x,ARENA.cx||0,.4),ARENA.y+(por?0:1.6),lerp(P.pos.z,ARENA.cz,.4)).addScaledVector(V3(-Math.sin(camYaw),0,-Math.cos(camYaw)),3);camTarget.copy(P.pos).add(off);if(Math.abs(camYaw)<.05)camTarget.x=P.pos.x*.5;look.y-=camPitch*3;camFloor(camTarget);{const bl=camAvoid(camTarget,true);camera.position.lerp(camTarget,Math.min(1,dt*(bl?(camAvoid.lift?9:18):4)));try{camGuard();}catch(e){}}camera.position.x+=R(-sk,sk);camera.position.y+=R(-sk,sk);{const hd=V3(P.pos.x,P.pos.y+.9,P.pos.z),cp=camera.position,lk=look.clone(),cA=Math.cos(Math.min(.4,camera.fov*Math.PI/180*.36));for(let i=0;i<12;i++){const a=lk.clone().sub(cp).normalize(),b=hd.clone().sub(cp).normalize();if(a.dot(b)>=cA)break;lk.lerp(hd,.3);}if(!camBossLook)camBossLook=lk.clone();camBossLook.lerp(lk,Math.min(1,dt*7));}camera.lookAt(camBossLook);}
     else{const SO=SEC.on,h=CRS.camH!=null?CRS.camH:SO?(por?7:5.1):L.camH||(por?4.4:3.0),d=CRS.camD!=null?CRS.camD:SO?(por?7.6:5.7):L.camD||(por?6.8:4.8);const dx=camera.position.x-P.pos.x,dz=camera.position.z-P.pos.z;if(held('camL'))camDrag-=dt*2.4;if(held('camR'))camDrag+=dt*2.4;camManualT-=dt;if(camDrag){camYaw-=camDrag;camDrag=0;camManualT=Math.max(camManualT,1.2);camera.position.set(P.pos.x+Math.sin(camYaw)*d,camera.position.y,P.pos.z+Math.cos(camYaw)*d);}
       if(CRS.camYaw!=null){camDrag=0;camYaw=lerpAngle(camYaw,CRS.camYaw,Math.min(1,dt*4));}
       if(L.lockYaw!=null&&!SO){camDrag=0;camYaw=lerpAngle(camYaw,L.lockYaw,Math.min(1,dt*4));}
       if(!((L.side!=null&&!SO)||CRS.camYaw!=null||(L.lockYaw!=null&&!SO))){camOrbit(dt,h,d,sk);}else{const pit=(L.side!=null&&!SO)||CRS.camYaw!=null?0:camPitch,dd=d*(1-Math.abs(pit)*.28),hh=h+pit*d*.95;camTarget.set(P.pos.x+Math.sin(camYaw)*dd,P.pos.y+hh,P.pos.z+Math.cos(camYaw)*dd);if(L.side!=null&&!SO)camTarget.z+=L.side;camFloor(camTarget);
       if(!SO)L.clampCam(camTarget);const blocked=camAvoid(camTarget);
-      if(blocked)camera.position.lerp(camTarget,Math.min(1,dt*18));else camera.position.lerp(camTarget,Math.min(1,dt*5));camera.position.x+=R(-sk,sk);camera.position.y+=R(-sk,sk);
+      if(blocked)camera.position.lerp(camTarget,Math.min(1,dt*18));else camera.position.lerp(camTarget,Math.min(1,dt*5));try{camGuard();}catch(e){}camera.position.x+=R(-sk,sk);camera.position.y+=R(-sk,sk);
       camLook.lerp(L.side!=null&&!SO?V3(P.pos.x-1,P.pos.y+1.4,P.pos.z+L.side):V3(P.pos.x-Math.sin(camYaw)*5+P.vel.x*.35,P.pos.y+1+clamp(P.vel.y*.04,-.4,.4)-((L.side!=null&&!SO)||CRS.camYaw!=null?0:camPitch)*3.2,P.pos.z-Math.cos(camYaw)*5+P.vel.z*.35),Math.min(1,dt*4));camera.lookAt(camLook);}}}
   if(sunSky)sunSky.position.set(camera.position.x,camera.position.y+30,camera.position.z-90);if(skySun&&skySun.visible){skySun.position.set(camera.position.x*.8,camera.position.y+20,camera.position.z-95);skySun.lookAt(camera.position);skySun.rotation.z+=Math.sin(time*.4)*.05;}
   updCtr();try{v6Tick(dt);}catch(e){}
