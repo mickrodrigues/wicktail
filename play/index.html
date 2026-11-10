@@ -1430,7 +1430,7 @@ function w2CourseWorld(path,mn,mx){const P2=path.pts.filter((p,i)=>i%3===0),base
   /* v1.18: the valley floor follows the line's own height, a few metres under the embankment, so there's real ground beside and
      under the track everywhere (no void on the right, nothing to see under the map); only the broken spans drop into a deeper gully */
   const H=(x,z)=>{const k=Math.round(x)+','+Math.round(z);let c=cache.get(k);if(c===undefined){const [d,q]=near(x,z);const gp=q&&(q.gap||(path.pts[q.i+3]&&path.pts[q.i+3].gap)||(path.pts[q.i-3]&&path.pts[q.i-3].gap));c=[d,(q?q.y:base+9.5)-(gp&&d<6?10:2.6)];cache.set(k,c);}/* v1.23.1: both sides of the line stay a forest floor just under the embankment, no dark pit */const d=c[0],fl=c[1];const w=Math.max(0,d-12);return fl+w2Noise(x,z)*1.2*Math.min(1,d/10)+Math.pow(Math.min(1,w/42),1.5)*58+Math.max(0,d-70)*.4+w2Noise(x*1.6,z*1.6)*Math.min(1,w/16)*10;};
-  w2Terrain(x0,x1,z0,z1,4,H,w2Pal);
+  W2.cH=H;w2Terrain(x0,x1,z0,z1,4,H,w2Pal);
   const F=[];let tries=0;const NC=Math.round(1500*w2Dens());while(F.length<NC&&tries<12000){tries++;const x=(tries%2&&P2.length)?(()=>{const p=P2[(Math.random()*P2.length)|0];return p.x+R(-34,34);})():R(x0+5,x1-5),z=(tries%2&&P2.length)?(()=>{const p=P2[(Math.random()*P2.length)|0];return p.z+R(-34,34);})():R(z1+5,z0-5),d=dist(x,z);if(d<10)continue;const h=H(x,z);const sl=Math.abs(H(x+2,z)-H(x-2,z))+Math.abs(H(x,z+2)-H(x,z-2));if(sl>15)continue;F.push([x,h-.3,z,R(1.4,2.8)*(d<16?1.15:d<24?1.5:1),R(0,TAU),R(.9,1.25)]);}
   w2Forest(F,t=>t[3]>2.45);
   /* v1.23.1: bushes and boulders on the low ground beside the line (inside of the bends included) so neither side is bare */
@@ -2240,6 +2240,9 @@ function crsMesh(path,o){const P=path.pts,CH=70,SK=o.skirt||7;const out=[];
         Q(B.rim,V(p0,sd*w0,bot0,p0.s/2.5,0),V(p1,sd*w1,bot1,p1.s/2.5,0),V(p1,sd*w1,p1.y+rh,p1.s/2.5,.5),V(p0,sd*w0,p0.y+rh,p0.s/2.5,.5));
         Q(B.rim,V(p0,sd*w0,p0.y+rh,p0.s/2.5,0),V(p1,sd*w1,p1.y+rh,p1.s/2.5,0),V(p1,sd*(w1+.6),p1.y+rh,p1.s/2.5,.25),V(p0,sd*(w0+.6),p0.y+rh,p0.s/2.5,.25));
         if(!o.banks)continue;
+        /* v1.23.2: on the inside of a bend the raised bank used to be squeezed down to two thin stone strips floating over the forest;
+           in the Moonline those sides now have no bank at all, just the forest floor and trees */
+        if(LV===10)continue;
         const cap=p=>{const ks=p.ks*sd;return ks>0?Math.max(p.w/2+.8,.85/ks):99;};
         const b1=p=>p.y+(o.b1||1.4),b2=p=>p.y+(o.b2||2.6)+1.3*Math.sin(p.s*.09+sd*2.1)+.6*Math.sin(p.s*.31+sd),o1=p=>Math.min(p.w/2+(o.o1||5.5),cap(p)),o2=p=>Math.min(p.w/2+(o.o2||14),cap(p));
         Q(B.bs,V(p0,sd*(w0+.6),p0.y+rh,p0.s/3,0),V(p1,sd*(w1+.6),p1.y+rh,p1.s/3,0),V(p1,sd*(w1+.6),b1(p1),p1.s/3,.3),V(p0,sd*(w0+.6),b1(p0),p0.s/3,.3));
@@ -2249,7 +2252,7 @@ function crsMesh(path,o){const P=path.pts,CH=70,SK=o.skirt||7;const out=[];
         Q(B.bs,V(p0,sd*o2(p0),b2(p0),p0.s/3,0),V(p1,sd*o2(p1),b2(p1),p1.s/3,0),V(p1,sd*o2(p1),p1.y-9,p1.s/3,-3),V(p0,sd*o2(p0),p0.y-9,p0.s/3,-3));}}
     const keys=['top','side','rim','bt','bs'],mats=[o.top,o.side,o.rim,o.bt||o.top,o.bs||o.side];const pos=[],uv=[],G=new THREE.BufferGeometry();let off=0;const groups=[];
     keys.forEach((k,mi)=>{const arr=B[k];if(!arr.length)return;for(const v of arr){pos.push(v[0],v[1],v[2]);uv.push(v[3],v[4]);}groups.push([off,arr.length,mi]);off+=arr.length;});
-    if(!pos.length)continue;G.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));G.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));G.computeVertexNormals();for(const [s,c,m] of groups)G.addGroup(s,c,m);
+    if(!pos.length)continue;G.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));G.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));G.computeVertexNormals();/* v1.23.2: bank tops always face up, so the grass shelf on the right of the line is lit like the left instead of going black and leaving its stone edges looking like floating strips */{const N=G.attributes.normal;for(const [s0,c,m] of groups)if(m===3)for(let i=s0;i<s0+c;i++)N.setXYZ(i,0,1,0);N.needsUpdate=true;}for(const [s,c,m] of groups)G.addGroup(s,c,m);
     const m=new THREE.Mesh(G,mats);scene.add(m);out.push(m);SEC_OCC.push(m);}
   if(o.rails){const postM=o.rim;for(let i=0;i<P.length;i+=4){const p=P[i];if(p.gap)continue;for(const sd of[-1,1]){const e=crsAt(path,p.s,sd*(p.w/2-.05));const m=new THREE.Mesh(boxGeo(.22,1.4,.22,2.5),postM);m.position.set(e.x,p.y+.45,e.z);scene.add(m);}}
     for(const sd of[-1,1]){const pos=[];for(let i=1;i<P.length;i++){const p0=P[i-1],p1=P[i];if(p1.gap||p0.gap)continue;const A=crsAt(path,p0.s,sd*(p0.w/2-.05)),Bq=crsAt(path,p1.s,sd*(p1.w/2-.05));for(const h of[.75,1.1]){pos.push(A.x,p0.y+h,A.z,Bq.x,p1.y+h,Bq.z);}}
@@ -2272,7 +2275,7 @@ function crsShardHigh(path,s,id){s=crsSolidS(path,s);const q=crsAt(path,s,0);mak
 function crsProps(path,T,M,rng,o){let n=0;for(let s=6;s<path.len-4&&n<(o.max||44);s+=o.every||7){for(const sd of[-1,1]){if(rng()>(o.p||.55))continue;const p=crsAt(path,s).p;if(p.gap)continue;const ks=p.ks*sd;const cap=ks>0?.85/ks:99;const lat=Math.min(p.w/2+(o.lat||9)+rng()*3,cap-1);if(lat<p.w/2+2)continue;
   const q=crsAt(path,s,sd*lat);const top=o.top?o.top(p,sd,lat):p.y;try{const fn=o.fn||(o.fns?o.fns[(rng()*o.fns.length)|0]:T.props[(rng()*T.props.length)|0]);if(LV<10&&fn===THEMES[0].props[0]&&typeof c1House==='function'){const hy=crsGround(q.x,q.z,top);c1House(q.x,hy==null?top:hy,q.z,-p.a+(sd>0?-Math.PI/2:Math.PI/2),{pal:pick(LV===2?['lilac','stone','pink']:['cream','pink','ochre']),floors:1+((rng()*2.4)|0)});n++;continue;}const pr=fn(M,1);const ob=pr.o||pr;ob.rotation.y=-p.a+(sd>0?-Math.PI/2:Math.PI/2)+R(-.3,.3);ob.scale.multiplyScalar(o.sc||1);
     if(o.sky){/* nothing to stand on out here: candles and lanterns hover, everything else rides a floating island */const tall=(pr.w||1)<1.1;if(tall){ob.position.set(q.x,top+.6,q.z);scene.add(ob);crsHover(ob);}else crsIsland(ob,q.x,top,q.z);n++;continue;}
-    const gy=crsGround(q.x,q.z,top);if(gy==null||Math.abs(gy-top)>8)continue;ob.position.set(q.x,gy,q.z);scene.add(ob);n++;}catch(e){}}}}
+    const gy=(LV===10&&typeof W2!=='undefined'&&W2.cH)?W2.cH(q.x,q.z):crsGround(q.x,q.z,top);if(gy==null||Math.abs(gy-top)>8)continue;ob.position.set(q.x,gy,q.z);scene.add(ob);n++;}catch(e){}}}}
 
 /* ---------- hazards & set pieces ---------- */
 const hayTex=texSmooth(128,128,g=>{g.fillStyle='#d8a83a';g.fillRect(0,0,128,128);for(let i=0;i<260;i++){g.strokeStyle=pick(['#f0c85a','#b8862a','#ffe08a','#a0701a']);g.lineWidth=R(1,3);const x=R(0,128),y=R(0,128);g.beginPath();g.moveTo(x,y);g.lineTo(x+R(-6,6),y+R(10,26));g.stroke();}g.fillStyle='#7a3a1a';g.fillRect(0,40,128,7);g.fillRect(0,86,128,7);});
@@ -2422,11 +2425,11 @@ function buildCourseSection(){const D=COURSE[LV];SEC.built=true;const rng=srng(L
   if(LV===10){let i=0;for(const [a,b] of tagRuns('bells'))for(let s=a+2;s<b-1;s+=5,i++)lanternSwing(path,s,i*1.7);}
   /* Moonline path: a real railway runs down the middle of the path (ballast, sleepers, iron rails), broken only where the path breaks */
   if(LV===10&&typeof kPines==='function'){/* the banks get the same layered pines, bushes, grass and boulders as the main line */const T1=[],GR=[],BU=[],BO=[];
-    for(let s=5;s<path.len-3;s+=2.3)for(const sd of[-1,1]){const q0=crsAt(path,s);const p=q0.p;if(p.gap)continue;const ks=p.ks*sd,cap=ks>0?.85/ks:99;const by=p.y+2.6+1.3*Math.sin(p.s*.09+sd*2.1)+.6*Math.sin(p.s*.31+sd);
-      const r=Math.random();if(r<.72){const lat=p.w/2+R(6.8,12.2);if(lat<cap-1){const q=crsAt(path,s,sd*lat);T1.push([q.x,by-.2,q.z,R(.95,1.45),R(0,TAU),R(.9,1.15)]);}}
-      if(Math.random()<.55){const lat=p.w/2+R(5.4,7);if(lat<cap-1){const q=crsAt(path,s,sd*lat);GR.push([q.x,by,q.z,R(.8,1.3),R(0,TAU),R(.8,1.3)]);}}
-      if(Math.random()<.18){const lat=p.w/2+R(1.2,4);if(lat<cap-1){const q=crsAt(path,s,sd*lat);BU.push([q.x,p.y+1.4,q.z,R(.6,.95),R(0,TAU),.8]);}}
-      if(Math.random()<.12){const lat=p.w/2+R(8,12);if(lat<cap-1){const q=crsAt(path,s,sd*lat);BO.push([q.x,by,q.z,R(.8,1.8),R(0,TAU),R(.5,.8),R(-.3,.3),R(-.3,.3)]);}}}
+    for(let s=5;s<path.len-3;s+=2.3)for(const sd of[-1,1]){const q0=crsAt(path,s);const p=q0.p;if(p.gap)continue;const ks=p.ks*sd,cap=99;const by=p.y+2.6+1.3*Math.sin(p.s*.09+sd*2.1)+.6*Math.sin(p.s*.31+sd);
+      const r=Math.random();if(r<.72){const lat=p.w/2+R(6.8,12.2);if(lat<cap-1){const q=crsAt(path,s,sd*lat);T1.push([q.x,W2.cH(q.x,q.z)-.2,q.z,R(.95,1.45),R(0,TAU),R(.9,1.15)]);}}
+      if(Math.random()<.55){const lat=p.w/2+R(5.4,7);if(lat<cap-1){const q=crsAt(path,s,sd*lat);GR.push([q.x,W2.cH(q.x,q.z),q.z,R(.8,1.3),R(0,TAU),R(.8,1.3)]);}}
+      if(Math.random()<.18){const lat=p.w/2+R(1.2,4);if(lat<cap-1){const q=crsAt(path,s,sd*lat);BU.push([q.x,W2.cH(q.x,q.z)+.1,q.z,R(.6,.95),R(0,TAU),.8]);}}
+      if(Math.random()<.12){const lat=p.w/2+R(8,12);if(lat<cap-1){const q=crsAt(path,s,sd*lat);BO.push([q.x,W2.cH(q.x,q.z),q.z,R(.8,1.8),R(0,TAU),R(.5,.8),R(-.3,.3),R(-.3,.3)]);}}}
     kPines(T1.filter((t,i)=>i%3),0);kPines(T1.filter((t,i)=>!(i%3)),1);kGrass(GR);kBushes(BU);kBoulders(BO);}
   if(LV===10&&typeof kTrack==='function'){let run=[];const flush=()=>{if(run.length>3)kTrack(run,0,{bed:true});run=[];};for(const p of path.pts){if(p.gap||p.tag==='crumble'){flush();continue;}run.push([p.x,p.z,p.y]);}flush();}
   if(LV===7||LV===10){for(const [a,b] of tagRuns('crumble'))for(let s=a+1.1;s<b-.3;s+=1.75){const q=crsAt(path,s,0);const w=path.pts[0].w-.6;const m=new THREE.Mesh(boxGeo(1.6,.5,1.6,2.5),crsMat(wallMat,1,false));m.position.set(q.x,q.y-.25,q.z);scene.add(m);const sd=addSolid(q.x-.8,q.x+.8,q.y-.5,q.y,q.z-.8,q.z+.8,'ground',null,{surf:'stone'});CRS.items.push({k:'crumble',s:sd,m,x:q.x,y:q.y,z:q.z,ct:0,vy:0,rt:0});
@@ -2736,7 +2739,7 @@ function gfxUI(){const QL={auto:'AUTO',low:'LOW',medium:'MEDIUM',high:'HIGH',ult
 
 function S2(){return MENU.root||MENU.scene;}
 
-const WT_VERSION='v1.23.1';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
+const WT_VERSION='v1.23.2';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
 
 /* ---------- beta feedback: opens an email with the details filled in ---------- */
 const FEEDBACK_TO='mike.jose.rodrigues@gmail.com';
