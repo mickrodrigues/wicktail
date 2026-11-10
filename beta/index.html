@@ -1382,7 +1382,12 @@ function w2Viaduct(ax,az,bx,bz,y,H,train){const L0=Math.hypot(bx-ax,bz-az),n=Mat
     W2.upd.push(dt=>{k+=dir*dt*12/L0;if(k>1.15){k=1.15;dir=-1;}if(k<-.15){k=-.15;dir=1;}const kk=clamp(k,0,1);tr.position.set(lerp(ax,bx,kk),y,lerp(az,bz,kk));tr.rotation.y=yaw+(dir<0?Math.PI:0);tr.visible=k>=0&&k<=1;});}
   return g;}
 /* far mountain ridge silhouettes beyond the playable world */
-function w2Ridges(cx,cz,r0,r1,n,y){const RG=new THREE.Group();const m=new THREE.MeshLambertMaterial({color:0x221c50,flatShading:true});for(let i=0;i<n;i++){const a=i/n*TAU+R(-.1,.1),r=R(r0,r1),h=R(70,150),c=new THREE.Mesh(new THREE.ConeGeometry(R(45,80),h,5),m);c.position.set(cx+Math.cos(a)*r,y+h/2-10,cz+Math.sin(a)*r);c.rotation.y=R(0,TAU);RG.add(c);
+/* v1.23: ridges are queued and built once every playable area (hub tracks + course line) is known, and a cone may never
+   stand within reach of a track, so no giant walk-through mountain can land on the line */
+function w2Ridges(cx,cz,r0,r1,n,y){(W2.rq=W2.rq||[]).push([cx,cz,r0,r1,n,y]);}
+function w2Keep(x,z,r){(W2.keep=W2.keep||[]).push([x,z,r]);}
+function w2RidgeFlush(){const q=W2.rq||[];W2.rq=[];for(const a of q)w2RidgesBuild(...a);}
+function w2RidgesBuild(cx,cz,r0,r1,n,y){const RG=new THREE.Group();const K=W2.keep||[];const ok=(x,z,rad)=>K.every(([kx,kz,kr])=>Math.hypot(x-kx,z-kz)>rad+kr);const m=new THREE.MeshLambertMaterial({color:0x221c50,flatShading:true});for(let i=0;i<n;i++){let a,r,rad,tr=0;do{a=i/n*TAU+R(-.1,.1);r=R(r0,r1)+tr*12;rad=R(45,80);tr++;}while(!ok(cx+Math.cos(a)*r,cz+Math.sin(a)*r,rad)&&tr<30);if(!ok(cx+Math.cos(a)*r,cz+Math.sin(a)*r,rad))continue;const h=R(70,150),c=new THREE.Mesh(new THREE.ConeGeometry(rad,h,5),m);c.position.set(cx+Math.cos(a)*r,y+h/2-10,cz+Math.sin(a)*r);c.rotation.y=R(0,TAU);RG.add(c);
   if(Math.random()<.5){const s=new THREE.Mesh(new THREE.ConeGeometry(c.geometry.parameters.radius*.28,h*.26,5),new THREE.MeshLambertMaterial({color:0x8a86c8,flatShading:true}));s.position.set(c.position.x,y+h-10-h*.13+.5,c.position.z);s.rotation.y=c.rotation.y;RG.add(s);}}scene.add(RG);kMergeGroup(RG);}
 function w2LanternTrail(pts,H){for(let i=0;i<pts.length;i++){const [x,z]=pts[i];scene.add(spr(glowTex,0xffb84a,1.8,1.8,x,H(x,z)+1.8,z));}}
 function c2WorldTick(dt){for(const f of W2.upd)f(dt);
@@ -1412,7 +1417,7 @@ function w2RailWorld(LATE){const cx=z=>7*Math.sin(z*.017+.6);
   {const tr=[];for(let i=0;i<22;i++){const k=i/21;tr.push([lerp(28,88,k)+Math.sin(k*8)*5,lerp(-150,-100,k)]);}w2LanternTrail(tr,H);}
   /* distant viaducts with trains, like the arches on the cover */
   w2Viaduct(-120,-150,-60,-40,22,H,true);w2Viaduct(70,-170,140,-270,30,H,true);w2Viaduct(-140,-380,140,-400,26,H,true);w2Viaduct(60,30,150,-40,24,H,false);
-  w2Ridges(0,-190,330,420,22,-10);
+  for(let z=60;z>-350;z-=10)w2Keep(0,z,70);w2Ridges(0,-190,330,420,22,-10);
   LATE.push(()=>{/* station + water tower in the far villages, from the cover models */
     for(const [x,z,ry] of[[-96,-212,Math.PI/2],[10,-416,0]]){const st=c2Prop('station',6.5);if(st){st.position.set(x,H(x,z)-.2,z);st.rotation.y=ry;scene.add(st);}}
     for(const [x,z] of[[92,-84],[-88,-38]]){const tw=c2Prop('tower',5.2);if(tw){tw.position.set(x,H(x,z)-.2,z);tw.rotation.y=R(0,TAU);scene.add(tw);}}});}
@@ -1432,7 +1437,7 @@ function w2CourseWorld(path,mn,mx){const P2=path.pts.filter((p,i)=>i%3===0),base
   let k=0;for(let i=8;i<P2.length-8&&k<4;i+=Math.floor(P2.length/5)){const p=P2[i],a=p.a||0,sd=k%2?1:-1;const nx=Math.cos(a)*sd,nz=Math.sin(a)*sd;const x=p.x+nx*60,z=p.z+nz*60;w2Cascade(x,z,p.x+nx*16,p.z+nz*16,6,H);k++;}
   {const p=P2[Math.floor(P2.length*.45)],a=p.a||0;w2Village(p.x+Math.cos(a)*80,p.z+Math.sin(a)*80,6,H,a+Math.PI);}
   {const p=P2[P2.length-1];w2Viaduct(p.x-90,p.z-70,p.x+90,p.z-90,base+38,H,true);}
-  w2Ridges((x0+x1)/2,(z0+z1)/2,Math.max(x1-x0,z0-z1)*.5+90,Math.max(x1-x0,z0-z1)*.5+180,18,base);}
+  for(const p of P2)w2Keep(p.x,p.z,60);w2Ridges((x0+x1)/2,(z0+z1)/2,Math.max(x1-x0,z0-z1)*.5+90,Math.max(x1-x0,z0-z1)*.5+180,18,base);w2RidgeFlush();}
 
 /* ===================== PS2 KIT =====================
    Locally generated, chunky pixel-art textures and detailed low-poly props in the style of the
@@ -2729,7 +2734,7 @@ function gfxUI(){const QL={auto:'AUTO',low:'LOW',medium:'MEDIUM',high:'HIGH',ult
 
 function S2(){return MENU.root||MENU.scene;}
 
-const WT_VERSION='v1.22';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
+const WT_VERSION='v1.23';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
 
 /* ---------- beta feedback: opens an email with the details filled in ---------- */
 const FEEDBACK_TO='mike.jose.rodrigues@gmail.com';
@@ -5915,7 +5920,7 @@ const LVPLAY=GO==='play'||GO==='retry';if(GO==='retry'){let lv=0;try{lv=+session
     if(typeof c2Load==='function')await c2Load(step);
     if(L.setup)L.setup();try{preloadMoon();preloadVO(LV===1?['i1','i2','i3','i4','i5','i6','i7']:LV===9?['e1','e2','e3']:LV===10?['b101','b102']:LV===12?['m201','m202','m203','m204','m205','m206','m207','m208','m209','m210','m211','m212','m213','b201','b202','b203','b204','b205','b206','b207']:LV===13?['b301','b302','b303','b304','b305','b306','b307','b308','b309']:LV===14?['m401']:[]);}catch(e){}
     if(gateMesh){gateMesh.material=new THREE.MeshBasicMaterial({color:0xc8a0ff,transparent:true,opacity:.07,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide});gateMesh.scale.y=.8;}
-    step(88,'Building '+L.name.toLowerCase()+'…');try{v6Init();}catch(e){}populate();try{autoSolid();}catch(err){console.error(err);}setupSeal();try{buildSection();}catch(err){console.error(err);}try{if(LV<10&&typeof c1Finish==='function')c1Finish();}catch(err){console.error(err);}try{v6Prep();}catch(err){console.error(err);}updHUD();step(100,'Ready');}
+    step(88,'Building '+L.name.toLowerCase()+'…');try{v6Init();}catch(e){}populate();try{autoSolid();}catch(err){console.error(err);}setupSeal();try{buildSection();}catch(err){console.error(err);}try{if(typeof w2RidgeFlush==='function')w2RidgeFlush();}catch(err){console.error(err);}try{if(LV<10&&typeof c1Finish==='function')c1Finish();}catch(err){console.error(err);}try{v6Prep();}catch(err){console.error(err);}updHUD();step(100,'Ready');}
   catch(err){txt.textContent='Could not load: '+err;return;}
   state='title';P.pos.copy(L.start);checkpoint.copy(L.start);flint.position.copy(P.pos);
   $('lvName').textContent='A Flint Wicktail Adventure';
