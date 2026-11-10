@@ -128,7 +128,7 @@ footer .brand{display:inline-block;margin-bottom:10px}
   <div class="bg" role="img" aria-label="Flint Wicktail on a mossy ledge under the Moon's Teeth"></div>
   <div class="wrap">
     <h1 class="logo" style="margin:0;filter:none"><img src="art/logo.png" alt="Wicktail · A Flint Wicktail Adventure" style="display:block;width:min(620px,88vw);height:auto;filter:drop-shadow(0 6px 22px rgba(0,0,0,.7))"></h1>
-    <p class="tag">The Moon has stolen the night. Carry the last lantern through nine strange dreams and break the grip of the Moon's Teeth.</p>
+    <p class="tag">The Moon has stolen the night. Carry the last lantern through fourteen strange dreams, break the grip of the Moon's Teeth and win back the stolen stars.</p>
     <div class="dl" id="download">
       <a class="btn gold" id="dlWin" href="https://mickrodrigues.itch.io/wicktail" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5l7.5-1v7H3zm0 13l7.5 1v-7H3zm8.5 1.2L21 21v-8.5h-9.5zm0-15.4v7.2H21V3z"/></svg><span class="t">Download for Windows<small>Desktop app · free</small></span></a>
       <button class="btn" id="dlAnd" type="button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.2 8.6h9.6v8.2c0 .7-.6 1.2-1.2 1.2h-.8v2.4a1.1 1.1 0 0 1-2.2 0V18h-1.2v2.4a1.1 1.1 0 0 1-2.2 0V18h-.8c-.7 0-1.2-.5-1.2-1.2zM5 8.8a1.1 1.1 0 0 1 2.2 0v5a1.1 1.1 0 0 1-2.2 0zm11.8 0a1.1 1.1 0 0 1 2.2 0v5a1.1 1.1 0 0 1-2.2 0zM8.4 4.2l-.9-1.5.5-.3 1 1.6a6 6 0 0 1 6 0l1-1.6.5.3-.9 1.5a5 5 0 0 1 1.2 3.7H7.2a5 5 0 0 1 1.2-3.7zm1.6 1.6a.5.5 0 1 0 0 1 .5.5 0 0 0 0-1zm4 0a.5.5 0 1 0 0 1 .5.5 0 0 0 0-1z"/></svg><span class="t">Install on Android<small>One tap · auto-updates</small></span></button>
@@ -144,15 +144,14 @@ footer .brand{display:inline-block;margin-bottom:10px}
   <h2>Two chapters. Fourteen dreams. One lantern.</h2>
   <div class="screen reveal" id="reel" aria-label="Trailer slideshow">
     <div class="sl" style="background-image:url(img/hero.jpg)"></div>
-    <div class="sl" style="background-image:url(img/play2.jpg)"></div>
-    <div class="sl" style="background-image:url(art/l3.jpg)"></div>
-    <div class="sl" style="background-image:url(img/play5.jpg)"></div>
-    <div class="sl" style="background-image:url(art/l7.jpg)"></div>
-    <div class="sl" style="background-image:url(art/l10.jpg)"></div>
-    <div class="sl" style="background-image:url(art/l13.jpg)"></div>
+    <div class="sl" style="background-image:url(img/shot1.jpg)"></div>
+    <div class="sl" style="background-image:url(img/shot2.jpg)"></div>
+    <div class="sl" style="background-image:url(art/l9.jpg)"></div>
+    <div class="sl" style="background-image:url(img/shot3.jpg)"></div>
+    <div class="sl" style="background-image:url(img/shot5.jpg)"></div>
+    <div class="sl" style="background-image:url(img/shot4.jpg)"></div>
+    <div class="sl" style="background-image:url(img/shot6.jpg)"></div>
     <div class="sl" style="background-image:url(art/l14.jpg)"></div>
-    <div class="sl" style="background-image:url(img/play8.jpg)"></div>
-    <div class="sl" style="background-image:url(img/lineup.jpg)"></div>
     <div class="lb t"></div><div class="lb b"></div>
     <div class="card"><div class="big" id="reelT"></div></div>
   </div>
@@ -247,7 +246,7 @@ document.getElementById('mailBtn').href='mailto:'+FEED+'?subject='+encodeURIComp
 var LV=['Sleepy-Sun Village','Cauldron Market','Dead Letter Bog','Glowshroom Mines','The Mill That Bites','The Clock Tower','The Hollow King','Dragon Gate',"The Moon's Teeth",'Moonline Railway',"Regent's Hollow",'Drowned Archive',"Cinderwing's Crossing",'Star-Cage Citadel'];
 document.getElementById('levels').innerHTML=LV.map(function(n,i){return '<div class="frame reveal"><img src="art/l'+(i+1)+'.jpg" alt="'+n+'" loading="lazy"><span class="no">'+String(i+1).padStart(2,'0')+'</span><div class="plate">'+n+'</div></div>';}).join('');
 /* trailer slideshow */
-(function(){var s=[].slice.call(document.querySelectorAll('#reel .sl')),t=document.getElementById('reelT'),cap=['','The Moon stole the night.','Nine dreams to cross.','Run. Jump. Spin.','Break his servants.','Then the stars went missing.','Cross the burning bridge.','Storm the Star-Cage.','Light the way.','Keep the lantern burning.'],i=-1;
+(function(){var s=[].slice.call(document.querySelectorAll('#reel .sl')),t=document.getElementById('reelT'),cap=['','The Moon stole the night.','Fourteen dreams to cross.','Break his servants.','Then the stars went missing.','Wake the drowned library.','Cross the burning bridge.','Storm the Star-Cage.','Keep the lantern burning.'],i=-1;
   function next(){if(i>=0)s[i].classList.remove('on');i=(i+1)%s.length;var e=s[i];e.classList.remove('on');void e.offsetWidth;e.classList.add('on');t.classList.remove('on');setTimeout(function(){t.textContent=cap[i]||'';if(cap[i])t.classList.add('on');},500);}
   next();setInterval(next,4800);})();
 /* install buttons */
