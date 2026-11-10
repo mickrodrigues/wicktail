@@ -1429,12 +1429,14 @@ function w2CourseWorld(path,mn,mx){const P2=path.pts.filter((p,i)=>i%3===0),base
   const x0=mn.x-150,x1=mx.x+150,z0=mx.z+150,z1=mn.z-150;const cache=new Map();
   /* v1.18: the valley floor follows the line's own height, a few metres under the embankment, so there's real ground beside and
      under the track everywhere (no void on the right, nothing to see under the map); only the broken spans drop into a deeper gully */
-  const H=(x,z)=>{const k=Math.round(x)+','+Math.round(z);let c=cache.get(k);if(c===undefined){const [d,q]=near(x,z);const gp=q&&(q.gap||(path.pts[q.i+3]&&path.pts[q.i+3].gap)||(path.pts[q.i-3]&&path.pts[q.i-3].gap));c=[d,(q?q.y:base+9.5)-(gp&&d<9?10:4.2)];cache.set(k,c);}const d=c[0],fl=lerp(c[1],base,Math.min(1,Math.max(0,d-40)/60));const w=Math.max(0,d-12);return fl+w2Noise(x,z)*1.2*Math.min(1,d/10)+Math.pow(Math.min(1,w/42),1.5)*58+Math.max(0,d-70)*.4+w2Noise(x*1.6,z*1.6)*Math.min(1,w/16)*10;};
+  const H=(x,z)=>{const k=Math.round(x)+','+Math.round(z);let c=cache.get(k);if(c===undefined){const [d,q]=near(x,z);const gp=q&&(q.gap||(path.pts[q.i+3]&&path.pts[q.i+3].gap)||(path.pts[q.i-3]&&path.pts[q.i-3].gap));c=[d,(q?q.y:base+9.5)-(gp&&d<6?10:2.6)];cache.set(k,c);}/* v1.23.1: both sides of the line stay a forest floor just under the embankment, no dark pit */const d=c[0],fl=c[1];const w=Math.max(0,d-12);return fl+w2Noise(x,z)*1.2*Math.min(1,d/10)+Math.pow(Math.min(1,w/42),1.5)*58+Math.max(0,d-70)*.4+w2Noise(x*1.6,z*1.6)*Math.min(1,w/16)*10;};
   w2Terrain(x0,x1,z0,z1,4,H,w2Pal);
-  const F=[];let tries=0;const NC=Math.round(1000*w2Dens());while(F.length<NC&&tries<9000){tries++;const x=R(x0+5,x1-5),z=R(z1+5,z0-5),d=dist(x,z);if(d<11)continue;const h=H(x,z);const sl=Math.abs(H(x+2,z)-H(x-2,z))+Math.abs(H(x,z+2)-H(x,z-2));if(sl>15)continue;F.push([x,h-.3,z,R(1.4,2.8)*(d<24?1.7:1),R(0,TAU),R(.9,1.25)]);}
+  const F=[];let tries=0;const NC=Math.round(1500*w2Dens());while(F.length<NC&&tries<12000){tries++;const x=(tries%2&&P2.length)?(()=>{const p=P2[(Math.random()*P2.length)|0];return p.x+R(-34,34);})():R(x0+5,x1-5),z=(tries%2&&P2.length)?(()=>{const p=P2[(Math.random()*P2.length)|0];return p.z+R(-34,34);})():R(z1+5,z0-5),d=dist(x,z);if(d<10)continue;const h=H(x,z);const sl=Math.abs(H(x+2,z)-H(x-2,z))+Math.abs(H(x,z+2)-H(x,z-2));if(sl>15)continue;F.push([x,h-.3,z,R(1.4,2.8)*(d<16?1.15:d<24?1.5:1),R(0,TAU),R(.9,1.25)]);}
   w2Forest(F,t=>t[3]>2.45);
+  /* v1.23.1: bushes and boulders on the low ground beside the line (inside of the bends included) so neither side is bare */
+  {const BU=[],BO=[];for(let i=0;i<2600&&BU.length<420;i++){const p=P2[(Math.random()*P2.length)|0];const x=p.x+R(-16,16),z=p.z+R(-16,16),d=dist(x,z);if(d<4.6||d>16)continue;const h=H(x,z);if(Math.random()<.85)BU.push([x,h+.2,z,R(.8,1.5),R(0,TAU),R(.7,1)]);else BO.push([x,h,z,R(.8,1.8),R(0,TAU),R(.5,.8),R(-.3,.3),R(-.3,.3)]);}if(typeof kBushes==='function')kBushes(BU);if(typeof kBoulders==='function')kBoulders(BO);}
   /* waterfalls and a village or two on the walls; a viaduct with a train in the distance */
-  let k=0;for(let i=8;i<P2.length-8&&k<4;i+=Math.floor(P2.length/5)){const p=P2[i],a=p.a||0,sd=k%2?1:-1;const nx=Math.cos(a)*sd,nz=Math.sin(a)*sd;const x=p.x+nx*60,z=p.z+nz*60;w2Cascade(x,z,p.x+nx*16,p.z+nz*16,6,H);k++;}
+  let k=4;for(let i=8;i<P2.length-8&&k<4;i+=Math.floor(P2.length/5)){const p=P2[i],a=p.a||0,sd=k%2?1:-1;const nx=Math.cos(a)*sd,nz=Math.sin(a)*sd;const x=p.x+nx*60,z=p.z+nz*60;w2Cascade(x,z,p.x+nx*16,p.z+nz*16,6,H);k++;}
   {const p=P2[Math.floor(P2.length*.45)],a=p.a||0;w2Village(p.x+Math.cos(a)*80,p.z+Math.sin(a)*80,6,H,a+Math.PI);}
   {const p=P2[P2.length-1];w2Viaduct(p.x-90,p.z-70,p.x+90,p.z-90,base+38,H,true);}
   for(const p of P2)w2Keep(p.x,p.z,60);w2Ridges((x0+x1)/2,(z0+z1)/2,Math.max(x1-x0,z0-z1)*.5+90,Math.max(x1-x0,z0-z1)*.5+180,18,base);w2RidgeFlush();}
@@ -2734,7 +2736,7 @@ function gfxUI(){const QL={auto:'AUTO',low:'LOW',medium:'MEDIUM',high:'HIGH',ult
 
 function S2(){return MENU.root||MENU.scene;}
 
-const WT_VERSION='v1.23';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
+const WT_VERSION='v1.23.1';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
 
 /* ---------- beta feedback: opens an email with the details filled in ---------- */
 const FEEDBACK_TO='mike.jose.rodrigues@gmail.com';
