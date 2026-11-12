@@ -2926,7 +2926,7 @@ function gfxUI(){const QL={auto:'AUTO',low:'LOW',medium:'MEDIUM',high:'HIGH',ult
 
 function S2(){return MENU.g1||MENU.root||MENU.scene;}
 
-const WT_VERSION='v1.28.3';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
+const WT_VERSION='v1.28.4';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
 
 /* ---------- beta feedback: opens an email with the details filled in ---------- */
 const FEEDBACK_TO='wicktail.support@gmail.com';
@@ -5612,12 +5612,11 @@ const crates=[],enemies=[],orbsArr=[],shots=[];let cratesTotal=0,cratesBroken=0;
 
 /* crates */
 const CRATE_KIND={crate:{tint:0xffffff,icon:null},bounce:{tint:0x9aff7a,icon:['↑','#d8ff8a','#3ad01a']},boom:{tint:0xff5a4a,icon:['!','#fff6b0','#ff3a1a']},check:{tint:0x8ad8ff,icon:['C','#e8f8ff','#3a9aff']},ward:{tint:0xffd27a,icon:['✦','#fff6b0','#ffb03a']},lucky:{tint:0xffe08a,icon:['?','#fff6b0','#c06aff']},iron:{tint:0x8a90b0,icon:['▣','#d8e0ff','#3a405a']}};
-function makeCrate(kind,x,z,y=0){const K=CRATE_KIND[kind];const o=crateProto.clone(true);o.traverse(c=>{if(c.isMesh){c.material=c.material.clone();c.material.color=new THREE.Color(K.tint);if(kind!=='crate')c.material.emissive=new THREE.Color(K.tint).multiplyScalar(LV>=10?.14:.24);if(kind==='boom')c.material.emissive=new THREE.Color(0x400000);}});
+function makeCrate(kind,x,z,y=0){const K=CRATE_KIND[kind];const o=crateProto.clone(true);o.traverse(c=>{if(c.isMesh){c.material=c.material.clone();c.material.color=new THREE.Color(K.tint);if(kind!=='crate')c.material.emissive=new THREE.Color(K.tint).multiplyScalar(LV>=10?.14:.24);if(kind==='boom'){c.material.color=new THREE.Color(0xff2a1a);c.material.emissive=new THREE.Color(0x6a0400);}}});
   const g=new THREE.Group();g.add(o);if(kind==='boom'){/* unmistakable TNT label on every side */
-    if(!makeCrate.tnt)makeCrate.tnt=tex(128,128,(c,w,h)=>{c.fillStyle='#1a0604';c.fillRect(0,0,w,h);for(let i=-4;i<12;i++){c.fillStyle=i%2?'#ffd23a':'#1a0604';c.beginPath();c.moveTo(i*16,0);c.lineTo(i*16+16,0);c.lineTo(i*16+16-128,128);c.lineTo(i*16-128,128);c.fill();}
-      c.fillStyle='#d8261a';c.fillRect(10,30,108,68);c.strokeStyle='#fff2c0';c.lineWidth=4;c.strokeRect(12,32,104,64);c.fillStyle='#fff6d8';c.font='900 46px Arial Black,Impact,sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('TNT',64,66);},1,1);
-    const t=makeCrate.tnt;for(const [px,pz,ry] of[[0,.51,0],[0,-.51,Math.PI],[.51,0,Math.PI/2],[-.51,0,-Math.PI/2]]){const pl=new THREE.Mesh(new THREE.PlaneGeometry(.86,.86),new THREE.MeshBasicMaterial({map:t}));pl.position.set(px,.5,pz);pl.rotation.y=ry;g.add(pl);}
-    const top=new THREE.Mesh(new THREE.PlaneGeometry(.86,.86),new THREE.MeshBasicMaterial({map:t}));top.rotation.x=-Math.PI/2;top.position.y=1.01;g.add(top);}
+    if(!makeCrate.tnt)makeCrate.tnt=tex(128,128,(c,w,h)=>{c.clearRect(0,0,w,h);c.font='900 58px Arial Black,Impact,sans-serif';c.textAlign='center';c.textBaseline='middle';c.lineJoin='round';c.lineWidth=8;c.strokeStyle='#140400';c.strokeText('TNT',64,66);c.fillStyle='#ffd21a';c.fillText('TNT',64,66);c.fillStyle='rgba(255,250,200,.55)';c.fillText('TNT',64,63);c.fillStyle='#ffd21a';c.fillText('TNT',64,65.5);},1,1);
+    const t=makeCrate.tnt;for(const [px,pz,ry] of[[0,.51,0],[0,-.51,Math.PI],[.51,0,Math.PI/2],[-.51,0,-Math.PI/2]]){const pl=new THREE.Mesh(new THREE.PlaneGeometry(.86,.86),new THREE.MeshBasicMaterial({map:t,transparent:true}));pl.position.set(px,.5,pz);pl.rotation.y=ry;g.add(pl);}
+    const top=new THREE.Mesh(new THREE.PlaneGeometry(.86,.86),new THREE.MeshBasicMaterial({map:t,transparent:true}));top.rotation.x=-Math.PI/2;top.position.y=1.01;g.add(top);}
   else if(K.icon){const t=labelTex(K.icon[0],K.icon[1],K.icon[2]);for(const [px,pz,ry] of[[0,.51,0],[0,-.51,Math.PI],[.51,0,Math.PI/2],[-.51,0,-Math.PI/2]]){const p=new THREE.Mesh(new THREE.PlaneGeometry(.62,.62),new THREE.MeshBasicMaterial({map:t,transparent:true}));p.position.set(px,.5,pz);p.rotation.y=ry;g.add(p);}
     const top=new THREE.Mesh(new THREE.PlaneGeometry(.62,.62),new THREE.MeshBasicMaterial({map:t,transparent:true}));top.rotation.x=-Math.PI/2;top.position.y=1.01;g.add(top);}
   if(kind==='ward')g.add(spr(glowTex,0xffc84a,1.6,1.6,0,.5,0));g.position.set(x,y,z);scene.add(g);
