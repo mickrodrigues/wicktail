@@ -134,7 +134,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .cards{display:flex;gap:14px;overflow-x:auto;padding:4px 2px 10px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;touch-action:pan-x}
 .card{flex:0 0 clamp(210px,27vw,250px);display:flex;flex-direction:column;scroll-snap-align:start;border-radius:14px;overflow:hidden;cursor:pointer;text-align:left;padding:0;border:1px solid var(--rimS);background:#12061e;position:relative;transition:transform .15s,border-color .2s,box-shadow .2s}
 .card:hover,.card:focus-visible{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 10px 26px rgba(0,0,0,.5),0 0 20px rgba(255,190,90,.35)}
-.card .ci{aspect-ratio:4/3;background:center/cover no-repeat;max-width:100%}
+.card .ci{aspect-ratio:4/3;background:center/cover no-repeat;max-width:100%}.card .ci{flex:0 0 auto;min-height:92px;width:100%}.card .cb{flex:0 0 auto}#levelsScr .panel{overflow-y:auto}
 .card .cb{padding:10px 12px 12px;display:grid;gap:6px;align-content:start}
 .cpBtn{flex-basis:100%;display:inline-flex;align-items:center;justify-content:center;min-height:36px;margin-top:2px;border-radius:9px;background:linear-gradient(180deg,#ffe39a,#e8a23a);color:#2a1206;font:900 12px/1 var(--ui);letter-spacing:.08em;cursor:pointer;box-shadow:0 2px 0 #8a4a10}
 .cpBtn:active{transform:translateY(1px)}
@@ -2622,9 +2622,17 @@ function camFloor(t){let g=groundBelow(t.x,t.z,Math.max(t.y,P.pos.y)+2.5);if(SEC
 /* ---------- controllers (Xbox / PlayStation, standard mapping) ---------- */
 const PAD={prev:[],nav:0,focus:-1,on:false};
 addEventListener('gamepadconnected',e=>{PAD.on=true;popup('CONTROLLER CONNECTED','#9af0ff');});
-function padNow(){const ps=navigator.getGamepads?navigator.getGamepads():[];for(const p of ps)if(p&&p.connected)return p;return null;}
+/* merge every connected pad: Windows often exposes one controller twice (e.g. Steam/DS4Windows virtual pad + the real one),
+   and the first one can have working sticks but dead buttons. Buttons are OR-ed; each axis takes the strongest reading. */
+function padNow(){const ps=[...(navigator.getGamepads?navigator.getGamepads():[])].filter(p=>p&&p.connected);if(!ps.length)return null;if(ps.length===1&&ps[0].mapping==='standard')return ps[0];
+  const nb=Math.max(...ps.map(p=>p.buttons.length),17),na=Math.max(...ps.map(p=>p.axes.length),4),buttons=[],axes=[];
+  for(let i=0;i<nb;i++){let pr=false,v=0;for(const p of ps){const q=p.buttons[i];if(q){if(q.pressed)pr=true;if(q.value>v)v=q.value;}}buttons.push({pressed:pr,value:v});}
+  for(let i=0;i<na;i++){let a=0;for(const p of ps){const v=p.axes[i]||0;if(Math.abs(v)>Math.abs(a))a=v;}axes.push(a);}
+  /* DualShock/DualSense without standard mapping: Square,Cross,Circle,Triangle → put Cross on A(0) and Circle on B(1) */
+  const ns=ps.find(p=>p.mapping!=='standard'&&/054c|playstation|dualshock|dualsense|wireless controller/i.test(p.id));if(ns&&!ps.some(p=>p.mapping==='standard')){const B=buttons.slice();buttons[0]=B[1];buttons[1]=B[2];buttons[2]=B[0];buttons[3]=B[3];}
+  return {buttons,axes,mapping:'merged',id:ps.map(p=>p.id).join(' + ')};}
 function padRead(dt){const p=padNow();const out={x:0,z:0,jump:false};if(!p)return out;const b=i=>!!(p.buttons[i]&&(p.buttons[i].pressed||p.buttons[i].value>.5)),dz=v=>Math.abs(v)<.18?0:(v-Math.sign(v)*.18)/.82;
-  const now=p.buttons.map((_,i)=>b(i)),edge=i=>now[i]&&!PAD.prev[i];PAD.prev=now;if(now.some(v=>v)||Math.abs(p.axes[0]||0)>.4||Math.abs(p.axes[1]||0)>.4||Math.abs(p.axes[2]||0)>.4)lastDev='pad';
+  const now=p.buttons.map((_,i)=>b(i)),prev=PAD.prev||[],edge=i=>now[i]&&!prev[i];PAD.prev=now;/* (bug fix: edge used to compare against the frame it had just overwritten, so no button press ever registered) */if(now.some(v=>v)||Math.abs(p.axes[0]||0)>.4||Math.abs(p.axes[1]||0)>.4||Math.abs(p.axes[2]||0)>.4)lastDev='pad';
   const pk=a=>padKeys(a),pe=a=>pk(a).some(i=>i!=null&&edge(i)),ph=a=>pk(a).some(i=>i!=null&&now[i]);
   if(padListen){PAD.listenWait-=dt;if(PAD.listenWait<=0){const i=now.findIndex((v,j)=>v&&edge(j));if(i>=0)padAssign(i);}return out;}
   if(state==='play'){out.x=dz(p.axes[0]||0);out.z=dz(p.axes[1]||0);if(now[14])out.x-=1;if(now[15])out.x+=1;if(now[12])out.z-=1;if(now[13])out.z+=1;out.jump=ph('jump');
@@ -2638,7 +2646,7 @@ function padRead(dt){const p=padNow();const out={x:0,z:0,jump:false};if(!p)retur
   let i=btns.indexOf(document.activeElement);if(mv){i=i<0?0:(i+mv+btns.length)%btns.length;btns[i].focus();}
   if(edge(0)){(i>=0?btns[i]:(btns.find(x=>x.classList.contains('primary'))||btns[0])).click();}
   if(edge(1)){const back=btns.find(x=>x.classList.contains('back'))||(!$('pause').hidden&&$('resumeBtn'));if(back)back.click();}
-  if(edge(9)&&state==='paused')togglePause();return out;}
+  if(edge(9)){if(state==='paused')togglePause();else if(!$('title').hidden&&$('settingsScr').hidden){const sb=$('settingsBtn');if(sb)sb.click();}}return out;}
 
 /* ===================== cinematics ===================== */
 const CINE={on:false,t:0,i:0,lines:[],cb:null,cam:null,skip:false,stage:null};
@@ -2803,6 +2811,10 @@ function ctlRender(){const el=$('kbList');if(!el)return;const pl=$('padList');if
       else{row.appendChild(ctlCell(CTL_FIXED[a]||'—',false,'pad'));row.appendChild(ctlCell('',false,'pad blank'));}
       el.appendChild(row);}}
   const ft=document.createElement('div');ft.className='ctlFoot';ft.textContent=(kbListen||padListen)?'Press the new key or button. Esc cancels.':'Click a box, then press the key or controller button you want.';el.appendChild(ft);}
+/* live controller test line in Settings → Controls, so problems can be seen at a glance */
+setInterval(()=>{const f=document.querySelector('.ctlFoot');if(!f||f.offsetParent===null)return;let t=f.dataset.base||(f.dataset.base=f.textContent);const ps=[...(navigator.getGamepads?navigator.getGamepads():[])].filter(p=>p&&p.connected);
+  if(!ps.length){f.textContent=t+'  ·  Controller: none detected (press any button on it).';return;}const p=padNow();const on=p.buttons.map((b,i)=>b.pressed||b.value>.5?i:-1).filter(i=>i>=0);
+  f.textContent=t+'  ·  Controller: '+ps.length+' found ('+ps.map(q=>q.mapping||'non-standard').join(', ')+')  ·  Pressed: '+(on.length?on.map(i=>padLabel(i)).join(' '):'—');},150);
 function padAssign(i){const [a,slot]=padListen;SET.pad2=SET.pad2||{};const cur=padKeys(a).slice();for(const o in PAD_DEF){const ks=padKeys(o).slice();let ch=false;for(const s of[0,1])if(ks[s]===i&&!(o===a&&s===slot)){ks[s]=null;ch=true;}if(ch)SET.pad2[o]=ks;}cur[slot]=i;SET.pad2[a]=cur;saveSet();padListen=null;padRender();updBtnLabels(true);}
 /* ---------- on-screen buttons show your bindings ---------- */
 let btnLblKey='';
@@ -2914,7 +2926,7 @@ function gfxUI(){const QL={auto:'AUTO',low:'LOW',medium:'MEDIUM',high:'HIGH',ult
 
 function S2(){return MENU.g1||MENU.root||MENU.scene;}
 
-const WT_VERSION='v1.28.1';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
+const WT_VERSION='v1.28.2';try{const tv=document.getElementById('tVer');if(tv)tv.textContent='WICKTAIL '+WT_VERSION;}catch(e){}
 
 /* ---------- beta feedback: opens an email with the details filled in ---------- */
 const FEEDBACK_TO='wicktail.support@gmail.com';
@@ -6079,7 +6091,7 @@ function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);i
 addEventListener('resize',resize);resize();
 let stopT=0;function hitStop(t){stopT=Math.max(stopT,t);}
 let cdWas=0;
-function frame(){requestAnimationFrame(frame);if(capSkip())return;let dt=Math.min(clock.getDelta(),.05);perfTick(dt);try{PAD.out=padRead(dt);}catch(e){}if(stopT>0){stopT-=dt;dt*=.06;}
+function frame(){requestAnimationFrame(frame);if(capSkip())return;let dt=Math.min(clock.getDelta(),.05);perfTick(dt);try{PAD.out=padRead(dt);}catch(e){window.__padErr=String(e&&e.stack||e).slice(0,300);}if(stopT>0){stopT-=dt;dt*=.06;}
   {const cd=Math.max(0,P.blastCD/1.3);if(Math.abs(cd-cdWas)>.004||cd===0&&cdWas>0){$('bBlast').style.setProperty('--cd',cd.toFixed(3));if(cd===0&&cdWas>0){$('bBlast').classList.remove('ready');void $('bBlast').offsetWidth;$('bBlast').classList.add('ready');}cdWas=cd;}}if(state==='paused'||state==='load')return draw();time+=dt;
   for(const s of movers){const ox=(s.min.x+s.max.x)/2,oz=(s.min.z+s.max.z)/2;const nx=s.bx+(s.ax?Math.sin(time*s.spd+s.ph)*s.amp:0),nz=s.bz+(s.az?Math.sin(time*s.spd+s.ph)*s.amp:0),ny=(s.sink!=null?(s.by+=clamp((P.stand===s?s.sink-1.5:s.sink)-s.by,-dt*.75,dt*1.1)):s.by)+(s.ay?Math.sin(time*s.spd+s.ph)*s.ay:0);s.dx=nx-ox;s.dz=nz-oz;s.dy=ny-s.max.y;s.min.y+=s.dy;s.max.y+=s.dy;s.mesh.position.y+=s.dy;
     s.min.x+=s.dx;s.max.x+=s.dx;s.min.z+=s.dz;s.max.z+=s.dz;s.mesh.position.x+=s.dx;s.mesh.position.z+=s.dz;}
