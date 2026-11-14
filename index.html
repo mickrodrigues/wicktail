@@ -11,7 +11,7 @@
 <meta property="og:image" content="img/hero.jpg">
 <link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700;900&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700;900&family=Nunito:wght@600;700;800;900&family=Lora:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{--void:#07031a;--deep:#120632;--ink:#fff4e0;--mute:#cdbfe8;--gold:#ffcf6a;--amber:#ffb04a;--violet:#8a5aff;--rose:#ff6a8a;
   --title:'Cinzel Decorative','Cinzel',Georgia,serif;--head:'Cinzel',Georgia,serif;--ui:'Nunito','Trebuchet MS',system-ui,sans-serif;--max:1180px}
@@ -65,7 +65,12 @@ h2{font:900 clamp(32px,4.6vw,54px)/1.05 var(--head);margin:10px 0 18px;color:#ff
 .screen .card{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;background:radial-gradient(60% 60% at 50% 50%,rgba(7,3,26,.25),rgba(7,3,26,.75));pointer-events:none}
 .screen .card .big{font:900 clamp(26px,5vw,58px)/1.1 var(--title);color:#fff2c8;text-shadow:0 0 30px rgba(255,180,80,.5),0 3px 0 #2a1004;opacity:0;transform:translateY(10px);transition:opacity .8s,transform .8s;text-align:center;padding:0 20px}
 .screen .card .big.on{opacity:1;transform:none}
-.screen .lb{position:absolute;left:0;right:0;height:7%;background:#000}.screen .lb.t{top:0}.screen .lb.b{bottom:0}
+.screen .cap{position:absolute;left:0;right:0;bottom:0;padding:16% 4% 4.2%;text-align:center;pointer-events:none;background:linear-gradient(180deg,rgba(14,6,36,0),rgba(14,6,36,.55) 45%,rgba(12,5,30,.9))}
+.screen .cap .orn{display:flex;align-items:center;justify-content:center;margin-bottom:1.6%;opacity:0;transition:opacity .8s}
+.screen .cap .orn i{width:clamp(6px,.75vw,11px);aspect-ratio:1;transform:rotate(45deg);background:linear-gradient(135deg,#fff3c4,#d9a441);box-shadow:0 0 10px rgba(255,200,110,.7)}
+.screen .cap .orn b{width:22%;height:2px;margin:0 8px;background:linear-gradient(90deg,rgba(217,164,65,.2),#f3d58a 20%,#f3d58a 80%,rgba(217,164,65,.2))}
+.screen .cap .txt{font:700 clamp(13px,3vw,42px)/1.15 'Lora',Georgia,serif;color:#fbe7b0;background:linear-gradient(180deg,#fffbe6,#fbe7b0 55%,#e9c06a);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 0 rgba(30,10,4,.9)) drop-shadow(0 0 16px rgba(0,0,0,.6));white-space:nowrap;opacity:0;transform:translateY(8px);transition:opacity .8s,transform .8s}
+.screen .cap.on .orn,.screen .cap.on .txt{opacity:1;transform:none}
 .soon{margin-top:16px;color:var(--mute);font-size:14px}
 /* features */
 .feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:34px}
@@ -137,16 +142,14 @@ footer .brand{display:inline-block;margin-bottom:10px}
   <h2>Two chapters. Fourteen dreams. One lantern.</h2>
   <div class="screen reveal" id="reel" aria-label="Trailer slideshow">
     <div class="sl" style="background-image:url(img/hero.jpg)"></div>
-    <div class="sl" style="background-image:url(img/shot1.jpg)"></div>
-    <div class="sl" style="background-image:url(img/shot2.jpg)"></div>
-    <div class="sl" style="background-image:url(art/l9.jpg)"></div>
-    <div class="sl" style="background-image:url(img/shot3.jpg)"></div>
-    <div class="sl" style="background-image:url(img/shot5.jpg)"></div>
-    <div class="sl" style="background-image:url(img/shot4.jpg)"></div>
-    <div class="sl" style="background-image:url(img/shot6.jpg)"></div>
-    <div class="sl" style="background-image:url(art/l14.jpg)"></div>
-    <div class="lb t"></div><div class="lb b"></div>
-    <div class="card"><div class="big" id="reelT"></div></div>
+    <div class="sl" style="background-image:url(img/s1.jpg)"></div>
+    <div class="sl" style="background-image:url(img/s2.jpg)"></div>
+    <div class="sl" style="background-image:url(img/s3.jpg)"></div>
+    <div class="sl" style="background-image:url(img/s4.jpg)"></div>
+    <div class="sl" style="background-image:url(img/s5.jpg)"></div>
+    <div class="sl" style="background-image:url(img/s6.jpg)"></div>
+    <div class="sl" style="background-image:url(img/s7.jpg)"></div>
+    <div class="cap"><div class="orn"><i></i><b></b><i></i></div><div class="txt" id="reelT"></div></div>
   </div>
   <p class="soon">Full gameplay trailer coming soon.</p>
 </div></section>
@@ -238,8 +241,8 @@ document.getElementById('mailBtn').href='mailto:'+FEED+'?subject='+encodeURIComp
 var LV=['Sleepy-Sun Village','Cauldron Market','Dead Letter Bog','Glowshroom Mines','The Mill That Bites','The Clock Tower','The Hollow King','Dragon Gate',"The Moon's Teeth",'Moonline Railway',"Regent's Hollow",'Drowned Archive',"Cinderwing's Crossing",'Star-Cage Citadel'];
 document.getElementById('levels').innerHTML=LV.map(function(n,i){return '<div class="frame reveal"><img src="art/l'+(i+1)+'.jpg" alt="'+n+'" loading="lazy"><span class="no">'+String(i+1).padStart(2,'0')+'</span><div class="plate">'+n+'</div></div>';}).join('');
 /* trailer slideshow */
-(function(){var s=[].slice.call(document.querySelectorAll('#reel .sl')),t=document.getElementById('reelT'),cap=['','The Moon stole the night.','Fourteen dreams to cross.','Break his servants.','Then the stars went missing.','Wake the drowned library.','Cross the burning bridge.','Storm the Star-Cage.','Keep the lantern burning.'],i=-1;
-  function next(){if(i>=0)s[i].classList.remove('on');i=(i+1)%s.length;var e=s[i];e.classList.remove('on');void e.offsetWidth;e.classList.add('on');t.classList.remove('on');setTimeout(function(){t.textContent=cap[i]||'';if(cap[i])t.classList.add('on');},500);}
+(function(){var s=[].slice.call(document.querySelectorAll('#reel .sl')),t=document.getElementById('reelT'),c=t.parentNode,cap=['Keep the lantern burning','13 epic boss fights','Ride the Moonline through glowing forests','Every boss fights differently','14 hand-crafted dream worlds','Dodge, dash and strike back','Smash crates and find hidden gems','Classic PS2-style platforming. No ads.'],i=-1;
+  function next(){if(i>=0)s[i].classList.remove('on');i=(i+1)%s.length;var e=s[i];e.classList.remove('on');void e.offsetWidth;e.classList.add('on');c.classList.remove('on');setTimeout(function(){t.textContent=cap[i]||'';if(cap[i])c.classList.add('on');},500);}
   next();setInterval(next,4800);})();
 /* install buttons */
 var dp=null;addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;});
