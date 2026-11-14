@@ -37,6 +37,7 @@ jobs:
           cp -r android-app/shell/. "$W"/
           cp -r art "$W"/art
           cp -r play/vo "$W"/vo
+          if [ -d play/sky ]; then cp -r play/sky "$W"/sky; fi
           python3 - <<'PY'
           import json, subprocess
           aref = json.load(open('android-app/aref.json'))
