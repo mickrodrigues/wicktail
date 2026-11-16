@@ -9353,7 +9353,7 @@ if(gp&&sc&&!sc.hidden&&window.__lrNav){const b=k=>!!(gp.buttons[k]&&gp.buttons[k
 for(const[k,d]of[[4,-1],[5,1],[14,-1],[15,1]]){if(b(k)&&!was[k])window.__lrNav(d)
 was[k]=b(k)}if(b(0)&&!was[0]&&window.__lrGo)window.__lrGo()
 was[0]=b(0)}else was={}}catch(e){}requestAnimationFrame(poll)}
-requestAnimationFrame(poll)}pick(Math.max(0,lvs.indexOf(tgt)))}function pxTex(w,h,fn){const c=document.createElement("canvas")
+requestAnimationFrame(poll)}pick(Math.max(0,lvs.indexOf(tgt)))}function bbPx(w,h,fn){const c=document.createElement("canvas")
 c.width=w
 c.height=h
 const g=c.getContext("2d")
@@ -9368,18 +9368,18 @@ for(let i=0;i<w*h/5;i++){g.fillStyle=cols[Math.random()*cols.length|0]
 const x=Math.random()*w|0,y=Math.random()*h|0
 g.fillRect(x,y,1,1+(Math.random()*3|0))}}function bbModel(){const G=new THREE.Group
 const L=(c,map)=>new THREE.MeshLambertMaterial({color:c||16777215,map:map||null,flatShading:true})
-const straw=pxTex(32,32,((g,w,h)=>bbStraw(g,w,h,"#d8a43a",["#f2c860","#b8802a","#e8b850","#9a6a20","#fff0a0"])))
-const strawEnd=pxTex(32,32,((g,w,h)=>{bbStraw(g,w,h,"#c8902e",["#e8b850","#8a5a18","#f2c860"])
+const straw=bbPx(32,32,((g,w,h)=>bbStraw(g,w,h,"#d8a43a",["#f2c860","#b8802a","#e8b850","#9a6a20","#fff0a0"])))
+const strawEnd=bbPx(32,32,((g,w,h)=>{bbStraw(g,w,h,"#c8902e",["#e8b850","#8a5a18","#f2c860"])
 for(let r=4;r<16;r+=4){g.strokeStyle="#8a5a18"
 g.beginPath()
 g.arc(16,16,r,0,6.3)
 g.stroke()}}))
-const rope=L(11040826),wood=L(6963234),dark=L(3810322),burlap=L(13148272,pxTex(16,16,((g,w,h)=>{g.fillStyle="#c8a070"
+const rope=L(11040826),wood=L(6963234),dark=L(3810322),burlap=L(13148272,bbPx(16,16,((g,w,h)=>{g.fillStyle="#c8a070"
 g.fillRect(0,0,w,h)
 g.fillStyle="#a8804a"
 for(let i=0;i<w;i+=2)g.fillRect(i,0,1,h)
 for(let j=0;j<h;j+=2)g.fillRect(0,j,w,1)})))
-const bandTex=pxTex(16,16,((g,w,h)=>{for(let y=0;y<h;y+=4)for(let x=0;x<w;x+=4){g.fillStyle=(x+y)/4%2?"#f4e8cc":"#c8302a"
+const bandTex=bbPx(16,16,((g,w,h)=>{for(let y=0;y<h;y+=4)for(let x=0;x<w;x+=4){g.fillStyle=(x+y)/4%2?"#f4e8cc":"#c8302a"
 g.fillRect(x,y,4,4)}}))
 const sm=[L(0,straw),L(0,straw),L(0,straw),L(0,straw),L(0,strawEnd),L(0,strawEnd)]
 const body=new THREE.Mesh(new THREE.BoxGeometry(.8,.62,1.05),sm)
