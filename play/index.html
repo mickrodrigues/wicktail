@@ -8159,7 +8159,12 @@ if(t<.97)show=false}catch(e){}}if(show){talkSetLabel(b,talkLabel())
 const x=Math.round((v.x*.5+.5)*innerWidth-TALK.w/2),bob=Math.floor(time*2.2)%2*3,y=Math.round((-v.y*.5+.5)*innerHeight-TALK.h-bob)
 b.style.transform="translate("+x+"px,"+y+"px)"}}if(b.hidden===show)b.hidden=!show}const GLD={armed:false,on:false,t:0,bufWas:0,snd:0}
 function mvJumpHeld(){try{const k2=KB_DEF.jump[1]
-return held("jump")||k2&&!!keys[k2]||typeof btnHold!=="undefined"&&btnHold.jump||!!P.padJump}catch(e){return false}}function glideTick(dt){const air=!P.onGround&&!P.dead&&state==="play"
+return held("jump")||k2&&!!keys[k2]||typeof btnHold!=="undefined"&&btnHold.jump||!!P.padJump}catch(e){return false}}function glideTick(dt){if(!window.GLIDE_ON){if(GLD.on||GLD.orbOn){GLD.on=false
+GLD.orbOn=false
+if(MV.orb&&MV.hold<=.28)MV.orb.visible=false
+if(flint)flint.rotation.z=0}GLD.armed=false
+GLD.t=0
+return}const air=!P.onGround&&!P.dead&&state==="play"
 if(!air){if(GLD.orbOn){GLD.orbOn=false
 if(MV.orb&&MV.hold<=.28)MV.orb.visible=false
 if(flint)flint.rotation.z=0}GLD.armed=false
@@ -11818,7 +11823,7 @@ const p=new THREE.Mesh(new THREE.CylinderGeometry(.08,.12,1.4,6),im)
 p.position.set(x,y+.7,z)
 scene.add(p)
 const f=spr(glowTex,16747050,1.6,2.2,x,y+2.3,z)
-scene.add(f);(WK.fires=WK.fires||[]).push({m:f,x,y:y+2,z})}if(LV===8){COURSE[8]={w:5.2,cmds:[{s:12,w:7,tag:"dgate"},{s:4,w:5.2},{arc:-40,r:12,dh:1},{s:8,tag:"jet"},{arc:70,r:10,dh:1.5},{s:8,tag:"jet"},{gap:1,s:2.6},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5.2},{arc:-60,r:11,dh:1},{s:8,tag:"ck"},{s:6,dh:2,tag:"lava"},{arc:120,r:7,dh:3,tag:"lava"},{s:6,dh:2,tag:"lava"},{gap:1,s:2.4,tag:"lava"},{s:4,dh:1,tag:"lava"},{arc:-120,r:7,dh:3,tag:"lava"},{s:8,dh:2.5,tag:"lava"},{arc:80,r:8,dh:2,tag:"lava"},{s:6,dh:1,tag:"lava"},{s:8},{s:8,dh:2.4,tag:"launch"},{gap:1,s:14,dh:-3.4,tag:"glide"},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5.2},{arc:-40,r:12},{s:10,tag:"jet"},{gap:1,s:2.8},{s:8},{arc:30,r:14},{s:10,w:9,tag:"maw"},{s:6,w:5.2,tag:"end"}],look:{top:"rock",banks:true,lava:true}}
+scene.add(f);(WK.fires=WK.fires||[]).push({m:f,x,y:y+2,z})}if(LV===8){COURSE[8]={w:5.2,cmds:[{s:12,w:7,tag:"dgate"},{s:4,w:5.2},{arc:-40,r:12,dh:1},{s:8,tag:"jet"},{arc:70,r:10,dh:1.5},{s:8,tag:"jet"},{gap:1,s:2.6},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5.2},{arc:-60,r:11,dh:1},{s:8,tag:"ck"},{s:6,dh:2,tag:"lava"},{arc:120,r:7,dh:3,tag:"lava"},{s:6,dh:2,tag:"lava"},{gap:1,s:2.4,tag:"lava"},{s:4,dh:1,tag:"lava"},{arc:-120,r:7,dh:3,tag:"lava"},{s:8,dh:2.5,tag:"lava"},{arc:80,r:8,dh:2,tag:"lava"},{s:6,dh:1,tag:"lava"},{s:8},{s:8,dh:1.2,tag:"launch"},{gap:1,s:14,dh:-1.2,tag:"glide"},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5.2},{arc:-40,r:12},{s:10,tag:"jet"},{gap:1,s:2.8},{s:8},{arc:30,r:14},{s:10,w:9,tag:"maw"},{s:6,w:5.2,tag:"end"}],look:{top:"rock",banks:true,lava:true}}
 L.courseDress=(p,o)=>{try{w8Dress(p,o)}catch(e){window.__lvErr=String(e)+" "+(e.stack||"").slice(0,300)}}}function w8Dress(path){WK.path=path
 const beaten=wkBeaten()
 {const[a]=wkRuns(path,"dgate")[0]||[0]
@@ -11849,9 +11854,18 @@ lm.rotation.x=-Math.PI/2
 lm.position.set((c0.x+c1.x)/2,Math.min(c0.y,c1.y)-6,(c0.z+c1.z)/2)
 scene.add(lm)
 WK.updraft={x:(c0.x+c1.x)/2,y:lm.position.y,z:(c0.z+c1.z)/2}
-for(let s=a+1;s<b;s+=1.6){const c=crsAt(path,s)
-const k=(s-a)/(b-a)
-spawnOrb(c.x,c0.y+1.2-k*(c0.y-c1.y)-Math.sin(k*Math.PI)*.4,c.z)}const[la]=wkRuns(path,"launch")[0]
+{const pts=[]
+const s0=a-2.5,s1=b+2.5
+for(let s=s0;s<=s1;s+=1.5){const c=crsAt(path,s,0)
+const k=(s-s0)/(s1-s0)
+const y=crsAt(path,s0).y+(crsAt(path,s1).y-crsAt(path,s0).y)*k
+pts.push([c.x,y+1.15-Math.sin(k*Math.PI)*.6,c.z])}const r=mkRail(pts)
+try{r.tube.material.color.setHex(6971504)}catch(_){}for(const p of pts)spawnOrb(p[0],p[1]+.8,p[2])
+for(const s of[s0,s1]){const c=crsAt(path,s,0)
+for(const sd of[-1,1]){const e=crsAt(path,s,sd*.9)
+const po=new THREE.Mesh(new THREE.CylinderGeometry(.18,.24,2,6),new THREE.MeshLambertMaterial({map:wkPaint8("basalt"),color:9076880}))
+po.position.set(e.x,e.y+1,e.z)
+scene.add(po)}}}const[la]=wkRuns(path,"launch")[0]
 for(const sd of[-1,1]){const e=crsAt(path,la+6,sd*2.8)
 w8Brazier(e.x,e.y,e.z)}}{const[a,b]=wkRuns(path,"maw")[0]
 const q=crsAt(path,b)
@@ -19009,9 +19023,12 @@ makeCrate("crate",c.x+Math.cos(an)*1.9,c.z+Math.sin(an)*1.9,c.y)}TG.ring=crates.
 spawnOrb(q.x,q.y,q.z)}}{const[a,b]=run("canyon")
 for(let s=a+2;s<b-1;s+=2.4){const q=crsAt(path,s,-(crsAt(path,s).p.w/2-.6),2.2)
 spawnOrb(q.x,q.y,q.z)}}{const[a,b]=run("drop")
-for(let s=a+2;s<b;s+=2.6){const t=(s-a)/(b-a)
-const q=crsAt(path,s,0,2.4-t*3)
-spawnOrb(q.x,q.y,q.z)}}TG.path=path}
+const s0=a-2.5,s1=b+2.5,y0=crsAt(path,s0).y,y1=crsAt(path,s1).y
+const pts=[]
+for(let s=s0;s<=s1;s+=1.5){const c=crsAt(path,s,0)
+const k=(s-s0)/(s1-s0)
+pts.push([c.x,y0+(y1-y0)*k+1.15,c.z])}mkRail(pts)
+for(const p of pts)spawnOrb(p[0],p[1]+.8,p[2])}TG.path=path}
 function tgTargetTex(){const c=document.createElement("canvas")
 c.width=c.height=64
 const g=c.getContext("2d")
