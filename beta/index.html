@@ -9524,15 +9524,15 @@ return q&&q.tag==="bells"?L1V.bells:[]}}function l1v2Dress(path,{tagRuns}){L1V.p
 const run=t=>tagRuns(t)[0]||[0,0]
 const at=(s,lat=0,dy=0)=>crsAt(path,s,lat,dy)
 try{const b=getBest()
-L1V.relit=!!(b[1]&&(b[1].time||b[1].grade))}catch(e){}const wood=new THREE.MeshLambertMaterial({color:6963234,flatShading:true}),dark=new THREE.MeshLambertMaterial({color:3810322,flatShading:true})
-const stone=new THREE.MeshLambertMaterial({color:9075360,flatShading:true})
+L1V.relit=!!(b[1]&&(b[1].time||b[1].grade))}catch(e){}const wood=l1Mat("wood",16777215),dark=l1Mat("wood",6967368),iron=new THREE.MeshLambertMaterial({color:3025462})
+const stone=l1Mat("masonry",16777215),roofM=l1Mat("masonry",8022696),hayM=new THREE.MeshLambertMaterial({map:l1Paint("hay")}),brickM=new THREE.MeshLambertMaterial({map:l1Paint("brick")})
 {const[a]=run("gate")
 const q=at(a+5)
 for(const sd of[-1,1]){const e=at(a+5,sd*3.6)
 const p=new THREE.Mesh(boxGeo(1.1,5.4,1.1,1.2),stone)
 p.position.set(e.x,e.y+2.7,e.z)
 scene.add(p)
-const cap=new THREE.Mesh(new THREE.ConeGeometry(.9,1,4),new THREE.MeshLambertMaterial({color:3816042,flatShading:true}))
+const cap=new THREE.Mesh(new THREE.ConeGeometry(.9,1,4),roofM)
 cap.position.set(e.x,e.y+5.9,e.z)
 cap.rotation.y=Math.PI/4
 scene.add(cap)
@@ -9540,14 +9540,11 @@ addSolid(e.x-.55,e.x+.55,e.y,e.y+5.4,e.z-.55,e.z+.55,"wall",null)}const beam=new
 beam.position.set(q.x,q.y+5,q.z)
 beam.rotation.y=-q.a
 scene.add(beam)
-const sb=new THREE.Mesh(new THREE.CircleGeometry(.75,10),new THREE.MeshBasicMaterial({color:15902778}))
-sb.position.set(q.x+Math.sin(q.a)*0,q.y+5,q.z+.47)
-scene.add(sb)
-for(let k=0;k<9;k++){const t=k/8,e=at(a+5,-3.4+t*6.8)
-const f=new THREE.Mesh(new THREE.ConeGeometry(.2,.4,3),new THREE.MeshLambertMaterial({color:[13119530,16050380,15902778][k%3]}))
-f.position.set(e.x,e.y+4.3-Math.sin(t*Math.PI)*.5,e.z+.5)
-f.rotation.x=Math.PI
-scene.add(f)}const sx=at(a+9,-5.4)
+{const sb=new THREE.Mesh(new THREE.CircleGeometry(.85,24),new THREE.MeshLambertMaterial({map:l1Paint("sun"),transparent:true,side:THREE.DoubleSide}))
+sb.position.set(q.x-Math.sin(q.a)*.5,q.y+5,q.z+Math.cos(q.a)*.5)
+sb.rotation.y=-q.a
+scene.add(sb)}{const e0=at(a+5,-3.4),e1=at(a+5,3.4)
+c1Bunting(e0.x,e0.y+4.55,e0.z,e1.x,e1.y+4.55,e1.z,{cols:[13119530,16050380,15902778,8010464],sag:.6})}const sx=at(a+9,-5.4)
 c1House(sx.x,sx.y,sx.z,-at(a+9).a+Math.PI/2,{pal:"ochre",floors:1,w:3.2,d:3.6,roofH:1.3,chimney:false,solid:false})
 const loft=at(a+9,-3.3)
 const lp=new THREE.Mesh(boxGeo(1.6,.3,2.4,1),wood)
@@ -9585,7 +9582,7 @@ roofs.push({c,top,d:h.d,s:h.s})
 for(let k=0;k<Math.floor(h.d/1.5);k++)spawnOrb(c.x,top+.9,c.z+h.d/2-.8-k*1.5)}))
 {const r0=roofs[0]
 const cart=at(a+.5,1.6)
-const hay=new THREE.Mesh(boxGeo(1.6,1.2,1.4,1),new THREE.MeshLambertMaterial({color:14197818,flatShading:true}))
+const hay=new THREE.Mesh(boxGeo(1.6,1.2,1.4,1),hayM)
 hay.position.set(cart.x,cart.y+.6,cart.z)
 scene.add(hay)
 addSolid(cart.x-.8,cart.x+.8,cart.y,cart.y+1.2,cart.z-.7,cart.z+.7,"block",null)
@@ -9596,7 +9593,7 @@ awn.position.set(aw.x,aw.y+3,aw.z)
 awn.rotation.x=.12
 scene.add(awn)
 addSolid(aw.x-.9,aw.x+.9,aw.y+2.8,aw.y+3.05,aw.z-.8,aw.z+.8,"block",null)}{const r=roofs[1]
-const ch=new THREE.Mesh(boxGeo(.8,1.1,.8,1),new THREE.MeshLambertMaterial({color:9062970,flatShading:true}))
+const ch=new THREE.Mesh(boxGeo(.8,1.1,.8,1),brickM)
 ch.position.set(r.c.x,r.top+.55,r.c.z)
 scene.add(ch)
 addSolid(r.c.x-.4,r.c.x+.4,r.top,r.top+1.1,r.c.z-.4,r.c.z+.4,"block",null)}{const r2=roofs[2],r3=roofs[3]
@@ -9606,7 +9603,7 @@ const pl=new THREE.Mesh(boxGeo(.5,.12,Math.abs(z1-z0),1),wood)
 pl.position.set(r2.c.x,y,(z0+z1)/2)
 scene.add(pl)
 addSolid(r2.c.x-.25,r2.c.x+.25,y-.12,y,Math.min(z0,z1),Math.max(z0,z1),"block",null)
-for(let k=0;k<4;k++){const sh=new THREE.Mesh(new THREE.PlaneGeometry(.5,.6),new THREE.MeshLambertMaterial({color:[16050380,9089256,15245512,15911008][k],side:THREE.DoubleSide}))
+for(let k=0;k<4;k++){const sh=new THREE.Mesh(new THREE.PlaneGeometry(.5,.6),new THREE.MeshLambertMaterial({map:l1Paint("cloth"+k),side:THREE.DoubleSide}))
 sh.position.set(r2.c.x+.4,y+.9,z0-.6-k*.7*Math.sign(z0-z1)*-1)
 sh.rotation.y=Math.PI/2
 scene.add(sh)}}{const r=roofs[3]
@@ -9630,80 +9627,137 @@ for(let k=0;k<3;k++){const o=at(a+1.5+k*1.5,3.9,1)
 spawnOrb(o.x,o.y,o.z)}}{const[a,b]=run("bells")
 const s0=a+7
 const q=at(s0)
-const fr=new THREE.Group
-scene.add(fr)
 for(const sd of[-1,1]){const e=at(s0,sd*4.6)
-const p=new THREE.Mesh(boxGeo(.45,5,.45,1),wood)
-p.position.set(e.x,e.y+2.5,e.z)
+const ft=new THREE.Mesh(boxGeo(.9,.6,.9,1),stone)
+ft.position.set(e.x,e.y+.3,e.z)
+scene.add(ft)
+const p=new THREE.Mesh(boxGeo(.5,5.2,.5,1),wood)
+p.position.set(e.x,e.y+2.9,e.z)
 scene.add(p)
-addSolid(e.x-.25,e.x+.25,e.y,e.y+5,e.z-.25,e.z+.25,"wall",null)}const bm=new THREE.Mesh(boxGeo(9.8,.4,.4,1),wood)
-bm.position.set(q.x,q.y+4.9,q.z)
+addSolid(e.x-.45,e.x+.45,e.y,e.y+5.4,e.z-.45,e.z+.45,"wall",null)
+const br=new THREE.Mesh(boxGeo(.9,.12,.56,1),iron)
+br.position.set(e.x,e.y+4.9,e.z)
+br.rotation.y=-q.a
+br.rotation.z=sd*.6
+scene.add(br)}const bm=new THREE.Mesh(boxGeo(10.2,.5,.55,1),wood)
+bm.position.set(q.x,q.y+5.5,q.z)
 bm.rotation.y=-q.a
 scene.add(bm)
-const bellM=[11016204,13668368,5905080]
+const bm2=new THREE.Mesh(boxGeo(10.6,.2,.75,1),dark)
+bm2.position.set(q.x,q.y+5.85,q.z)
+bm2.rotation.y=-q.a
+scene.add(bm2)
+const bellM=[13123626,15249456,9064672]
 L1V.bells=[-3,0,3].map(((lat,i)=>{const e=at(s0,lat)
 const g=new THREE.Group
-g.position.set(e.x,e.y+4.7,e.z)
+g.position.set(e.x,e.y+5.25,e.z)
+g.rotation.y=-q.a
 scene.add(g)
-const bell=new THREE.Mesh(new THREE.CylinderGeometry(.35,.75,1.1,8,1,true),new THREE.MeshLambertMaterial({color:bellM[i],side:THREE.DoubleSide,emissive:0}))
-bell.position.y=-.85
-g.add(bell)
-const top=new THREE.Mesh(new THREE.SphereGeometry(.36,8,4,0,6.3,0,1.6),new THREE.MeshLambertMaterial({color:bellM[i]}))
-top.position.y=-.3
-g.add(top)
-const cl=new THREE.Mesh(new THREE.SphereGeometry(.15,6,4),dark)
-cl.position.y=-1.35
-g.add(cl)
-const rope=new THREE.Mesh(boxGeo(.06,.3,.06,1),dark)
-rope.position.y=-.05
-g.add(rope)
-return{g,bell,i,x:e.x,y:e.y+3.6,z:e.z,sw:0,glow:0,pos:V3(e.x,e.y+3.3,e.z),alive:true,type:"bell"}}))
+const bm=c1BellMesh(.5)
+bm.position.y=-.35
+g.add(bm)
+let body=null
+const tint=new THREE.Color(bellM[i]).lerp(new THREE.Color(16777215),.45)
+bm.traverse((o=>{if(o.isMesh&&o.material===c1BronzeM()){o.material=c1BronzeM().clone()
+o.material.color.copy(tint)
+o.material.emissive.setHex(0)
+if(!body)body=o}}))
+const band=new THREE.Mesh(new THREE.TorusGeometry(.6,.07,6,20),new THREE.MeshLambertMaterial({color:bellM[i],emissive:new THREE.Color(bellM[i]).multiplyScalar(.25)}))
+band.rotation.x=Math.PI/2
+band.position.y=-.95
+g.add(band)
+const rb=new THREE.Mesh(new THREE.PlaneGeometry(.22,.7),new THREE.MeshLambertMaterial({color:bellM[i],side:THREE.DoubleSide}))
+rb.position.set(.35,0,.28)
+rb.rotation.z=.2
+g.add(rb)
+return{g,bell:body,i,x:e.x,y:e.y+4.2,z:e.z,sw:0,glow:0,pos:V3(e.x,e.y+3.9,e.z),alive:true,type:"bell"}}))
 L1V.order=[2,0,1]
 L1V.got=0
 L1V.zoneS=a
 L1V.playT=-1
 L1V.cool=0
 const g2=at(b-1)
-L1V.gateBlock=addSolid(g2.x-5.8,g2.x+5.8,g2.y,g2.y+6,g2.z-1.2,g2.z+1.2,"wall",null)
-L1V.door=new THREE.Group
-for(const sd of[-1,1]){const d=new THREE.Mesh(boxGeo(2.8,4.2,.3,1),wood)
-d.position.set(sd*1.4,2.1,0)
-L1V.door.add(d)
-for(const yy of[.8,3.2]){const st=new THREE.Mesh(boxGeo(2.6,.18,.34,1),dark)
-st.position.set(sd*1.4,yy,0)
-L1V.door.add(st)}}L1V.plq=L1V.order.map(((bi,k)=>{const m=new THREE.MeshLambertMaterial({color:bellM[bi],emissive:0})
-const ring=new THREE.Mesh(new THREE.CylinderGeometry(.62,.62,.12,16),new THREE.MeshLambertMaterial({color:3810328}))
-ring.rotation.x=Math.PI/2
-ring.position.set((k-1)*1.65,1.55,0)
-L1V.door.add(ring)
-for(const zz of[-.22,.22]){const d=new THREE.Mesh(new THREE.CylinderGeometry(.5,.5,.06,16),m)
-d.rotation.x=Math.PI/2
-d.position.set((k-1)*1.65,1.55,zz)
-L1V.door.add(d)
-const bl=new THREE.Mesh(new THREE.ConeGeometry(.26,.42,8),new THREE.MeshLambertMaterial({color:2758672}))
-bl.rotation.x=0
-bl.position.set((k-1)*1.65,1.57,zz*1.25)
-L1V.door.add(bl)}return m}))
-L1V.door.position.set(g2.x,g2.y,g2.z)
-L1V.door.rotation.y=-g2.a
-scene.add(L1V.door)
-for(const sd of[-1,1]){const e=at(b-1,sd*3.2)
-const p=new THREE.Mesh(boxGeo(.8,5,.8,1.2),stone)
-p.position.set(e.x,e.y+2.5,e.z)
-scene.add(p)}{const q2=at(a+2,-3)
+const ry=-g2.a
+const G=new THREE.Group
+G.position.set(g2.x,g2.y,g2.z)
+G.rotation.y=ry
+scene.add(G)
+L1V.gate=G
+const W=7.2
+for(const sd of[-1,1]){const wl=new THREE.Mesh(boxGeo(W-2.95,5.4,1.4,2),stone)
+wl.position.set(sd*(2.95+(W-2.95)/2),2.7,0)
+G.add(wl)
+const cr=new THREE.Mesh(boxGeo(W-2.95,.35,1.6,1),roofM)
+cr.position.set(sd*(2.95+(W-2.95)/2),5.55,0)
+G.add(cr)
+for(let k=0;k<3;k++){const m=new THREE.Mesh(boxGeo(.7,.5,1.6,1),stone)
+m.position.set(sd*(3.6+k*1.3),6,0)
+G.add(m)}const pl=new THREE.Mesh(boxGeo(1.1,7,1.8,2),stone)
+pl.position.set(sd*2.95,3.5,0)
+G.add(pl)
+const cp=new THREE.Mesh(new THREE.ConeGeometry(.95,1.2,4),roofM)
+cp.position.set(sd*2.95,7.6,0)
+cp.rotation.y=Math.PI/4
+G.add(cp)
+const lg=new THREE.Mesh(boxGeo(.3,.42,.3,1),new THREE.MeshBasicMaterial({color:16765562}))
+lg.position.set(sd*2.95,4.5,1.1)
+G.add(lg)
+const lc=new THREE.Mesh(new THREE.ConeGeometry(.28,.24,4),iron)
+lc.rotation.y=Math.PI/4
+lc.position.set(sd*2.95,4.84,1.1)
+G.add(lc)
+const lw=spr(glowTex,16756816,2.2,2.2,sd*2.95,4.5,1.15)
+lw.material.opacity=.55
+G.add(lw)
+const e=at(b-1,sd*(2.95+(W-2.95)/2))
+const hw=(W-2.4)/2+.6
+addSolid(e.x-hw,e.x+hw,e.y,e.y+7,e.z-1.2,e.z+1.2,"wall",null)}const lint=new THREE.Mesh(boxGeo(4.8,1.1,1.6,2),stone)
+lint.position.set(0,5.25,0)
+G.add(lint)
+const sgn=new THREE.Mesh(boxGeo(4.2,1.1,.16,1),wood)
+sgn.position.set(0,5.25,.88)
+G.add(sgn)
+L1V.plq=L1V.order.map(((bi,k)=>{const m=new THREE.MeshLambertMaterial({map:l1Paint("plq"+bi),color:16777215,emissive:0})
+const d=new THREE.Mesh(new THREE.CircleGeometry(.44,20),m)
+d.position.set((k-1)*1.3,5.25,.97)
+G.add(d)
+const rim=new THREE.Mesh(new THREE.TorusGeometry(.46,.06,6,20),iron)
+rim.position.copy(d.position)
+G.add(rim)
+return m}))
+L1V.leaves=[]
+const dm=new THREE.MeshLambertMaterial({map:l1Paint("door")})
+for(const sd of[-1,1]){const h=new THREE.Group
+h.position.set(sd*2.4,0,0)
+G.add(h)
+const lf=new THREE.Mesh(new THREE.BoxGeometry(2.4,4.7,.28),dm)
+lf.position.set(-sd*1.2,2.35,0)
+h.add(lf)
+const ring=new THREE.Mesh(new THREE.TorusGeometry(.16,.04,6,12),iron)
+ring.position.set(-sd*2.05,2.2,.2)
+h.add(ring)
+L1V.leaves.push({h,sd})}{const e=at(b-1)
+L1V.gateBlock=addSolid(e.x-2.6,e.x+2.6,e.y,e.y+6,e.z-1.2,e.z+1.2,"wall",null)}{const q2=at(a+2,-3)
 mkFoe("charger","balebutt",q2.x,q2.z,q2.y,1.15)}}{const[a]=run("bells")
 const t=at(a+3,7.4)
-const tw=new THREE.Mesh(boxGeo(3.2,22,3.2,2),stone)
-tw.position.set(t.x,t.y+11,t.z)
+const tw=new THREE.Mesh(boxGeo(3.2,18,3.2,2),stone)
+tw.position.set(t.x,t.y+9,t.z)
 scene.add(tw)
+for(const[ox,oz]of[[1.3,1.3],[-1.3,1.3],[1.3,-1.3],[-1.3,-1.3]]){const c=new THREE.Mesh(boxGeo(.6,4,.6,2),stone)
+c.position.set(t.x+ox,t.y+20,t.z+oz)
+scene.add(c)}const sl=new THREE.Mesh(boxGeo(3.6,.4,3.6,2),stone)
+sl.position.set(t.x,t.y+22.1,t.z)
+scene.add(sl)
 addSolid(t.x-1.6,t.x+1.6,t.y-2,t.y+22,t.z-1.6,t.z+1.6,"wall",null)
-const rf=new THREE.Mesh(new THREE.ConeGeometry(2.9,4,4),new THREE.MeshLambertMaterial({color:3816042,flatShading:true}))
+const rf=new THREE.Mesh(new THREE.ConeGeometry(2.9,4,4),roofM)
 rf.position.set(t.x,t.y+24,t.z)
 rf.rotation.y=Math.PI/4
 scene.add(rf)
-const big=new THREE.Mesh(new THREE.CylinderGeometry(.6,1.2,1.6,8,1,true),new THREE.MeshLambertMaterial({color:14196800,side:THREE.DoubleSide}))
-big.position.set(t.x,t.y+19.4,t.z)
+const big=new THREE.Group
+big.position.set(t.x,t.y+20.8,t.z)
 scene.add(big)
+const bb=c1BellMesh(.75)
+big.add(bb)
 L1V.bigBell=big
 const n=at(a+1,4.6)
 const ld=new THREE.Mesh(boxGeo(1.8,.3,1.8,1),stone)
@@ -9716,37 +9770,26 @@ makeCrate("lucky",n.x,n.z,n.y+2.2)
 spawnOrb(n.x,n.y+3.4,n.z)}{const ch=tagRuns("chase")
 if(ch.length){const s=ch[ch.length-1][1]+8
 const q=at(s,1.4)
-mkFoe("charger","balebutt",q.x,q.z,q.y,1.15)}}if(L1V.relit){for(let s=8;s<path.len-4;s+=6){const p=at(s).p
+mkFoe("charger","balebutt",q.x,q.z,q.y,1.15)}}if(L1V.relit){for(let s=8;s<path.len-4;s+=9){const p=at(s).p
+if(p.gap||p.tag==="bells")continue
+for(const sd of[-1,1]){const e=at(s,sd*(p.w/2+.25))
+c1Lantern(e.x,e.y,e.z,{h:2.8,ry:-p.a+(sd>0?Math.PI:0),solid:false,pool:false})}}for(let s=10;s<path.len-6;s+=11){const p=at(s).p
 if(p.gap)continue
-for(const sd of[-1,1]){const e=at(s,sd*(p.w/2+.2))
-const post=new THREE.Mesh(boxGeo(.14,2.4,.14,1),dark)
-post.position.set(e.x,e.y+1.2,e.z)
-scene.add(post)
-const lamp=new THREE.Mesh(boxGeo(.32,.4,.32,1),new THREE.MeshBasicMaterial({color:16762992}))
-lamp.position.set(e.x,e.y+2.55,e.z)
-scene.add(lamp)
-const gl=spr(glowTex,16758858,1.4,1.4,e.x,e.y+2.55,e.z)
-gl.material.opacity=.5
-scene.add(gl)}}for(let s=10;s<path.len-6;s+=11){const p=at(s).p
-if(p.gap)continue
-for(let k=0;k<7;k++){const t=k/6
-const e=at(s,-p.w/2+t*p.w)
-const f=new THREE.Mesh(new THREE.ConeGeometry(.16,.32,3),new THREE.MeshLambertMaterial({color:[13119530,16050380,15902778][k%3]}))
-f.position.set(e.x,e.y+3.6-Math.sin(t*Math.PI)*.6,e.z)
-f.rotation.x=Math.PI
-scene.add(f)}}}}function l1BellTick(dt){if(LV!==1||!L1V.bells||!CRS.paths||!CRS.paths[0])return
+const e0=at(s,-p.w/2-.2),e1=at(s,p.w/2+.2)
+c1Bunting(e0.x,e0.y+3.9,e0.z,e1.x,e1.y+3.9,e1.z,{cols:[13119530,16050380,15902778,8010464],sag:.7})}}}function l1BellTick(dt){if(LV!==1||!L1V.bells||!CRS.paths||!CRS.paths[0])return
 const B=L1V.bells
 L1V.cool-=dt
 for(const b of B){b.sw*=Math.pow(.15,dt)
 b.g.rotation.x=Math.sin(time*9+b.i)*b.sw*.6
 b.glow=Math.max(0,b.glow-dt*1.6)
-b.bell.material.emissive.copy(b.bell.material.color).multiplyScalar(Math.min(1,b.glow)*.85)}if(L1V.bigBell)L1V.bigBell.rotation.z=Math.sin(time*.8)*.08
+if(b.bell)b.bell.material.emissive.copy(b.bell.material.color).multiplyScalar(Math.min(1,b.glow)*.6)}if(L1V.bigBell)L1V.bigBell.rotation.z=Math.sin(time*.8)*.12
 if(L1V.plq)L1V.plq.forEach(((m,k)=>{const on=L1V.solved||k<L1V.got
 const fl=L1V.playT>=0&&L1V.playT>.6+k*.75&&L1V.playT<1.2+k*.75
 const v=on?.55+Math.sin(time*4)*.1:fl?.7:0
 m.emissive.setRGB(v,v*.8,v*.5)}))
-if(L1V.solved){if(L1V.door&&L1V.door.position.y>-7)L1V.door.position.y-=dt*3
-return}const q=crsNear(P.pos.x,P.pos.z)
+if(L1V.solved){if(L1V.leaves){L1V.open=Math.min(1,(L1V.open||0)+dt*.7)
+const e=1-Math.pow(1-L1V.open,3)
+for(const l of L1V.leaves)l.h.rotation.y=-l.sd*e*1.75}return}const q=crsNear(P.pos.x,P.pos.z)
 const inZone=q&&q.path===CRS.paths[0]&&q.tag==="bells"
 const ring=b=>{b.sw=1
 b.glow=1.4
@@ -9777,7 +9820,181 @@ try{[0,4,7,12,16].forEach(((s,k)=>cnTone(s,.3,.07,.3+k*.12)))
 sfx.check()}catch(_){}try{burst(B[1].pos.clone(),16765562,30,6,.5)}catch(_){}}}else{L1V.got=0
 try{blip(300,120,.35,"square",.05)}catch(_){}B.forEach((x=>x.sw=.5))
 L1V.heard=false
-setTimeout((()=>{L1V.heard=false}),900)}break}}if(LV===1){ARENA={x0:-9.5,x1:9.5,z0:-74,z1:-104,cz:-89,y:0}
+setTimeout((()=>{L1V.heard=false}),900)}break}}const L1TX={}
+function l1Img(k){if(L1TX["i"+k])return L1TX["i"+k]
+const img=new Image
+const t=new THREE.Texture(img)
+t.wrapS=t.wrapT=THREE.RepeatWrapping
+t.minFilter=THREE.LinearMipmapLinearFilter
+t.anisotropy=4
+t.encoding=THREE.sRGBEncoding
+img.onload=()=>{t.needsUpdate=true}
+if(window.WT_TEX&&WT_TEX[k])img.src=WT_TEX[k]
+return L1TX["i"+k]=t}function l1Mat(k,col){return new THREE.MeshLambertMaterial({map:window.WT_TEX&&WT_TEX[k]?l1Img(k):k==="wood"?KT.wood():KT.masonry(),color:col})}function l1Paint(k){if(L1TX[k])return L1TX[k]
+const c=document.createElement("canvas")
+const S=k.startsWith("plq")||k==="sun"?128:256
+c.width=c.height=S
+const g=c.getContext("2d")
+const t=new THREE.CanvasTexture(c)
+t.encoding=THREE.sRGBEncoding
+t.anisotropy=4
+L1TX[k]=t
+const rnd=(()=>{let x=k.length*977+13
+return()=>(x=x*16807%2147483647)/2147483647})()
+const done=()=>{t.needsUpdate=true}
+const withWood=f=>{const im=new Image
+im.onload=()=>{f(im)
+done()}
+im.onerror=()=>{f(null)
+done()}
+if(window.WT_TEX&&WT_TEX.wood)im.src=WT_TEX.wood
+else{f(null)
+done()}}
+if(k==="door")withWood((im=>{for(let p=0;p<4;p++){if(im)g.drawImage(im,p*31%200,0,64,256,p*64,0,64,256)
+else{g.fillStyle="#6a4022"
+g.fillRect(p*64,0,64,256)}g.fillStyle="rgba(20,8,4,.55)"
+g.fillRect(p*64,0,3,256)
+g.fillStyle="rgba(255,220,170,.08)"
+g.fillRect(p*64+3,0,2,256)}const vg=g.createLinearGradient(0,0,0,256)
+vg.addColorStop(0,"rgba(30,10,40,.25)")
+vg.addColorStop(.5,"rgba(0,0,0,0)")
+vg.addColorStop(1,"rgba(20,6,20,.35)")
+g.fillStyle=vg
+g.fillRect(0,0,256,256)
+for(const y of[34,128,214]){const sg=g.createLinearGradient(0,y-9,0,y+9)
+sg.addColorStop(0,"#5a5668")
+sg.addColorStop(.45,"#3a3646")
+sg.addColorStop(1,"#1e1a26")
+g.fillStyle=sg
+g.fillRect(0,y-9,256,18)
+g.fillStyle="rgba(160,90,40,.35)"
+for(let i=0;i<30;i++)g.fillRect(rnd()*256,y-9+rnd()*18,2+rnd()*5,1+rnd()*2)
+for(let x=12;x<256;x+=32){const rg=g.createRadialGradient(x-1,y-2,0,x,y,5)
+rg.addColorStop(0,"#b8b4c8")
+rg.addColorStop(.5,"#6a6678")
+rg.addColorStop(1,"#26222e")
+g.fillStyle=rg
+g.beginPath()
+g.arc(x,y,4.5,0,7)
+g.fill()}}g.save()
+g.translate(128,82)
+g.fillStyle="rgba(242,168,58,.85)"
+g.beginPath()
+g.moveTo(0,-22)
+g.bezierCurveTo(16,-4,12,16,0,20)
+g.bezierCurveTo(-12,16,-16,-4,0,-22)
+g.fill()
+g.fillStyle="rgba(255,236,170,.9)"
+g.beginPath()
+g.moveTo(0,-8)
+g.bezierCurveTo(7,2,5,12,0,14)
+g.bezierCurveTo(-5,12,-7,2,0,-8)
+g.fill()
+g.restore()}))
+else if(k==="hay"){g.fillStyle="#b8862a"
+g.fillRect(0,0,S,S)
+for(let i=0;i<2600;i++){const x=rnd()*S,y=rnd()*S,l=6+rnd()*22,a=(rnd()-.5)*.7
+g.strokeStyle=["#e8c060","#d8a840","#c89430","#f4d878","#a87a24","#8a6420"][rnd()*6|0]
+g.lineWidth=1+rnd()*1.5
+g.beginPath()
+g.moveTo(x,y)
+g.lineTo(x+Math.cos(a)*l,y+Math.sin(a)*l)
+g.stroke()}for(const y of[S*.3,S*.7]){g.fillStyle="#6a3a1a"
+g.fillRect(0,y-4,S,8)
+g.fillStyle="rgba(255,220,160,.25)"
+g.fillRect(0,y-4,S,2)}done()}else if(k==="brick"){g.fillStyle="#3a2420"
+g.fillRect(0,0,S,S)
+const bh=S/10
+for(let r=0;r<10;r++){const off=r%2?S/8:0
+for(let x=-S/4+off;x<S;x+=S/4){const c=["#9a4a38","#8a4030","#a85840","#7a3828","#b0603e"][rnd()*5|0]
+g.fillStyle=c
+g.fillRect(x+2,r*bh+2,S/4-4,bh-4)
+g.fillStyle="rgba(255,200,160,.18)"
+g.fillRect(x+2,r*bh+2,S/4-4,2)
+g.fillStyle="rgba(0,0,0,.2)"
+g.fillRect(x+2,r*bh+bh-4,S/4-4,2)}}g.fillStyle="rgba(20,10,10,.35)"
+for(let i=0;i<60;i++)g.fillRect(rnd()*S,rnd()*S*.3,3+rnd()*6,2+rnd()*8)
+done()}else if(k.startsWith("cloth")){const n=+k[5]
+const base=["#f4e8cc","#7aa0e0","#e890c0","#f2c050"][n]
+g.fillStyle=base
+g.fillRect(0,0,S,S)
+g.globalAlpha=.5
+if(n===0){g.strokeStyle="#c8302a"
+g.lineWidth=10
+for(let x=20;x<S;x+=48){g.beginPath()
+g.moveTo(x,0)
+g.lineTo(x,S)
+g.stroke()
+g.beginPath()
+g.moveTo(0,x)
+g.lineTo(S,x)
+g.stroke()}}else if(n===1){g.fillStyle="#f4e8cc"
+for(let y=16;y<S;y+=40)for(let x=16+y/40%2*20;x<S;x+=40){g.beginPath()
+g.arc(x,y,7,0,7)
+g.fill()}}else if(n===2){g.fillStyle="#a03a7a"
+for(let y=0;y<S;y+=32)g.fillRect(0,y,S,12)}else{g.fillStyle="#c8302a"
+for(let i=0;i<14;i++){const x=rnd()*S,y=rnd()*S
+g.beginPath()
+for(let a=0;a<5;a++){const r=a%2?5:12
+g.lineTo(x+Math.cos(a*1.26)*r,y+Math.sin(a*1.26)*r)}g.fill()}}g.globalAlpha=1
+g.fillStyle="rgba(0,0,0,.12)"
+for(let y=0;y<S;y+=3)g.fillRect(0,y,S,1)
+g.strokeStyle="rgba(60,30,20,.5)"
+g.lineWidth=4
+g.strokeRect(2,2,S-4,S-4)
+done()}else if(k==="sun"){const cx=S/2
+g.clearRect(0,0,S,S)
+for(let i=0;i<16;i++){const a=i/16*Math.PI*2
+g.fillStyle=i%2?"#f2a83a":"#e8702a"
+g.beginPath()
+g.moveTo(cx+Math.cos(a-.15)*38,cx+Math.sin(a-.15)*38)
+g.lineTo(cx+Math.cos(a)*62,cx+Math.sin(a)*62)
+g.lineTo(cx+Math.cos(a+.15)*38,cx+Math.sin(a+.15)*38)
+g.fill()}const rg=g.createRadialGradient(cx-8,cx-8,4,cx,cx,40)
+rg.addColorStop(0,"#ffe8a0")
+rg.addColorStop(.6,"#f2a83a")
+rg.addColorStop(1,"#c8602a")
+g.fillStyle=rg
+g.beginPath()
+g.arc(cx,cx,40,0,7)
+g.fill()
+g.strokeStyle="#5a2a14"
+g.lineWidth=3
+g.beginPath()
+g.arc(cx-14,cx-4,7,.1,Math.PI-.1)
+g.stroke()
+g.beginPath()
+g.arc(cx+14,cx-4,7,.1,Math.PI-.1)
+g.stroke()
+g.beginPath()
+g.arc(cx,cx+10,10,.3,Math.PI-.3)
+g.stroke()
+done()}else if(k.startsWith("plq")){const bi=+k[3]
+const col=["#c8402a","#e8b030","#8a50e0"][bi]
+const cx=S/2
+g.fillStyle="#2a1810"
+g.fillRect(0,0,S,S)
+const rg=g.createRadialGradient(cx,cx,8,cx,cx,64)
+rg.addColorStop(0,col)
+rg.addColorStop(1,"#1a0c08")
+g.fillStyle=rg
+g.beginPath()
+g.arc(cx,cx,62,0,7)
+g.fill()
+g.fillStyle="#f4e0b0"
+g.beginPath()
+g.moveTo(cx-10,cx-26)
+g.quadraticCurveTo(cx-14,cx+4,cx-30,cx+20)
+g.lineTo(cx+30,cx+20)
+g.quadraticCurveTo(cx+14,cx+4,cx+10,cx-26)
+g.quadraticCurveTo(cx,cx-34,cx-10,cx-26)
+g.fill()
+g.beginPath()
+g.arc(cx,cx+26,7,0,7)
+g.fill()
+g.fillStyle="rgba(0,0,0,.25)"
+g.fillRect(cx-30,cx+14,60,5)
+done()}return t}if(LV===1){ARENA={x0:-9.5,x1:9.5,z0:-74,z1:-104,cz:-89,y:0}
 slab(-20,20,12,-36)
 slab(-20,6,-36,-52)
 slab(-20,20,-52,-60.5)
@@ -17267,11 +17484,16 @@ let lockT=null,lockPrev=null,lockPop=0
 function lockAlive(t){return t==="boss"?boss.state==="sleep"||boss.state==="tired":t.alive&&!t.dying}function lockPos(t){return t==="boss"?boss.pos.clone():t.pos.clone().setY(t.pos.y+(t.type==="bat"?0:.6))}function updLock(){lockT=null
 if(state!=="play"||P.dead){lockSpr.visible=false
 return}let best=16
-const _lo=L.lockOnly&&L.lockOnly()
-if(_lo){lockT=_lo}else for(const e of L.lockExtra?enemies.concat(L.lockExtra()):enemies){if(!lockAlive(e))continue
+for(const e of enemies){if(!lockAlive(e))continue
 const d=Math.hypot(e.pos.x-P.pos.x,e.pos.z-P.pos.z)
 if(d<best&&Math.abs(e.pos.y-P.pos.y)<5){best=d
-lockT=e}}if(inBoss&&lockAlive("boss")&&Math.hypot(boss.pos.x-P.pos.x,boss.pos.z-P.pos.z)<18)lockT="boss"
+lockT=e}}if(!lockT){const _lo=L.lockOnly&&L.lockOnly()
+if(_lo)lockT=_lo
+else if(L.lockExtra){best=16
+for(const e of L.lockExtra()){if(!lockAlive(e))continue
+const d=Math.hypot(e.pos.x-P.pos.x,e.pos.z-P.pos.z)
+if(d<best&&Math.abs(e.pos.y-P.pos.y)<5){best=d
+lockT=e}}}}if(inBoss&&lockAlive("boss")&&Math.hypot(boss.pos.x-P.pos.x,boss.pos.z-P.pos.z)<18)lockT="boss"
 lockPrev=lockT
 lockPop=Math.max(0,lockPop-.033*4)
 lockSpr.visible=false
