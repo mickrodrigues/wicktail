@@ -4807,7 +4807,8 @@ s.material.opacity=on?1:.6
 s.scale.setScalar(on?.42:.28)}))}}}function tryKill(e,dir,stomp,force){if(!e.alive)return false
 ensureHp(e)
 if(e.hitCD>0&&!force)return false
-if(e.shieldFront&&dir&&!stomp&&!force&&!e.dizzy){const fx=Math.sin(e.face||0),fz=Math.cos(e.face||0)
+if(typeof foeBlock==="function"&&foeBlock(e,dir,stomp,force)){e.hitCD=.3
+return false}if(e.shieldFront&&dir&&!stomp&&!force&&!e.dizzy){const fx=Math.sin(e.face||0),fz=Math.cos(e.face||0)
 if(dir.x*fx+dir.z*fz<-.35){e.hitCD=.35
 try{blip(1700,1200,.08,"square",.06)
 blip(900,700,.06,"square",.04,.03)
@@ -8069,7 +8070,7 @@ mvSpinTick(dt)
 mvChargeTick(dt)
 mvCsTick(dt)
 mvImpTick(dt)
-try{ghostTick(dt)}catch(e){}try{crateWobTick(dt)}catch(e){}try{musLayerTick(dt)}catch(e){}try{rescueTick(dt)}catch(e){}try{bbTick(dt)}catch(e){}try{foeAnimTick(dt)}catch(e){}try{l1BellTick(dt)}catch(e){window.__belErr=String(e)}try{wxTick(dt)}catch(e){window.__wxErr=String(e)}}const TALK={el:null,n:null,lbl:"",w:0,h:0}
+try{ghostTick(dt)}catch(e){}try{crateWobTick(dt)}catch(e){}try{musLayerTick(dt)}catch(e){}try{rescueTick(dt)}catch(e){}try{bbTick(dt)}catch(e){}try{foeAnimTick(dt)}catch(e){}try{fFoesTick(dt)}catch(e){window.__ffErr=String(e)}try{l1BellTick(dt)}catch(e){window.__belErr=String(e)}try{wxTick(dt)}catch(e){window.__wxErr=String(e)}}const TALK={el:null,n:null,lbl:"",w:0,h:0}
 function talkBubble(textPx){const S=3,pw=Math.ceil(textPx/S)+14,ph=14,tail=4,W=pw,H=ph+tail
 const c=document.createElement("canvas")
 c.width=W
@@ -8869,7 +8870,8 @@ o.material=Array.isArray(o.material)?o.material.map((x=>x.clone())):o.material.c
 ms.forEach((m=>{if(!m.emissive)return
 if(m.userData.te0==null)m.userData.te0=m.emissive.getHex()
 if(hex==null)m.emissive.setHex(m.userData.te0)
-else m.emissive.setHex(hex).multiplyScalar(k)}))}))}function mkFoe(kind,key,x,z,y,size=1.4,o={}){const upd=kind==="charger"?updCharger:kind==="thrower"?updThrower:updShielded
+else m.emissive.setHex(hex).multiplyScalar(k)}))}))}function mkFoe(kind,key,x,z,y,size=1.4,o={}){if(typeof FOE_AI!=="undefined"&&FOE_AI[key]){const e=mkEnemy(key,kind,x,z,y,FOE_SZ[key]||size,Object.assign({upd:FOE_AI[key],pk:key,face:0},o))
+return e}const upd=kind==="charger"?updCharger:kind==="thrower"?updThrower:updShielded
 const e=mkEnemy(key,kind,x,z,y,size,Object.assign({upd,pk:key},o))
 if(e&&kind==="shielded")e.shieldFront=true
 return e}const FV={buf:{},bad:{},cd:{},last:0}
@@ -9468,14 +9470,15 @@ if(o.name==="bbHead")e.bbH=o}))}const sp=e.cs==="rush"?16:e.cs==="wind"?0:5
 e.wph=(e.wph||0)+dt*sp
 e.bbL.forEach(((l,i)=>{l.rotation.x=Math.sin(e.wph+(i%2?Math.PI:0)+(i>1?Math.PI/2:0))*(e.cs==="rush"?.7:.25)}))
 if(e.bbH)e.bbH.rotation.x=e.cs==="wind"?.35:e.cs==="rush"?.25:Math.sin(time*2+e.ph)*.06
-if(e.cs==="wind"&&Math.random()<.4)try{emit(e.pos.clone().add(V3(Math.sin(e.face)*.4,.1,Math.cos(e.face)*.4)),{life:.5,size:.12,size1:.04,color:15911008,vx:R(-1,1),vy:R(.5,1.5),vz:R(-1,1)})}catch(_){}if(e.cs==="rush"&&Math.random()<.5)try{emit(e.pos.clone().setY(e.pos.y+.8),{life:.7,size:.1,size1:.03,color:15251536,vx:R(-.5,.5),vy:R(.2,.8),vz:R(-.5,.5),g:2})}catch(_){}}}const FOE_STYLE={balebutt:"trot",potlobber:"waddle",postbox:"hop",lampmole:"waddle",coggremlin:"skitter",cuckoo:"waddle",crownguard:"march",emberpup:"trot",moonmite:"skitter",ticket:"hover",rootsentry:"sway",inksquid:"hover",cindermoth:"flutter",starwarden:"hover"}
+if(e.cs==="wind"&&Math.random()<.4)try{emit(e.pos.clone().add(V3(Math.sin(e.face)*.4,.1,Math.cos(e.face)*.4)),{life:.5,size:.12,size1:.04,color:15911008,vx:R(-1,1),vy:R(.5,1.5),vz:R(-1,1)})}catch(_){}if(e.cs==="rush"&&Math.random()<.5)try{emit(e.pos.clone().setY(e.pos.y+.8),{life:.7,size:.1,size1:.03,color:15251536,vx:R(-.5,.5),vy:R(.2,.8),vz:R(-.5,.5),g:2})}catch(_){}}}const FOE_STYLE={balebutt:"trot",potlobber:"waddle",postbox:"hop",lampmole:"waddle",coggremlin:"skitter",cuckoo:"tick",crownguard:"march",emberpup:"trot",moonmite:"skitter",ticket:"march",rootsentry:"sway",inksquid:"hover",cindermoth:"flutter",starwarden:"hover"}
 function foeAnimTick(dt){for(const e of enemies){const st=FOE_STYLE[e.pk]
 if(!st||!e.alive||!e.body)continue
 if(e.fa===undefined){e.fa=null
 e.body.traverse((o=>{if(o.name==="fAnim")e.fa=o}))}const a=e.fa
 if(!a)continue
-const mv=e.cs==="rush"||e.mode==="chase"||e.mode==="walk"||e.mode==="patrol"
-const sp=e.cs==="rush"?15:mv?8:3
+const fast=["rush","spin","sprint","dash","skid"].includes(e.cs)
+const mv=fast||e.cs==="march"||e.cs==="under"||e.pk==="coggremlin"&&!e.hasCog
+const sp=fast?15:mv?8:3
 e.fph=(e.fph||e.ph||0)+dt*sp
 const s=Math.sin(e.fph),c=Math.cos(e.fph)
 let y=0,rx=0,rz=0,sx=1,sy=1
@@ -9488,18 +9491,607 @@ sx=1+(1-h)*.06}else if(st==="skitter"){y=Math.abs(Math.sin(e.fph*2))*.04
 rz=Math.sin(e.fph*2)*.05}else if(st==="hover"||st==="flutter"){y=.25+s*.12
 rz=c*.06
 if(st==="flutter")sx=1+Math.abs(Math.sin(e.fph*3))*.08}else if(st==="sway"){rz=s*.05
-sy=1+c*.03}if(e.cs==="wind"){rx=-.25
-sy*=.9
-sx*=1.06
-rz=Math.sin(time*40)*.05}else if(e.cs==="rush")rx=.28
-a.position.y=y
-a.rotation.set(rx,0,rz)
-a.scale.set(sx,sy,sx)}}const FOE_LV=[null,["balebutt","charger",1.5],["potlobber","thrower",1.45],["postbox","shielded",1.4],["lampmole","charger",1.35],["coggremlin","shielded",1.4],["cuckoo","thrower",1.45],["crownguard","shielded",1.6],["emberpup","charger",1.3],["moonmite","thrower",1.35],["ticket","charger",1.6],["rootsentry","shielded",1.5],["inksquid","thrower",1.45],["cindermoth","charger",1.4],["starwarden","shielded",1.55]]
+sy=1+c*.03}else if(st==="tick"){rz=Math.sin(time*6.28)*.04}if(e.dizzy){rz=Math.sin(time*9)*.22
+y=0}rx+=e.lean||0
+const pf=e.puff||1
+if(e.wag)rz+=e.wag
+{const sw=e.pk==="postbox"&&e.cs==="spin"||e.pk==="crownguard"&&e.cs==="spear"||e.pk==="coggremlin"&&e.cs==="saw"||e.pk==="ticket"&&e.cs==="skid"
+if(sw&&!e.swoosh){const g=new THREE.Group
+for(let i=0;i<3;i++){const t=new THREE.Mesh(new THREE.TorusGeometry(1,.035+i*.01,4,36,4.2),new THREE.MeshBasicMaterial({color:15786239,transparent:true,opacity:.45-i*.1,depthWrite:false,blending:THREE.AdditiveBlending}))
+t.rotation.x=Math.PI/2
+t.position.y=(i-1)*.12
+t.scale.setScalar(1+i*.12)
+g.add(t)}e.obj.add(g)
+e.swoosh=g}if(e.swoosh){e.swoosh.visible=sw
+if(sw){const r=(e.r||.6)*1.9
+e.swoosh.scale.set(r,1,r)
+e.swoosh.position.y=(e.h||1.2)*.45
+e.swoosh.rotation.y-=dt*22}}}a.position.y=y
+a.rotation.set(rx,e.spinA||0,rz)
+a.scale.set(sx*pf,sy*pf,sx*pf)}}const FOE_LV=[null,["balebutt","charger",1.5],["potlobber","thrower",1.45],["postbox","shielded",1.4],["lampmole","charger",1.35],["coggremlin","shielded",1.4],["cuckoo","thrower",1.45],["crownguard","shielded",1.6],["emberpup","charger",1.3],["moonmite","thrower",1.35],["ticket","charger",1.6],["rootsentry","shielded",1.5],["inksquid","thrower",1.45],["cindermoth","charger",1.4],["starwarden","shielded",1.55]]
 function sigFoe(){const f=FOE_LV[LV]
 if(!f||!PROTO[f[0]])return null
 return(x,z,y)=>{const e=mkFoe(f[1],f[0],x,z,y||0,f[2])
 if(e)e.sig=true
-return e}}if(LV===1){COURSE[1]={w:5.6,noHighShard:true,cmds:[{s:12,w:8,tag:"gate"},{s:4,w:5.6},{arc:35,r:14},{s:6,dh:1},{arc:-70,r:12},{s:7},{gap:1,s:2.8},{s:7},{arc:45,r:13,dh:-1},{s:14,tag:"lant"},{arc:-30,r:16},{s:6,w:9,tag:"nook2"},{s:4,w:5.6,dh:1.4},{arc:20,r:12},{s:8,tag:"ck"},{s:4,w:12},{s:42,w:12,tag:"fork"},{s:4,w:12},{s:4,w:5.6,tag:"ck"},{s:22,w:4.8,dh:-2.2,tag:"chase"},{s:2.4,w:4.8,tag:"chase"},{s:22,w:4.8,dh:-2.2,tag:"chase"},{s:4,w:5.6},{s:7},{arc:-60,r:12},{s:12,tag:"lant"},{arc:80,r:11},{s:8,dh:-1.4},{gap:1,s:2.6},{s:10},{arc:-30,r:14},{s:8},{s:16,w:11,tag:"bells"},{s:6,w:5.6,tag:"end"}],look:{top:"path",banks:true},hz:"lant"}}const L1V={bells:null,solved:false,relit:false}
+return e}}const FOE_SZ={balebutt:1.15,potlobber:1.6,postbox:1.9,lampmole:1.05,coggremlin:1.7,cuckoo:1.3,crownguard:2,emberpup:.95,moonmite:1.2,ticket:2,rootsentry:2,inksquid:1.2,cindermoth:1.6,starwarden:1.7}
+const FOE_AI={}
+const FP=[],FH=[]
+let fInkT=0,fPrevV=null
+const fD=e=>Math.hypot(P.pos.x-e.pos.x,P.pos.z-e.pos.z)
+const fOn=()=>state==="play"&&!P.dead
+function fAng(e){return Math.atan2(P.pos.x-e.pos.x,P.pos.z-e.pos.z)}function fTurn(e,dt,k){e.face=lerpAngle(e.face||0,fAng(e),Math.min(1,dt*k))}function fFree(e,nx,nz){try{const gy=groundBelow(nx,nz,e.pos.y+.6)
+if(gy<e.pos.y-1)return"edge"
+for(const s of solids){if(!s.alive||e.pos.y>=s.max.y-.05||e.pos.y+1<s.min.y)continue
+if((s.type==="wall"||s.type==="crate"||s.type==="block")&&overlapXZ(s,nx,nz,e.r||.5))return s.type==="crate"?"crate":"wall"}}catch(_){}return null}function fStep(e,vx,vz,dt){const nx=e.pos.x+vx*dt,nz=e.pos.z+vz*dt
+const b=fFree(e,nx,nz)
+if(!b){e.pos.x=nx
+e.pos.z=nz}return b}function fSync(e){e.obj.position.set(e.pos.x,e.pos.y,e.pos.z)
+e.obj.rotation.y=e.face||0}function fFront(e,dir){const fx=Math.sin(e.face||0),fz=Math.cos(e.face||0)
+return dir&&dir.x*fx+dir.z*fz<-.3}function fClang(e){try{blip(1700,1200,.08,"square",.06)
+blip(900,700,.06,"square",.04,.03)
+burst(e.pos.clone().setY(e.pos.y+(e.h||1)*.55).add(V3(Math.sin(e.face)*.7,0,Math.cos(e.face)*.7)),14213375,10,5,.25)}catch(_){}}function fStars(e){if(Math.random()<.25)try{const a=time*7
+emit(e.pos.clone().setY(e.pos.y+(e.h||1.1)+.3).add(V3(Math.cos(a)*.5,0,Math.sin(a)*.5)),{life:.45,size:.22,size1:.05,color:16769136})}catch(_){}}function fDizzy(e,t){e.cs="dizzy"
+e.ct=t
+e.dizzy=true
+e.spinA=0
+e.lean=0
+try{blip(600,300,.2,"triangle",.05)}catch(_){}}function fContact(e,r){if(fOn()&&fD(e)<r&&Math.abs(P.pos.y-e.pos.y)<1.6&&!(P.spinT>0))try{hurt()}catch(_){}}function fTint(e,hex,k){try{mvTint(e,hex,k)}catch(_){}}function fDust(p,col,n){for(let i=0;i<(n||6);i++)try{emit(p.clone().add(V3(R(-.4,.4),.1,R(-.4,.4))),{life:.6,size:.35,size1:.8,color:col||13615328,normal:true,vx:R(-1,1),vy:R(.4,1.2),vz:R(-1,1)})}catch(_){}}function fGroundY(x,z,y){const g=groundBelow(x,z,y+1.5)
+return g>-50?g:y}function fLob(e,mesh,to,o={}){const from=e.pos.clone().setY(e.pos.y+(o.fromY!=null?o.fromY:e.h||1.1))
+mesh.position.copy(from)
+scene.add(mesh)
+let ring=null
+const v=Math.random()*6|0
+if(o.mark){ring=fSplatMesh(o.mark,v,o.mr||1.15,true)
+ring.position.set(to.x,to.y+.06,to.z)
+scene.add(ring)}FP.push({mesh,ring,v,rz:ring?ring.rotation.z:0,from,to,t:0,T:o.T||1,arc:o.arc==null?3.2:o.arc,land:o.land,spin:o.spin==null?6:o.spin,e,bounce:o.bounce||0,dir:o.dir})}function fProjTick(dt){for(let i=FP.length-1;i>=0;i--){const q=FP[i]
+q.t+=dt
+const k=Math.min(1,q.t/q.T)
+q.mesh.position.lerpVectors(q.from,q.to,k)
+q.mesh.position.y+=Math.sin(k*Math.PI)*q.arc
+q.mesh.rotation.x+=dt*q.spin
+q.mesh.rotation.z+=dt*q.spin*.6
+if(q.ring){q.ring.material.opacity=.55+.35*Math.sin(time*12)
+q.ring.scale.setScalar(1.12-k*.12)}if(k>.25&&fOn()&&q.mesh.position.distanceTo(P.pos.clone().setY(P.pos.y+.8))<.75){try{hurt()}catch(_){}if(q.land)q.land(q,true)
+fKill(q)
+FP.splice(i,1)
+continue}if(k>=1){if(q.bounce>0){const d=q.dir||V3(q.to.x-q.from.x,0,q.to.z-q.from.z).normalize()
+const nt=V3(q.to.x+d.x*2.2,0,q.to.z+d.z*2.2)
+nt.y=fGroundY(nt.x,nt.z,q.to.y)
+try{blip(900,1300,.08,"triangle",.04)}catch(_){}q.from=q.to.clone()
+q.to=nt
+q.t=0
+q.T=.42
+q.arc=q.bounce*.55
+q.bounce--
+q.dir=d
+if(Math.hypot(P.pos.x-q.from.x,P.pos.z-q.from.z)<.9&&Math.abs(P.pos.y-q.from.y)<1.2)try{hurt()}catch(_){}continue}if(Math.hypot(P.pos.x-q.to.x,P.pos.z-q.to.z)<1&&Math.abs(P.pos.y-q.to.y)<1.3)try{hurt()}catch(_){}if(q.land)q.land(q,false)
+fKill(q)
+FP.splice(i,1)}}}function fKill(q){scene.remove(q.mesh)
+if(q.ring){scene.remove(q.ring)
+q.ring.geometry.dispose()
+q.ring.material.dispose()}}function fHaz(x,y,z,o){if(o.splat&&!o.mesh){o.mesh=fSplatMesh(o.splat,o.v==null?Math.random()*6|0:o.v,(o.r||1)*1.25,false)
+if(o.rz!=null)o.mesh.rotation.z=o.rz
+o.grow=1}const m=o.mesh||new THREE.Mesh(new THREE.CircleGeometry(o.r||1,20),new THREE.MeshBasicMaterial({color:o.col,transparent:true,opacity:o.op||.75,depthWrite:false}))
+if(!o.mesh){m.rotation.x=-Math.PI/2}m.position.set(x,y+.04,z)
+scene.add(m)
+if(o.grow)m.scale.setScalar(.3)
+const h={m,grow:o.grow,x,y,z,r:o.r||1,t:0,T:o.T||2,hurt:o.hurt,slip:o.slip,fx:o.fx,delay:o.delay||0,arm:o.arm}
+FH.push(h)
+return h}function fHazTick(dt){let slip=false
+for(let i=FH.length-1;i>=0;i--){const h=FH[i]
+h.t+=dt
+const k=h.t/h.T
+const inside=Math.hypot(P.pos.x-h.x,P.pos.z-h.z)<h.r&&Math.abs(P.pos.y-h.y)<.7
+if(h.grow&&h.t<.2)h.m.scale.setScalar(.3+h.t/.2*.7)
+else if(h.grow)h.m.scale.setScalar(1)
+if(h.grow&&h.m.material&&!h.fx)h.m.material.opacity=Math.min(1,(1-k)*4)
+if(h.fx)h.fx(h,dt,k)
+if(h.m.material&&h.m.material.opacity!=null&&!h.fx)h.m.material.opacity=(h.op0||(h.op0=h.m.material.opacity))*Math.min(1,(1-k)*3)
+if(inside&&fOn()&&h.t>=h.delay){if(h.hurt)try{hurt()}catch(_){}if(h.slip)slip=true}if(k>=1){scene.remove(h.m)
+h.m.traverse((o=>{if(o.geometry)o.geometry.dispose()}))
+FH.splice(i,1)}}if(slip&&fPrevV){P.vel.x=fPrevV.x*.93+P.vel.x*.07
+P.vel.z=fPrevV.z*.93+P.vel.z*.07}fPrevV=V3(P.vel.x,0,P.vel.z)}function fInk(){fInkT=2.2
+let d=document.getElementById("fInk")
+if(!d){d=document.createElement("div")
+d.id="fInk"
+d.style.cssText="position:fixed;inset:0;pointer-events:none;z-index:40;opacity:0;transition:none;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 45%,rgba(14,10,40,.55) 70%,rgba(10,6,30,.92) 100%)"
+document.body.appendChild(d)
+for(let i=0;i<9;i++){const b=document.createElement("div")
+const a=i/9*Math.PI*2,r=46+Math.random()*6
+const s=60+Math.random()*90
+b.style.cssText=`position:absolute;left:${50+Math.cos(a)*r}%;top:${50+Math.sin(a)*r}%;width:${s}px;height:${s*.8}px;margin:-${s/2}px;border-radius:50% 45% 55% 40%;background:#120c34;opacity:.9`
+d.appendChild(b)}}}function fInkTick(dt){if(fInkT<=0)return
+fInkT-=dt
+const d=document.getElementById("fInk")
+if(d)d.style.opacity=Math.max(0,Math.min(1,fInkT/1.2))}function fFoesTick(dt){fProjTick(dt)
+fHazTick(dt)
+fInkTick(dt)}function fPot(){const g=new THREE.Group
+const b=new THREE.Mesh(new THREE.SphereGeometry(.24,8,6),new THREE.MeshLambertMaterial({color:11034682,flatShading:true}))
+g.add(b)
+const n=new THREE.Mesh(new THREE.CylinderGeometry(.09,.12,.14,6),new THREE.MeshLambertMaterial({color:11034682}))
+n.position.y=.24
+g.add(n)
+const c=new THREE.Mesh(new THREE.CylinderGeometry(.08,.08,.08,6),new THREE.MeshLambertMaterial({color:14200944}))
+c.position.y=.34
+g.add(c)
+const l=new THREE.Mesh(new THREE.SphereGeometry(.17,8,5,0,6.3,0,1.2),new THREE.MeshBasicMaterial({color:8060762}))
+l.position.y=.1
+g.add(l)
+return g}function fSpring(){const g=new THREE.Group
+const m=new THREE.MeshLambertMaterial({color:12106960,emissive:2105904})
+for(let i=0;i<4;i++){const t=new THREE.Mesh(new THREE.TorusGeometry(.16,.035,5,12),m)
+t.rotation.x=Math.PI/2
+t.position.y=i*.08
+g.add(t)}return g}function fRock(){return new THREE.Mesh(new THREE.DodecahedronGeometry(.2,0),new THREE.MeshLambertMaterial({color:12102864,flatShading:true}))}function fBlot(){const m=new THREE.Mesh(new THREE.SphereGeometry(.22,8,6),new THREE.MeshPhongMaterial({color:1709136,shininess:80,specular:8421631}))
+m.scale.set(1,.8,1.2)
+return m}FOE_AI.balebutt=function(e,dt){const d=fD(e)
+e.cs=e.cs||"idle"
+e.ct=(e.ct||0)-dt
+e.lean=0
+if(e.cs==="idle"){fTurn(e,dt,3)
+if(d<10&&e.ct<=0&&fOn()){e.cs="scrape"
+e.ct=1.1
+e.sc=0}}else if(e.cs==="scrape"){fTurn(e,dt,6)
+const n=e.ct>.55?0:1
+if(n!==e.sc||e.sc===0&&!e.sc0){e.sc0=1
+e.sc=n
+fDust(e.pos.clone().add(V3(-Math.sin(e.face)*.4,0,-Math.cos(e.face)*.4)),15253600,7)
+try{blip(260,160,.12,"sawtooth",.04)}catch(_){}}e.lean=-.18+Math.sin(time*22)*.06
+if(e.ct<=0){e.cs="rush"
+e.ct=.8
+e.sc0=0
+e.rd=V3(Math.sin(e.face),0,Math.cos(e.face))}}else if(e.cs==="rush"){e.lean=.25
+const b=fStep(e,e.rd.x*11,e.rd.z*11,dt)
+if(Math.random()<.6)try{emit(e.pos.clone().setY(e.pos.y+.6),{life:.7,size:.12,size1:.03,color:15251536,vx:R(-.5,.5),vy:R(.2,.8),vz:R(-.5,.5),g:2})}catch(_){}fContact(e,1.1)
+if(b==="wall"||b==="crate"){e.pos.x-=e.rd.x*.8
+e.pos.z-=e.rd.z*.8
+fDust(e.pos.clone().setY(e.pos.y+.5),15253600,10)
+shakeT=Math.max(shakeT,.15)
+fDizzy(e,2.2)}else if(b||e.ct<=0){e.cs="idle"
+e.ct=1}}else if(e.cs==="dizzy"){fStars(e)
+e.lean=-.15
+if(e.ct<=0){e.cs="idle"
+e.ct=1
+e.dizzy=false}}fSync(e)}
+FOE_AI.potlobber=function(e,dt){const d=fD(e)
+fTurn(e,dt,4)
+e.ct=(e.ct==null?1.8:e.ct)-dt
+e.lean=0
+if(e.ct<.6&&e.ct>0){e.lean=-.4*Math.sin((.6-e.ct)/.6*Math.PI)}if(e.ct<=0){e.ct=2.8
+if(d<14&&fOn()){const tx=P.pos.x+P.vel.x*.35,tz=P.pos.z+P.vel.z*.35
+const to=V3(tx,fGroundY(tx,tz,P.pos.y),tz)
+try{blip(400,700,.12,"triangle",.04)}catch(_){}fLob(e,fPot(),to,{T:1.15,arc:3.6,mark:"potion",land:q=>{try{burst(q.to.clone().setY(q.to.y+.3),8060762,16,4,.3)
+blip(300,120,.15,"square",.05)}catch(_){}fHaz(q.to.x,q.to.y,q.to.z,{r:1.1,splat:"potion",v:q.v,rz:q.rz,T:1.8,hurt:true,fx:(h,dt,k)=>{h.m.material.opacity=Math.min(1,(1-k)*3)
+if(Math.random()<.4)try{emit(V3(h.x+R(-.8,.8),h.y+.1,h.z+R(-.8,.8)),{life:.5,size:.15,size1:.25,color:10157946,vy:1.2})}catch(_){}}})}})}}fSync(e)}
+FOE_AI.postbox=function(e,dt){const d=fD(e)
+e.cs=e.cs||"idle"
+e.ct=(e.ct==null?1.2:e.ct)-dt
+if(e.cs==="idle"){fTurn(e,dt,2.4)
+e.spinA=0
+if(d<2&&fOn()){e.cs="snap"
+e.ct=.45}else if(d<9&&e.ct<=0&&fOn()){e.cs="wind"
+e.ct=.7
+try{blip(300,500,.4,"square",.03)}catch(_){}}}else if(e.cs==="snap"){e.lean=.3*Math.sin((.45-e.ct)/.45*Math.PI)
+if(e.ct<.2)fContact(e,1.6)
+if(e.ct<=0){e.cs="idle"
+e.ct=.8
+e.lean=0}}else if(e.cs==="wind"){e.spinA=(e.spinA||0)+dt*(6-e.ct*6)
+fTint(e,6299664,.5+.5*Math.sin(time*30))
+if(e.ct<=0){e.cs="spin"
+e.ct=2.4
+fTint(e,null)}}else if(e.cs==="spin"){e.spinA=(e.spinA||0)+dt*26
+const a=fAng(e)
+e.sd=lerpAngle(e.sd==null?a:e.sd,a,Math.min(1,dt*1.2))
+const b=fStep(e,Math.sin(e.sd)*5.2,Math.cos(e.sd)*5.2,dt)
+if(Math.random()<.5)fDust(e.pos.clone(),12101840,1)
+if(Math.random()<.08)try{blip(1400,1e3,.05,"square",.03)}catch(_){}fContact(e,1.3)
+if(e.ct<=0||b==="wall"){e.sd=null
+fDizzy(e,1.8)}}else if(e.cs==="dizzy"){fStars(e)
+e.spinA=Math.sin(time*5)*.3
+if(e.ct<=0){e.cs="idle"
+e.ct=1.4
+e.dizzy=false}}e.obj.position.set(e.pos.x,e.pos.y,e.pos.z)
+e.obj.rotation.y=e.face}
+FOE_AI.postbox.blk=(e,dir,stomp)=>{if(e.cs==="dizzy"||stomp)return false
+if(e.cs==="spin"||e.cs==="wind"||fFront(e,dir)){fClang(e)
+if(dir&&!stomp){P.vel.x-=dir.x*6
+P.vel.z-=dir.z*6}return true}return false}
+FOE_AI.lampmole=function(e,dt){const d=fD(e)
+e.cs=e.cs||"idle"
+e.ct=(e.ct==null?1:e.ct)-dt
+if(!e.mound){const g=new THREE.Group
+const m=new THREE.Mesh(new THREE.SphereGeometry(.7,10,6,0,6.3,0,1.4),new THREE.MeshLambertMaterial({color:6965818,flatShading:true}))
+m.scale.y=.45
+g.add(m)
+for(let i=0;i<6;i++){const p=new THREE.Mesh(new THREE.DodecahedronGeometry(.1,0),new THREE.MeshLambertMaterial({color:9075338,flatShading:true}))
+p.position.set(R(-.5,.5),.18,R(-.5,.5))
+g.add(p)}g.visible=false
+scene.add(g)
+e.mound=g
+const c=new THREE.Mesh(new THREE.ConeGeometry(1.4,5,16,1,true),new THREE.MeshBasicMaterial({color:16773280,transparent:true,opacity:.18,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide}))
+c.rotation.x=-Math.PI/2
+c.position.set(0,(e.h||1)*.75,2.8)
+c.visible=false
+e.obj.add(c)
+e.beam=c}e.beam.visible=e.cs==="rush"
+e.lean=0
+if(e.cs==="idle"){fTurn(e,dt,3)
+e.obj.visible=true
+if(d<12&&d>3&&e.ct<=0&&fOn()){e.cs="dig"
+e.ct=.5
+fDust(e.pos.clone(),6965818,10)
+try{blip(180,90,.3,"sawtooth",.04)}catch(_){}}}else if(e.cs==="dig"){e.obj.position.y=e.pos.y-(.5-e.ct)*2.4
+if(e.ct<=0){e.cs="under"
+e.ct=3
+e.obj.visible=false
+e.mound.visible=true}}else if(e.cs==="under"){const a=fAng(e)
+const b=fStep(e,Math.sin(a)*6,Math.cos(a)*6,dt)
+e.face=a
+e.mound.position.set(e.pos.x,e.pos.y,e.pos.z)
+e.mound.rotation.y+=dt*3
+if(Math.random()<.5)fDust(e.pos.clone(),6965818,1)
+if(d<3.2||e.ct<=0||b){e.cs="burst"
+e.ct=.35
+e.mound.visible=false
+e.obj.visible=true
+fDust(e.pos.clone().setY(e.pos.y+.3),6965818,16)
+try{burst(e.pos.clone().setY(e.pos.y+.5),9071178,12,5,.3,true)
+blip(220,600,.2,"square",.05)}catch(_){}}}else if(e.cs==="burst"){fTurn(e,dt,12)
+e.lean=-.3
+if(e.ct<=0){e.cs="rush"
+e.ct=.75
+e.rd=V3(Math.sin(e.face),0,Math.cos(e.face))}}else if(e.cs==="rush"){e.lean=.45
+const b=fStep(e,e.rd.x*9.5,e.rd.z*9.5,dt)
+fContact(e,1)
+if(Math.random()<.5)fDust(e.pos.clone(),9071194,1)
+if(b||e.ct<=0)fDizzy(e,1.8)}else if(e.cs==="dizzy"){fStars(e)
+e.lean=-.1+Math.sin(time*12)*.08
+if(e.ct<=0){e.cs="idle"
+e.ct=1.5
+e.dizzy=false}}if(e.cs!=="dig"){e.obj.position.set(e.pos.x,e.pos.y,e.pos.z)}e.obj.rotation.y=e.face
+e.harmless=e.cs==="under"}
+FOE_AI.lampmole.blk=e=>e.cs==="under"||e.cs==="dig"
+FOE_AI.coggremlin=function(e,dt){const d=fD(e)
+e.cs=e.cs||"idle"
+e.ct=(e.ct==null?.5:e.ct)-dt
+if(e.hasCog==null){e.hasCog=true
+e.maxHp=e.hp=2}if(e.cs==="idle"){fTurn(e,dt,e.hasCog?3:5)
+e.spinA=0
+if(d>1.8&&d<10&&fOn()){const a=fAng(e)
+const v=e.hasCog?1.6:2.4
+fStep(e,Math.sin(a)*v,Math.cos(a)*v,dt)}if(d<2.4&&e.ct<=0&&fOn()&&e.hasCog){e.cs="saw"
+e.ct=.6
+try{blip(1200,500,.3,"sawtooth",.04)}catch(_){}}}else if(e.cs==="saw"){const k=1-e.ct/.6
+e.spinA=Math.sin(k*Math.PI)*2.4
+if(k>.2&&k<.8)fContact(e,2.1)
+if(Math.random()<.4)try{emit(e.pos.clone().setY(e.pos.y+.8).add(V3(Math.sin(e.face+e.spinA)*1.1,0,Math.cos(e.face+e.spinA)*1.1)),{life:.3,size:.15,size1:.03,color:16765056})}catch(_){}if(e.ct<=0){e.cs="idle"
+e.ct=1.3
+e.spinA=0}}else if(e.cs==="dizzy"){fStars(e)
+if(e.ct<=0){e.cs="idle"
+e.ct=.6
+e.dizzy=false}}fSync(e)}
+FOE_AI.coggremlin.blk=(e,dir,stomp)=>{if(stomp||!e.hasCog||e.dizzy)return false
+if(fFront(e,dir)){fClang(e)
+if(dir){P.vel.x-=dir.x*6
+P.vel.z-=dir.z*6}return true}e.hasCog=false
+try{const gm=typeof c1GearMesh==="function"?c1GearMesh(.5):new THREE.Mesh(new THREE.CylinderGeometry(.5,.5,.15,10),new THREE.MeshLambertMaterial({color:9067050}))
+const g=new THREE.Group
+g.add(gm)
+gm.rotation.x=Math.PI/2
+const fx=Math.sin(e.face),fz=Math.cos(e.face)
+const x=e.pos.x+fx*.6,z=e.pos.z+fz*.6,y=e.pos.y+.5
+g.position.set(x,y,z)
+g.rotation.y=e.face+Math.PI/2
+scene.add(g)
+fHaz(x,e.pos.y,z,{mesh:g,r:.6,T:2.4,hurt:false,fx:(h,dt,k)=>{h.x+=fx*4*dt
+h.z+=fz*4*dt
+h.m.position.set(h.x,e.pos.y+.5,h.z)
+gm.rotation.z+=dt*9
+if(k>.8)h.m.scale.setScalar((1-k)*5)}})
+blip(800,400,.2,"triangle",.05)}catch(_){}fDizzy(e,1.4)
+return false}
+FOE_AI.cuckoo=function(e,dt){const d=fD(e)
+e.cs=e.cs||"hide"
+e.ct=(e.ct==null?1.5:e.ct)-dt
+const a=fAng(e)
+if(e.cs==="hide"){e.face=lerpAngle(e.face||0,a+Math.PI,Math.min(1,dt*4))
+e.lean=0
+if(e.ct<=0&&d<14&&fOn()){e.cs="pop"
+e.ct=.4}}else if(e.cs==="pop"){e.face=lerpAngle(e.face,a,Math.min(1,dt*14))
+e.puff=1+.15*Math.sin((.4-e.ct)/.4*Math.PI)
+if(e.ct<=0){e.cs="shoot"
+e.ct=1.4
+e.n=0
+e.nt=0
+try{cnTone(16,.18,.07)
+cnTone(12,.25,.07,.2)}catch(_){}}}else if(e.cs==="shoot"){fTurn(e,dt,6)
+e.nt-=dt
+if(e.nt<=0&&e.n<2){e.nt=.55
+e.n++
+e.lean=.25
+const dir=V3(Math.sin(a),0,Math.cos(a))
+const t=V3(e.pos.x+dir.x*3.2,0,e.pos.z+dir.z*3.2)
+t.y=fGroundY(t.x,t.z,e.pos.y)
+fLob(e,fSpring(),t,{T:.5,arc:1.4,bounce:2,dir,fromY:(e.h||1)*.85,spin:3})
+try{blip(500,900,.1,"square",.04)}catch(_){}}else e.lean*=.9
+if(e.ct<=0){e.cs="hide"
+e.ct=2.2
+e.puff=1}}fSync(e)}
+FOE_AI.cuckoo.blk=(e,dir,stomp)=>{if(e.cs==="hide"&&!stomp){fClang(e)
+return true}return false}
+FOE_AI.crownguard=function(e,dt){const d=fD(e)
+e.cs=e.cs||"march"
+e.ct=(e.ct==null?5:e.ct)-dt
+e.key=(e.key==null?5:e.key)-dt
+if(e.cs==="march"){fTurn(e,dt,1.6)
+e.spinA=0
+if(d>1.6&&d<10&&fOn()){fStep(e,Math.sin(e.face)*1.6,Math.cos(e.face)*1.6,dt)}const behind=Math.cos(fAng(e)-e.face)<-.2
+if(behind&&d<2.8&&fOn()){e.cs="spear"
+e.ct=.7
+try{blip(700,1400,.25,"sawtooth",.04)}catch(_){}}if(e.key<=0){e.cs="frozen"
+e.ct=1.6
+e.dizzy=true
+fTint(e,2109520,.6)
+try{blip(500,200,.4,"square",.04)}catch(_){}}}else if(e.cs==="spear"){e.spinA=(1-e.ct/.7)*Math.PI*2
+fContact(e,2.3)
+if(e.ct<=0){e.cs="march"
+e.spinA=0}}else if(e.cs==="frozen"){e.spinA=0
+if(Math.random()<.2)try{emit(e.pos.clone().setY(e.pos.y+(e.h||1.6)*.6).add(V3(-Math.sin(e.face)*.5,0,-Math.cos(e.face)*.5)),{life:.4,size:.12,size1:.03,color:16769136})}catch(_){}if(e.ct<=0){e.cs="march"
+e.key=5
+e.dizzy=false
+fTint(e,null)}}fSync(e)}
+FOE_AI.crownguard.blk=(e,dir,stomp)=>{if(stomp||e.dizzy)return false
+if(fFront(e,dir)){fClang(e)
+if(dir){P.vel.x-=dir.x*6
+P.vel.z-=dir.z*6}return true}return false}
+FOE_AI.emberpup=function(e,dt){const d=fD(e)
+e.cs=e.cs||"idle"
+e.ct=(e.ct==null?1:e.ct)-dt
+e.lean=0
+if(e.cs==="idle"){fTurn(e,dt,5)
+if(d<11&&e.ct<=0&&fOn()){e.cs="crouch"
+e.ct=.6
+try{blip(900,1400,.08,"square",.05)
+blip(900,1500,.08,"square",.05,.12)}catch(_){}}}else if(e.cs==="crouch"){fTurn(e,dt,8)
+e.lean=-.2
+e.puff=.9
+e.wag=Math.sin(time*30)*.2
+if(e.ct<=0){e.cs="dash"
+e.ct=.7
+e.puff=1
+e.rd=V3(Math.sin(e.face),0,Math.cos(e.face))
+e.ft=0}}else if(e.cs==="dash"){e.lean=.3
+const b=fStep(e,e.rd.x*12,e.rd.z*12,dt)
+fContact(e,.9)
+e.ft-=dt
+if(e.ft<=0){e.ft=.07
+fHaz(e.pos.x,e.pos.y,e.pos.z,{r:.6,splat:"lava",T:1.5,hurt:true,delay:.15,fx:(h,dt,k)=>{h.m.material.opacity=Math.min(1,(1-k)*3)
+if(Math.random()<.35)try{emit(V3(h.x+R(-.3,.3),h.y+.15,h.z+R(-.3,.3)),{life:.45,size:.28,size1:.05,color:pick([16751152,16765024,16734752]),vy:1.8})}catch(_){}}})}if(b||e.ct<=0){e.cs="idle"
+e.ct=1.4}}fSync(e)}
+FOE_AI.moonmite=function(e,dt){const d=fD(e)
+fTurn(e,dt,4)
+e.cs=e.cs||"idle"
+e.ct=(e.ct==null?1.6:e.ct)-dt
+if(e.cs==="idle"){e.puff=1
+if(e.ct<=0&&d<13&&fOn()){e.cs="puff"
+e.ct=.7
+try{blip(200,500,.6,"sine",.04)}catch(_){}}else if(e.ct<=0)e.ct=.5}else if(e.cs==="puff"){e.puff=1+.3*(1-e.ct/.7)
+if(e.ct<=0){e.cs="spit"
+e.ct=1
+e.n=0
+e.nt=0}}else if(e.cs==="spit"){e.puff=Math.max(1,e.puff-dt*.6)
+e.nt-=dt
+if(e.nt<=0&&e.n<3){e.nt=.3
+const s=e.n-1
+e.n++
+const a=fAng(e)+s*.28
+const dd=Math.min(d,9)+s*.4
+const t=V3(e.pos.x+Math.sin(a)*dd,0,e.pos.z+Math.cos(a)*dd)
+t.y=fGroundY(t.x,t.z,P.pos.y)
+fLob(e,fRock(),t,{T:.8,arc:2.6,mark:"dust",mr:.7,fromY:(e.h||1)*.55,land:q=>{fDust(q.to.clone(),13156568,8)
+try{blip(160,80,.12,"square",.04)}catch(_){}fHaz(q.to.x,q.to.y,q.to.z,{r:.55,splat:"dust",T:3})}})
+try{blip(300,160,.08,"square",.05)}catch(_){}}if(e.ct<=0){e.cs="idle"
+e.ct=2.2}}fSync(e)}
+FOE_AI.ticket=function(e,dt){const d=fD(e)
+e.cs=e.cs||"idle"
+e.ct=(e.ct==null?1:e.ct)-dt
+e.lean=0
+if(e.cs==="idle"){fTurn(e,dt,3)
+e.spinA=0
+if(d<12&&e.ct<=0&&fOn()){e.cs="whistle"
+e.ct=.8
+try{blip(2400,2300,.35,"square",.04)
+blip(2600,2500,.25,"square",.03,.4)}catch(_){}}}else if(e.cs==="whistle"){fTurn(e,dt,6)
+fTint(e,12587024,.4+.4*Math.sin(time*20))
+if(e.ct<=0){e.cs="sprint"
+e.ct=1.3
+e.rd=V3(Math.sin(e.face),0,Math.cos(e.face))}}else if(e.cs==="sprint"){e.lean=.3
+const a=fAng(e)
+const want=V3(Math.sin(a),0,Math.cos(a))
+e.rd.lerp(want,Math.min(1,dt*.9)).normalize()
+e.face=Math.atan2(e.rd.x,e.rd.z)
+const b=fStep(e,e.rd.x*10,e.rd.z*10,dt)
+fContact(e,1.1)
+if(Math.random()<.4)fDust(e.pos.clone(),12103880,1)
+const passed=(P.pos.x-e.pos.x)*e.rd.x+(P.pos.z-e.pos.z)*e.rd.z<-.5
+if(passed||b||e.ct<=0){e.cs="skid"
+e.ct=1.1
+fTint(e,null)
+try{blip(900,300,.4,"sawtooth",.04)}catch(_){}}}else if(e.cs==="skid"){const k=e.ct/1.1
+fStep(e,e.rd.x*7*k,e.rd.z*7*k,dt)
+e.spinA=(e.spinA||0)+dt*14*k
+if(Math.random()<.6)fDust(e.pos.clone(),12103880,1)
+if(e.ct<=0)fDizzy(e,1.2)}else if(e.cs==="dizzy"){fStars(e)
+e.spinA*=.9
+if(e.ct<=0){e.cs="idle"
+e.ct=1.2
+e.dizzy=false
+e.spinA=0}}fSync(e)}
+FOE_AI.rootsentry=function(e,dt){const d=fD(e)
+fTurn(e,dt,1.1)
+e.still=e.still||0
+e.ct=(e.ct||0)-dt
+const sp=Math.hypot(P.vel.x,P.vel.z)
+if(d<12&&fOn()&&sp<1.2&&P.onGround){e.still+=dt}else e.still=Math.max(0,e.still-dt*2)
+if(e.still>1.5&&e.ct<=0){e.still=0
+e.ct=2.2
+const x=P.pos.x,z=P.pos.z,y=P.pos.y
+try{blip(120,90,.5,"sawtooth",.04)}catch(_){}const cr=new THREE.Group
+const cm=new THREE.MeshBasicMaterial({color:1707016,transparent:true,opacity:.85,depthWrite:false})
+for(let i=0;i<5;i++){const l=new THREE.Mesh(new THREE.PlaneGeometry(.08,1.1),cm)
+l.rotation.x=-Math.PI/2
+l.rotation.z=i/5*Math.PI
+cr.add(l)}fHaz(x,y,z,{mesh:cr,r:.9,T:1.9,delay:.75,hurt:false,fx:(h,dt,k)=>{h.m.scale.setScalar(.5+k*2)
+if(h.t>.75&&!h.up){h.up=1
+h.hurt=true
+fDust(V3(h.x,h.y+.2,h.z),6965802,14)
+try{blip(200,90,.25,"square",.06)}catch(_){}for(let i=0;i<5;i++){const a=i/5*Math.PI*2
+const r=new THREE.Mesh(new THREE.ConeGeometry(.16,1.6,5),new THREE.MeshLambertMaterial({color:5913122,flatShading:true}))
+r.position.set(Math.cos(a)*.4,.6,Math.sin(a)*.4)
+r.rotation.set(Math.sin(a)*.4,0,-Math.cos(a)*.4)
+h.m.add(r)}}if(h.up)h.m.children.forEach((c=>{if(c.geometry&&c.geometry.type==="ConeGeometry")c.scale.y=Math.min(1,(h.t-.75)*6)*(k>.85?(1-k)*6:1)}))}})}e.puff=1+Math.min(.08,e.still*.05)
+fSync(e)}
+FOE_AI.rootsentry.blk=(e,dir,stomp)=>{if(stomp)return false
+if(fFront(e,dir)){fClang(e)
+if(dir){P.vel.x-=dir.x*6
+P.vel.z-=dir.z*6}return true}return false}
+FOE_AI.inksquid=function(e,dt){const d=fD(e)
+fTurn(e,dt,4)
+e.ct=(e.ct==null?1.6:e.ct)-dt
+e.lean=0
+if(e.ct<.5&&e.ct>0)e.puff=1+.2*Math.sin((.5-e.ct)/.5*Math.PI)
+else e.puff=1
+if(e.ct<=0){e.ct=2.5
+if(d<13&&fOn()){const tx=P.pos.x+P.vel.x*.3,tz=P.pos.z+P.vel.z*.3
+const to=V3(tx,fGroundY(tx,tz,P.pos.y),tz)
+try{blip(500,200,.2,"sine",.05)}catch(_){}fLob(e,fBlot(),to,{T:.9,arc:2.8,mark:"ink",fromY:(e.h||1)*.6,spin:2,land:(q,direct)=>{if(direct)fInk()
+try{burst(q.to.clone().setY(q.to.y+.2),2761840,12,3,.3,true)
+blip(260,120,.15,"sine",.05)}catch(_){}fHaz(q.to.x,q.to.y,q.to.z,{r:1.3,splat:"ink",v:q.v,rz:q.rz,T:4.5,slip:true})}})}}fSync(e)}
+function foeBlock(e,dir,stomp,force){const ai=FOE_AI[e.pk]
+if(!ai||!ai.blk)return false
+try{return ai.blk(e,dir,stomp,force)}catch(_){return false}}const FSPL={tex:{},pal:{potion:{rim:"#d8ff4a",main:"#8ad81e",dark:"#4e9a12",hi:"#f0ffb8",bub:"#b8f048",line:"#e8ff70"},ink:{rim:"#4a44a8",main:"#16124a",dark:"#0a0826",hi:"#9a9aff",bub:"#2a2670",line:"#8a80ff"},lava:{rim:"#ffe060",main:"#ff7a14",dark:"#b02a08",hi:"#fff2b0",bub:"#ffb030",line:"#ffb040",crust:"#3a1a10"},dust:{rim:"#d8d0e8",main:"#9a90b0",dark:"#5a5070",hi:"#f0ecff",bub:"#7a7090",line:"#e0d8f0"},root:{rim:"#6a4a2a",main:"#3a2414",dark:"#1a0c06",hi:"#8a6a4a",bub:"#4a3020",line:"#c89a5a"}}}
+function fSplatShape(seed){let x=seed*9301+49297
+const r=()=>(x=x*16807%2147483647)/2147483647
+const n=48,pts=[]
+const h=[]
+for(let k=2;k<7;k++)h.push([k,r()*.16/(k*.5),r()*6.28])
+const lobes=[]
+for(let i=0;i<2+(r()*3|0);i++)lobes.push([r()*6.28,.2+r()*.3,.25+r()*.25])
+for(let i=0;i<n;i++){const a=i/n*Math.PI*2
+let rad=1
+for(const[k,amp,ph]of h)rad+=Math.sin(a*k+ph)*amp
+for(const[la,ll,lw]of lobes){let d=Math.abs((a-la+Math.PI*3)%(Math.PI*2)-Math.PI)
+if(d<lw)rad+=ll*Math.cos(d/lw*Math.PI/2)**2}pts.push([Math.cos(a)*rad*1.45,Math.sin(a)*rad*.8])}const drops=[]
+for(let i=0;i<3+(r()*4|0);i++){const a=r()*6.28
+const p=pts[Math.floor(a/6.28*n)%n]
+drops.push([p[0]*(1.12+r()*.25),p[1]*(1.15+r()*.3),.05+r()*.09])}const bubs=[]
+for(let i=0;i<4+(r()*5|0);i++)bubs.push([(r()-.5)*1.7,(r()-.5)*.8,.04+r()*.09])
+return{pts,drops,bubs,r}}function fPath(g,pts,S,sc,ox,oy){const c=S/2,k=S/4.4*sc
+g.beginPath()
+for(let i=0;i<pts.length;i++){const p=pts[i],q=pts[(i+1)%pts.length]
+const mx=(p[0]+q[0])/2,my=(p[1]+q[1])/2
+if(i===0)g.moveTo(c+ox+mx*k,c+oy+my*k)
+else g.quadraticCurveTo(c+ox+p[0]*k,c+oy+p[1]*k,c+ox+mx*k,c+oy+my*k)}const p=pts[0],q=pts[1]
+g.quadraticCurveTo(c+ox+p[0]*k,c+oy+p[1]*k,c+ox+(p[0]+q[0])/2*k,c+oy+(p[1]+q[1])/2*k)
+g.closePath()}function fSplatTex(kind,v,outline){const key=kind+v+(outline?"o":"")
+if(FSPL.tex[key])return FSPL.tex[key]
+const S=256,c=document.createElement("canvas")
+c.width=c.height=S
+const g=c.getContext("2d")
+const C=FSPL.pal[kind]||FSPL.pal.potion
+const sh=fSplatShape(v*7+kind.length*13+1)
+const k=S/4.4
+const cx=S/2
+if(outline){g.globalAlpha=.28
+g.fillStyle=C.main
+fPath(g,sh.pts,S,1,0,0)
+g.fill()
+g.globalAlpha=1
+g.setLineDash([14,10])
+g.lineWidth=7
+g.strokeStyle=C.line
+fPath(g,sh.pts,S,1,0,0)
+g.stroke()
+g.setLineDash([])
+g.lineWidth=3
+g.strokeStyle="rgba(255,255,255,.7)"
+fPath(g,sh.pts,S,.55,0,0)
+g.stroke()}else if(kind==="dust"){g.fillStyle=C.rim
+fPath(g,sh.pts,S,.8,0,0)
+g.fill()
+g.fillStyle=C.dark
+fPath(g,sh.pts,S,.55,0,5)
+g.fill()
+g.fillStyle=C.main
+fPath(g,sh.pts,S,.38,-4,-2)
+g.fill()
+g.strokeStyle=C.dark
+g.lineWidth=3
+for(let i=0;i<7;i++){const a=sh.r()*6.28
+let x=cx+Math.cos(a)*k*.9,y=cx+Math.sin(a)*k*.5
+g.beginPath()
+g.moveTo(x,y)
+for(let j=0;j<3;j++){x+=Math.cos(a+(sh.r()-.5))*k*.22
+y+=Math.sin(a+(sh.r()-.5))*k*.14
+g.lineTo(x,y)}g.stroke()}for(const[x,y,r]of sh.drops){g.fillStyle=C.rim
+g.beginPath()
+g.ellipse(cx+x*k*1.1,cx+y*k*1.1,r*k*.9,r*k*.6,0,0,7)
+g.fill()
+g.fillStyle=C.dark
+g.beginPath()
+g.ellipse(cx+x*k*1.1+2,cx+y*k*1.1+3,r*k*.7,r*k*.3,0,0,Math.PI)
+g.fill()}}else{g.fillStyle=C.rim
+fPath(g,sh.pts,S,1,0,0)
+g.fill()
+for(const[x,y,r]of sh.drops){g.beginPath()
+g.ellipse(cx+x*k,cx+y*k,r*k*1.3,r*k*.75,0,0,7)
+g.fill()}g.fillStyle=C.main
+fPath(g,sh.pts,S,.86,0,4)
+g.fill()
+g.fillStyle=C.dark
+g.globalAlpha=.55
+fPath(g,sh.pts,S,.55,6,10)
+g.fill()
+g.globalAlpha=1
+if(kind==="lava"){g.fillStyle=C.crust
+for(let i=0;i<9;i++){const x=(sh.r()-.5)*1.8,y=(sh.r()-.5)*.8
+g.beginPath()
+g.ellipse(cx+x*k,cx+y*k,(.08+sh.r()*.14)*k,(.05+sh.r()*.08)*k,sh.r()*3,0,7)
+g.fill()}}g.strokeStyle=C.hi
+g.globalAlpha=.75
+g.lineWidth=5
+g.lineCap="round"
+for(let i=0;i<2;i++){const y=cx+(-.3+i*.16)*k,x0=cx+(-.9+sh.r()*.4+i*.25)*k,x1=x0+(.3+sh.r()*.4)*k
+g.beginPath()
+g.moveTo(x0,y)
+g.quadraticCurveTo((x0+x1)/2,y-8,x1,y)
+g.stroke()}g.globalAlpha=1
+for(const[x,y,r]of sh.bubs){g.fillStyle=C.bub
+g.beginPath()
+g.ellipse(cx+x*k,cx+y*k,r*k*1.2,r*k,0,0,7)
+g.fill()
+g.fillStyle=C.dark
+g.globalAlpha=.6
+g.beginPath()
+g.ellipse(cx+x*k+r*k*.2,cx+y*k+r*k*.35,r*k*.9,r*k*.45,0,0,Math.PI)
+g.fill()
+g.globalAlpha=1
+g.fillStyle=C.hi
+g.beginPath()
+g.ellipse(cx+x*k-r*k*.35,cx+y*k-r*k*.35,r*k*.35,r*k*.25,-.5,0,7)
+g.fill()}}const t=new THREE.CanvasTexture(c)
+t.encoding=THREE.sRGBEncoding
+return FSPL.tex[key]=t}function fSplatMesh(kind,v,size,outline){const m=new THREE.Mesh(new THREE.PlaneGeometry(size*2,size*2),new THREE.MeshBasicMaterial({map:fSplatTex(kind,v%6,outline),transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2}))
+m.rotation.x=-Math.PI/2
+m.rotation.z=Math.random()*6.28
+return m}function fSplatKind(color){const c=new THREE.Color(color)
+const hsl={}
+c.getHSL(hsl)
+if(hsl.s<.2)return"dust"
+const h=hsl.h*360
+if(h<55||h>330)return"lava"
+if(h<170)return"potion"
+return"ink"}if(LV===1){COURSE[1]={w:5.6,noHighShard:true,cmds:[{s:12,w:8,tag:"gate"},{s:4,w:5.6},{arc:35,r:14},{s:6,dh:1},{arc:-70,r:12},{s:7},{gap:1,s:2.8},{s:7},{arc:45,r:13,dh:-1},{s:14,tag:"lant"},{arc:-30,r:16},{s:6,w:9,tag:"nook2"},{s:4,w:5.6,dh:1.4},{arc:20,r:12},{s:8,tag:"ck"},{s:4,w:12},{s:42,w:12,tag:"fork"},{s:4,w:12},{s:4,w:5.6,tag:"ck"},{s:22,w:4.8,dh:-2.2,tag:"chase"},{s:2.4,w:4.8,tag:"chase"},{s:22,w:4.8,dh:-2.2,tag:"chase"},{s:4,w:5.6},{s:7},{arc:-60,r:12},{s:12,tag:"lant"},{arc:80,r:11},{s:8,dh:-1.4},{gap:1,s:2.6},{s:10},{arc:-30,r:14},{s:8},{s:16,w:11,tag:"bells"},{s:6,w:5.6,tag:"end"}],look:{top:"path",banks:true},hz:"lant"}}const L1V={bells:null,solved:false,relit:false}
 window.__L1V=L1V
 if(LV===1){L.lockOnly=()=>{if(!L1V.bells||L1V.solved)return null
 const q=crsNear(P.pos.x,P.pos.z)
@@ -17783,9 +18375,9 @@ playCfg(L.bossMus)
 shakeT=.6}function bossThrow(){const tgt=V3(P.pos.x+P.vel.x*.5,0,P.pos.z+P.vel.z*.5)
 tgt.x=clamp(tgt.x,ARENA.x0+1,ARENA.x1-1)
 tgt.z=clamp(tgt.z,ARENA.z1+2,ARENA.z0-1)
-const ring=new THREE.Mesh(new THREE.RingGeometry(1.15,1.45,32),ringMat)
-ring.rotation.x=-Math.PI/2
-ring.position.set(tgt.x,.06,tgt.z)
+let ring
+try{ring=fSplatMesh("lava",Math.random()*6|0,1.6,true)}catch(_){ring=new THREE.Mesh(new THREE.RingGeometry(1.15,1.45,32),ringMat)
+ring.rotation.x=-Math.PI/2}ring.position.set(tgt.x,.06,tgt.z)
 scene.add(ring)
 const o=grp(spr(glowTex,16742938,2.2,2.2,0,0,0),spr(glowTex,16769162,.9,.9,0,0,0))
 o.position.copy(boss.pos)
@@ -17931,14 +18523,15 @@ makeCrate("crate",1.8,-66,1)}const globs=[]
 const globRingMat=new THREE.MeshBasicMaterial({color:8060730,transparent:true,opacity:.8,side:THREE.DoubleSide,depthWrite:false})
 const ringMats={}
 function lobGlob(from,to,dur,size,color=8060714){const rm=color===8060714?globRingMat:ringMats[color]=ringMats[color]||new THREE.MeshBasicMaterial({color,transparent:true,opacity:.8,side:THREE.DoubleSide,depthWrite:false})
-const ring=new THREE.Mesh(new THREE.RingGeometry(size*.82,size,32),rm)
-ring.rotation.x=-Math.PI/2
-ring.position.set(to.x,to.y+.07,to.z)
+let ring,sk=null,sv=Math.random()*6|0
+try{sk=fSplatKind(color)
+ring=fSplatMesh(sk,sv,size*1.25,true)}catch(_){ring=new THREE.Mesh(new THREE.RingGeometry(size*.82,size,32),rm)
+ring.rotation.x=-Math.PI/2}ring.position.set(to.x,to.y+.07,to.z)
 scene.add(ring)
 const o=grp(spr(glowTex,color,1.3*size,1.3*size,0,0,0),spr(glowTex,16777215,.5*size,.5*size,0,0,0))
 o.position.copy(from)
 scene.add(o)
-globs.push({o,ring,from:from.clone(),to:to.clone(),t:0,dur,size,h:2+size,color})
+globs.push({o,ring,sk,sv,from:from.clone(),to:to.clone(),t:0,dur,size,h:2+size,color})
 blip(260,560,.18,"triangle",.06)}function clearGlobs(){globs.forEach((g=>{scene.remove(g.o)
 scene.remove(g.ring)}))
 globs.length=0}function updGlobs(dt){globRingMat.opacity=.45+Math.abs(Math.sin(time*12))*.4
@@ -17949,13 +18542,13 @@ f.t+=dt
 const k=Math.min(1,f.t/f.dur)
 f.o.position.lerpVectors(f.from,f.to,k)
 f.o.position.y+=Math.sin(k*Math.PI)*f.h
-if(Math.random()<.6)emit(f.o.position.clone(),{life:.35,size:.5*f.size,size1:.05,color:f.color})
+if(f.sk){f.ring.material.opacity=.55+.35*Math.sin(time*12)}if(Math.random()<.6)emit(f.o.position.clone(),{life:.35,size:.5*f.size,size1:.05,color:f.color})
 if(k>=1){burst(f.to.clone().setY(f.to.y+.3),f.color,16,5,.5)
 if(AC)noise(AC.currentTime,.2,.25,"lowpass",700,sfxBus)
 if(state==="play"&&Math.hypot(P.pos.x-f.to.x,P.pos.z-f.to.z)<f.size*1.05&&P.pos.y<f.to.y+1.3)hurt()
 scene.remove(f.o)
 scene.remove(f.ring)
-globs.splice(i,1)}}}let bratProto=null
+if(f.sk)try{fHaz(f.to.x,f.to.y,f.to.z,{r:f.size*.95,splat:f.sk,v:f.sv,rz:f.ring.rotation.z,T:1.3})}catch(_){}globs.splice(i,1)}}}let bratProto=null
 function brat(x,z,y=0){if(!bratProto)return null
 const g=new THREE.Group
 g.rotation.order="YXZ"
