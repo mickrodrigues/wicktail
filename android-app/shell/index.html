@@ -46,7 +46,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .ctr.show{transform:none;opacity:1}.ctr.bump{animation:bump .25s}@keyframes bump{50%{transform:scale(1.18)}}
 .ctrR{transform:translateX(140%)}
 .orbI{position:relative;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff 0 20%,#ffe14a 45%,#ff9a1a 80%);box-shadow:0 0 10px #ffd23f}
-.orbI::after{content:"";position:absolute;inset:-4px;border-radius:50%;background:conic-gradient(#ffd27a calc(var(--op,0)*1turn),rgba(255,255,255,.12) 0);-webkit-mask:radial-gradient(circle,transparent 9px,#000 9.5px);mask:radial-gradient(circle,transparent 9px,#000 9.5px)}.orbFly{position:fixed;z-index:7;width:14px;height:14px;margin:-7px 0 0 -7px;pointer-events:none;background:#ffc63a;border:2px solid #5a3400;transform:rotate(45deg);image-rendering:pixelated}
+.orbI::after{content:"";position:absolute;inset:-4px;border-radius:50%;background:conic-gradient(#ffd27a calc(var(--op,0)*1turn),rgba(255,255,255,.12) 0);-webkit-mask:radial-gradient(circle,transparent 9px,#000 9.5px);mask:radial-gradient(circle,transparent 9px,#000 9.5px)}.orbFly{position:fixed;z-index:7;width:16px;height:16px;margin:-8px 0 0 -8px;pointer-events:none;border-radius:50%;background:radial-gradient(circle,#fff8d8 0 22%,#ffe14a 40%,rgba(255,200,60,.5) 62%,rgba(255,200,60,0) 72%)}
 .crtI{width:18px;height:18px;border-radius:3px;background:linear-gradient(135deg,#c8904a,#8a5420);border:2px solid #4a2a0c;box-shadow:inset 0 0 0 2px rgba(255,220,160,.25)}
 .hud-r{position:absolute;right:calc(14px + env(safe-area-inset-right,0px));top:calc(10px + env(safe-area-inset-top,0px));display:flex;gap:10px;align-items:center}
 .iconBtn{pointer-events:auto;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;cursor:pointer;border:1px solid var(--rim)}
@@ -305,6 +305,76 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 
 
 @media (pointer:coarse){.btns .btn{opacity:.8}.btns .btn:active,.btns .btn.on,.btns .btn.down{opacity:1}#stick{opacity:.5}}
+
+:root{--plum:#1e0e46;--plum2:#10072a;--cream:#f6ead2;--parch:#efe1c2;--ink2:#3a2216;--amber:#f2a83a}
+#title .tcol,#title .topbar .tbLogo,#title #journalBtn,#title #settingsBtn,#title .tfoot{display:none!important}
+#title.splash .tcol{display:flex!important}#title.splash #mPanel{display:none}
+#mPanel{position:absolute;left:0;top:0;bottom:0;width:clamp(260px,30vw,400px);z-index:2;background:linear-gradient(90deg,rgba(16,7,40,.96),rgba(30,14,70,.9));border-right:1px solid var(--rimS);box-shadow:6px 0 30px rgba(0,0,0,.45);padding:max(22px,env(safe-area-inset-top,0px)) 26px 18px max(30px,env(safe-area-inset-left,0px));display:flex;flex-direction:column}
+#mPanel .mLogo{width:88%;max-width:300px;height:auto;margin:4px 0 clamp(14px,4vh,34px)}
+.mList{display:flex;flex-direction:column;gap:clamp(4px,1.2vh,10px)}
+.mItem{position:relative;background:none;border:0;padding:6px 0 6px 30px;text-align:left;cursor:pointer;color:var(--cream);font:800 clamp(17px,2.1vw,24px)/1.1 var(--ui);letter-spacing:.01em;display:flex;flex-direction:column;gap:3px}
+.mItem .mt{transition:transform .15s}.mItem#pmCont .mt{font-weight:900;letter-spacing:.04em}
+.mItem .ms{font:700 clamp(12px,1.25vw,15px)/1.2 var(--ui);color:rgba(246,234,210,.75)}
+.mItem::before{content:"";position:absolute;left:4px;top:clamp(9px,1.4vw,13px);border-left:13px solid var(--amber);border-top:8px solid transparent;border-bottom:8px solid transparent;opacity:0;transform:translateX(-6px);transition:opacity .15s,transform .15s}
+.mItem.on::before{opacity:1;transform:none}.mItem.on .mt{color:#fff;transform:translateX(2px)}
+.mItem:focus-visible{outline:none}
+.mFoot{margin-top:auto;padding-top:10px;border-top:1px solid rgba(246,234,210,.25);font:700 12px/1 var(--ui);letter-spacing:.14em;color:rgba(246,234,210,.6)}
+#title .topbar{left:auto!important;right:max(16px,env(safe-area-inset-right,0px))!important;width:auto!important;background:none!important;border:0!important;box-shadow:none!important}
+
+#levelsScr{padding:0!important;background:#07031a!important}
+#levelsScr .panel.lroadP{position:absolute;inset:0;width:auto!important;max-width:none!important;max-height:none!important;border-radius:0;border:0!important;background:none!important;box-shadow:none!important;backdrop-filter:none!important;padding:0!important;overflow:hidden!important}
+#levelsScr .panel.lroadP>.phead,#levelsScr .panel.lroadP>.chsub{display:none!important}
+#lroad{position:absolute;inset:0}
+.lrBg{position:absolute;inset:-4%;background:center/cover no-repeat;filter:brightness(.5) saturate(.85) blur(2px);animation:lrDrift 22s ease-in-out infinite alternate}
+@keyframes lrDrift{from{transform:scale(1.02)}to{transform:scale(1.08) translate(-1%,-1%)}}
+.lrShade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,7,40,.7),rgba(16,7,40,.1) 30%,rgba(16,7,40,.15) 60%,rgba(16,7,40,.8)),linear-gradient(90deg,rgba(16,7,40,.3),rgba(16,7,40,0) 40%,rgba(16,7,40,.55) 70%)}
+.lrHead{position:absolute;left:max(4vw,env(safe-area-inset-left,0px));top:max(16px,env(safe-area-inset-top,0px));z-index:3}
+.lrHead h2{margin:0;font:900 clamp(26px,4vw,48px)/1 var(--head);color:var(--cream);letter-spacing:.04em;text-shadow:0 3px 12px rgba(0,0,0,.6)}
+.lrCh{display:flex;align-items:center;gap:10px;margin-top:6px;font:800 clamp(13px,1.5vw,18px)/1 var(--ui);color:var(--cream);text-shadow:0 2px 6px rgba(0,0,0,.7)}
+.lrChB,.lrArr{background:none;border:0;color:var(--cream);font-size:16px;cursor:pointer;padding:4px 6px;text-shadow:0 2px 6px rgba(0,0,0,.7)}
+.lrPath{position:absolute;z-index:2;left:max(3vw,env(safe-area-inset-left,0px));right:calc(clamp(260px,32vw,400px) + 4vw);top:30%;bottom:16%}
+.lrPath svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.lrTrail{stroke:#c8a878;stroke-opacity:.8;stroke-width:22;stroke-linecap:round;vector-effect:non-scaling-stroke;filter:drop-shadow(0 3px 0 rgba(40,20,10,.5))}
+.lrPost{position:absolute;transform:translate(-50%,-100%) scale(calc(var(--sc,1)*1.55));transform-origin:50% 100%;background:none;border:0;padding:0;cursor:pointer;width:40px;height:70px}
+.lrPost svg{position:absolute;left:0;bottom:0;display:block}
+.lrPost .ring{display:block;position:absolute;left:50%;bottom:-6px;width:40px;height:14px;transform:translateX(-50%);border-radius:50%;border:3px solid var(--amber);box-shadow:0 0 12px rgba(255,170,60,.7);opacity:0;transition:opacity .2s}
+.lrPost.sel .ring{opacity:1;animation:lrRing 1.4s ease-in-out infinite}
+@keyframes lrRing{50%{transform:translateX(-50%) scale(1.12)}}
+.lrPost.shake{animation:lrShake .35s}@keyframes lrShake{25%{margin-left:-4px}75%{margin-left:4px}}
+.lrNav{position:absolute;z-index:3;left:max(4vw,env(safe-area-inset-left,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:12px;font:800 clamp(14px,1.6vw,19px)/1 var(--ui);color:var(--cream);text-shadow:0 2px 6px rgba(0,0,0,.8)}
+.lrCard{position:absolute;z-index:4;right:max(2.5vw,env(safe-area-inset-right,0px));top:max(14px,env(safe-area-inset-top,0px));bottom:max(14px,env(safe-area-inset-bottom,0px));width:clamp(250px,31vw,390px);background:radial-gradient(ellipse at 30% 20%,#f6ead0,#ead8b0 60%,#d8c094);color:var(--ink2);text-align:left;padding:clamp(10px,2vh,18px) clamp(14px,1.6vw,20px);box-shadow:0 10px 30px rgba(0,0,0,.5),inset 0 0 30px rgba(120,80,30,.25);clip-path:polygon(0 1%,3% 0,40% .6%,70% 0,97% .8%,100% 3%,99.4% 40%,100% 75%,99% 99%,60% 100%,25% 99.3%,1% 100%,.5% 60%);display:flex;flex-direction:column;overflow:hidden}
+.lrBack{align-self:flex-end;background:none;border:0;color:var(--ink2);font:800 15px/1 var(--ui);cursor:pointer;padding:2px 0 8px}
+.lrPic{flex:0 1 auto;aspect-ratio:16/10;width:100%;min-height:0;background:center/cover no-repeat;border:2px solid rgba(58,34,22,.45);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.lrPic.lock{filter:grayscale(1) brightness(.35)}
+.lrName{margin:clamp(8px,1.6vh,14px) 0 6px;font:900 clamp(18px,2.2vw,28px)/1.1 var(--head);color:#2a1408}
+.lrLine{font:800 clamp(13px,1.35vw,16px)/1.5 var(--ui);white-space:pre}
+.lrEnter{margin-top:auto;align-self:center;width:84%;padding:clamp(9px,1.6vh,13px) 0;background:linear-gradient(180deg,#f8c25a,#e89a2a);border:2px solid #9a5a12;color:#2a1004;font:900 clamp(15px,1.7vw,20px)/1 var(--ui);letter-spacing:.08em;cursor:pointer;box-shadow:0 3px 0 #7a440c}
+.lrEnter:active{transform:translateY(2px);box-shadow:0 1px 0 #7a440c}.lrEnter[disabled]{filter:grayscale(1);opacity:.6;pointer-events:none}
+.lrRes{align-self:center;margin-top:6px;background:none;border:0;color:#6a3a10;font:800 13px/1 var(--ui);text-decoration:underline;cursor:pointer}
+
+#pause{background:rgba(10,4,24,.18)!important;backdrop-filter:blur(1.5px)!important;-webkit-backdrop-filter:blur(1.5px)!important}
+#pause>:not(.pNote){display:none!important}
+#pause:not([hidden]){display:block!important}
+.pNote{position:absolute;left:max(4vw,env(safe-area-inset-left,0px));top:50%;transform:translateY(-50%) rotate(-1deg);width:clamp(250px,30vw,360px);max-height:92vh;overflow:auto;background:radial-gradient(ellipse at 30% 20%,#f6ead0,#ead8b0 60%,#d8c094);color:var(--ink2);padding:clamp(18px,3.5vh,30px) clamp(18px,2.2vw,28px) clamp(12px,2vh,18px);box-shadow:0 12px 34px rgba(0,0,0,.5),inset 0 0 30px rgba(120,80,30,.25);clip-path:polygon(0 1%,4% 0,45% .8%,80% 0,97% 1%,100% 4%,99.3% 45%,100% 80%,99% 99%,55% 100%,20% 99%,1% 100%,.6% 55%);text-align:left}
+.pNote .pin{position:absolute;left:50%;top:6px;width:16px;height:16px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle at 35% 35%,#e0b070,#8a5a2a 60%,#4a2a10);box-shadow:0 2px 3px rgba(0,0,0,.4)}
+.pNote h2{margin:6px 0 4px;font:900 clamp(26px,3.4vw,40px)/1 var(--head);color:#2a1408;letter-spacing:.04em}
+.nLv{font:800 clamp(15px,1.7vw,19px)/1.2 var(--ui)}.nSt{font:700 clamp(12px,1.3vw,15px)/1.5 var(--ui);opacity:.85;white-space:pre}
+.nRule{height:1px;background:rgba(58,34,22,.35);margin:clamp(8px,1.8vh,14px) 0}
+.pNote .mItem{color:var(--ink2);font-size:clamp(15px,1.8vw,20px);padding-top:4px;padding-bottom:4px}
+.pNote .mItem.on .mt{color:#1a0c04}.pNote .mItem::before{top:clamp(6px,1vw,9px)}
+.nFb{display:block;margin:8px 0 0 30px;background:none;border:0;padding:0;color:#6a3a10;font:700 12px/1 var(--ui);text-decoration:underline;cursor:pointer}
+#journalScr{z-index:40}
+
+#tgTag{position:fixed;left:50%;top:max(10px,env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:6;padding:7px 18px 6px;border-radius:999px;text-align:center;pointer-events:none;font:900 22px/1 var(--ui);color:#fff3d0;text-shadow:0 2px 0 rgba(0,0,0,.35);font-variant-numeric:tabular-nums}
+#tgTag .b{font:800 10px/1 var(--ui);letter-spacing:.1em;color:#ffd27a;margin-top:3px;min-height:10px}
+#tgTag .pp{display:flex;gap:5px;justify-content:center;margin-top:5px}#tgTag .pp i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.22)}#tgTag .pp i.on{background:#ffd27a;box-shadow:0 0 6px #ffb84a}
+#tgCard{position:fixed;inset:0;z-index:30;background:rgba(10,4,24,.55);display:flex;align-items:center;justify-content:center}
+#tgCard .cd{display:block!important;width:min(360px,86vw);height:auto!important;border-radius:18px;padding:18px 22px;color:#fff3d0;font:800 15px/1 var(--ui)}
+#tgCard h2{margin:0 0 8px;font:900 26px/1 var(--head);text-align:center;color:#ffe8a8}
+#tgCard .tgMed{width:58px;height:58px;border-radius:50%;margin:6px auto;border:3px solid #fff1c0;box-shadow:0 0 0 1px #5a2a06,inset 0 -6px 0 rgba(0,0,0,.18)}
+#tgCard .tgMn{text-align:center;margin-bottom:12px;font:900 13px/1 var(--head);letter-spacing:.14em;color:#ffd27a}
+#tgCard .tgRow{display:flex;justify-content:space-between;margin:8px 0}
+#tgCard .tgBtns{display:flex;gap:10px;margin-top:16px}#tgCard .tgB{flex:1;display:block;height:auto;writing-mode:horizontal-tb;padding:12px 0;border-radius:12px;cursor:pointer;font:900 16px/1 var(--head);letter-spacing:.14em;color:#fff3d0;background:linear-gradient(180deg,var(--glass2),var(--glass));border:1px solid var(--rimS)}#tgCard .tgB.pri{background:linear-gradient(180deg,#ffe8a8,#f2b048 55%,#c47418);color:#2a1004;border-color:#fff1c0}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
@@ -399,7 +469,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
   </div>
 </div></div>
 <div id="pause" class="screen dim" hidden><h2 class="logo" style="font-size:clamp(34px,7vw,64px)">Paused</h2><div class="orn" id="pName">Level 1</div>
-  <div class="menu"><button id="resumeBtn" class="mbtn primary" type="button">RESUME</button><button id="pRestart" class="mbtn glass" type="button">RESTART LEVEL</button><button id="pSettings" class="mbtn glass" type="button">SETTINGS</button><button id="pFeedback" class="mbtn glass" type="button">SEND FEEDBACK</button><button id="pQuit" class="mbtn glass" type="button">QUIT TO MENU</button></div>
+  <div class="menu"><button id="resumeBtn" class="mbtn primary" type="button">RESUME</button><button id="pRestart" class="mbtn glass" type="button">RESTART LEVEL</button><button id="pSettings" class="mbtn glass" type="button">SETTINGS</button><button id="pFeedback" class="mbtn glass" type="button">SEND FEEDBACK</button><button id="pQuit" class="mbtn glass" type="button">QUIT TO MENU</button></div><div class="sStats" id="sStats"></div>
   <div class="ctrlBox glass" id="ctrlBox"><div><b>Move</b><span>WASD · stick</span></div><div><b>Jump</b><span>Space · K</span></div><div><b>Spin</b><span>J</span></div><div><b>Lantern</b><span>L</span></div><div><b>Dash</b><span>Shift · I</span></div><div><b>Camera</b><span>Q / E · drag</span></div><div><b>Spin in air</b><span>boosts your jump</span></div><div><b>Pause</b><span>P · Esc</span></div></div></div>
 <div id="over" class="screen dim" hidden><h2 class="logo" id="overTitle" style="font-size:clamp(30px,6.5vw,60px)">Level Complete</h2><div class="orn" id="overSub"></div>
   <div class="res"><div class="rrow glass"><span class="orbI"></span>ORBS<b id="sOrbs">0</b></div><div class="rrow glass"><span class="crtI"></span>CRATES<b id="sCrates">0/0</b></div><div class="rrow glass"><span style="font-size:16px">⌛</span>TIME<b id="sTime">0:00</b></div><div class="rrow glass"><span class="shI"></span>SHARDS<b id="sShards">0/3</b></div></div>
@@ -1700,11 +1770,14 @@ return s}function groundSeg(z0,z1,x0=-4.6,x1=4.6,walls=true){addSolid(x0,x1,-4,0
 if(walls){addSolid(x0-.9,x0,0,.75,z1,z0,"wall",wallMat)
 addSolid(x1,x1+.9,0,.75,z1,z0,"wall",wallMat)}}const MAXLV=14
 const UNLOCK=(()=>{try{return clamp(+localStorage.getItem("wt-unlocked")||1,1,MAXLV)}catch(e){return 1}})()
-function lvLabel(n){return n>=10?"Chapter 2 · Level "+(n-9):"Level "+n}function lvHash(n){return n>=10?"chapter2-level"+(n-9):"level"+n}const LV=(()=>{const h=(location.hash||"").toLowerCase()
+function lvLabel(n){if(n===15)return"Training Grounds"
+return n>=10?"Chapter 2 · Level "+(n-9):"Level "+n}function lvHash(n){if(n===15)return"training"
+return n>=10?"chapter2-level"+(n-9):"level"+n}const LV=(()=>{const h=(location.hash||"").toLowerCase()
+if(/^#training/.test(h))return 15
 const m=h.match(/^#level(\d+)/),m2=h.match(/^#chapter2-level(\d+)/)
 let n=m2?+m2[1]+9:m?+m[1]:0
 if(!n){try{n=+localStorage.getItem("wt-level")||1}catch(e){n=1}}return clamp(n,1,Math.min(MAXLV,UNLOCK))})()
-if(LV>MAXLV){try{localStorage.setItem("wt-level","1")}catch(e){}location.hash="level1"
+if(LV>MAXLV&&LV!==15){try{localStorage.setItem("wt-level","1")}catch(e){}location.hash="level1"
 location.reload()}let ARENA=null,gate=null,gateMesh=null,sunSky=null
 const L={kill:[],smoke:[],bubbles:[],torches:[],flora:[],shafts:[],hemiI:1,tick:null,grade:{sat:1.1,vig:.75,tint:[1.05,1,.95]}}
 const GT=[groundSide,groundSide,groundTop,groundSide,groundSide,groundSide]
@@ -5129,7 +5202,7 @@ checkpoint.copy(SEC.retCk)
 camBehind()
 state="play"
 fade(0,.45)
-SEC.bonusPad.cd=2.5}),350)}function warpToLevel(){if(SEC.done)return
+SEC.bonusPad.cd=2.5}),350)}function warpToLevel(){if(SEC.done||LV===15)return
 SEC.done=true
 sfx.check()
 burst(SEC.warpP.clone(),13150463,40,8,.6)
@@ -6229,14 +6302,14 @@ d.rotation.x=-Math.PI/2
 d.position.set(q.x,q.y+.03,q.z)
 scene.add(d)
 CRS.items.push({k:"jet",x:q.x,y:q.y,z:q.z,t:i*.8,per:2.6})}}if(LV===9){CRS.items.push({k:"stars",path,t:2})}if(L.courseDress)L.courseDress(path,{mn,mx,tagRuns,tagS,rng})
-crsPop(path,rng,Object.assign({skip:["chase","ride","lily","fork","bridge","blade","gear"],step:7},D.pop||{}))
+if(LV!==15)crsPop(path,rng,Object.assign({skip:["chase","ride","lily","fork","bridge","blade","gear"],step:7},D.pop||{}))
 const pts=path.pts
 const len=path.len
-crsShardHigh(path,len*.3,"high")
-if(!(LV%2)){crsShardHigh(path,len*.78,"high2")}if(!D.noMidCheck)crsCheck(path,len*.5)
-{const sw=[len*.62,len*.9]
+if(LV!==15){crsShardHigh(path,len*.3,"high")
+if(!(LV%2)){crsShardHigh(path,len*.78,"high2")}}if(!D.noMidCheck)crsCheck(path,len*.5)
+if(LV!==15){const sw=[len*.62,len*.9]
 for(const s of sw){const q=crsAt(path,s,-1.5)
-spawnWisp(q.x,q.y+1,q.z)}}if(LV%2||D.bonus){let s=len*(D.bonus||.42)
+spawnWisp(q.x,q.y+1,q.z)}}if((LV%2||D.bonus)&&LV!==15){let s=len*(D.bonus||.42)
 for(let k=0;k<30&&(crsAt(path,s).p.gap||crsAt(path,s).p.tag);k++)s+=1
 const sd=Math.floor(s)%2?1:-1,w0=crsAt(path,s).p.w
 const q=crsAt(path,s,sd*(w0/2-.75))
@@ -6251,7 +6324,8 @@ g.position.set(q.x,q.y+1.9,q.z)
 g.rotation.y=-q.a
 scene.add(g)
 SEC.warp=g
-SEC.warpP=V3(q.x,q.y+.9,q.z)}L.start0=L.start.clone()
+SEC.warpP=V3(q.x,q.y+.9,q.z)
+if(LV===15)g.visible=false}L.start0=L.start.clone()
 L.start=V3(SX,0,-1.5)
 SEC.on=true
 if(LEVELS[LV-1])LEVELS[LV-1].par+=Math.round(len*.55)}function updFlies(){for(const it of CRS.items)if(it.k==="fly"){it.o.position.y=it.y+Math.sin(time*2+it.ph)*.18
@@ -6366,7 +6440,7 @@ if(rx)camDrag+=rx*dt*2.8*SET.sens*(SET.invert?-1:1)
 if(ry)camPitch=clamp(camPitch+ry*dt*1.7*SET.sens,-.55,.85)
 if(rx||ry)camManualT=1.5
 if(pe("jump")){P.jumpBuf=.14}if(pe("spin"))doSpin()
-if(pe("lantern"))doBlast()
+if(pe("lantern"))lanternPress()
 if(edge(4)||edge(5)){try{window.__padLast=1
 npcTalkPress()}catch(_){}}try{P.padLantern=ph("lantern")
 P.padJump=ph("jump")}catch(_){}if(pe("dash"))doDash()
@@ -7327,7 +7401,8 @@ scene.traverse((o=>{if(o.isMesh&&o.geometry&&o.geometry.type==="ConeGeometry"&&o
 rm.forEach((o=>o.parent&&o.parent.remove(o)))}catch(e){}return og.apply(this,a)}}function journalRender(){const best=getBest(),ach=achGet()
 let h='<div class="jh">Dreams</div><div class="jgrid">'
 const un=+(localStorage.getItem("wt-unlocked")||1)
-LEVELS.forEach(((l,i)=>{const n=i+1,b=best[n]||{},lock=n>un
+LEVELS.forEach(((l,i)=>{if(l.tg)return
+const n=i+1,b=best[n]||{},lock=n>un
 h+=`<div class="jcard${lock?" lock":""}"><span class="g">${b.grade||""}</span><b>${n<=9?"Ch 1":"Ch 2"} · ${lock?"???":l.name}</b>Dream Shards: ${"◆".repeat(b.shards||0)}${"◇".repeat(3-(b.shards||0))}<br>Crate Gem: ${b.gem?"✔":"—"} · Time Relic: ${b.relic?"✔":"—"}<br>Best time: ${b.time?Math.floor(b.time/60)+":"+String(Math.floor(b.time%60)).padStart(2,"0"):"--:--"}</div>`}))
 h+='</div><div class="jh">Achievements · '+ACH_LIST.filter((a=>ach[a[0]])).length+"/"+ACH_LIST.length+'</div><div class="jgrid">'
 for(const[id,ic,nm,ds]of ACH_LIST)h+=`<div class="jcard ach${ach[id]?" got":""}"><i>${ic}</i><div><b>${nm}</b>${ds}</div></div>`
@@ -7889,7 +7964,7 @@ MV.orb=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex,color:16758858,tra
 MV.orbCore=new THREE.Sprite(new THREE.SpriteMaterial({map:mvTex("spark"),color:16777215,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}))
 MV.orb.add(MV.orbCore)
 scene.add(MV.orb)
-MV.orb.visible=false}function mvChargeTick(dt){const ok=state==="play"&&!P.dead&&!(typeof CINE!=="undefined"&&CINE.on)
+MV.orb.visible=false}function lanternPress(){MV.tap=true}function mvChargeTick(dt){const ok=state==="play"&&!P.dead&&!(typeof CINE!=="undefined"&&CINE.on)
 const h=ok&&mvLanternHeld()
 if(h){MV.hold+=dt
 if(MV.hold>.28){mvOrb()
@@ -7916,7 +7991,8 @@ blip(2100,2800,.22,"triangle",.03,.06)
 hapt(25)}catch(e){}mvImpact(p,.9,false)}const b=document.getElementById("bBlast")
 if(b){b.classList.add("charging")
 b.classList.toggle("full",MV.chg>=1)
-b.style.setProperty("--chg",MV.chg.toFixed(3))}}}else{if(MV.chg>=1&&ok)mvChargedShot()
+b.style.setProperty("--chg",MV.chg.toFixed(3))}}}else{if(ok&&(MV.hold>0||MV.tap)){if(MV.chg>=1)mvChargedShot()
+else doBlast()}MV.tap=false
 if(MV.hold>0){MV.hold=0
 MV.chg=0
 MV.full=false
@@ -8149,7 +8225,7 @@ if(W.arc){const ang=wrArcAng(W),n=WR.n,tx=Math.cos(ang)*WR.dir,tz=-Math.sin(ang)
 const want=W.r+n*(W.thick/2+.42),d=Math.hypot(P.pos.x-W.cx,P.pos.z-W.cz),corr=(want-d)*8
 P.vel.x=tx*9.5+rx*corr
 P.vel.z=tz*9.5+rz*corr
-P.vel.y=Math.max(-3,3.4-WR.t*7.5)
+P.vel.y=Math.max(-2.2,3.4-WR.t*4.5)
 P.face=Math.atan2(tx,tz)
 if(flint){flint.rotation.y=P.face}WR.step-=dt
 if(WR.step<=0){WR.step=.09
@@ -8166,13 +8242,13 @@ burst(P.pos.clone().setY(P.pos.y+.8),15259832,10,4,.3)}catch(e){}WR.lastW=W
 WR.cool=.25
 wrStop()
 P.face=Math.atan2(P.vel.x,P.vel.z)
-return}if(WR.t>1.4||ang<W.a0||ang>W.a1){WR.lastW=W
+return}if(WR.t>2.2||ang<W.a0||ang>W.a1){WR.lastW=W
 WR.cool=.2
 wrStop()}return}const ax=W.alongX?"x":"z",px=W.alongX?"z":"x"
 const n=WR.n
 P.vel[ax]=WR.dir*9.5
 P.vel[px]=-n*1.5
-P.vel.y=Math.max(-3,3.4-WR.t*7.5)
+P.vel.y=Math.max(-2.2,3.4-WR.t*4.5)
 P.face=Math.atan2(W.alongX?WR.dir:0,W.alongX?0:WR.dir)
 if(flint){flint.rotation.y=P.face}WR.step-=dt
 if(WR.step<=0){WR.step=.09
@@ -8190,11 +8266,11 @@ burst(P.pos.clone().setY(P.pos.y+.8),15259832,10,4,.3)}catch(e){}WR.lastW=W
 WR.cool=.25
 wrStop(true)
 P.face=Math.atan2(W.alongX?WR.dir*.5:n,W.alongX?n:WR.dir*.5)
-return}if(WR.t>1.15||!inLen){WR.lastW=W
+return}if(WR.t>2||!inLen){WR.lastW=W
 WR.cool=.2
 wrStop()}return}if(WR.cool>0)return
 for(const W of WR.walls){const s=W.s
-if(!s.alive||W===WR.lastW)continue
+if(!s.alive)continue
 if(W.arc){if(P.pos.y+.4<W.y0||P.pos.y+1.2>W.y1+.6)continue
 const ang=wrArcAng(W)
 if(ang<W.a0+.08||ang>W.a1-.08)continue
@@ -8315,13 +8391,17 @@ bone.getWorldPosition(_wa.a)
 child.getWorldPosition(_wa.c)
 const cur=_wa.c.sub(_wa.a).normalize()
 _wa.b.set(dx,dy,dz).normalize()
+if(!(isFinite(_wa.b.x)&&isFinite(_wa.b.y)&&isFinite(_wa.b.z)&&isFinite(cur.x)&&isFinite(k))||_wa.b.lengthSq()<.5)return
 _wa.q.setFromUnitVectors(cur,_wa.b)
 bone.getWorldQuaternion(_wa.q2)
 _wa.q2.premultiply(_wa.q)
 bone.parent.getWorldQuaternion(_wa.pq)
 _wa.pq.invert()
 _wa.q2.premultiply(_wa.pq)
+const q0=bone.quaternion.clone()
 bone.quaternion.slerp(_wa.q2,k)
+const Q=bone.quaternion
+if(!(isFinite(Q.x)&&isFinite(Q.y)&&isFinite(Q.z)&&isFinite(Q.w)))Q.copy(q0)
 bone.updateMatrixWorld(true)}const RL={rails:[],on:false,r:null,u:0,dir:1,spd:12,snd:0,cool:0,bufWas:0}
 function railTex(){if(RL.tex)return RL.tex
 const c=document.createElement("canvas")
@@ -8453,7 +8533,15 @@ try{blip(700,1100,.15,"sine",.035)}catch(e){}}if(pl.k<.45&&pl.s.alive){const on=
 if(on){pl.linger=.6
 pl.k=.5}else pl.s.alive=false}pl.mat.opacity=.12+pl.k*.88
 pl.mat.depthWrite=pl.k>.8
-pl.mat.color.setRGB(.6+pl.k*.4,.6+pl.k*.35,.75+pl.k*.15)}}const FF={face:0,lean:0,skidT:0,lastFace:0,idleT:0,yawnT:0,wob:0,look:0,lookT:null,dark:[4,6,7,10,12].includes(typeof LV!=="undefined"?LV:0)}
+pl.mat.color.setRGB(.6+pl.k*.4,.6+pl.k*.35,.75+pl.k*.15)}}function headLook(head,hf,dx,dy,dz,k){const fx=Math.sin(P.face),fz=Math.cos(P.face)
+let yaw=Math.atan2(dx*fz-dz*fx,dx*fx+dz*fz)
+const h=Math.hypot(dx,dz)
+let pit=Math.atan2(dy,Math.max(.01,h))
+if(!isFinite(yaw)||!isFinite(pit)||!isFinite(P.face))return
+yaw=Math.max(-.87,Math.min(.87,yaw))
+pit=Math.max(-.44,Math.min(.44,pit))
+const a=P.face+yaw
+wrAim(head,hf,Math.sin(a)*Math.cos(pit),Math.sin(pit),Math.cos(a)*Math.cos(pit),Math.min(.5,k))}const FF={face:0,lean:0,skidT:0,lastFace:0,idleT:0,yawnT:0,wob:0,look:0,lookT:null,dark:[4,6,7,10,12].includes(typeof LV!=="undefined"?LV:0)}
 function angDiff(a,b){let d=a-b
 while(d>Math.PI)d-=Math.PI*2
 while(d<-Math.PI)d+=Math.PI*2
@@ -8482,7 +8570,7 @@ if(best)FF.lookT=best
 if(FF.look>.02&&FF.lookT){head.updateMatrixWorld(true)
 const hp=V3()
 head.getWorldPosition(hp)
-wrAim(head,hf,FF.lookT[0]-hp.x,(FF.lookT[1]-hp.y)*.6,FF.lookT[2]-hp.z,FF.look*.55)}}const atEdge=P.onGround&&sp<.6&&!busy&&(()=>{const fx=Math.sin(P.face),fz=Math.cos(P.face)
+headLook(head,hf,FF.lookT[0]-hp.x,FF.lookT[1]-hp.y,FF.lookT[2]-hp.z,FF.look*.45)}}const atEdge=P.onGround&&sp<.6&&!busy&&(()=>{const fx=Math.sin(P.face),fz=Math.cos(P.face)
 const gy=groundBelow(P.pos.x+fx*.7,P.pos.z+fz*.7,P.pos.y+.2)
 return gy<P.pos.y-2.2})()
 FF.wob+=((atEdge?1:0)-FF.wob)*Math.min(1,dt*6)
@@ -8507,13 +8595,13 @@ f&&f.getWorldPosition(lh)
 head.updateMatrixWorld(true)
 const hp=V3()
 head.getWorldPosition(hp)
-wrAim(head,hf,lh.x-hp.x+Math.sin(P.face),lh.y-hp.y+.3,lh.z-hp.z+Math.cos(P.face),k*.5)}}else{for(const side of["Left","Right"]){const a=flint.getObjectByName(side+"Arm"),f=flint.getObjectByName(side+"ForeArm")
+headLook(head,hf,lh.x-hp.x+Math.sin(P.face),lh.y-hp.y+.3,lh.z-hp.z+Math.cos(P.face),k*.4)}}else{for(const side of["Left","Right"]){const a=flint.getObjectByName(side+"Arm"),f=flint.getObjectByName(side+"ForeArm")
 if(a&&f)wrAim(a,f,(side==="Left"?1:-1)*Math.cos(P.face)*.25,1,(side==="Left"?-1:1)*Math.sin(P.face)*.25,k)}if(head&&hf){head.updateMatrixWorld(true)
 const hp=V3()
 head.getWorldPosition(hp)
-wrAim(head,hf,Math.sin(P.face)*.5,.9,Math.cos(P.face)*.5,k*.6)}flint.scale.y*=1+k*.04}}}function rimPatch(obj,col,str){obj.traverse((o=>{if(!o.isMesh||!o.material)return
+headLook(head,hf,Math.sin(P.face),.45,Math.cos(P.face),k*.4)}flint.scale.y*=1+k*.04}}}function rimPatch(obj,col,str){obj.traverse((o=>{if(!o.isMesh||!o.material)return
 const mats=Array.isArray(o.material)?o.material:[o.material]
-mats.forEach((m=>{if(m.userData.rim||!(m.isMeshStandardMaterial||m.isMeshPhongMaterial||m.isMeshLambertMaterial||m.isMeshToonMaterial))return
+mats.forEach((m=>{if(m.userData.rim||m.onBeforeCompile&&m.onBeforeCompile.toString().indexOf("uFlap")>=0||!(m.isMeshStandardMaterial||m.isMeshPhongMaterial||m.isMeshLambertMaterial||m.isMeshToonMaterial))return
 m.userData.rim=1
 const prev=m.onBeforeCompile
 m.onBeforeCompile=(sh,r)=>{try{if(prev)prev(sh,r)}catch(e){}sh.uniforms.rimCol={value:new THREE.Color(col)}
@@ -8533,11 +8621,7 @@ sync()
 try{saveSet()}catch(e){}}))}catch(e){}}),0)
 function lowFxTick(){if(SET&&SET.lowfx){if(typeof shakeT!=="undefined")shakeT=0}}const OF={seen:new WeakSet,fl:[],lastOp:-1}
 function orbFlyTick(dt){try{const fp=V3(P.pos.x,P.pos.y+.9,P.pos.z)
-for(const m of orbsArr){if(m.alive){if(m.v||P.dead)continue
-const d=m.o.position.distanceTo(fp)
-if(d<2.6&&d>.3){const k=Math.min(1,dt*(4+10*(1-d/2.6)))
-m.o.position.lerp(fp,k*.5)
-m.y=m.o.position.y}}else if(!OF.seen.has(m)){OF.seen.add(m)
+for(const m of orbsArr){if(m.alive){continue}else if(!OF.seen.has(m)){OF.seen.add(m)
 const v=m.o.position.clone().project(camera)
 if(v.z<1){const el=document.createElement("div")
 el.className="orbFly"
@@ -8551,7 +8635,7 @@ const k=Math.min(1,f.t),e=k*k
 const x=f.x+(tx-f.x)*e,y=f.y+(ty-f.y)*e-Math.sin(k*Math.PI)*60
 f.el.style.left=x+"px"
 f.el.style.top=y+"px"
-f.el.style.transform="rotate(45deg) scale("+(1-k*.35)+")"
+f.el.style.transform="scale("+(1-k*.35)+")"
 if(k>=1){f.el.remove()
 OF.fl.splice(i,1)
 if(tg){tg.classList.remove("bump")
@@ -8813,8 +8897,9 @@ setTimeout((()=>fvSay(["f_boss_enter1","f_boss_enter2"],60)),2500)}if(inBoss&&bo
 FVW.bossHp=boss.hp
 if(boss.state==="sleep"&&!FVW.down){FVW.down=1
 fvSay("f_boss_down",12,.7)}if(boss.state!=="sleep")FVW.down=0}}catch(e){}}let L1X=false
-function l1Extras(){if(L1X||LV!==1||!CRS.paths||!CRS.paths[0])return
-L1X=true
+function l1Extras(){L1X=true
+return
+if(LV!==1||!CRS.paths||!CRS.paths[0])return
 const path=CRS.paths[0]
 const P0=s=>crsAt(path,s,0)
 try{const ss=[26,32,38].map((s=>P0(s)))
@@ -9103,7 +9188,150 @@ r.c.position.x+=Math.sin(a)*dt*4
 r.c.position.z+=Math.cos(a)*dt*4
 r.c.position.y=.14+Math.abs(Math.sin(r.t*14))*.2}if(r.t>3.6){r.state="gone"
 try{burst(V3(r.x+r.c.position.x,r.y+.6,r.z+r.c.position.z),16765562,10,3,.3)}catch(e){}scene.remove(r.c)
-rescueBubble(r,false)}}else if(r.state==="gone"&&r.t>8){for(const f of r.fly){f.m.visible=false}r.state="done"}}}if(LV===1){ARENA={x0:-9.5,x1:9.5,z0:-74,z1:-104,cz:-89,y:0}
+rescueBubble(r,false)}}else if(r.state==="gone"&&r.t>8){for(const f of r.fly){f.m.visible=false}r.state="done"}}}window.__dbg={crsAt:(a,b,c,d)=>crsAt(a,b,c,d),orbs:()=>orbsArr,spawnOrb:(a,b,c)=>spawnOrb(a,b,c),enemies:()=>enemies,MV:()=>MV}
+const MN={}
+function mnItems(box,items){box.innerHTML=""
+items.forEach(((it,k)=>{const b=document.createElement("button")
+b.type="button"
+b.className="mItem"+(it.cls?" "+it.cls:"")
+b.id=it.id||""
+if(it.hidden)b.hidden=true
+b.innerHTML='<span class="mt">'+it.t+"</span>"+(it.sub?'<span class="ms"></span>':"")
+b.addEventListener("click",it.fn)
+b.addEventListener("pointerenter",(()=>mnSel(box,b)))
+b.addEventListener("focus",(()=>mnSel(box,b)))
+box.appendChild(b)}))
+const f=box.querySelector(".mItem:not([hidden])")
+if(f)f.classList.add("on")}function mnSel(box,b){box.querySelectorAll(".mItem").forEach((e=>e.classList.toggle("on",e===b)))}function mnKeys(box,e){const it=[...box.querySelectorAll(".mItem:not([hidden])")]
+if(!it.length)return false
+let k=it.findIndex((x=>x.classList.contains("on")))
+if(e.key==="ArrowDown"||e.key==="s"){k=(k+1)%it.length}else if(e.key==="ArrowUp"||e.key==="w"){k=(k-1+it.length)%it.length}else if(e.key==="Enter"||e.key===" "){if(k>=0)it[k].click()
+return true}else return false
+mnSel(box,it[k])
+try{it[k].focus({preventScroll:true})
+blip(600,760,.04,"triangle",.03)}catch(_){}return true}setTimeout((function newMenus(){try{const T=document.getElementById("title")
+if(!T||document.getElementById("mPanel"))return
+const click=id=>{const b=document.getElementById(id)
+if(b)b.click()}
+const pn=document.createElement("div")
+pn.id="mPanel"
+pn.innerHTML='<img class="mLogo" src="art/logo.png" alt="Wicktail"><div class="mList" id="mList"></div><div class="mFoot" id="mFoot"></div>'
+T.appendChild(pn)
+mnItems(pn.querySelector("#mList"),[{id:"pmCont",t:"CONTINUE",sub:1,fn:()=>{initAudio()
+const t=chTarget(CHSEL)
+if(!SET.diffChosen){click("playBtn")
+return}try{blip(700,1050,.08,"triangle",.05)}catch(e){}if(cpGet(t)){goResume(t)
+return}if(t===LV){levelCard()
+return}goLevel(t)}},{id:"pmLv",t:"Choose a level",fn:()=>click("playBtn")},{id:"pmTg",t:"Training grounds",fn:()=>{initAudio()
+try{sessionStorage.setItem("wt-go","play")}catch(e){}location.hash="#training!play"
+location.reload()}},{id:"pmJn",t:"Dream journal",fn:()=>click("journalBtn")},{id:"pmSet",t:"Settings",fn:()=>click("settingsBtn")},{id:"pmQuit",t:"Quit game",hidden:true,fn:()=>click("quitGame")}])
+const qg=document.getElementById("quitGame")
+if(qg){const up=()=>{document.getElementById("pmQuit").hidden=qg.hidden}
+new MutationObserver(up).observe(qg,{attributes:true})
+up()}new MutationObserver(paperSync).observe(document.getElementById("tbTabs"),{attributes:true,subtree:true})
+paperSync()
+addEventListener("keydown",(e=>{if(!T.hidden&&!T.classList.contains("splash")&&document.querySelectorAll(".screen:not([hidden])").length===1){if(mnKeys(document.getElementById("mList"),e))e.preventDefault()}const pz=document.getElementById("pause")
+if(pz&&!pz.hidden&&document.getElementById("settingsScr").hidden){if(mnKeys(pz.querySelector(".nList"),e))e.preventDefault()}}))
+const pz=document.getElementById("pause")
+const note=document.createElement("div")
+note.className="pNote"
+note.innerHTML='<i class="pin"></i><h2>PAUSED</h2><div class="nLv" id="nLv"></div><div class="nSt" id="nSt"></div><div class="nRule"></div><div class="mList nList"></div><div class="nRule"></div><div class="mList nList2"></div><button type="button" class="nFb" id="nFb">Send feedback</button>'
+pz.appendChild(note)
+mnItems(note.querySelector(".nList"),[{t:"Resume",fn:()=>click("resumeBtn")},{t:"Restart level",fn:()=>click("pRestart")},{t:"Dream journal",fn:()=>{click("journalBtn")}},{t:"Settings",fn:()=>click("pSettings")}])
+mnItems(note.querySelector(".nList2"),[{t:"Return to menu",fn:()=>click("pQuit")}])
+note.querySelector(".nList2 .mItem").classList.remove("on")
+note.querySelector("#nFb").addEventListener("click",(()=>click("pFeedback")))
+new MutationObserver((()=>{try{if(!pz.hidden){document.getElementById("nLv").textContent=LV===15?"Training Grounds":LEVELS[LV-1].name
+const sh=typeof SEC!=="undefined"&&SEC.shards||0
+document.getElementById("nSt").textContent="Shards "+sh+" / 3  ·  Crates "+cratesBroken+" / "+cratesTotal
+mnSel(note.querySelector(".nList"),note.querySelector(".nList .mItem"))}}catch(e){}})).observe(pz,{attributes:true,attributeFilter:["hidden"]})
+const bc=buildCards
+buildCards=function(){bc.apply(this,arguments)
+try{dreamMap()}catch(e){window.__dmErr=String(e)}}}catch(e){window.__pmErr=String(e)}}),0)
+function paperSync(){try{const t=chTarget(CHSEL),c=document.getElementById("pmCont")
+if(!c)return
+c.querySelector(".ms").textContent="Level "+(t>=10?t-9:t)+"  ·  "+LEVELS[t-1].name
+const f=document.getElementById("mFoot")
+if(f)f.textContent="CHAPTER "+CHSEL}catch(e){}}function dreamMap(){const box=document.getElementById("cards")
+const cards=[...box.querySelectorAll(".card")]
+if(!cards.length)return
+box.style.display="none"
+const pan=box.parentElement
+pan.classList.add("lroadP")
+let R=document.getElementById("lroad")
+if(R)R.remove()
+R=document.createElement("div")
+R.id="lroad"
+pan.appendChild(R)
+const best=getBest(),lvs=cards.map((c=>+c.dataset.lv)),ok=lv=>lv<=MAXLV&&lv<=UNLOCK,art=lv=>"url(art/l"+lv+".jpg),url(https://mickrodrigues.github.io/wicktail/play/art/l"+lv+".jpg)"
+const ch2=CHSEL===2
+R.innerHTML='<div class="lrBg"></div><div class="lrShade"></div><div class="lrHead"><h2>THE LANTERN ROAD</h2><div class="lrCh"><button type="button" class="lrChB" data-d="-1">◀</button><span>Chapter '+CHSEL+"  ·  "+(ch2?"The Stolen Stars":"The Moon's Teeth")+'</span><button type="button" class="lrChB" data-d="1">▶</button></div></div>'+'<div class="lrPath"><svg viewBox="0 0 100 40" preserveAspectRatio="none"><path class="lrTrail" fill="none"/></svg></div>'+'<div class="lrNav"><button type="button" class="lrArr" data-d="-1">◀</button><span>Choose destination</span><button type="button" class="lrArr" data-d="1">▶</button></div>'+'<div class="lrCard"><button type="button" class="lrBack">◀ Back</button><div class="lrPic"></div><h3 class="lrName"></h3><div class="lrLine lrNum"></div><div class="lrLine lrSh"></div><div class="lrLine lrCr"></div><button type="button" class="lrEnter">ENTER LEVEL</button><button type="button" class="lrRes" hidden>Resume checkpoint</button></div>'
+R.querySelector(".lrBg").style.backgroundImage=ch2?"url(art/l10.jpg)":"url(art/key.jpg)"
+const path=R.querySelector(".lrPath"),n=lvs.length
+const pts=lvs.map(((lv,i)=>{const t=i/Math.max(1,n-1)
+return[4+t*86,30-t*14+Math.sin(t*6.3)*5]}))
+let d=""
+pts.forEach(((p,i)=>{if(!i){d="M"+p[0]+" "+p[1]
+return}const q=pts[i-1],mx=(q[0]+p[0])/2
+d+=" C"+mx+" "+q[1]+" "+mx+" "+p[1]+" "+p[0]+" "+p[1]}))
+R.querySelector(".lrTrail").setAttribute("d",d)
+const tgt=chTarget(CHSEL)
+let sel=-1
+lvs.forEach(((lv,i)=>{const b=document.createElement("button")
+b.type="button"
+b.className="lrPost"+(ok(lv)?" on":" off")+(lv===tgt?" next":"")
+b.style.left=pts[i][0]+"%"
+b.style.top=pts[i][1]/40*100+"%"
+const sc=.75+pts[i][1]/40*.5
+b.style.setProperty("--sc",sc.toFixed(2))
+const lit=ok(lv)
+b.innerHTML='<svg viewBox="0 0 40 72" width="40" height="72"><defs><radialGradient id="lg'+i+'" cx=".5" cy=".6" r=".6"><stop offset="0" stop-color="#fff6c8"/><stop offset=".55" stop-color="#ffb84a"/><stop offset="1" stop-color="#c86418"/></radialGradient></defs>'+(lit?'<circle cx="16" cy="18" r="13" fill="#ffb84a" opacity=".28"/>':"")+'<rect x="22" y="8" width="5" height="64" rx="1.5" fill="#3a2414"/><rect x="9" y="7" width="18" height="3.5" rx="1.5" fill="#2a180c"/><path d="M11 10 L21 10 L19 13 L13 13 Z" fill="#2a180c"/><rect x="10" y="13" width="12" height="15" rx="2" fill="#1a0e08"/><rect x="12" y="15" width="8" height="11" rx="1" fill="'+(lit?"url(#lg"+i+")":"#3a2a3a")+'"/><path d="M10 28 L22 28 L20 31 L12 31 Z" fill="#1a0e08"/></svg><span class="ring"></span>'
+b.addEventListener("pointerenter",(()=>pick(i)))
+b.addEventListener("focus",(()=>pick(i)))
+b.addEventListener("click",(()=>{if(sel===i)go()
+else pick(i)}))
+path.appendChild(b)}))
+function pick(i){if(i<0||i>=n||i===sel)return
+sel=i
+const lv=lvs[i],o=ok(lv),b=best[lv]||{}
+R.querySelectorAll(".lrPost").forEach(((e,k)=>e.classList.toggle("sel",k===i)))
+const pic=R.querySelector(".lrPic")
+pic.style.backgroundImage=art(lv)
+pic.classList.toggle("lock",!o)
+R.querySelector(".lrName").textContent=o?LEVELS[lv-1].name:"Not yet reached"
+R.querySelector(".lrNum").textContent="Level "+(lv>=10?lv-9:lv)
+R.querySelector(".lrSh").textContent=o?"Shards   "+(b.shards||0)+" / 3":"Finish the level before"
+R.querySelector(".lrCr").textContent=o?b.time?"Best time   "+fmtT(b.time):"Not played yet":""
+const en=R.querySelector(".lrEnter")
+en.disabled=!o
+R.querySelector(".lrRes").hidden=!(o&&cpGet(lv))
+try{blip(500+i*40,700+i*40,.05,"triangle",.03)}catch(e){}}function go(){const lv=lvs[sel]
+if(!ok(lv)){const e=R.querySelectorAll(".lrPost")[sel]
+e.classList.remove("shake")
+void e.offsetWidth
+e.classList.add("shake")
+try{blip(220,140,.15,"square",.05)}catch(_){}return}if(lv===LV){document.getElementById("levelsScr").hidden=true
+levelCard()
+return}goLevel(lv)}R.querySelector(".lrEnter").addEventListener("click",go)
+R.querySelector(".lrRes").addEventListener("click",(()=>goResume(lvs[sel])))
+R.querySelector(".lrBack").addEventListener("click",(()=>{document.getElementById("levelsScr").hidden=true}))
+R.querySelectorAll(".lrArr").forEach((b=>b.addEventListener("click",(()=>pick(Math.max(0,Math.min(n-1,sel+ +b.dataset.d)))))))
+R.querySelectorAll(".lrChB").forEach((b=>b.addEventListener("click",(()=>{const c=CHSEL===1?2:1
+const t=document.querySelector('#tbTabs .tbTab[data-ch="'+c+'"]')
+if(c===2&&UNLOCK<10){b.classList.remove("shake")
+void b.offsetWidth
+b.classList.add("shake")
+try{blip(220,140,.15,"square",.05)}catch(_){}return}if(t)t.click()
+try{openLevels()}catch(_){}}))))
+if(!window.__lrKeys){window.__lrKeys=1
+addEventListener("keydown",(e=>{const sc=document.getElementById("levelsScr")
+if(!sc||sc.hidden||!window.__lrNav)return
+if(e.key==="ArrowRight"||e.key==="d"){window.__lrNav(1)
+e.preventDefault()}else if(e.key==="ArrowLeft"||e.key==="a"){window.__lrNav(-1)
+e.preventDefault()}else if(e.key==="Enter"){window.__lrGo()
+e.preventDefault()}}))}window.__lrNav=k=>pick(Math.max(0,Math.min(n-1,sel+k)))
+window.__lrGo=go
+pick(Math.max(0,lvs.indexOf(tgt)))}if(LV===1){ARENA={x0:-9.5,x1:9.5,z0:-74,z1:-104,cz:-89,y:0}
 slab(-20,20,12,-36)
 slab(-20,6,-36,-52)
 slab(-20,20,-52,-60.5)
@@ -15999,7 +16227,153 @@ consReset(true)}})
 L.netH=npc("nettle",-6.4,-74.6,3,Math.PI*.75,1.35,[["NETTLE COGFOOT","Psst! Down here! That great big Imp's squatting on my shooting star.",4.6,"talk"],["NETTLE COGFOOT","Knock him out and I'll send you up past the broken stairs. Watch his stars, he throws all three!",5.6,"point"]],{name:"NETTLE COGFOOT"})
 L.bramT=npc("bramble",2,-102.6,7.5,Math.PI,1.75,[["SIR BRAMBLE VALE","The upper stair is sealed with starlight. But this old telescope can focus a beam.",5,"talk"],["SIR BRAMBLE VALE","Spin its crank to turn it. Aim it at the seal's lens, and hold steady.",4.6,"point"]],{name:"SIR BRAMBLE VALE"})
 makeCrate("check",0,-101,7.5)
-for(let i=0;i<5;i++)spawnOrb(0,8.9+i*.8,-106-i*2.2)}}if(LV<10&&typeof C1!=="undefined")c1Finish()
+for(let i=0;i<5;i++)spawnOrb(0,8.9+i*.8,-106-i*2.2)}}else if(LV===15){Object.assign(L,{num:15,name:"TRAINING GROUNDS",start:V3(0,0,4),killY:-40,mus:LVMUS[1][0],bossMus:LVMUS[1][0],bossName:"",hemiI:1,hint:"",grade:{sat:1.06,vig:.75,tint:[1.05,1,.95]},inArena:()=>false,tg:true})
+ARENA={x0:-9,x1:9,z0:-900,z1:-930,cz:-915,y:0}
+{const sky=skyTex((g=>{grad(g,512,1024,[[0,"#1a1048"],[.32,"#4a2a8a"],[.5,"#c86a8a"],[.58,"#f2a86a"],[.64,"#ffd08a"],[1,"#3a2a5a"]])
+stars(g,512,1024,120,.3)
+clouds(g,512,1024,18,["#e88aa0","#9a6ac8","#ffc890"],.14,.48,9)}))
+scene.background=sky
+scene.fog=new THREE.Fog(9067146,40,150)
+hemi.color.setHex(16769232)
+hemi.groundColor.setHex(3811914)
+hemi.intensity=1}addSolid(-6,6,-4,0,-6,10,"ground",solidMat(16777215,stoneTex("#1a1428",["#6a5a8a","#5a4a7a","#7a6a9a","#4a3e66"],9,6,1,1)))
+SECTHEME[15]=0
+SECSURF[15]="stone"
+COURSE[15]={w:5.4,look:{top:"path",banks:true},noMidCheck:true,noProps:false,pop:{step:9999},cmds:[{s:9,tag:"start"},{s:3},{gap:1,s:2.4,tag:"hop"},{s:2.6},{gap:1,s:2.6,tag:"hop"},{s:2.6},{gap:1,s:2.8,tag:"hop"},{s:4},{s:3,tag:"dashrun"},{gap:1,s:5.6,tag:"wide"},{s:6,tag:"ck1"},{s:3},{gap:1,s:15,tag:"canyon"},{s:6,tag:"ck2"},{arc:90,r:7},{s:5},{gap:1,s:13,dh:-5,tag:"drop"},{s:6,tag:"ck3"},{arc:-90,r:7},{s:3},{gap:1,s:11,dh:-4.5,tag:"stairs"},{s:5,tag:"ck4"},{s:2,tag:"cellar"},{gap:1,s:9,tag:"cellarGap"},{s:4,tag:"cellar"},{s:4,tag:"ck5"},{s:14,w:9,tag:"targets"},{s:4,w:5.4},{s:8,w:8,tag:"finish"},{s:2,w:5.4,tag:"end"}]}
+const TG={t:0,run:false,done:false,best:0,targets:[],ring:[],missed:0,el:null,pips:null,flags:[],gotFlags:0}
+window.__TG=TG
+try{TG.best=+localStorage.getItem("wt-tg-best")||0}catch(e){}L.courseDress=(path,{tagRuns,tagS})=>{const rock=new THREE.MeshLambertMaterial({map:noiseTex("#3a2c4e",["#5a4a70","#2e2240","#6a5a80","#4a3a5e"],1,1,true)})
+rock.map.wrapS=rock.map.wrapT=THREE.RepeatWrapping
+rock.map.repeat.set(2,2)
+const wood=new THREE.MeshLambertMaterial({color:9067060}),ink=new THREE.MeshLambertMaterial({color:2758712})
+const run=t=>tagRuns(t)[0]||[0,0]
+{const[a]=run("start")
+const q=crsAt(path,a+4)
+for(const sd of[-1,1]){const e=crsAt(path,a+4,sd*2.4)
+const p=new THREE.Mesh(boxGeo(.5,3.4,.5,1),wood)
+p.position.set(e.x,e.y+1.7,e.z)
+scene.add(p)}const ar=new THREE.Mesh(boxGeo(5.6,.4,.5,1),wood)
+ar.position.set(q.x,q.y+3.5,q.z)
+ar.rotation.y=-q.a
+scene.add(ar)
+TG.startS=a+4}for(const t of["ck1","ck2","ck3","ck4","ck5"]){const[a]=run(t)
+crsCheck(path,a+1.5)}{const[a,b]=run("canyon")
+const q0=crsAt(path,a-1),q1=crsAt(path,b+1)
+const y=q0.y
+for(const sd of[-1,1]){const x=q0.x+sd*(q0.p.w/2+.35)
+const s=mkRunWall(x-.35,x+.35,y-6,y+4.5,Math.min(q0.z,q1.z),Math.max(q0.z,q1.z))
+if(s.mesh)s.mesh.material=rock}for(let s=a+1;s<b;s+=2.2)for(const sd of[-1,1]){const e=crsAt(path,s,sd*(q0.p.w/2-.02),1+Math.sin(s)*.3)
+const m=new THREE.Mesh(new THREE.PlaneGeometry(.5,.18),new THREE.MeshBasicMaterial({color:15260868,transparent:true,opacity:.55,depthWrite:false}))
+m.position.set(e.x,e.y,e.z)
+m.rotation.y=sd>0?-Math.PI/2:Math.PI/2
+m.rotation.z=.4
+scene.add(m)}}{const[a,b]=run("stairs")
+const pts=[]
+for(let s=a-2;s<=b+1.5;s+=1.5){const q=crsAt(path,s,1.6)
+pts.push([q.x,q.y+.9,q.z])}mkRail(pts)
+for(let s=a+1;s<b;s+=1.9){if(Math.random()<.5)continue
+const q=crsAt(path,s,-1.4)
+const st=new THREE.Mesh(boxGeo(1.6,.35,1.1,1),rock)
+st.position.set(q.x,q.y-1.2-Math.random()*3,q.z)
+st.rotation.set(Math.random()*.6,Math.random(),Math.random()*.6)
+scene.add(st)}}{const[a]=run("cellar"),[g0,g1]=run("cellarGap")
+const q0=crsAt(path,a),q1=crsAt(path,g1+4)
+const y=q0.y
+const roof=new THREE.Mesh(boxGeo(9,1,Math.abs(q1.z-q0.z)+Math.abs(q1.x-q0.x)+2,2),rock)
+roof.position.set((q0.x+q1.x)/2,y+4.6,(q0.z+q1.z)/2)
+roof.rotation.y=-q0.a
+scene.add(roof)
+for(const sd of[-1,1]){const e0=crsAt(path,(a+g1+4)/2,sd*4.2)
+const w=new THREE.Mesh(boxGeo(.6,6,Math.abs(q1.z-q0.z)+Math.abs(q1.x-q0.x)+2,2),rock)
+w.position.set(e0.x,y+1.6,e0.z)
+w.rotation.y=-q0.a
+scene.add(w)}const n=3
+for(let i=0;i<n;i++){const s=g0+(g1-g0)*(i+.5)/n
+const q=crsAt(path,s,i%2?.9:-.9)
+mkLightPlat(q.x,q.y-.25+i*.35,q.z,2.2,2.2,.5)}TG.cellar=[q0.x,q0.z,q1.x,q1.z]}{const[a,b]=run("targets")
+for(const[s,lat,iron]of[[a+5,-3.2,0],[a+6.5,3,0],[a+9,-1.5,1],[a+10.5,2.2,0],[a+12.5,-3,0]]){const q=crsAt(path,s,lat)
+const g=new THREE.Group
+g.position.set(q.x,q.y,q.z)
+const post=new THREE.Mesh(boxGeo(.18,1.4,.18,1),wood)
+post.position.y=.7
+g.add(post)
+const face=new THREE.Mesh(new THREE.CylinderGeometry(.55,.55,.14,12),iron?new THREE.MeshLambertMaterial({color:6974074,flatShading:true}):new THREE.MeshLambertMaterial({map:tgTargetTex()}))
+face.rotation.x=Math.PI/2
+face.rotation.z=0
+face.position.y=1.75
+g.add(face)
+g.rotation.y=-q.a
+scene.add(g)
+TG.targets.push({g,face,iron,alive:true,x:q.x,y:q.y+1.75,z:q.z})}}{const[a]=run("finish")
+const c=crsAt(path,a+4)
+const lp=new THREE.Mesh(boxGeo(.2,3,.2,1),ink)
+lp.position.set(c.x,c.y+1.5,c.z)
+scene.add(lp)
+const lamp=new THREE.Mesh(boxGeo(.45,.5,.45,1),new THREE.MeshBasicMaterial({color:16765066}))
+lamp.position.set(c.x,c.y+3.1,c.z)
+scene.add(lamp)
+const n0=crates.length
+for(let i=0;i<6;i++){const an=i/6*Math.PI*2
+makeCrate("crate",c.x+Math.cos(an)*1.9,c.z+Math.sin(an)*1.9,c.y)}TG.ring=crates.slice(n0)}for(const t of["hop","wide"]){for(const[a,b]of tagRuns(t)){const q=crsAt(path,(a+b)/2,0,1.6)
+spawnOrb(q.x,q.y,q.z)}}{const[a,b]=run("canyon")
+for(let s=a+2;s<b-1;s+=2.4){const q=crsAt(path,s,-(crsAt(path,s).p.w/2-.6),2.2)
+spawnOrb(q.x,q.y,q.z)}}{const[a,b]=run("drop")
+for(let s=a+2;s<b;s+=2.6){const t=(s-a)/(b-a)
+const q=crsAt(path,s,0,2.4-t*3)
+spawnOrb(q.x,q.y,q.z)}}TG.path=path}
+function tgTargetTex(){const c=document.createElement("canvas")
+c.width=c.height=64
+const g=c.getContext("2d")
+const cols=["#f4e8cc","#c8402a","#f4e8cc","#c8402a"]
+for(let i=0;i<4;i++){g.fillStyle=cols[i]
+g.beginPath()
+g.arc(32,32,30-i*8,0,Math.PI*2)
+g.fill()}g.strokeStyle="#2a1838"
+g.lineWidth=3
+g.beginPath()
+g.arc(32,32,30,0,Math.PI*2)
+g.stroke()
+const t=new THREE.CanvasTexture(c)
+t.magFilter=THREE.NearestFilter
+return t}function tgFmt(t){const m=Math.floor(t/60),s=t%60
+return m+":"+(s<10?"0":"")+s.toFixed(2)}function tgHud(){if(TG.el)return
+const d=document.createElement("div")
+d.id="tgTag"
+d.className="glass"
+d.innerHTML='<div class="t">0:00.00</div><div class="b"></div><div class="pp"></div>'
+document.body.appendChild(d)
+TG.el=d}function tgFinish(){if(TG.done)return
+TG.done=true
+TG.run=false
+const t=TG.t+TG.missed*3
+const nb=!TG.best||t<TG.best
+if(nb){TG.best=t
+try{localStorage.setItem("wt-tg-best",String(t))}catch(e){}}const med=t<=65?["GOLD","radial-gradient(circle at 35% 30%,#fff1c0,#f2b048 55%,#a8641a)"]:t<=85?["SILVER","radial-gradient(circle at 35% 30%,#ffffff,#c8c8e0 55%,#7a7a9a)"]:t<=110?["BRONZE","radial-gradient(circle at 35% 30%,#ffd0a0,#c07a3a 55%,#7a4418)"]:null
+try{sfx.check();[0,4,7,12].forEach(((s,k)=>cnTone(s,.18,.06,k*.12)))}catch(e){}const c=document.createElement("div")
+c.id="tgCard"
+c.innerHTML='<div class="cd glass"><h2>LAP DONE</h2>'+(med?'<div class="tgMed" style="background:'+med[1]+'"></div><div class="tgMn">'+med[0]+"</div>":'<div class="tgMn">NO MEDAL YET</div>')+'<div class="tgRow"><span>TIME</span><span>'+tgFmt(t)+"</span></div>"+(TG.missed?'<div class="tgRow"><span>MISSED TARGETS</span><span>+'+TG.missed*3+" SEC</span></div>":"")+'<div class="tgRow"><span>BEST</span><span>'+tgFmt(TG.best)+(nb?" · NEW":"")+"</span></div>"+'<div class="tgBtns"><button type="button" class="tgB pri" id="tgAgain">AGAIN</button><button type="button" class="tgB" id="tgMenu">MENU</button></div></div>'
+document.body.appendChild(c)
+state="paused"
+document.getElementById("tgAgain").onclick=()=>{location.hash="#training!play"
+location.reload()}
+document.getElementById("tgMenu").onclick=()=>{try{sessionStorage.setItem("wt-go","menu")}catch(e){}location.hash=""
+location.reload()}}L.update=dt=>{if(!TG.path)return
+tgHud()
+if(!TG.run&&!TG.done){const q=crsNear(P.pos.x,P.pos.z)
+if(q&&q.path===TG.path&&q.s>TG.startS){TG.run=true}}if(TG.run)TG.t+=dt
+TG.el.querySelector(".t").textContent=tgFmt(TG.t)
+TG.el.querySelector(".b").textContent=TG.best?"BEST "+tgFmt(TG.best):""
+{const got=crates.filter((c=>c.kind==="check"&&!c.alive)).length
+TG.el.querySelector(".pp").innerHTML=[0,1,2,3,4].map((i=>"<i"+(i<got?' class="on"':"")+"></i>")).join("")}for(const tg of TG.targets){if(!tg.alive)continue
+let hit=false
+try{for(const s of shots){if(!tg.iron&&s.o.position.distanceTo(V3(tg.x,tg.y,tg.z))<1){hit=true
+s.life=0}}}catch(e){}try{for(const c of MV.cs){if(c.o.position.distanceTo(V3(tg.x,tg.y,tg.z))<1.3)hit=true}}catch(e){}if(hit){tg.alive=false
+tg.fall=0
+try{burst(V3(tg.x,tg.y,tg.z),tg.iron?13158616:16050380,12,4,.3)
+blip(900,1300,.08,"square",.05)}catch(e){}}}for(const tg of TG.targets)if(!tg.alive&&tg.fall<1){tg.fall=Math.min(1,tg.fall+dt*3)
+tg.g.rotation.x=-tg.fall*Math.PI/2}{const q=crsNear(P.pos.x,P.pos.z)
+if(q&&q.tag==="finish"&&!TG.counted){TG.counted=true
+TG.missed=TG.targets.filter((t=>t.alive)).length}}if(TG.run&&TG.ring.length&&TG.ring.every((c=>!c.alive)))tgFinish()}}if(LV<10&&typeof C1!=="undefined")c1Finish()
 const parts=[]
 for(let i=0;i<220;i++){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}))
 s.visible=false
@@ -16227,7 +16601,7 @@ updHUD()}let _orbGeo=null,_orbMat=null
 function orbGem(){if(!_orbGeo){_orbGeo=new THREE.IcosahedronGeometry(.2,0)
 _orbMat=new THREE.MeshLambertMaterial({color:16762426,emissive:5911552,flatShading:true})}const m=new THREE.Mesh(_orbGeo,_orbMat)
 m.userData.orbGem=1
-return m}function spawnOrb(x,y,z,pop){const o=grp(orbGem(),spr(glowTex,16765024,.62,.62,0,0,0))
+return m}function spawnOrb(x,y,z,pop){const o=grp(spr(glowTex,16769354,.78,.78,0,0,0),spr(glowTex,16774336,.3,.3,0,0,0))
 o.position.set(x,y,z)
 scene.add(o)
 const m={o,y,ph:R(0,TAU),alive:true,v:pop?V3(R(-2,2),R(4,6),R(-2,2)):null}
@@ -16613,7 +16987,7 @@ if(s.type==="plat"||s.type==="pad")return"wood"
 if(s.type==="block"||s.type==="gate")return"stone"
 return{1:"grass",2:"stone",3:"mud",4:"wood",5:"wood",6:"wood",7:"stone",8:"stone",9:"stone"}[LV]||"grass"}function die(fell){if(P.dead)return
 P.dead=true
-try{hapt([90,60,120])}catch(e){}P.lives--
+try{hapt([90,60,120])}catch(e){}if(LV!==15)P.lives--
 sfx.hurt()
 shakeT=.4
 if(!fell){playAct("hurt",.08,true)
@@ -17146,7 +17520,7 @@ lockPointer()
 return}if(state!=="play")return
 if(isK("jump",k)){if(e)e.preventDefault()
 P.jumpBuf=.14}if(isK("spin",k))doSpin()
-if(isK("lantern",k)&&!(e&&e.repeat))doBlast()
+if(isK("lantern",k)&&!(e&&e.repeat))lanternPress()
 if((k==="f"||k==="enter")&&state==="play"&&!(e&&e.repeat)){try{npcTalkPress()}catch(_){}}if(isK("dash",k))doDash()
 if(isK("pause",k)&&k!=="escape")togglePause()
 else if(isK("pause",k)&&!document.pointerLockElement)togglePause()}function lockPointer(){if(SET.mouse===false||!matchMedia("(pointer:fine)").matches)return
@@ -17237,7 +17611,7 @@ knob.style.transform=""
 stick.style.left=stick.style.top=stick.style.bottom=""}}))
 const btnHold={jump:false}
 for(const[id,fn]of[["bJump",()=>{P.jumpBuf=.14
-btnHold.jump=true}],["bSpin",doSpin],["bBlast",()=>{doBlast()
+btnHold.jump=true}],["bSpin",doSpin],["bBlast",()=>{lanternPress()
 btnHold.lantern=true}],["bDash",doDash]]){const b=$(id)
 b.addEventListener("pointerdown",(e=>{e.preventDefault()
 e.stopPropagation()
@@ -17279,7 +17653,7 @@ el.classList.add("show")
 clearTimeout(banner.t)
 banner.t=setTimeout((()=>el.classList.remove("show")),2200)}function fade(o,d){const f=$("fade")
 f.style.transition=`opacity ${d}s`
-f.style.opacity=String(o)}const LEVELS=[{name:"Sleepy-Sun Village",par:150},{name:"Cauldron Market",par:190},{name:"Dead Letter Bog",par:190},{name:"Glowshroom Mines",par:200},{name:"The Mill That Bites",par:120},{name:"The Clock Tower",par:210},{name:"The Hollow King",par:160},{name:"Dragon Gate",par:210},{name:"The Moon's Teeth",par:230},{name:"Moonline Railway",par:210,ch:2},{name:"Regent's Hollow",par:220,ch:2},{name:"Drowned Archive",par:230,ch:2},{name:"Cinderwing's Crossing",par:230,ch:2},{name:"Star-Cage Citadel",par:260,ch:2}]
+f.style.opacity=String(o)}const LEVELS=[{name:"Sleepy-Sun Village",par:150},{name:"Cauldron Market",par:190},{name:"Dead Letter Bog",par:190},{name:"Glowshroom Mines",par:200},{name:"The Mill That Bites",par:120},{name:"The Clock Tower",par:210},{name:"The Hollow King",par:160},{name:"Dragon Gate",par:210},{name:"The Moon's Teeth",par:230},{name:"Moonline Railway",par:210,ch:2},{name:"Regent's Hollow",par:220,ch:2},{name:"Drowned Archive",par:230,ch:2},{name:"Cinderwing's Crossing",par:230,ch:2},{name:"Star-Cage Citadel",par:260,ch:2},{name:"Training Grounds",par:65,tg:true}]
 const TIPS=["Jump, then <b>Spin</b> in mid-air for an extra boost.","Your <b>Lantern Blast</b> aims itself at the nearest enemy.","Smash <b>every crate</b> in a level to earn its Crate Gem.","Gold <b>ward crates</b> protect you from one hit.","Drag the <b>right side</b> of the screen to look around.","Bosses always leave an opening. Watch for it.","Blue <b>C crates</b> are checkpoints.","Beat the par time to win the <b>Time Relic</b>.","Bounce crates and striped awnings launch you sky-high."]
 const SET={music:.7,sfx:.9,sens:1,invert:false,glow:true,easy:false}
 try{Object.assign(SET,JSON.parse(localStorage.getItem("wt-settings")||"{}"))}catch(e){}function saveSet(){try{localStorage.setItem("wt-settings",JSON.stringify(SET))}catch(e){}}if((SET.ctrlV||0)<2){delete SET.pad2
@@ -17814,8 +18188,12 @@ m.o.position.addScaledVector(m.v,dt)
 const gy=groundBelow(m.o.position.x,m.o.position.z,m.o.position.y+.5)
 if(m.o.position.y<gy+.6&&m.v.y<0){m.o.position.y=gy+.6
 m.v=null
-m.y=gy+.6}}else m.o.position.y=m.y+Math.sin(time*4+m.ph)*.12
-if(state==="play"&&!P.dead&&m.o.position.distanceTo(P.pos.clone().setY(P.pos.y+.8))<1.05&&(!m.v||m.v.y<2)){m.alive=false
+m.y=gy+.6}}else{const fp=P.pos.clone().setY(P.pos.y+.8),dd=m.o.position.distanceTo(fp)
+if(!P.dead&&state==="play"&&(m.mag||dd<2.4)){m.mag=true
+m.ms=(m.ms||5)+dt*40
+const st=Math.min(dd,m.ms*dt)
+if(dd>.001)m.o.position.addScaledVector(fp.sub(m.o.position).normalize(),st)
+m.y=m.o.position.y}else m.o.position.y=m.y+Math.sin(time*4+m.ph)*.12}if(state==="play"&&!P.dead&&m.o.position.distanceTo(P.pos.clone().setY(P.pos.y+.8))<1.05&&(!m.v||m.v.y<2)){m.alive=false
 scene.remove(m.o)
 P.orbs++
 sfx.orb(orbStreak())
@@ -18032,7 +18410,8 @@ const c=b2.getCenter(V3())
 crateProto.position.set(-c.x,-b2.min.y,-c.z)
 const w=new THREE.Group
 w.add(crateProto)
-crateProto=w}try{await loadAsset("assets"+LV+".js")
+crateProto=w}try{if(LV===15)throw 0
+await loadAsset("assets"+LV+".js")
 Object.assign(WT_ASSETS,window.WT_LV||{})}catch(e){}if(WT_ASSETS.sun){step(75,"Waking the Sleepy Sun…")
 const sg=await loadGLB(WT_ASSETS.sun)
 sunModel=norm(sg.scene,1,true)
