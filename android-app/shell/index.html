@@ -325,23 +325,30 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 #levelsScr .panel.lroadP{position:absolute;inset:0;width:auto!important;max-width:none!important;max-height:none!important;border-radius:0;border:0!important;background:none!important;box-shadow:none!important;backdrop-filter:none!important;padding:0!important;overflow:hidden!important}
 #levelsScr .panel.lroadP>.phead,#levelsScr .panel.lroadP>.chsub{display:none!important}
 #lroad{position:absolute;inset:0}
-.lrBg{position:absolute;inset:-4%;background:center/cover no-repeat;filter:brightness(.5) saturate(.85) blur(2px);animation:lrDrift 22s ease-in-out infinite alternate}
-@keyframes lrDrift{from{transform:scale(1.02)}to{transform:scale(1.08) translate(-1%,-1%)}}
-.lrShade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,7,40,.7),rgba(16,7,40,.1) 30%,rgba(16,7,40,.15) 60%,rgba(16,7,40,.8)),linear-gradient(90deg,rgba(16,7,40,.3),rgba(16,7,40,0) 40%,rgba(16,7,40,.55) 70%)}
-.lrHead{position:absolute;left:max(4vw,env(safe-area-inset-left,0px));top:max(16px,env(safe-area-inset-top,0px));z-index:3}
-.lrHead h2{margin:0;font:900 clamp(26px,4vw,48px)/1 var(--head);color:var(--cream);letter-spacing:.04em;text-shadow:0 3px 12px rgba(0,0,0,.6)}
-.lrCh{display:flex;align-items:center;gap:10px;margin-top:6px;font:800 clamp(13px,1.5vw,18px)/1 var(--ui);color:var(--cream);text-shadow:0 2px 6px rgba(0,0,0,.7)}
-.lrChB,.lrArr{background:none;border:0;color:var(--cream);font-size:16px;cursor:pointer;padding:4px 6px;text-shadow:0 2px 6px rgba(0,0,0,.7)}
-.lrPath{position:absolute;z-index:2;left:max(3vw,env(safe-area-inset-left,0px));right:calc(clamp(260px,32vw,400px) + 4vw);top:30%;bottom:16%}
-.lrPath svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.lrTrail{stroke:#c8a878;stroke-opacity:.8;stroke-width:22;stroke-linecap:round;vector-effect:non-scaling-stroke;filter:drop-shadow(0 3px 0 rgba(40,20,10,.5))}
-.lrPost{position:absolute;transform:translate(-50%,-100%) scale(calc(var(--sc,1)*1.55));transform-origin:50% 100%;background:none;border:0;padding:0;cursor:pointer;width:40px;height:70px}
-.lrPost svg{position:absolute;left:0;bottom:0;display:block}
-.lrPost .ring{display:block;position:absolute;left:50%;bottom:-6px;width:40px;height:14px;transform:translateX(-50%);border-radius:50%;border:3px solid var(--amber);box-shadow:0 0 12px rgba(255,170,60,.7);opacity:0;transition:opacity .2s}
-.lrPost.sel .ring{opacity:1;animation:lrRing 1.4s ease-in-out infinite}
+.lrScene{position:absolute;left:50%;top:50%;width:max(100vw,177.78vh);aspect-ratio:16/9;transform:translate(-50%,-50%);background:url(art/road1.jpg) center/100% 100% no-repeat;animation:lrDrift 26s ease-in-out infinite alternate}
+@keyframes lrDrift{from{transform:translate(-50%,-50%) scale(1.01)}to{transform:translate(-50.6%,-50.6%) scale(1.04)}}
+.lrLamps{position:absolute;inset:0}
+.lrLamp{position:absolute;transform:translate(-50%,-100%);aspect-ratio:112/300;background:none;border:0;padding:0;cursor:pointer;transition:filter .2s}
+.lrLamp img{display:block;width:100%;height:100%;pointer-events:none;filter:drop-shadow(0 4px 4px rgba(0,0,0,.5))}
+.lrLamp.on img{animation:lrFlick 2.8s ease-in-out infinite}@keyframes lrFlick{50%{filter:drop-shadow(0 4px 4px rgba(0,0,0,.5)) brightness(1.1)}}
+.lrLamp.sel::after{content:"";position:absolute;left:50%;bottom:-4%;width:150%;aspect-ratio:3/1;transform:translateX(-50%);border-radius:50%;border:3px solid #ffd27a;box-shadow:0 0 14px rgba(255,180,80,.8),inset 0 0 10px rgba(255,180,80,.5);animation:lrRing 1.4s ease-in-out infinite}
 @keyframes lrRing{50%{transform:translateX(-50%) scale(1.12)}}
-.lrPost.shake{animation:lrShake .35s}@keyframes lrShake{25%{margin-left:-4px}75%{margin-left:4px}}
-.lrNav{position:absolute;z-index:3;left:max(4vw,env(safe-area-inset-left,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:12px;font:800 clamp(14px,1.6vw,19px)/1 var(--ui);color:var(--cream);text-shadow:0 2px 6px rgba(0,0,0,.8)}
+.lrLamp.sel img{filter:drop-shadow(0 0 10px rgba(255,190,90,.9)) brightness(1.15)}
+.lrNo{position:absolute;left:50%;top:-14px;transform:translate(-50%,-100%);font:900 clamp(11px,1.2vw,15px)/1 var(--ui);color:#fff3d0;text-shadow:0 2px 4px rgba(0,0,0,.8);opacity:.8}
+.lrLamp.off .lrNo{color:#a898c8}.lrLamp.sel .lrNo{color:#ffd27a;opacity:1}
+.lrLamp.shake{animation:lrShake .35s}@keyframes lrShake{25%{margin-left:-5px}75%{margin-left:5px}}
+.lrShade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,7,40,.6),rgba(16,7,40,0) 25%),linear-gradient(90deg,rgba(16,7,40,0) 55%,rgba(16,7,40,.45) 75%)}
+.lrHead{position:absolute;left:max(4vw,env(safe-area-inset-left,0px));top:max(16px,env(safe-area-inset-top,0px));z-index:3}
+.lrHead h2{margin:0;font:900 clamp(24px,3.4vw,42px)/1 var(--head);color:var(--cream);letter-spacing:.04em;text-shadow:0 3px 12px rgba(0,0,0,.6)}
+.lrCh{display:flex;align-items:center;gap:10px;margin-top:6px;font:800 clamp(13px,1.5vw,18px)/1 var(--ui);color:var(--cream);text-shadow:0 2px 6px rgba(0,0,0,.7)}
+.lrChB{background:none;border:0;color:var(--cream);font-size:16px;cursor:pointer;padding:4px 6px;text-shadow:0 2px 6px rgba(0,0,0,.7)}
+.lrBig{position:absolute;z-index:3;top:50%;transform:translateY(-50%);width:clamp(46px,5vw,64px);height:clamp(46px,5vw,64px);border-radius:50%;border:1px solid var(--rimS);background:linear-gradient(180deg,var(--glass2),var(--glass));color:#ffe8a8;font-size:clamp(18px,2vw,26px);cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.lrBig.l{left:max(3vw,env(safe-area-inset-left,0px))}.lrBig.r{right:calc(clamp(250px,31vw,390px) + 5vw)}
+.lrBig:active{transform:translateY(-50%) scale(.94)}
+.lrDots{position:absolute;z-index:3;left:max(4vw,env(safe-area-inset-left,0px));right:calc(clamp(250px,31vw,390px) + 5vw);bottom:max(16px,env(safe-area-inset-bottom,0px));display:flex;justify-content:center;gap:clamp(6px,1vw,12px)}
+@keyframes lrFlipR{0%{transform:perspective(1200px) rotateY(0)}45%{transform:perspective(1200px) rotateY(-88deg)}55%{transform:perspective(1200px) rotateY(88deg)}100%{transform:perspective(1200px) rotateY(0)}}
+@keyframes lrFlipL{0%{transform:perspective(1200px) rotateY(0)}45%{transform:perspective(1200px) rotateY(88deg)}55%{transform:perspective(1200px) rotateY(-88deg)}100%{transform:perspective(1200px) rotateY(0)}}
+.lrCard.flipR{animation:lrFlipR .38s ease-in-out}.lrCard.flipL{animation:lrFlipL .38s ease-in-out}
 .lrCard{position:absolute;z-index:4;right:max(2.5vw,env(safe-area-inset-right,0px));top:max(14px,env(safe-area-inset-top,0px));bottom:max(14px,env(safe-area-inset-bottom,0px));width:clamp(250px,31vw,390px);background:radial-gradient(ellipse at 30% 20%,#f6ead0,#ead8b0 60%,#d8c094);color:var(--ink2);text-align:left;padding:clamp(10px,2vh,18px) clamp(14px,1.6vw,20px);box-shadow:0 10px 30px rgba(0,0,0,.5),inset 0 0 30px rgba(120,80,30,.25);clip-path:polygon(0 1%,3% 0,40% .6%,70% 0,97% .8%,100% 3%,99.4% 40%,100% 75%,99% 99%,60% 100%,25% 99.3%,1% 100%,.5% 60%);display:flex;flex-direction:column;overflow:hidden}
 .lrBack{align-self:flex-end;background:none;border:0;color:var(--ink2);font:800 15px/1 var(--ui);cursor:pointer;padding:2px 0 8px}
 .lrPic{flex:0 1 auto;aspect-ratio:16/10;width:100%;min-height:0;background:center/cover no-repeat;border:2px solid rgba(58,34,22,.45);box-shadow:0 2px 8px rgba(0,0,0,.25)}
@@ -8057,7 +8064,7 @@ mvSpinTick(dt)
 mvChargeTick(dt)
 mvCsTick(dt)
 mvImpTick(dt)
-try{ghostTick(dt)}catch(e){}try{crateWobTick(dt)}catch(e){}try{musLayerTick(dt)}catch(e){}try{rescueTick(dt)}catch(e){}try{wxTick(dt)}catch(e){window.__wxErr=String(e)}}const TALK={el:null,n:null,lbl:"",w:0,h:0}
+try{ghostTick(dt)}catch(e){}try{crateWobTick(dt)}catch(e){}try{musLayerTick(dt)}catch(e){}try{rescueTick(dt)}catch(e){}try{bbTick(dt)}catch(e){}try{wxTick(dt)}catch(e){window.__wxErr=String(e)}}const TALK={el:null,n:null,lbl:"",w:0,h:0}
 function talkBubble(textPx){const S=3,pw=Math.ceil(textPx/S)+14,ph=14,tail=4,W=pw,H=ph+tail
 const c=document.createElement("canvas")
 c.width=W
@@ -9188,7 +9195,7 @@ r.c.position.x+=Math.sin(a)*dt*4
 r.c.position.z+=Math.cos(a)*dt*4
 r.c.position.y=.14+Math.abs(Math.sin(r.t*14))*.2}if(r.t>3.6){r.state="gone"
 try{burst(V3(r.x+r.c.position.x,r.y+.6,r.z+r.c.position.z),16765562,10,3,.3)}catch(e){}scene.remove(r.c)
-rescueBubble(r,false)}}else if(r.state==="gone"&&r.t>8){for(const f of r.fly){f.m.visible=false}r.state="done"}}}window.__dbg={crsAt:(a,b,c,d)=>crsAt(a,b,c,d),orbs:()=>orbsArr,spawnOrb:(a,b,c)=>spawnOrb(a,b,c),enemies:()=>enemies,MV:()=>MV}
+rescueBubble(r,false)}}else if(r.state==="gone"&&r.t>8){for(const f of r.fly){f.m.visible=false}r.state="done"}}}window.__dbg={mkFoe:(a,b,c,d,e,f)=>mkFoe(a,b,c,d,e,f),crsAt:(a,b,c,d)=>crsAt(a,b,c,d),orbs:()=>orbsArr,spawnOrb:(a,b,c)=>spawnOrb(a,b,c),enemies:()=>enemies,MV:()=>MV}
 const MN={}
 function mnItems(box,items){box.innerHTML=""
 items.forEach(((it,k)=>{const b=document.createElement("button")
@@ -9265,37 +9272,38 @@ R.id="lroad"
 pan.appendChild(R)
 const best=getBest(),lvs=cards.map((c=>+c.dataset.lv)),ok=lv=>lv<=MAXLV&&lv<=UNLOCK,art=lv=>"url(art/l"+lv+".jpg),url(https://mickrodrigues.github.io/wicktail/play/art/l"+lv+".jpg)"
 const ch2=CHSEL===2
-R.innerHTML='<div class="lrBg"></div><div class="lrShade"></div><div class="lrHead"><h2>THE LANTERN ROAD</h2><div class="lrCh"><button type="button" class="lrChB" data-d="-1">◀</button><span>Chapter '+CHSEL+"  ·  "+(ch2?"The Stolen Stars":"The Moon's Teeth")+'</span><button type="button" class="lrChB" data-d="1">▶</button></div></div>'+'<div class="lrPath"><svg viewBox="0 0 100 40" preserveAspectRatio="none"><path class="lrTrail" fill="none"/></svg></div>'+'<div class="lrNav"><button type="button" class="lrArr" data-d="-1">◀</button><span>Choose destination</span><button type="button" class="lrArr" data-d="1">▶</button></div>'+'<div class="lrCard"><button type="button" class="lrBack">◀ Back</button><div class="lrPic"></div><h3 class="lrName"></h3><div class="lrLine lrNum"></div><div class="lrLine lrSh"></div><div class="lrLine lrCr"></div><button type="button" class="lrEnter">ENTER LEVEL</button><button type="button" class="lrRes" hidden>Resume checkpoint</button></div>'
-R.querySelector(".lrBg").style.backgroundImage=ch2?"url(art/l10.jpg)":"url(art/key.jpg)"
-const path=R.querySelector(".lrPath"),n=lvs.length
-const pts=lvs.map(((lv,i)=>{const t=i/Math.max(1,n-1)
-return[4+t*86,30-t*14+Math.sin(t*6.3)*5]}))
-let d=""
-pts.forEach(((p,i)=>{if(!i){d="M"+p[0]+" "+p[1]
-return}const q=pts[i-1],mx=(q[0]+p[0])/2
-d+=" C"+mx+" "+q[1]+" "+mx+" "+p[1]+" "+p[0]+" "+p[1]}))
-R.querySelector(".lrTrail").setAttribute("d",d)
+R.innerHTML='<div class="lrScene"><div class="lrLamps"></div></div><div class="lrShade"></div><div class="lrHead"><h2>CHOOSE A LEVEL</h2><div class="lrCh"><button type="button" class="lrChB" data-d="-1">◀</button><span>Chapter '+CHSEL+"  ·  "+(ch2?"The Stolen Stars":"The Moon's Teeth")+'</span><button type="button" class="lrChB" data-d="1">▶</button></div></div>'+'<button type="button" class="lrBig l" data-d="-1">◀</button><button type="button" class="lrBig r" data-d="1">▶</button>'+'<div class="lrCard"><button type="button" class="lrBack">◀ Back</button><div class="lrPic"></div><h3 class="lrName"></h3><div class="lrLine lrNum"></div><div class="lrLine lrSh"></div><div class="lrLine lrCr"></div><button type="button" class="lrEnter">ENTER LEVEL</button><button type="button" class="lrRes" hidden>Resume checkpoint</button></div>'
+const lampsEl=R.querySelector(".lrLamps"),n=lvs.length
+const SPOTS=[[46.2,94.5,24],[35,77.5,19],[24.6,66.5,14.5],[35,57.5,11],[40,51.5,9],[55,49,7.6],[61.2,46,6.4],[65,42.6,5.4],[58.2,39.4,4.5]]
 const tgt=chTarget(CHSEL)
-let sel=-1
-lvs.forEach(((lv,i)=>{const b=document.createElement("button")
+let sel=-1,bgA=true
+lvs.forEach(((lv,i)=>{const sp=SPOTS[Math.min(SPOTS.length-1,Math.round(i*(SPOTS.length-1)/Math.max(1,n-1)))]
+const b=document.createElement("button")
 b.type="button"
-b.className="lrPost"+(ok(lv)?" on":" off")+(lv===tgt?" next":"")
-b.style.left=pts[i][0]+"%"
-b.style.top=pts[i][1]/40*100+"%"
-const sc=.75+pts[i][1]/40*.5
-b.style.setProperty("--sc",sc.toFixed(2))
-const lit=ok(lv)
-b.innerHTML='<svg viewBox="0 0 40 72" width="40" height="72"><defs><radialGradient id="lg'+i+'" cx=".5" cy=".6" r=".6"><stop offset="0" stop-color="#fff6c8"/><stop offset=".55" stop-color="#ffb84a"/><stop offset="1" stop-color="#c86418"/></radialGradient></defs>'+(lit?'<circle cx="16" cy="18" r="13" fill="#ffb84a" opacity=".28"/>':"")+'<rect x="22" y="8" width="5" height="64" rx="1.5" fill="#3a2414"/><rect x="9" y="7" width="18" height="3.5" rx="1.5" fill="#2a180c"/><path d="M11 10 L21 10 L19 13 L13 13 Z" fill="#2a180c"/><rect x="10" y="13" width="12" height="15" rx="2" fill="#1a0e08"/><rect x="12" y="15" width="8" height="11" rx="1" fill="'+(lit?"url(#lg"+i+")":"#3a2a3a")+'"/><path d="M10 28 L22 28 L20 31 L12 31 Z" fill="#1a0e08"/></svg><span class="ring"></span>'
-b.addEventListener("pointerenter",(()=>pick(i)))
-b.addEventListener("focus",(()=>pick(i)))
+b.className="lrLamp"+(ok(lv)?" on":" off")
+b.style.left=sp[0]+"%"
+b.style.top=sp[1]+"%"
+b.style.height=sp[2]+"%"
+b.style.zIndex=100-i
+b.innerHTML='<img src="art/'+(ok(lv)?"lamp_on":"lamp_off")+'.png" alt="" draggable="false"><span class="lrNo">'+(ok(lv)?lv>=10?lv-9:lv:"?")+"</span>"
 b.addEventListener("click",(()=>{if(sel===i)go()
 else pick(i)}))
-path.appendChild(b)}))
-function pick(i){if(i<0||i>=n||i===sel)return
+lampsEl.appendChild(b)}))
+{let sx=null
+R.addEventListener("pointerdown",(e=>{if(e.target.closest(".lrCard,button"))return
+sx=e.clientX}))
+R.addEventListener("pointerup",(e=>{if(sx==null)return
+const dx=e.clientX-sx
+sx=null
+if(Math.abs(dx)>50)pick(Math.max(0,Math.min(n-1,sel+(dx<0?1:-1))))}))}function pick(i){if(i<0||i>=n||i===sel)return
+const dir=sel<0?0:i>sel?1:-1
 sel=i
-const lv=lvs[i],o=ok(lv),b=best[lv]||{}
-R.querySelectorAll(".lrPost").forEach(((e,k)=>e.classList.toggle("sel",k===i)))
-const pic=R.querySelector(".lrPic")
+{const cd=R.querySelector(".lrCard")
+cd.classList.remove("flipL","flipR")
+void cd.offsetWidth
+if(dir)cd.classList.add(dir>0?"flipR":"flipL")}const lv=lvs[i],o=ok(lv),b=best[lv]||{}
+R.querySelectorAll(".lrLamp").forEach(((e,k)=>e.classList.toggle("sel",k===i)))
+const upd=()=>{const pic=R.querySelector(".lrPic")
 pic.style.backgroundImage=art(lv)
 pic.classList.toggle("lock",!o)
 R.querySelector(".lrName").textContent=o?LEVELS[lv-1].name:"Not yet reached"
@@ -9304,9 +9312,11 @@ R.querySelector(".lrSh").textContent=o?"Shards   "+(b.shards||0)+" / 3":"Finish 
 R.querySelector(".lrCr").textContent=o?b.time?"Best time   "+fmtT(b.time):"Not played yet":""
 const en=R.querySelector(".lrEnter")
 en.disabled=!o
-R.querySelector(".lrRes").hidden=!(o&&cpGet(lv))
+R.querySelector(".lrRes").hidden=!(o&&cpGet(lv))}
+if(dir)setTimeout(upd,170)
+else upd()
 try{blip(500+i*40,700+i*40,.05,"triangle",.03)}catch(e){}}function go(){const lv=lvs[sel]
-if(!ok(lv)){const e=R.querySelectorAll(".lrPost")[sel]
+if(!ok(lv)){const e=R.querySelectorAll(".lrLamp")[sel]
 e.classList.remove("shake")
 void e.offsetWidth
 e.classList.add("shake")
@@ -9315,7 +9325,7 @@ levelCard()
 return}goLevel(lv)}R.querySelector(".lrEnter").addEventListener("click",go)
 R.querySelector(".lrRes").addEventListener("click",(()=>goResume(lvs[sel])))
 R.querySelector(".lrBack").addEventListener("click",(()=>{document.getElementById("levelsScr").hidden=true}))
-R.querySelectorAll(".lrArr").forEach((b=>b.addEventListener("click",(()=>pick(Math.max(0,Math.min(n-1,sel+ +b.dataset.d)))))))
+R.querySelectorAll(".lrBig").forEach((b=>b.addEventListener("click",(()=>pick(Math.max(0,Math.min(n-1,sel+ +b.dataset.d)))))))
 R.querySelectorAll(".lrChB").forEach((b=>b.addEventListener("click",(()=>{const c=CHSEL===1?2:1
 const t=document.querySelector('#tbTabs .tbTab[data-ch="'+c+'"]')
 if(c===2&&UNLOCK<10){b.classList.remove("shake")
@@ -9331,7 +9341,116 @@ e.preventDefault()}else if(e.key==="ArrowLeft"||e.key==="a"){window.__lrNav(-1)
 e.preventDefault()}else if(e.key==="Enter"){window.__lrGo()
 e.preventDefault()}}))}window.__lrNav=k=>pick(Math.max(0,Math.min(n-1,sel+k)))
 window.__lrGo=go
-pick(Math.max(0,lvs.indexOf(tgt)))}if(LV===1){ARENA={x0:-9.5,x1:9.5,z0:-74,z1:-104,cz:-89,y:0}
+if(!window.__lrPad){window.__lrPad=1
+let was={}
+const poll=()=>{try{const sc=document.getElementById("levelsScr")
+const gp=[...navigator.getGamepads?navigator.getGamepads():[]].find((g=>g&&g.connected))
+if(gp&&sc&&!sc.hidden&&window.__lrNav){const b=k=>!!(gp.buttons[k]&&gp.buttons[k].pressed)
+for(const[k,d]of[[4,-1],[5,1],[14,-1],[15,1]]){if(b(k)&&!was[k])window.__lrNav(d)
+was[k]=b(k)}if(b(0)&&!was[0]&&window.__lrGo)window.__lrGo()
+was[0]=b(0)}else was={}}catch(e){}requestAnimationFrame(poll)}
+requestAnimationFrame(poll)}pick(Math.max(0,lvs.indexOf(tgt)))}function pxTex(w,h,fn){const c=document.createElement("canvas")
+c.width=w
+c.height=h
+const g=c.getContext("2d")
+fn(g,w,h)
+const t=new THREE.CanvasTexture(c)
+t.magFilter=THREE.NearestFilter
+t.minFilter=THREE.NearestFilter
+t.generateMipmaps=false
+return t}function bbStraw(g,w,h,base,cols){g.fillStyle=base
+g.fillRect(0,0,w,h)
+for(let i=0;i<w*h/5;i++){g.fillStyle=cols[Math.random()*cols.length|0]
+const x=Math.random()*w|0,y=Math.random()*h|0
+g.fillRect(x,y,1,1+(Math.random()*3|0))}}function bbModel(){const G=new THREE.Group
+const L=(c,map)=>new THREE.MeshLambertMaterial({color:c||16777215,map:map||null,flatShading:true})
+const straw=pxTex(32,32,((g,w,h)=>bbStraw(g,w,h,"#d8a43a",["#f2c860","#b8802a","#e8b850","#9a6a20","#fff0a0"])))
+const strawEnd=pxTex(32,32,((g,w,h)=>{bbStraw(g,w,h,"#c8902e",["#e8b850","#8a5a18","#f2c860"])
+for(let r=4;r<16;r+=4){g.strokeStyle="#8a5a18"
+g.beginPath()
+g.arc(16,16,r,0,6.3)
+g.stroke()}}))
+const rope=L(11040826),wood=L(6963234),dark=L(3810322),burlap=L(13148272,pxTex(16,16,((g,w,h)=>{g.fillStyle="#c8a070"
+g.fillRect(0,0,w,h)
+g.fillStyle="#a8804a"
+for(let i=0;i<w;i+=2)g.fillRect(i,0,1,h)
+for(let j=0;j<h;j+=2)g.fillRect(0,j,w,1)})))
+const bandTex=pxTex(16,16,((g,w,h)=>{for(let y=0;y<h;y+=4)for(let x=0;x<w;x+=4){g.fillStyle=(x+y)/4%2?"#f4e8cc":"#c8302a"
+g.fillRect(x,y,4,4)}}))
+const sm=[L(0,straw),L(0,straw),L(0,straw),L(0,straw),L(0,strawEnd),L(0,strawEnd)]
+const body=new THREE.Mesh(new THREE.BoxGeometry(.8,.62,1.05),sm)
+body.position.y=.72
+G.add(body)
+for(const z of[-.24,.24]){const b=new THREE.Mesh(new THREE.BoxGeometry(.84,.66,.07),rope)
+b.position.set(0,.72,z)
+G.add(b)}for(let i=0;i<10;i++){const t=new THREE.Mesh(new THREE.ConeGeometry(.04,.22,3),L(15911008))
+const a=Math.random()*6.28
+t.position.set(Math.cos(a)*.42,.72+(Math.random()-.5)*.5,(Math.random()-.5)*.9)
+t.rotation.set(Math.random(),0,Math.PI/2*(t.position.x>0?-1:1))
+G.add(t)}const tail=new THREE.Mesh(new THREE.ConeGeometry(.07,.3,4),L(15251536))
+tail.position.set(0,.95,-.58)
+tail.rotation.x=-.9
+G.add(tail)
+const head=new THREE.Group
+head.position.set(0,1.05,.58)
+head.name="bbHead"
+G.add(head)
+const hb=new THREE.Mesh(new THREE.BoxGeometry(.52,.46,.44),sm)
+head.add(hb)
+const hr=new THREE.Mesh(new THREE.BoxGeometry(.55,.07,.47),rope)
+hr.position.y=.12
+head.add(hr)
+for(const[x,r]of[[-.13,.075],[.14,.065]]){const e=new THREE.Mesh(new THREE.CylinderGeometry(r,r,.04,8),L(9062944))
+e.rotation.x=Math.PI/2
+e.position.set(x,.05,.23)
+head.add(e)
+for(const s of[-1,1]){const st=new THREE.Mesh(new THREE.BoxGeometry(r*1.5,.012,.01),L(2757640))
+st.rotation.z=s*.78
+st.position.set(x,.05,.255)
+head.add(st)}}const nose=new THREE.Mesh(new THREE.CylinderGeometry(.06,.06,.04,6),L(5911576))
+nose.rotation.x=Math.PI/2
+nose.position.set(0,-.1,.235)
+head.add(nose)
+for(const s of[-1,1]){const ear=new THREE.Mesh(new THREE.BoxGeometry(.22,.06,.12),burlap)
+ear.position.set(s*.33,.08,0)
+ear.rotation.z=s*-.5
+head.add(ear)}for(const s of[-1,1]){let px=s*.15,py=.23,pz=-.02,a=0
+for(let k=0;k<5;k++){const seg=new THREE.Mesh(new THREE.CylinderGeometry(.03-k*.004,.035-k*.004,.13,4),wood)
+a+=.55
+seg.position.set(px+s*Math.sin(a)*.06,py+Math.cos(a)*.08,pz-Math.sin(a)*.04)
+seg.rotation.set(-a*.6,0,s*(.4+a*.4))
+head.add(seg)
+px=seg.position.x
+py=seg.position.y
+pz=seg.position.z}}const band=new THREE.Mesh(new THREE.CylinderGeometry(.2,.26,.12,6,1,true),new THREE.MeshLambertMaterial({map:bandTex,side:THREE.DoubleSide,flatShading:true}))
+band.position.set(0,.9,.45)
+band.rotation.x=.5
+G.add(band)
+const knot=new THREE.Mesh(new THREE.ConeGeometry(.11,.18,3),new THREE.MeshLambertMaterial({map:bandTex,flatShading:true}))
+knot.position.set(0,.74,.58)
+knot.rotation.x=Math.PI
+G.add(knot)
+for(const[x,z]of[[-.26,.34],[.26,.34],[-.26,-.34],[.26,-.34]]){const lg=new THREE.Group
+lg.name="bbLeg"
+lg.position.set(x,.42,z)
+G.add(lg)
+const st=new THREE.Mesh(new THREE.CylinderGeometry(.045,.05,.36,4),wood)
+st.position.y=-.18
+lg.add(st)
+const clog=new THREE.Mesh(new THREE.BoxGeometry(.13,.08,.17),dark)
+clog.position.set(0,-.38,.02)
+lg.add(clog)}G.traverse((o=>{if(o.isMesh){o.castShadow=false}}))
+return G}PROTO.balebutt=bbModel()
+function bbTick(dt){for(const e of enemies){if(e.pk!=="balebutt"||!e.alive)continue
+const m=e.body
+if(!m)continue
+if(!e.bbL){e.bbL=[]
+m.traverse((o=>{if(o.name==="bbLeg")e.bbL.push(o)
+if(o.name==="bbHead")e.bbH=o}))}const sp=e.cs==="rush"?16:e.cs==="wind"?0:5
+e.wph=(e.wph||0)+dt*sp
+e.bbL.forEach(((l,i)=>{l.rotation.x=Math.sin(e.wph+(i%2?Math.PI:0)+(i>1?Math.PI/2:0))*(e.cs==="rush"?.7:.25)}))
+if(e.bbH)e.bbH.rotation.x=e.cs==="wind"?.35:e.cs==="rush"?.25:Math.sin(time*2+e.ph)*.06
+if(e.cs==="wind"&&Math.random()<.4)try{emit(e.pos.clone().add(V3(Math.sin(e.face)*.4,.1,Math.cos(e.face)*.4)),{life:.5,size:.12,size1:.04,color:15911008,vx:R(-1,1),vy:R(.5,1.5),vz:R(-1,1)})}catch(_){}if(e.cs==="rush"&&Math.random()<.5)try{emit(e.pos.clone().setY(e.pos.y+.8),{life:.7,size:.1,size1:.03,color:15251536,vx:R(-.5,.5),vy:R(.2,.8),vz:R(-.5,.5),g:2})}catch(_){}}}if(LV===1){ARENA={x0:-9.5,x1:9.5,z0:-74,z1:-104,cz:-89,y:0}
 slab(-20,20,12,-36)
 slab(-20,6,-36,-52)
 slab(-20,20,-52,-60.5)
