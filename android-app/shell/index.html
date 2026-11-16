@@ -4981,7 +4981,12 @@ c.map.needsUpdate=true
 c.map.wrapS=c.map.wrapT=THREE.RepeatWrapping
 c.map.repeat.set(rep,rep)}return c}const SECTHEME={1:0,2:3,3:2,4:1,5:0,6:3,7:3,8:2,9:4,10:2}
 const SECSURF={1:"grass",2:"stone",3:"mud",4:"wood",5:"grass",6:"stone",7:"stone",8:"stone",9:"stone",10:"wood"}
-function secEnemy(rng){const m={1:(x,z,y)=>{const e=cinder(x,z,rng()<.5,1.3,1.1)
+function secEnemy(rng){const _b=secEnemy0(rng)
+let sg=null
+try{if(LV>1&&LV<15)sg=sigFoe()}catch(e){}if(!sg)return _b
+if(!_b)return sg
+const r2=srng(LV*131+7)
+return(x,z,y)=>r2()<.55?sg(x,z,y):_b(x,z,y)}function secEnemy0(rng){const m={1:(x,z,y)=>{const e=cinder(x,z,rng()<.5,1.3,1.1)
 if(e){e.pos.y=e.base.y=y}return e},2:(x,z,y)=>brat(x,z,y),6:crank,7:crank,8:gnawer,9:(x,z,y)=>rng()<.5?comet(x,z,y):gnawer(x,z,y),10:(x,z,y)=>{const e=clapper(x,z,y,12)
 if(e)e.free=true
 return e}}[LV]
@@ -6312,7 +6317,7 @@ CRS.items.push({k:"jet",x:q.x,y:q.y,z:q.z,t:i*.8,per:2.6})}}if(LV===9){CRS.items
 if(LV!==15)crsPop(path,rng,Object.assign({skip:["chase","ride","lily","fork","bridge","blade","gear"],step:7},D.pop||{}))
 const pts=path.pts
 const len=path.len
-if(LV!==15){crsShardHigh(path,len*.3,"high")
+if(LV!==15&&!D.noHighShard){crsShardHigh(path,len*.3,"high")
 if(!(LV%2)){crsShardHigh(path,len*.78,"high2")}}if(!D.noMidCheck)crsCheck(path,len*.5)
 if(LV!==15){const sw=[len*.62,len*.9]
 for(const s of sw){const q=crsAt(path,s,-1.5)
@@ -8064,7 +8069,7 @@ mvSpinTick(dt)
 mvChargeTick(dt)
 mvCsTick(dt)
 mvImpTick(dt)
-try{ghostTick(dt)}catch(e){}try{crateWobTick(dt)}catch(e){}try{musLayerTick(dt)}catch(e){}try{rescueTick(dt)}catch(e){}try{bbTick(dt)}catch(e){}try{wxTick(dt)}catch(e){window.__wxErr=String(e)}}const TALK={el:null,n:null,lbl:"",w:0,h:0}
+try{ghostTick(dt)}catch(e){}try{crateWobTick(dt)}catch(e){}try{musLayerTick(dt)}catch(e){}try{rescueTick(dt)}catch(e){}try{bbTick(dt)}catch(e){}try{foeAnimTick(dt)}catch(e){}try{l1BellTick(dt)}catch(e){window.__belErr=String(e)}try{wxTick(dt)}catch(e){window.__wxErr=String(e)}}const TALK={el:null,n:null,lbl:"",w:0,h:0}
 function talkBubble(textPx){const S=3,pw=Math.ceil(textPx/S)+14,ph=14,tail=4,W=pw,H=ph+tail
 const c=document.createElement("canvas")
 c.width=W
@@ -9378,67 +9383,79 @@ for(let j=0;j<h;j+=2)g.fillRect(0,j,w,1)})))
 const bandTex=bbPx(16,16,((g,w,h)=>{for(let y=0;y<h;y+=4)for(let x=0;x<w;x+=4){g.fillStyle=(x+y)/4%2?"#f4e8cc":"#c8302a"
 g.fillRect(x,y,4,4)}}))
 const sm=[L(0,straw),L(0,straw),L(0,straw),L(0,straw),L(0,strawEnd),L(0,strawEnd)]
-const body=new THREE.Mesh(new THREE.BoxGeometry(.8,.62,1.05),sm)
-body.position.y=.72
+const body=new THREE.Mesh(new THREE.BoxGeometry(.8,.56,1),sm)
+body.position.y=.62
 G.add(body)
-for(const z of[-.24,.24]){const b=new THREE.Mesh(new THREE.BoxGeometry(.84,.66,.07),rope)
-b.position.set(0,.72,z)
-G.add(b)}for(let i=0;i<10;i++){const t=new THREE.Mesh(new THREE.ConeGeometry(.04,.22,3),L(15911008))
-const a=Math.random()*6.28
-t.position.set(Math.cos(a)*.42,.72+(Math.random()-.5)*.5,(Math.random()-.5)*.9)
-t.rotation.set(Math.random(),0,Math.PI/2*(t.position.x>0?-1:1))
-G.add(t)}const tail=new THREE.Mesh(new THREE.ConeGeometry(.07,.3,4),L(15251536))
-tail.position.set(0,.95,-.58)
-tail.rotation.x=-.9
+for(const z of[-.22,.22]){const b=new THREE.Mesh(new THREE.BoxGeometry(.84,.6,.07),rope)
+b.position.set(0,.62,z)
+G.add(b)}const tuftM=L(16175216)
+for(let i=0;i<16;i++){const t=new THREE.Mesh(new THREE.ConeGeometry(.05,.24,3),i%3?tuftM:L(14197818))
+const side=i%4
+const z=(Math.random()-.5)*.9
+if(side===0){t.position.set(.4,.62+(Math.random()-.3)*.4,z)
+t.rotation.z=-1.3}else if(side===1){t.position.set(-.4,.62+(Math.random()-.3)*.4,z)
+t.rotation.z=1.3}else{t.position.set((Math.random()-.5)*.7,.92,z)
+t.rotation.set((Math.random()-.5)*.8,0,(Math.random()-.5)*.8)}G.add(t)}const tail=new THREE.Group
+tail.position.set(0,.82,-.5)
 G.add(tail)
-const head=new THREE.Group
-head.position.set(0,1.05,.58)
+for(let k=0;k<4;k++){const c=new THREE.Mesh(new THREE.ConeGeometry(.05,.3,3),tuftM)
+c.rotation.x=-1.1+(k-1.5)*.25
+c.rotation.z=(k-1.5)*.3
+c.position.z=-.1
+tail.add(c)}const head=new THREE.Group
+head.position.set(0,.98,.62)
 head.name="bbHead"
 G.add(head)
-const hb=new THREE.Mesh(new THREE.BoxGeometry(.52,.46,.44),sm)
+const hb=new THREE.Mesh(new THREE.BoxGeometry(.54,.46,.42),sm)
 head.add(hb)
-const hr=new THREE.Mesh(new THREE.BoxGeometry(.55,.07,.47),rope)
-hr.position.y=.12
+const hr=new THREE.Mesh(new THREE.BoxGeometry(.57,.07,.45),rope)
+hr.position.y=.13
 head.add(hr)
-for(const[x,r]of[[-.13,.075],[.14,.065]]){const e=new THREE.Mesh(new THREE.CylinderGeometry(r,r,.04,8),L(9062944))
+for(let k=0;k<5;k++){const f=new THREE.Mesh(new THREE.ConeGeometry(.04,.16,3),tuftM)
+f.position.set(-.18+k*.09,.25,(Math.random()-.5)*.2)
+f.rotation.z=(k-2)*.25
+head.add(f)}for(const[x,r]of[[-.13,.095],[.14,.08]]){const e=new THREE.Mesh(new THREE.CylinderGeometry(r,r,.05,8),L(9062944))
 e.rotation.x=Math.PI/2
-e.position.set(x,.05,.23)
+e.position.set(x,.04,.22)
 head.add(e)
-for(const s of[-1,1]){const st=new THREE.Mesh(new THREE.BoxGeometry(r*1.5,.012,.01),L(2757640))
-st.rotation.z=s*.78
-st.position.set(x,.05,.255)
-head.add(st)}}const nose=new THREE.Mesh(new THREE.CylinderGeometry(.06,.06,.04,6),L(5911576))
+const rim=new THREE.Mesh(new THREE.TorusGeometry(r*.8,.012,3,8),L(5909008))
+rim.position.set(x,.04,.248)
+head.add(rim)
+for(const sg of[-1,1]){const st=new THREE.Mesh(new THREE.BoxGeometry(r*1.4,.018,.01),L(2757640))
+st.rotation.z=sg*.78
+st.position.set(x,.04,.252)
+head.add(st)}}const nose=new THREE.Mesh(new THREE.CylinderGeometry(.065,.065,.05,6),L(5911576))
 nose.rotation.x=Math.PI/2
-nose.position.set(0,-.1,.235)
+nose.position.set(0,-.11,.225)
 head.add(nose)
-for(const s of[-1,1]){const ear=new THREE.Mesh(new THREE.BoxGeometry(.22,.06,.12),burlap)
-ear.position.set(s*.33,.08,0)
-ear.rotation.z=s*-.5
-head.add(ear)}for(const s of[-1,1]){let px=s*.15,py=.23,pz=-.02,a=0
-for(let k=0;k<5;k++){const seg=new THREE.Mesh(new THREE.CylinderGeometry(.03-k*.004,.035-k*.004,.13,4),wood)
-a+=.55
-seg.position.set(px+s*Math.sin(a)*.06,py+Math.cos(a)*.08,pz-Math.sin(a)*.04)
-seg.rotation.set(-a*.6,0,s*(.4+a*.4))
-head.add(seg)
-px=seg.position.x
-py=seg.position.y
-pz=seg.position.z}}const band=new THREE.Mesh(new THREE.CylinderGeometry(.2,.26,.12,6,1,true),new THREE.MeshLambertMaterial({map:bandTex,side:THREE.DoubleSide,flatShading:true}))
-band.position.set(0,.9,.45)
-band.rotation.x=.5
+for(const sg of[-1,1]){const ear=new THREE.Mesh(new THREE.BoxGeometry(.28,.05,.16),burlap)
+ear.position.set(sg*.36,.06,-.02)
+ear.rotation.z=sg*-.75
+head.add(ear)}for(const sg of[-1,1]){const h=new THREE.Mesh(new THREE.TorusGeometry(.13,.035,4,7,4.2),wood)
+h.position.set(sg*.2,.32,-.04)
+h.rotation.set(0,sg*1.25,sg>0?-.6:3.74)
+head.add(h)
+const tip=new THREE.Mesh(new THREE.ConeGeometry(.03,.09,4),wood)
+tip.position.set(sg*.27,.22,-.14)
+tip.rotation.x=1.8
+head.add(tip)}const bmat=new THREE.MeshLambertMaterial({map:bandTex,side:THREE.DoubleSide,flatShading:true})
+const band=new THREE.Mesh(new THREE.CylinderGeometry(.24,.3,.1,6,1,true),bmat)
+band.position.set(0,.84,.5)
+band.rotation.x=.35
 G.add(band)
-const knot=new THREE.Mesh(new THREE.ConeGeometry(.11,.18,3),new THREE.MeshLambertMaterial({map:bandTex,flatShading:true}))
-knot.position.set(0,.74,.58)
-knot.rotation.x=Math.PI
+const knot=new THREE.Mesh(new THREE.ConeGeometry(.17,.26,3),bmat)
+knot.position.set(0,.66,.62)
+knot.rotation.set(Math.PI,0,0)
 G.add(knot)
-for(const[x,z]of[[-.26,.34],[.26,.34],[-.26,-.34],[.26,-.34]]){const lg=new THREE.Group
+for(const[x,z]of[[-.25,.32],[.25,.32],[-.25,-.32],[.25,-.32]]){const lg=new THREE.Group
 lg.name="bbLeg"
-lg.position.set(x,.42,z)
+lg.position.set(x,.36,z)
 G.add(lg)
-const st=new THREE.Mesh(new THREE.CylinderGeometry(.045,.05,.36,4),wood)
-st.position.y=-.18
+const st=new THREE.Mesh(new THREE.CylinderGeometry(.06,.07,.28,5),wood)
+st.position.y=-.14
 lg.add(st)
-const clog=new THREE.Mesh(new THREE.BoxGeometry(.13,.08,.17),dark)
-clog.position.set(0,-.38,.02)
+const clog=new THREE.Mesh(new THREE.BoxGeometry(.16,.09,.2),dark)
+clog.position.set(0,-.31,.02)
 lg.add(clog)}G.traverse((o=>{if(o.isMesh){o.castShadow=false}}))
 return G}PROTO.balebutt=bbModel()
 function bbTick(dt){for(const e of enemies){if(e.pk!=="balebutt"||!e.alive)continue
@@ -9450,7 +9467,279 @@ if(o.name==="bbHead")e.bbH=o}))}const sp=e.cs==="rush"?16:e.cs==="wind"?0:5
 e.wph=(e.wph||0)+dt*sp
 e.bbL.forEach(((l,i)=>{l.rotation.x=Math.sin(e.wph+(i%2?Math.PI:0)+(i>1?Math.PI/2:0))*(e.cs==="rush"?.7:.25)}))
 if(e.bbH)e.bbH.rotation.x=e.cs==="wind"?.35:e.cs==="rush"?.25:Math.sin(time*2+e.ph)*.06
-if(e.cs==="wind"&&Math.random()<.4)try{emit(e.pos.clone().add(V3(Math.sin(e.face)*.4,.1,Math.cos(e.face)*.4)),{life:.5,size:.12,size1:.04,color:15911008,vx:R(-1,1),vy:R(.5,1.5),vz:R(-1,1)})}catch(_){}if(e.cs==="rush"&&Math.random()<.5)try{emit(e.pos.clone().setY(e.pos.y+.8),{life:.7,size:.1,size1:.03,color:15251536,vx:R(-.5,.5),vy:R(.2,.8),vz:R(-.5,.5),g:2})}catch(_){}}}if(LV===1){ARENA={x0:-9.5,x1:9.5,z0:-74,z1:-104,cz:-89,y:0}
+if(e.cs==="wind"&&Math.random()<.4)try{emit(e.pos.clone().add(V3(Math.sin(e.face)*.4,.1,Math.cos(e.face)*.4)),{life:.5,size:.12,size1:.04,color:15911008,vx:R(-1,1),vy:R(.5,1.5),vz:R(-1,1)})}catch(_){}if(e.cs==="rush"&&Math.random()<.5)try{emit(e.pos.clone().setY(e.pos.y+.8),{life:.7,size:.1,size1:.03,color:15251536,vx:R(-.5,.5),vy:R(.2,.8),vz:R(-.5,.5),g:2})}catch(_){}}}const FOE_STYLE={balebutt:"trot",potlobber:"waddle",postbox:"hop",lampmole:"waddle",coggremlin:"skitter",cuckoo:"waddle",crownguard:"march",emberpup:"trot",moonmite:"skitter",ticket:"hover",rootsentry:"sway",inksquid:"hover",cindermoth:"flutter",starwarden:"hover"}
+function foeAnimTick(dt){for(const e of enemies){const st=FOE_STYLE[e.pk]
+if(!st||!e.alive||!e.body)continue
+if(e.fa===undefined){e.fa=null
+e.body.traverse((o=>{if(o.name==="fAnim")e.fa=o}))}const a=e.fa
+if(!a)continue
+const mv=e.cs==="rush"||e.mode==="chase"||e.mode==="walk"||e.mode==="patrol"
+const sp=e.cs==="rush"?15:mv?8:3
+e.fph=(e.fph||e.ph||0)+dt*sp
+const s=Math.sin(e.fph),c=Math.cos(e.fph)
+let y=0,rx=0,rz=0,sx=1,sy=1
+if(st==="trot"||st==="march"){y=Math.abs(s)*(mv?.08:.02)
+rz=s*(mv?.06:.02)}else if(st==="waddle"){y=Math.abs(s)*.05
+rz=s*.12}else if(st==="hop"){const h=Math.max(0,s)
+y=h*(mv?.35:.08)
+sy=1-(1-h)*.12
+sx=1+(1-h)*.06}else if(st==="skitter"){y=Math.abs(Math.sin(e.fph*2))*.04
+rz=Math.sin(e.fph*2)*.05}else if(st==="hover"||st==="flutter"){y=.25+s*.12
+rz=c*.06
+if(st==="flutter")sx=1+Math.abs(Math.sin(e.fph*3))*.08}else if(st==="sway"){rz=s*.05
+sy=1+c*.03}if(e.cs==="wind"){rx=-.25
+sy*=.9
+sx*=1.06
+rz=Math.sin(time*40)*.05}else if(e.cs==="rush")rx=.28
+a.position.y=y
+a.rotation.set(rx,0,rz)
+a.scale.set(sx,sy,sx)}}const FOE_LV=[null,["balebutt","charger",1.5],["potlobber","thrower",1.45],["postbox","shielded",1.4],["lampmole","charger",1.35],["coggremlin","shielded",1.4],["cuckoo","thrower",1.45],["crownguard","shielded",1.6],["emberpup","charger",1.3],["moonmite","thrower",1.35],["ticket","charger",1.6],["rootsentry","shielded",1.5],["inksquid","thrower",1.45],["cindermoth","charger",1.4],["starwarden","shielded",1.55]]
+function sigFoe(){const f=FOE_LV[LV]
+if(!f||!PROTO[f[0]])return null
+return(x,z,y)=>{const e=mkFoe(f[1],f[0],x,z,y||0,f[2])
+if(e)e.sig=true
+return e}}if(LV===1){COURSE[1]={w:5.6,noHighShard:true,cmds:[{s:12,w:8,tag:"gate"},{s:4,w:5.6},{arc:35,r:14},{s:6,dh:1},{arc:-70,r:12},{s:7},{gap:1,s:2.8},{s:7},{arc:45,r:13,dh:-1},{s:14,tag:"lant"},{arc:-30,r:16},{s:6,w:9,tag:"nook2"},{s:4,w:5.6,dh:1.4},{arc:20,r:12},{s:8,tag:"ck"},{s:4,w:12},{s:42,w:12,tag:"fork"},{s:4,w:12},{s:4,w:5.6,tag:"ck"},{s:22,w:4.8,dh:-2.2,tag:"chase"},{s:2.4,w:4.8,tag:"chase"},{s:22,w:4.8,dh:-2.2,tag:"chase"},{s:4,w:5.6},{s:7},{arc:-60,r:12},{s:12,tag:"lant"},{arc:80,r:11},{s:8,dh:-1.4},{gap:1,s:2.6},{s:10},{arc:-30,r:14},{s:8},{s:16,w:11,tag:"bells"},{s:6,w:5.6,tag:"end"}],look:{top:"path",banks:true},hz:"lant"}}const L1V={bells:null,solved:false,relit:false}
+window.__L1V=L1V
+if(LV===1){L.courseDress=(p,o)=>{try{l1v2Dress(p,o)}catch(e){window.__l1vErr=String(e)+" "+(e.stack||"").slice(0,300)}}
+L.lockExtra=()=>{if(!L1V.bells||L1V.solved)return[]
+const q=crsNear(P.pos.x,P.pos.z)
+return q&&q.tag==="bells"?L1V.bells:[]}}function l1v2Dress(path,{tagRuns}){L1V.path=path
+const run=t=>tagRuns(t)[0]||[0,0]
+const at=(s,lat=0,dy=0)=>crsAt(path,s,lat,dy)
+try{const b=getBest()
+L1V.relit=!!(b[1]&&(b[1].time||b[1].grade))}catch(e){}const wood=new THREE.MeshLambertMaterial({color:6963234,flatShading:true}),dark=new THREE.MeshLambertMaterial({color:3810322,flatShading:true})
+const stone=new THREE.MeshLambertMaterial({color:9075360,flatShading:true})
+{const[a]=run("gate")
+const q=at(a+5)
+for(const sd of[-1,1]){const e=at(a+5,sd*3.6)
+const p=new THREE.Mesh(boxGeo(1.1,5.4,1.1,1.2),stone)
+p.position.set(e.x,e.y+2.7,e.z)
+scene.add(p)
+const cap=new THREE.Mesh(new THREE.ConeGeometry(.9,1,4),new THREE.MeshLambertMaterial({color:3816042,flatShading:true}))
+cap.position.set(e.x,e.y+5.9,e.z)
+cap.rotation.y=Math.PI/4
+scene.add(cap)
+addSolid(e.x-.55,e.x+.55,e.y,e.y+5.4,e.z-.55,e.z+.55,"wall",null)}const beam=new THREE.Mesh(boxGeo(8.4,.8,.9,1.2),wood)
+beam.position.set(q.x,q.y+5,q.z)
+beam.rotation.y=-q.a
+scene.add(beam)
+const sb=new THREE.Mesh(new THREE.CircleGeometry(.75,10),new THREE.MeshBasicMaterial({color:15902778}))
+sb.position.set(q.x+Math.sin(q.a)*0,q.y+5,q.z+.47)
+scene.add(sb)
+for(let k=0;k<9;k++){const t=k/8,e=at(a+5,-3.4+t*6.8)
+const f=new THREE.Mesh(new THREE.ConeGeometry(.2,.4,3),new THREE.MeshLambertMaterial({color:[13119530,16050380,15902778][k%3]}))
+f.position.set(e.x,e.y+4.3-Math.sin(t*Math.PI)*.5,e.z+.5)
+f.rotation.x=Math.PI
+scene.add(f)}const sx=at(a+9,-5.4)
+c1House(sx.x,sx.y,sx.z,-at(a+9).a+Math.PI/2,{pal:"ochre",floors:1,w:3.2,d:3.6,roofH:1.3,chimney:false,solid:false})
+const loft=at(a+9,-3.3)
+const lp=new THREE.Mesh(boxGeo(1.6,.3,2.4,1),wood)
+lp.position.set(loft.x,loft.y+2.6,loft.z)
+scene.add(lp)
+addSolid(loft.x-.8,loft.x+.8,loft.y+2.3,loft.y+2.6,loft.z-1.2,loft.z+1.2,"block",null)
+const cart=at(a+6.5,-2.6)
+makeCrate("crate",cart.x,cart.z,cart.y)
+makeCrate("crate",cart.x,cart.z,cart.y+1)
+makeCrate("lucky",loft.x,loft.z,loft.y+2.6)
+for(let k=0;k<3;k++)spawnOrb(loft.x,loft.y+3.4,loft.z-.8+k*.8)
+try{if(PROTO.sun){const s=cloneProto("sun")
+const e=at(a+1)
+const fx=Math.sin(e.a),fz=-Math.cos(e.a)
+s.scale.multiplyScalar(9)
+s.position.set(e.x+fx*140,e.y+42,e.z+fz*140)
+s.lookAt(e.x,e.y+20,e.z)
+scene.add(s)
+L1V.sun=s}}catch(e){}}for(let s=6;s<path.len-6;s+=7.5){const p=at(s).p
+if(p.gap||p.tag==="fork"||p.tag==="chase"||p.tag==="bells"||p.tag==="gate")continue
+for(const sd of[-1,1]){if(Math.random()<.35)continue
+const lat=sd*(p.w/2+3.4)
+const e=at(s,lat)
+if(crsInside(e.x,e.z,1.6))continue
+c1House(e.x,e.y-.2,e.z,-p.a+(sd>0?-Math.PI/2:Math.PI/2),{pal:["cream","pink","ochre","cream"][(s|0)%4],floors:1+(s*7|0)%2,lean:sd*(.05+Math.random()*.07),solid:false,chimP:.5})}}{const[a,b]=run("fork")
+const ry=-at(a).a
+const roofs=[]
+const H=[{s:a+3,d:6.5},{s:a+12,d:6},{s:a+21,d:6.5},{s:a+31.5,d:5.5}]
+H.forEach(((h,i)=>{const c=at(h.s+h.d/2,3.6)
+const g=c1House(c.x,c.y,c.z,ry,{pal:["pink","cream","ochre","pink"][i],floors:1,w:4.2,d:h.d,roofH:1.25,chimney:false,solid:false,jetty:false,lean:i%2?.04:-.03})
+const top=c.y+.6+3+.22+1.25
+addSolid(c.x-2.1,c.x+2.1,c.y-1,top-1.1,c.z-h.d/2,c.z+h.d/2,"wall",null)
+addSolid(c.x-.6,c.x+.6,top-1.1,top,c.z-h.d/2-.35,c.z+h.d/2+.35,"block",null)
+roofs.push({c,top,d:h.d,s:h.s})
+for(let k=0;k<Math.floor(h.d/1.5);k++)spawnOrb(c.x,top+.9,c.z+h.d/2-.8-k*1.5)}))
+{const r0=roofs[0]
+const cart=at(a+.5,1.6)
+const hay=new THREE.Mesh(boxGeo(1.6,1.2,1.4,1),new THREE.MeshLambertMaterial({color:14197818,flatShading:true}))
+hay.position.set(cart.x,cart.y+.6,cart.z)
+scene.add(hay)
+addSolid(cart.x-.8,cart.x+.8,cart.y,cart.y+1.2,cart.z-.7,cart.z+.7,"block",null)
+const aw=at(a+2.2,2.2)
+const awn=new THREE.Mesh(boxGeo(1.8,.18,1.6,1),new THREE.MeshLambertMaterial({map:typeof bbPx==="function"?bbPx(16,16,((g,w,h)=>{for(let x=0;x<w;x+=4){g.fillStyle=x/4%2?"#f4e8cc":"#c8302a"
+g.fillRect(x,0,4,h)}})):null}))
+awn.position.set(aw.x,aw.y+3,aw.z)
+awn.rotation.x=.12
+scene.add(awn)
+addSolid(aw.x-.9,aw.x+.9,aw.y+2.8,aw.y+3.05,aw.z-.8,aw.z+.8,"block",null)}{const r=roofs[1]
+const ch=new THREE.Mesh(boxGeo(.8,1.1,.8,1),new THREE.MeshLambertMaterial({color:9062970,flatShading:true}))
+ch.position.set(r.c.x,r.top+.55,r.c.z)
+scene.add(ch)
+addSolid(r.c.x-.4,r.c.x+.4,r.top,r.top+1.1,r.c.z-.4,r.c.z+.4,"block",null)}{const r2=roofs[2],r3=roofs[3]
+const z0=r2.c.z-r2.d/2-.35,z1=r3.c.z+r3.d/2+.35
+const y=Math.min(r2.top,r3.top)-.05
+const pl=new THREE.Mesh(boxGeo(.5,.12,Math.abs(z1-z0),1),wood)
+pl.position.set(r2.c.x,y,(z0+z1)/2)
+scene.add(pl)
+addSolid(r2.c.x-.25,r2.c.x+.25,y-.12,y,Math.min(z0,z1),Math.max(z0,z1),"block",null)
+for(let k=0;k<4;k++){const sh=new THREE.Mesh(new THREE.PlaneGeometry(.5,.6),new THREE.MeshLambertMaterial({color:[16050380,9089256,15245512,15911008][k],side:THREE.DoubleSide}))
+sh.position.set(r2.c.x+.4,y+.9,z0-.6-k*.7*Math.sign(z0-z1)*-1)
+sh.rotation.y=Math.PI/2
+scene.add(sh)}}{const r=roofs[3]
+spawnShard(r.c.x,r.top+1.4,r.c.z-r.d/2+.8,"high")
+const land=at(b+1.5,3.6)
+const ledge=new THREE.Mesh(boxGeo(2.2,r.top-land.y-1.6,2,1),stone)
+ledge.position.set(land.x,land.y+(r.top-land.y-1.6)/2,land.z)
+scene.add(ledge)
+addSolid(land.x-1.1,land.x+1.1,land.y,land.y+r.top-land.y-1.6,land.z-1,land.z+1,"block",null)}for(const[s,lat,k]of[[a+5,-3,"crate"],[a+9,-1.2,"lucky"],[a+17,-4,"crate"],[a+26,-2,"crate"],[a+34,-3.6,"boom"]]){const q=at(s,lat)
+makeCrate(k,q.x,q.z,q.y)}{const q=at(a+20,-2.5)
+mkFoe("charger","balebutt",q.x,q.z,q.y,1.15)}for(let s=a+3;s<b;s+=3.5){const q=at(s,-2.8+Math.sin(s*.4)*1.2,1)
+spawnOrb(q.x,q.y,q.z)}}{for(const[a,b]of tagRuns("chase"))for(let s=a+1;s<b;s+=5.2)for(const sd of[-1,1]){const p=at(s).p
+const e=at(s,sd*(p.w/2+2.6))
+c1House(e.x,e.y,e.z,-p.a+(sd>0?-Math.PI/2:Math.PI/2),{pal:["cream","pink","ochre"][((s|0)+(sd>0?1:0))%3],floors:2,lean:sd*.06,solid:false,chimP:.4,w:3.6,d:4.8})}}{const[a]=run("nook2")
+const h=at(a+3,1.4)
+c1House(h.x,h.y,h.z,-at(a+3).a-Math.PI/2,{pal:"pink",floors:1,w:2.6,d:3.4,roofH:1.1,solid:false,lean:-.05})
+addSolid(h.x-1.3,h.x+1.3,h.y-1,h.y+4.6,h.z-1.7,h.z+1.7,"wall",null)
+const n=at(a+3,3.7)
+makeCrate("lucky",n.x,n.z,n.y)
+for(let k=0;k<3;k++){const o=at(a+1.5+k*1.5,3.9,1)
+spawnOrb(o.x,o.y,o.z)}}{const[a,b]=run("bells")
+const s0=a+7
+const q=at(s0)
+const fr=new THREE.Group
+scene.add(fr)
+for(const sd of[-1,1]){const e=at(s0,sd*4.6)
+const p=new THREE.Mesh(boxGeo(.45,5,.45,1),wood)
+p.position.set(e.x,e.y+2.5,e.z)
+scene.add(p)
+addSolid(e.x-.25,e.x+.25,e.y,e.y+5,e.z-.25,e.z+.25,"wall",null)}const bm=new THREE.Mesh(boxGeo(9.8,.4,.4,1),wood)
+bm.position.set(q.x,q.y+4.9,q.z)
+bm.rotation.y=-q.a
+scene.add(bm)
+const bellM=[14196800,14727264,13144120]
+L1V.bells=[-3,0,3].map(((lat,i)=>{const e=at(s0,lat)
+const g=new THREE.Group
+g.position.set(e.x,e.y+4.7,e.z)
+scene.add(g)
+const bell=new THREE.Mesh(new THREE.CylinderGeometry(.35,.75,1.1,8,1,true),new THREE.MeshLambertMaterial({color:bellM[i],side:THREE.DoubleSide,emissive:0}))
+bell.position.y=-.85
+g.add(bell)
+const top=new THREE.Mesh(new THREE.SphereGeometry(.36,8,4,0,6.3,0,1.6),new THREE.MeshLambertMaterial({color:bellM[i]}))
+top.position.y=-.3
+g.add(top)
+const cl=new THREE.Mesh(new THREE.SphereGeometry(.15,6,4),dark)
+cl.position.y=-1.35
+g.add(cl)
+const rope=new THREE.Mesh(boxGeo(.06,.3,.06,1),dark)
+rope.position.y=-.05
+g.add(rope)
+return{g,bell,i,x:e.x,y:e.y+3.6,z:e.z,sw:0,glow:0,pos:V3(e.x,e.y+3.3,e.z),alive:true,type:"bell"}}))
+L1V.order=[2,0,1]
+L1V.got=0
+L1V.zoneS=a
+L1V.playT=-1
+L1V.cool=0
+const g2=at(b-1)
+L1V.gateBlock=addSolid(g2.x-5.8,g2.x+5.8,g2.y,g2.y+6,g2.z-1.2,g2.z+1.2,"wall",null)
+L1V.door=new THREE.Group
+for(const sd of[-1,1]){const d=new THREE.Mesh(boxGeo(2.8,4.2,.3,1),wood)
+d.position.set(sd*1.4,2.1,0)
+L1V.door.add(d)
+for(const yy of[.8,3.2]){const st=new THREE.Mesh(boxGeo(2.6,.18,.34,1),dark)
+st.position.set(sd*1.4,yy,0)
+L1V.door.add(st)}}L1V.door.position.set(g2.x,g2.y,g2.z)
+L1V.door.rotation.y=-g2.a
+scene.add(L1V.door)
+for(const sd of[-1,1]){const e=at(b-1,sd*3.2)
+const p=new THREE.Mesh(boxGeo(.8,5,.8,1.2),stone)
+p.position.set(e.x,e.y+2.5,e.z)
+scene.add(p)}{const q2=at(a+2,-3)
+mkFoe("charger","balebutt",q2.x,q2.z,q2.y,1.15)}}{const[a]=run("bells")
+const t=at(a+3,7.4)
+const tw=new THREE.Mesh(boxGeo(3.2,22,3.2,2),stone)
+tw.position.set(t.x,t.y+11,t.z)
+scene.add(tw)
+addSolid(t.x-1.6,t.x+1.6,t.y-2,t.y+22,t.z-1.6,t.z+1.6,"wall",null)
+const rf=new THREE.Mesh(new THREE.ConeGeometry(2.9,4,4),new THREE.MeshLambertMaterial({color:3816042,flatShading:true}))
+rf.position.set(t.x,t.y+24,t.z)
+rf.rotation.y=Math.PI/4
+scene.add(rf)
+const big=new THREE.Mesh(new THREE.CylinderGeometry(.6,1.2,1.6,8,1,true),new THREE.MeshLambertMaterial({color:14196800,side:THREE.DoubleSide}))
+big.position.set(t.x,t.y+19.4,t.z)
+scene.add(big)
+L1V.bigBell=big
+const n=at(a+1,4.6)
+const ld=new THREE.Mesh(boxGeo(1.8,.3,1.8,1),stone)
+ld.position.set(n.x,n.y+2.2,n.z)
+scene.add(ld)
+addSolid(n.x-.9,n.x+.9,n.y+1.9,n.y+2.2,n.z-.9,n.z+.9,"block",null)
+const st=at(a+2.2,3.4)
+makeCrate("crate",st.x,st.z,st.y)
+makeCrate("lucky",n.x,n.z,n.y+2.2)
+spawnOrb(n.x,n.y+3.4,n.z)}{const ch=tagRuns("chase")
+if(ch.length){const s=ch[ch.length-1][1]+8
+const q=at(s,1.4)
+mkFoe("charger","balebutt",q.x,q.z,q.y,1.15)}}if(L1V.relit){for(let s=8;s<path.len-4;s+=6){const p=at(s).p
+if(p.gap)continue
+for(const sd of[-1,1]){const e=at(s,sd*(p.w/2+.2))
+const post=new THREE.Mesh(boxGeo(.14,2.4,.14,1),dark)
+post.position.set(e.x,e.y+1.2,e.z)
+scene.add(post)
+const lamp=new THREE.Mesh(boxGeo(.32,.4,.32,1),new THREE.MeshBasicMaterial({color:16762992}))
+lamp.position.set(e.x,e.y+2.55,e.z)
+scene.add(lamp)
+const gl=spr(glowTex,16758858,1.4,1.4,e.x,e.y+2.55,e.z)
+gl.material.opacity=.5
+scene.add(gl)}}for(let s=10;s<path.len-6;s+=11){const p=at(s).p
+if(p.gap)continue
+for(let k=0;k<7;k++){const t=k/6
+const e=at(s,-p.w/2+t*p.w)
+const f=new THREE.Mesh(new THREE.ConeGeometry(.16,.32,3),new THREE.MeshLambertMaterial({color:[13119530,16050380,15902778][k%3]}))
+f.position.set(e.x,e.y+3.6-Math.sin(t*Math.PI)*.6,e.z)
+f.rotation.x=Math.PI
+scene.add(f)}}}}function l1BellTick(dt){if(LV!==1||!L1V.bells||!CRS.paths||!CRS.paths[0])return
+const B=L1V.bells
+L1V.cool-=dt
+for(const b of B){b.sw*=Math.pow(.15,dt)
+b.g.rotation.x=Math.sin(time*9+b.i)*b.sw*.6
+b.glow=Math.max(0,b.glow-dt*1.6)
+b.bell.material.emissive.setRGB(b.glow*.9,b.glow*.6,b.glow*.15)}if(L1V.bigBell)L1V.bigBell.rotation.z=Math.sin(time*.8)*.08
+if(L1V.solved){if(L1V.door&&L1V.door.position.y>-7)L1V.door.position.y-=dt*3
+return}const q=crsNear(P.pos.x,P.pos.z)
+const inZone=q&&q.path===CRS.paths[0]&&q.tag==="bells"
+const ring=b=>{b.sw=1
+b.glow=1
+try{cnTone([12,16,19][b.i],.5,.07)
+blip(880+b.i*220,700+b.i*180,.4,"sine",.04)}catch(_){}}
+if(inZone&&L1V.playT<0&&!L1V.heard){L1V.playT=0
+L1V.heard=true}if(L1V.playT>=0){const prev=L1V.playT
+L1V.playT+=dt
+L1V.order.forEach(((bi,k)=>{const tt=.6+k*.75
+if(prev<tt&&L1V.playT>=tt)ring(B[bi])}))
+if(L1V.playT>3.4){L1V.playT=-1
+L1V.got=0}return}if(!inZone||L1V.cool>0)return
+for(const b of B){let hit=false
+const dx=P.pos.x-b.x,dz=P.pos.z-b.z
+if(P.spinT>0&&Math.hypot(dx,dz)<1.5&&P.pos.y+1.6>b.y-1.2)hit=true
+try{for(const s of shots){if(s.o.position.distanceTo(b.pos)<1.1){hit=true
+s.life=0}}}catch(_){}try{for(const c of MV.cs)if(c.o.position.distanceTo(b.pos)<1.4)hit=true}catch(_){}if(!hit)continue
+ring(b)
+L1V.cool=.45
+if(L1V.order[L1V.got]===b.i){L1V.got++
+if(L1V.got>=3){L1V.solved=true
+if(L1V.gateBlock)L1V.gateBlock.alive=false
+try{[0,4,7,12,16].forEach(((s,k)=>cnTone(s,.3,.07,.3+k*.12)))
+sfx.check()}catch(_){}try{burst(B[1].pos.clone(),16765562,30,6,.5)}catch(_){}}}else{L1V.got=0
+try{blip(300,120,.35,"square",.05)}catch(_){}B.forEach((x=>x.sw=.5))
+L1V.heard=false
+setTimeout((()=>{L1V.heard=false}),900)}break}}if(LV===1){ARENA={x0:-9.5,x1:9.5,z0:-74,z1:-104,cz:-89,y:0}
 slab(-20,20,12,-36)
 slab(-20,6,-36,-52)
 slab(-20,20,-52,-60.5)
@@ -13253,7 +13542,9 @@ for(const z of[-28,-30.5])spawnOrb(.3,1.2,z)
 spawnOrb(-1,1.8,-34)
 spawnOrb(-1.1,1.2,-38.5)
 makeCrate("check",0,-42.5)
-{bud(0,-54,0,0,6.5)}orbLine(-5,-44,-5,-58,5)
+{bud(0,-54,0,0,6.5)}try{const sg=sigFoe()
+if(sg){sg(-3,24,0)
+sg(3.2,-59,0)}}catch(e){}orbLine(-5,-44,-5,-58,5)
 makeCrate("crate",6,-46)
 makeCrate("boom",-6,-50)
 makeCrate("crate",6,-60)
@@ -16390,12 +16681,25 @@ scene.add(m)}}{const[a,b]=run("stairs")
 const pts=[]
 for(let s=a-2;s<=b+1.5;s+=1.5){const q=crsAt(path,s,1.6)
 pts.push([q.x,q.y+.9,q.z])}mkRail(pts)
-for(let s=a+1;s<b;s+=1.9){if(Math.random()<.5)continue
-const q=crsAt(path,s,-1.4)
-const st=new THREE.Mesh(boxGeo(1.6,.35,1.1,1),rock)
-st.position.set(q.x,q.y-1.2-Math.random()*3,q.z)
-st.rotation.set(Math.random()*.6,Math.random(),Math.random()*.6)
-scene.add(st)}}{const[a]=run("cellar"),[g0,g1]=run("cellarGap")
+const stepM=new THREE.MeshLambertMaterial({color:12101832,map:rock.map})
+const q0=crsAt(path,a),q1=crsAt(path,b)
+const nSt=Math.round((b-a)/.9)
+for(let k=0;k<=nSt;k++){const s=a+k*(b-a)/nSt
+const fallen=k>2&&k<nSt-2
+const q=crsAt(path,s,-.9)
+const st=new THREE.Mesh(boxGeo(3.4,.4,(b-a)/nSt+.05,1),stepM)
+st.rotation.y=-q.a
+if(fallen){st.position.set(q.x+R(-.3,.3),q.y-3.5-Math.random()*3,q.z)
+st.rotation.x=R(-.6,.6)
+st.rotation.z=R(-.5,.5)
+scene.add(st)
+continue}st.position.set(q.x,q.y-.2,q.z)
+scene.add(st)
+addSolid(q.x-1.6,q.x+1.6,q.y-.4,q.y,q.z-.5,q.z+.5,"ground",null,{surf:"stone"})}for(const s of[a-2,b+.8]){const q=crsAt(path,s,1.6)
+const bl=new THREE.Mesh(boxGeo(.5,.8,1.6,1),stepM)
+bl.position.set(q.x,q.y+.4,q.z)
+bl.rotation.y=-q.a
+scene.add(bl)}}{const[a]=run("cellar"),[g0,g1]=run("cellarGap")
 const q0=crsAt(path,a),q1=crsAt(path,g1+4)
 const y=q0.y
 const roof=new THREE.Mesh(boxGeo(9,1,Math.abs(q1.z-q0.z)+Math.abs(q1.x-q0.x)+2,2),rock)
@@ -16416,14 +16720,14 @@ g.position.set(q.x,q.y,q.z)
 const post=new THREE.Mesh(boxGeo(.18,1.4,.18,1),wood)
 post.position.y=.7
 g.add(post)
-const face=new THREE.Mesh(new THREE.CylinderGeometry(.55,.55,.14,12),iron?new THREE.MeshLambertMaterial({color:6974074,flatShading:true}):new THREE.MeshLambertMaterial({map:tgTargetTex()}))
+const face=new THREE.Mesh(new THREE.CylinderGeometry(.55,.55,.14,12),iron?new THREE.MeshLambertMaterial({map:tgIronTex()}):new THREE.MeshLambertMaterial({map:tgTargetTex()}))
 face.rotation.x=Math.PI/2
 face.rotation.z=0
 face.position.y=1.75
 g.add(face)
 g.rotation.y=-q.a
 scene.add(g)
-TG.targets.push({g,face,iron,alive:true,x:q.x,y:q.y+1.75,z:q.z})}}{const[a]=run("finish")
+TG.targets.push({g,face,iron,alive:true,x:q.x,y:q.y+1.75,z:q.z,pos:V3(q.x,q.y+1.15,q.z),type:"target"})}}{const[a]=run("finish")
 const c=crsAt(path,a+4)
 const lp=new THREE.Mesh(boxGeo(.2,3,.2,1),ink)
 lp.position.set(c.x,c.y+1.5,c.z)
@@ -16454,6 +16758,36 @@ g.arc(32,32,30,0,Math.PI*2)
 g.stroke()
 const t=new THREE.CanvasTexture(c)
 t.magFilter=THREE.NearestFilter
+return t}function tgIronTex(){const c=document.createElement("canvas")
+c.width=c.height=64
+const g=c.getContext("2d")
+g.fillStyle="#5a5a6a"
+g.beginPath()
+g.arc(32,32,31,0,6.3)
+g.fill()
+g.fillStyle="#7a7a8e"
+g.beginPath()
+g.arc(32,32,24,0,6.3)
+g.fill()
+g.fillStyle="#4a4a58"
+g.beginPath()
+g.arc(32,32,16,0,6.3)
+g.fill()
+g.fillStyle="#ffb84a"
+g.beginPath()
+g.arc(32,32,7,0,6.3)
+g.fill()
+g.fillStyle="#2a2a34"
+for(let i=0;i<8;i++){const a=i/8*6.28
+g.beginPath()
+g.arc(32+Math.cos(a)*27,32+Math.sin(a)*27,2.5,0,6.3)
+g.fill()}g.strokeStyle="#2a1838"
+g.lineWidth=3
+g.beginPath()
+g.arc(32,32,30,0,6.3)
+g.stroke()
+const t=new THREE.CanvasTexture(c)
+t.magFilter=THREE.NearestFilter
 return t}function tgFmt(t){const m=Math.floor(t/60),s=t%60
 return m+":"+(s<10?"0":"")+s.toFixed(2)}function tgHud(){if(TG.el)return
 const d=document.createElement("div")
@@ -16476,7 +16810,8 @@ state="paused"
 document.getElementById("tgAgain").onclick=()=>{location.hash="#training!play"
 location.reload()}
 document.getElementById("tgMenu").onclick=()=>{try{sessionStorage.setItem("wt-go","menu")}catch(e){}location.hash=""
-location.reload()}}L.update=dt=>{if(!TG.path)return
+location.reload()}}L.lockExtra=()=>TG.targets
+L.update=dt=>{if(!TG.path)return
 tgHud()
 if(!TG.run&&!TG.done){const q=crsNear(P.pos.x,P.pos.z)
 if(q&&q.path===TG.path&&q.s>TG.startS){TG.run=true}}if(TG.run)TG.t+=dt
@@ -16894,7 +17229,7 @@ let lockT=null,lockPrev=null,lockPop=0
 function lockAlive(t){return t==="boss"?boss.state==="sleep"||boss.state==="tired":t.alive&&!t.dying}function lockPos(t){return t==="boss"?boss.pos.clone():t.pos.clone().setY(t.pos.y+(t.type==="bat"?0:.6))}function updLock(){lockT=null
 if(state!=="play"||P.dead){lockSpr.visible=false
 return}let best=16
-for(const e of enemies){if(!lockAlive(e))continue
+for(const e of L.lockExtra?enemies.concat(L.lockExtra()):enemies){if(!lockAlive(e))continue
 const d=Math.hypot(e.pos.x-P.pos.x,e.pos.z-P.pos.z)
 if(d<best&&Math.abs(e.pos.y-P.pos.y)<5){best=d
 lockT=e}}if(inBoss&&lockAlive("boss")&&Math.hypot(boss.pos.x-P.pos.x,boss.pos.z-P.pos.z)<18)lockT="boss"
@@ -18567,7 +18902,12 @@ if(gg.animations.length)PANIM.goblin=gg.animations}cauldronProto=norm((await loa
 setupGoblinBoss()}for(const k of["mimic","gremlin","mill","crank","king","gnawer","gate","comet","moon"])if(WT_ASSETS[k]){step(84,"Dreaming up the "+k+"…")
 const gk=await loadGLB(WT_ASSETS[k])
 PROTO[k]=norm(gk.scene,1,false)
-if(gk.animations&&gk.animations.length)PANIM[k]=gk.animations}if(LV===10&&GO!=="retry"&&typeof c2IntroSeen==="function"){try{step(84,"Gathering the stolen stars…")
+if(gk.animations&&gk.animations.length)PANIM[k]=gk.animations}for(const k of Object.keys(WT_ASSETS))if(k.startsWith("en_")){try{const gk=await loadGLB(WT_ASSETS[k])
+const w=new THREE.Group,an=new THREE.Group
+an.name="fAnim"
+an.add(norm(gk.scene,1,false))
+w.add(an)
+PROTO[k.slice(3)]=w}catch(e){console.error(e)}}if(LV===10&&GO!=="retry"&&typeof c2IntroSeen==="function"){try{step(84,"Gathering the stolen stars…")
 await loadAsset("assets_c2i.js")
 Object.assign(WT_ASSETS,window.WT_C2I||{})
 window.C2I_OK=1}catch(e){}}if(typeof c2Load==="function")await c2Load(step)
