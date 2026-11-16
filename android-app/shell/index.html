@@ -45,7 +45,8 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .ctr{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 8px;border-radius:999px;font:900 18px/1 var(--ui);transform:translateX(-140%);opacity:0;transition:transform .35s cubic-bezier(.2,1.3,.4,1),opacity .25s;width:max-content}
 .ctr.show{transform:none;opacity:1}.ctr.bump{animation:bump .25s}@keyframes bump{50%{transform:scale(1.18)}}
 .ctrR{transform:translateX(140%)}
-.orbI{width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff 0 20%,#ffe14a 45%,#ff9a1a 80%);box-shadow:0 0 10px #ffd23f}
+.orbI{position:relative;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff 0 20%,#ffe14a 45%,#ff9a1a 80%);box-shadow:0 0 10px #ffd23f}
+.orbI::after{content:"";position:absolute;inset:-4px;border-radius:50%;background:conic-gradient(#ffd27a calc(var(--op,0)*1turn),rgba(255,255,255,.12) 0);-webkit-mask:radial-gradient(circle,transparent 9px,#000 9.5px);mask:radial-gradient(circle,transparent 9px,#000 9.5px)}.orbFly{position:fixed;z-index:7;width:14px;height:14px;margin:-7px 0 0 -7px;pointer-events:none;background:#ffc63a;border:2px solid #5a3400;transform:rotate(45deg);image-rendering:pixelated}
 .crtI{width:18px;height:18px;border-radius:3px;background:linear-gradient(135deg,#c8904a,#8a5420);border:2px solid #4a2a0c;box-shadow:inset 0 0 0 2px rgba(255,220,160,.25)}
 .hud-r{position:absolute;right:calc(14px + env(safe-area-inset-right,0px));top:calc(10px + env(safe-area-inset-top,0px));display:flex;gap:10px;align-items:center}
 .iconBtn{pointer-events:auto;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;cursor:pointer;border:1px solid var(--rim)}
@@ -91,6 +92,8 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 #dashFx{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:0;background:repeating-conic-gradient(from 0deg at 50% 55%,rgba(255,255,255,0) 0 3deg,rgba(220,200,255,.22) 3deg 4deg);-webkit-mask:radial-gradient(ellipse at 50% 55%,transparent 32%,#000 75%);mask:radial-gradient(ellipse at 50% 55%,transparent 32%,#000 75%)}
 #dashFx.on{animation:dashfx .35s ease-out}@keyframes dashfx{0%{opacity:1}100%{opacity:0}}
 #bBlast::after{content:"";position:absolute;inset:-5px;border-radius:50%;background:conic-gradient(rgba(10,4,32,.78) calc(var(--cd,0)*1turn),transparent 0);pointer-events:none}
+@font-face{font-family:WTPix;src:url(data:font/woff2;base64,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) format('woff2');font-display:block}.talkBtn{position:fixed;left:0;top:0;z-index:6;border:0;padding:0;margin:0;background-color:transparent;background-repeat:no-repeat;image-rendering:pixelated;image-rendering:crisp-edges;cursor:pointer;pointer-events:auto;touch-action:none;will-change:transform}.talkBtn span{position:absolute;left:0;right:0;text-align:center;font:700 16px/1 WTPix,monospace;letter-spacing:1px;color:#3a1838;-webkit-font-smoothing:none;font-smooth:never;white-space:nowrap}body.cine .talkBtn{display:none!important}
+#bBlast.charging{box-shadow:0 0 0 calc(var(--chg,0)*6px) rgba(255,200,110,.45),0 0 calc(var(--chg,0)*34px) rgba(255,190,90,.9)}#bBlast.charging svg{transform:scale(calc(1 + var(--chg,0)*.18))}#bBlast.full{animation:chgFull .35s ease-in-out infinite alternate}@keyframes chgFull{to{box-shadow:0 0 0 7px rgba(255,236,170,.6),0 0 40px rgba(255,220,140,1)}}
 #bBlast.ready{animation:ready .5s}@keyframes ready{50%{box-shadow:0 0 0 6px rgba(255,207,106,.5),0 0 30px rgba(255,200,110,1)}}
 @media (hover:hover) and (pointer:fine){#controls{opacity:.55}}
 
@@ -316,7 +319,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 <div id="hud" hidden>
   <div class="hud-l">
     <div class="medal"><div class="port" id="port"><b id="hLives">4</b></div><div class="fcol"><div class="flames" id="hHp"></div><div class="wardBar" id="wardBar" hidden><i id="wardFill"></i></div></div></div>
-    <div class="ctr glass" id="cOrbs"><span class="orbI"></span><span id="hOrbs">0</span></div><div class="ctr glass" id="cShards"><span class="shI"></span><span id="hShards">0/3</span></div>
+    <div class="ctr glass" id="cOrbs"><span class="orbI" id="orbRing"></span><span id="hOrbs">0</span></div><div class="ctr glass" id="cShards"><span class="shI"></span><span id="hShards">0/3</span></div>
   </div>
   <div class="hud-r"><div class="ctr ctrR glass" id="cCrates"><span class="crtI"></span><span id="hCrates">0/0</span></div>
     <button id="pauseBtn" class="iconBtn glass" type="button" aria-label="Pause"><svg viewBox="0 0 18 18"><rect x="3" y="2" width="4" height="14" rx="1.5" fill="url(#gg)"/><rect x="11" y="2" width="4" height="14" rx="1.5" fill="url(#gg)"/></svg></button></div>
@@ -374,6 +377,8 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
   <div class="srow"><label>Draw distance</label><button id="setDraw" class="tog glass" type="button">FAR</button></div>
   <div class="srow"><label>Frame rate limit</label><button id="setCap" class="tog glass" type="button">UNLIMITED</button></div>
   <div class="srow"><label for="setFov">Field of view <b id="setFovV" class="sval">56°</b></label><input id="setFov" type="range" min="50" max="90" step="1" value="56"></div>
+  <div class="srow"><label>Reduce effects<span class="sDesc">Less screen shake and no bright flashes</span></label><button id="setLowFx" class="tog glass" type="button" aria-pressed="false">OFF</button></div>
+  <div class="srow"><label>Retro wobble<span class="sDesc">Shaky old-console vertices · next level load</span></label><button id="setWobble" class="tog glass" type="button" aria-pressed="false">OFF</button></div>
   <div class="srow"><label>Show FPS counter</label><button id="setFpsShow" class="tog glass" type="button" aria-pressed="false">OFF</button></div>
   </div>
   <div class="spane" id="tCtrl" hidden>
@@ -399,7 +404,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 <div id="over" class="screen dim" hidden><h2 class="logo" id="overTitle" style="font-size:clamp(30px,6.5vw,60px)">Level Complete</h2><div class="orn" id="overSub"></div>
   <div class="res"><div class="rrow glass"><span class="orbI"></span>ORBS<b id="sOrbs">0</b></div><div class="rrow glass"><span class="crtI"></span>CRATES<b id="sCrates">0/0</b></div><div class="rrow glass"><span style="font-size:16px">⌛</span>TIME<b id="sTime">0:00</b></div><div class="rrow glass"><span class="shI"></span>SHARDS<b id="sShards">0/3</b></div></div>
   <div class="medalRow"><div class="badge" id="bGem"><i class="bigGem"></i>CRATE GEM</div><div class="badge" id="bRelic"><i class="relic"></i>TIME RELIC</div></div>
-  <div class="rbtns"><button id="nextBtn" class="mbtn primary" type="button" hidden>NEXT LEVEL</button><button id="againBtn" class="mbtn glass" type="button">REPLAY</button><button id="overMenu" class="mbtn glass" type="button">MENU</button></div></div>
+  <div class="rbtns"><button id="nextBtn" class="mbtn primary" type="button" hidden>NEXT LEVEL</button><button id="cpBtn" class="mbtn primary" type="button" hidden>CONTINUE FROM CHECKPOINT</button><button id="againBtn" class="mbtn glass" type="button">REPLAY</button><button id="overMenu" class="mbtn glass" type="button">MENU</button></div></div>
 
 <script src="lib/three.min.js"></script>
 <script src="lib/GLTFLoader.js"></script>
@@ -1117,9 +1122,9 @@ g.restore()}const G={box:new THREE.BoxGeometry(1,1,1),cyl:new THREE.CylinderGeom
 function phong(map,o={}){return new THREE.MeshPhongMaterial(Object.assign({map,shininess:45,specular:3815994},o))}function glow(map,i=.6,o={}){return phong(map,Object.assign({emissive:16777215,emissiveMap:map,emissiveIntensity:i},o))}function mesh(geo,mat,sx,sy,sz,x=0,y=0,z=0){const m=new THREE.Mesh(geo,mat)
 m.scale.set(sx,sy,sz)
 m.position.set(x,y,z)
-return m}function spr(map,color,sx,sy,x,y,z,additive=true){if(additive&&typeof glowTex!=="undefined"&&map===glowTex&&!spr.full){color=new THREE.Color(color).multiplyScalar(.58)
-sx*=.86
-sy*=.86}const m=new THREE.Sprite(new THREE.SpriteMaterial({map,color,transparent:true,depthWrite:false,blending:additive?THREE.AdditiveBlending:THREE.NormalBlending}))
+return m}function spr(map,color,sx,sy,x,y,z,additive=true){if(additive&&typeof glowTex!=="undefined"&&map===glowTex&&!spr.full){color=new THREE.Color(color).multiplyScalar(.4)
+sx*=.78
+sy*=.78}const m=new THREE.Sprite(new THREE.SpriteMaterial({map,color,transparent:true,depthWrite:false,blending:additive?THREE.AdditiveBlending:THREE.NormalBlending}))
 m.scale.set(sx,sy,1)
 m.position.set(x,y,z)
 return m}function grp(...k){const g=new THREE.Group
@@ -1591,10 +1596,12 @@ if(seq.next<AC.currentTime-.2)seq.next=AC.currentTime+.05
 while(seq.next<AC.currentTime+.14){playStep(c,seq.step,seq.next,spb)
 seq.next+=spb*(seq.step%2===0?1+c.swing:1-c.swing)
 seq.step=(seq.step+1)%64}}function playStep(c,s,t,spb){const bar=s>>4,st=s&15,ch=c.prog[bar],root=c.root+ch[0],dp=DR[c.drums]
-if(dp[0][st]==="x")kick(t)
-if(dp[1][st]==="x")snare(t,c.drums==="dream"?.45:1)
-if(dp[2][st]==="x")hat(t,st%4===2?1:.6)
-const bp=c.bassPat[st]
+const _k=window.MUSL&&performance.now()-window.MUSL.at<600?window.MUSL.k:1
+if(dp[0][st]==="x"&&(_k>.22||st===0))kick(t)
+if(dp[1][st]==="x"&&_k>.38)snare(t,c.drums==="dream"?.45:1)
+if(dp[2][st]==="x"&&_k>.55)hat(t,st%4===2?1:.6)
+if(_k>.9&&st%4===2){const o=c.prog[bar][(st>>2)%3]
+tone(t,mtof(c.root+o+12),spb*.7,"square",.016,musicBus,{cut:2400,send:true})}const bp=c.bassPat[st]
 if(bp!=="."){const n=root-24+(bp==="o"?12:bp==="f"?7:0)
 tone(t,mtof(n),spb*1.6,c.bass,.2,musicBus,{cut:c.bassCut||1200,q:4})}if(st%c.arp===0){const k=st/c.arp%3|0,n=c.prog[bar][k]+c.root+12*((c.arpOct||1)-1)
 tone(t,mtof(n),spb*.9,c.arpWave,.04,musicBus,{send:true,cut:3e3})}if(st===0)ch.forEach((o=>tone(t,mtof(c.root+o-12),spb*15,"triangle",.035,musicBus,{a:.4})))
@@ -1699,7 +1706,7 @@ let n=m2?+m2[1]+9:m?+m[1]:0
 if(!n){try{n=+localStorage.getItem("wt-level")||1}catch(e){n=1}}return clamp(n,1,Math.min(MAXLV,UNLOCK))})()
 if(LV>MAXLV){try{localStorage.setItem("wt-level","1")}catch(e){}location.hash="level1"
 location.reload()}let ARENA=null,gate=null,gateMesh=null,sunSky=null
-const L={kill:[],smoke:[],bubbles:[],torches:[],flora:[],shafts:[],hemiI:1,tick:null,grade:{sat:1.16,vig:.75,tint:[1,1,1]}}
+const L={kill:[],smoke:[],bubbles:[],torches:[],flora:[],shafts:[],hemiI:1,tick:null,grade:{sat:1.1,vig:.75,tint:[1.05,1,.95]}}
 const GT=[groundSide,groundSide,groundTop,groundSide,groundSide,groundSide]
 function slab(x0,x1,z0,z1,top=0,depth=4){return addSolid(x0,x1,top-depth,top,z1,z0,"ground",GT)}const bound=(x0,x1,z0,z1)=>addSolid(x0,x1,-4,22,z1,z0,"wall",null)
 function ramp(x0,x1,z0,z1,y0,y1){const s=addSolid(x0,x1,Math.min(y0,y1)-1,Math.max(y0,y1),Math.min(z0,z1),Math.max(z0,z1),"ramp",null,{rz0:z0,rz1:z1,ry0:y0,ry1:y1})
@@ -2440,9 +2447,10 @@ return n}function updNpcs(dt){for(const n of C2.npcs){const a=n.a
 if(!n.busy){const d=Math.hypot(P.pos.x-n.pos.x,P.pos.z-n.pos.z)
 c2Play(a,n.idle||"idle")
 if(d<6){const ty=Math.atan2(P.pos.x-n.pos.x,P.pos.z-n.pos.z)
-a.g.rotation.y=lerpAngle(a.g.rotation.y,ty,Math.min(1,dt*3))}if(!n.said&&d<n.r&&state==="play"&&!P.dead&&P.onGround)talkTo(n)}c2Anim(a,dt)
+a.g.rotation.y=lerpAngle(a.g.rotation.y,ty,Math.min(1,dt*3))}n.near=!n.said&&d<n.r+.8&&state==="play"&&!P.dead
+if(n.auto&&n.near&&P.onGround)talkTo(n)}c2Anim(a,dt)
 n.ring.material.opacity=n.said?0:.35+Math.sin(time*4)*.25
-if(n.mark){n.mark.visible=!n.said
+if(n.mark){n.mark.visible=false
 n.mark.position.y=n.pos.y+n.size*1.25+Math.sin(time*3)*.12}}}function talkTo(n,cb){n.busy=true
 n.said=true
 P.vel.set(0,0,0)
@@ -4719,7 +4727,14 @@ s.material.opacity=on?1:.6
 s.scale.setScalar(on?.42:.28)}))}}}function tryKill(e,dir,stomp,force){if(!e.alive)return false
 ensureHp(e)
 if(e.hitCD>0&&!force)return false
-if(e.hp>1){e.hp--
+if(e.shieldFront&&dir&&!stomp&&!force&&!e.dizzy){const fx=Math.sin(e.face||0),fz=Math.cos(e.face||0)
+if(dir.x*fx+dir.z*fz<-.35){e.hitCD=.35
+try{blip(1700,1200,.08,"square",.06)
+blip(900,700,.06,"square",.04,.03)
+burst(e.pos.clone().setY(e.pos.y+.8).add(V3(fx*.7,0,fz*.7)),14213375,10,5,.25)
+P.vel.x-=dir.x*7
+P.vel.z-=dir.z*7
+showHint("SHIELD! HIT IT FROM THE SIDE OR BEHIND",1.8)}catch(_){}return false}}if(e.hp>1){e.hp--
 e.hitCD=.45
 e.hurtT=.3
 if(!e.mode||e.mode==="idle")e.mt=Math.max(e.mt||0,.8)
@@ -6352,7 +6367,9 @@ if(ry)camPitch=clamp(camPitch+ry*dt*1.7*SET.sens,-.55,.85)
 if(rx||ry)camManualT=1.5
 if(pe("jump")){P.jumpBuf=.14}if(pe("spin"))doSpin()
 if(pe("lantern"))doBlast()
-if(pe("dash"))doDash()
+if(edge(4)||edge(5)){try{window.__padLast=1
+npcTalkPress()}catch(_){}}try{P.padLantern=ph("lantern")
+P.padJump=ph("jump")}catch(_){}if(pe("dash"))doDash()
 if(pe("pause"))togglePause()
 return out}if(CINE.on){HOLD.pad=now[0]?1:0
 return out}if(window._anyBtn&&now.some(((v,i)=>v&&!(PAD.prevAny||[])[i]))){PAD.prevAny=now
@@ -7388,7 +7405,7 @@ if(f>=3)b.s.position.y+=(t-BOOM_T[3])*1.6*b.sc
 b.s.material.opacity=f<5?1:1-k
 b.fl.material.opacity=Math.max(0,.85-t/.12)
 b.fl.scale.setScalar(3.4*b.sc*(1+t*2.5))}}function hapt(ms){try{if(SET&&SET.vibe===false)return
-if(navigator.vibrate)navigator.vibrate(ms)}catch(e){}}function fxTick(dt){landTrack()
+if(navigator.vibrate)navigator.vibrate(ms)}catch(e){}}function fxTick(dt){try{movesTick(dt)}catch(e){window.__mvErr=String(e&&e.stack||e).slice(0,300)}landTrack()
 wardTick(dt)
 boomTick(dt)
 fshTick()
@@ -7400,18 +7417,21 @@ birdsTick(dt)
 waterTick(dt)
 lavaTick(dt)}const _fa={q:new THREE.Quaternion,q2:new THREE.Quaternion,pq:new THREE.Quaternion,a:new THREE.Vector3,b:new THREE.Vector3,w:new THREE.Vector3}
 function flintArm(){if(!flint)return
-const arm=flint.userData.armL||(flint.userData.armL=flint.getObjectByName("LeftArm")),fore=flint.userData.foreL||(flint.userData.foreL=flint.getObjectByName("LeftForeArm"))
+try{if(P.wallRun&&typeof wrArm==="function"&&wrArm())return
+if(P.grind&&typeof railPose==="function"&&railPose())return}catch(e){}const arm=flint.userData.armL||(flint.userData.armL=flint.getObjectByName("LeftArm")),fore=flint.userData.foreL||(flint.userData.foreL=flint.getObjectByName("LeftForeArm"))
 if(!arm||!fore)return
+const gl=typeof GLD!=="undefined"&&GLD.on
 const T=.45,t=Math.max(0,P.castT||0)
-if(t<=0||P.dead)return
+if(t<=0&&!gl||P.dead)return
 const u=1-t/T
-const w=u<.25?u/.25:u>.7?Math.max(0,(1-u)/.3):1
+const w=gl?Math.min(1,(GLD.t||0)*6):u<.25?u/.25:u>.7?Math.max(0,(1-u)/.3):1
 if(w<=0)return
 flint.updateMatrixWorld(true)
 arm.getWorldPosition(_fa.a)
 fore.getWorldPosition(_fa.b)
 const cur=_fa.b.sub(_fa.a).normalize()
-_fa.w.set(Math.sin(P.face),.08,Math.cos(P.face)).normalize()
+if(gl)_fa.w.set(Math.sin(P.face)*.18,1,Math.cos(P.face)*.18).normalize()
+else _fa.w.set(Math.sin(P.face),.08,Math.cos(P.face)).normalize()
 _fa.q.setFromUnitVectors(cur,_fa.w)
 arm.getWorldQuaternion(_fa.q2)
 _fa.q2.premultiply(_fa.q)
@@ -7589,19 +7609,21 @@ o.userData.skyOff=1}}))}function skyTick(){if(!SKYM.mesh||!SKYM.mesh.parent)retu
 if((SKYM.chk=(SKYM.chk||0)+1)%90===1)skyHideOld()
 SKYM.mesh.position.copy(camera.position)
 SKYM.mat.uniforms.phase.value=(time%12+12)%12/12
-if(scene.background&&scene.background!==null&&state!=="title")scene.background=null}const SWAY={sh:[],done:new Set}
+try{SKYM.mat.uniforms.hasBolt.value=SET&&SET.lowfx?0:SKYM.mat.uniforms.bolts.value?1:0}catch(e){}if(scene.background&&scene.background!==null&&state!=="title")scene.background=null}const SWAY={sh:[],done:new Set}
 function swayMat(m,amp){if(!m||SWAY.done.has(m))return
 SWAY.done.add(m)
 const prev=m.onBeforeCompile
 m.onBeforeCompile=(sh,r)=>{if(prev)prev(sh,r)
 sh.uniforms.uWind={value:0}
+sh.uniforms.uFl={value:new THREE.Vector3(0,-999,0)}
 SWAY.sh.push(sh)
-sh.vertexShader="uniform float uWind;\n"+sh.vertexShader.replace("#include <begin_vertex>",`#include <begin_vertex>\n  #ifdef USE_INSTANCING\n  vec2 wp=instanceMatrix[3].xz;float wh=max(position.y,0.0)*${amp.toFixed(4)};\n  #else\n  vec2 wp=(modelMatrix*vec4(position,1.0)).xz;float wh=${(amp*2).toFixed(4)};\n  #endif\n  float ws=sin(uWind*1.6+wp.x*0.31+wp.y*0.23)+0.35*sin(uWind*2.9+wp.x*0.83-wp.y*0.6);\n  transformed.x+=ws*wh;transformed.z+=ws*wh*0.55;`)}
+sh.vertexShader="uniform float uWind;uniform vec3 uFl;\n"+sh.vertexShader.replace("#include <begin_vertex>",`#include <begin_vertex>\n  #ifdef USE_INSTANCING\n  vec2 wp=instanceMatrix[3].xz;float wh=max(position.y,0.0)*${amp.toFixed(4)};\n  #else\n  vec2 wp=(modelMatrix*vec4(position,1.0)).xz;float wh=${(amp*2).toFixed(4)};\n  #endif\n  float ws=sin(uWind*1.6+wp.x*0.31+wp.y*0.23)+0.35*sin(uWind*2.9+wp.x*0.83-wp.y*0.6);\n  transformed.x+=ws*wh;transformed.z+=ws*wh*0.55;\n  {vec2 fd=wp-uFl.xz;float fdl=length(fd);float fp=(1.0-clamp(fdl/1.5,0.0,1.0))*step(abs(uFl.y-(modelMatrix*vec4(0.0,0.0,0.0,1.0)).y),3.0);vec2 pd=fdl>0.001?fd/fdl:vec2(0.0);float ph=max(position.y,0.0);transformed.x+=pd.x*fp*ph*0.55;transformed.z+=pd.y*fp*ph*0.55;transformed.y-=fp*ph*0.18;}`)}
 m.needsUpdate=true}function swaySetup(){try{if(typeof KIT!=="undefined"&&KIT.mat){swayMat(KIT.mat.grass,.06)
 swayMat(KIT.mat.bush,.025)
 swayMat(KIT.mat.pine,.012)}if(typeof C1!=="undefined"&&C1.mat){swayMat(C1.mat.leafM,.02)
 swayMat(C1.mat.bloomM,.02)
-swayMat(C1.mat.swampM,.015)}}catch(e){}}function swayTick(){for(const sh of SWAY.sh)sh.uniforms.uWind.value=time}const FFLY={pts:null,base:null,ph:null}
+swayMat(C1.mat.swampM,.015)}}catch(e){}}function swayTick(){for(const sh of SWAY.sh){sh.uniforms.uWind.value=time
+if(sh.uniforms.uFl)sh.uniforms.uFl.value.copy(P.pos)}}const FFLY={pts:null,base:null,ph:null}
 function fflySetup(){try{if(FFLY.pts){scene.add(FFLY.pts)
 return}const N=34,g=new THREE.BufferGeometry,pos=new Float32Array(N*3),base=new Float32Array(N*3),ph=new Float32Array(N)
 for(let i=0;i<N;i++){base[i*3]=R(-14,14)
@@ -7720,7 +7742,7 @@ emit(P.pos.clone().add(V3(Math.cos(a)*.3,.06,Math.sin(a)*.3)),{vx:Math.cos(a)*sp
 function wardTick(dt){const bar=document.getElementById("wardBar")
 if(!bar)return
 if(!(P.ward>0)||P.dead){if(!bar.hidden)bar.hidden=true
-return}if(state==="play"){P.wardT=(P.wardT==null?WARD_T:P.wardT)-dt
+return}if(state==="play"&&!(typeof CINE!=="undefined"&&CINE.on)){P.wardT=(P.wardT==null?WARD_T:P.wardT)-dt
 if(P.wardT<=0){P.ward--
 P.wardT=WARD_T
 try{blip(700,300,.25,"sine",.04)
@@ -7753,7 +7775,1335 @@ tx.wrapS=tx.wrapT=THREE.RepeatWrapping
 tx.repeat.set(6,6)
 LAVA.tex.push(tx)
 return tx}function lavaTick(dt){for(const t of LAVA.tex){t.offset.x+=dt*.012
-t.offset.y+=dt*.007}}if(LV===1){ARENA={x0:-9.5,x1:9.5,z0:-74,z1:-104,cz:-89,y:0}
+t.offset.y+=dt*.007}}const MV={spinWas:0,ring:null,ringT:-1,sparks:[],chg:0,hold:0,full:false,orb:null,orbCore:null,hum:0,cs:[],deadSeen:new WeakSet,bossHp:null,imp:[],flashEl:null}
+function mvTex(kind){if(MV["t_"+kind])return MV["t_"+kind]
+const c=document.createElement("canvas")
+c.width=c.height=128
+const g=c.getContext("2d")
+g.translate(64,64)
+if(kind==="spark"){const gr=g.createRadialGradient(0,0,0,0,0,18)
+gr.addColorStop(0,"rgba(255,255,255,1)")
+gr.addColorStop(1,"rgba(255,214,120,0)")
+g.fillStyle=gr
+g.beginPath()
+g.arc(0,0,18,0,7)
+g.fill()
+g.fillStyle="#fff6d8"
+for(let i=0;i<4;i++){g.save()
+g.rotate(i*Math.PI/2)
+g.beginPath()
+g.moveTo(0,-60)
+g.lineTo(7,-7)
+g.lineTo(0,0)
+g.lineTo(-7,-7)
+g.closePath()
+g.fill()
+g.restore()}}else if(kind==="ring"){for(let a=0;a<360;a+=2){const k=a/360
+g.strokeStyle=`rgba(255,${200+k*55|0},${120+k*120|0},${(k*k*.9).toFixed(3)})`
+g.lineWidth=10+k*8
+g.beginPath()
+g.arc(0,0,48,a*Math.PI/180,(a+3)*Math.PI/180)
+g.stroke()}}else if(kind==="burst"){g.fillStyle="rgba(255,255,255,.95)"
+for(let i=0;i<8;i++){g.save()
+g.rotate(i*Math.PI/4+i%2*.12)
+const L=i%2?40:62
+g.beginPath()
+g.moveTo(0,-L)
+g.lineTo(6,-8)
+g.lineTo(0,0)
+g.lineTo(-6,-8)
+g.closePath()
+g.fill()
+g.restore()}const gr=g.createRadialGradient(0,0,0,0,0,26)
+gr.addColorStop(0,"rgba(255,255,255,1)")
+gr.addColorStop(1,"rgba(255,230,160,0)")
+g.fillStyle=gr
+g.beginPath()
+g.arc(0,0,26,0,7)
+g.fill()}const t=new THREE.CanvasTexture(c)
+MV["t_"+kind]=t
+return t}function mvSpinBuild(){const grpS=new THREE.Group
+const ring=new THREE.Mesh(new THREE.RingGeometry(.75,1.25,40,1),new THREE.MeshBasicMaterial({map:mvTex("ring"),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,fog:false}))
+ring.rotation.x=-Math.PI/2
+grpS.add(ring)
+grpS.userData.ring=ring
+MV.sparks=[]
+for(let i=0;i<9;i++){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:mvTex("spark"),color:i%3?16770720:16777215,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}))
+s.scale.setScalar(.42)
+grpS.add(s)
+MV.sparks.push(s)}grpS.visible=false
+scene.add(grpS)
+MV.ring=grpS}function mvSpinStart(){if(!MV.ring)mvSpinBuild()
+MV.ringT=0
+MV.ring.visible=true
+try{if(AC){noise(AC.currentTime,.22,.12,"highpass",2400,sfxBus)
+blip(1200,2400,.16,"sine",.035)
+blip(1800,3e3,.12,"triangle",.02,.05)}}catch(e){}}function mvSpinTick(dt){if(!MV.ring||MV.ringT<0)return
+MV.ringT+=dt
+const T=.48,k=MV.ringT/T
+if(k>=1){MV.ring.visible=false
+MV.ringT=-1
+return}const g=MV.ring
+g.position.set(P.pos.x,P.pos.y+.75,P.pos.z)
+const sc=.55+Math.sin(Math.min(1,k*1.6)*Math.PI/2)*.85
+g.scale.setScalar(sc)
+const ring=g.userData.ring
+ring.rotation.z-=dt*26
+ring.material.opacity=k<.15?k/.15:(1-k)*1.15
+MV.sparks.forEach(((s,i)=>{const a=-time*22+i*(Math.PI*2/MV.sparks.length)
+const r=1.05+Math.sin(time*30+i)*.05
+s.position.set(Math.cos(a)*r,Math.sin(k*9+i)*.12,Math.sin(a)*r)
+s.material.opacity=Math.max(0,1-k*1.1)
+s.scale.setScalar(.42*(1-k*.4))
+s.material.rotation=time*6+i}))
+if(Math.random()<.6)try{const a=Math.random()*6.28
+emit(V3(P.pos.x+Math.cos(a)*1.1*sc,P.pos.y+.7,P.pos.z+Math.sin(a)*1.1*sc),{life:.35,size:.22,size1:.02,color:16773304,vy:.6})}catch(e){}if(!P.onGround&&P.vel.y<-1.2)P.vel.y=-1.2}function mvImpact(p,size=1,strong=false){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:mvTex("burst"),color:strong?16777215:16773832,transparent:true,depthWrite:false,depthTest:false,blending:THREE.AdditiveBlending,fog:false}))
+s.position.copy(p)
+s.renderOrder=999
+s.material.rotation=Math.random()*6.28
+scene.add(s)
+MV.imp.push({s,t:0,size})
+if(strong){shakeT=Math.max(shakeT,.22)
+try{hapt(35)}catch(e){}if(!MV.flashEl){const d=document.createElement("div")
+d.style.cssText="position:fixed;inset:0;z-index:4;pointer-events:none;background:#fff;opacity:0;mix-blend-mode:screen"
+document.body.appendChild(d)
+MV.flashEl=d}if(!(SET&&SET.lowfx)){MV.flashEl.style.transition="none"
+MV.flashEl.style.opacity=".32"
+requestAnimationFrame((()=>{MV.flashEl.style.transition="opacity .14s"
+MV.flashEl.style.opacity="0"}))}}}function mvImpTick(dt){for(let i=MV.imp.length-1;i>=0;i--){const m=MV.imp[i]
+m.t+=dt
+const k=m.t/.16
+if(k>=1){scene.remove(m.s)
+m.s.material.dispose()
+MV.imp.splice(i,1)
+continue}m.s.scale.setScalar(m.size*(.6+k*1.6))
+m.s.material.opacity=1-k}for(const e of enemies){if(!e.alive&&e.dying>0&&!MV.deadSeen.has(e)){MV.deadSeen.add(e)
+mvImpact(e.pos.clone().setY(e.pos.y+.7),1.3,false)
+comboKill()}}if(inBoss&&boss){if(MV.bossHp!=null&&boss.hp<MV.bossHp)mvImpact(boss.pos.clone().setY(boss.pos.y+1.6),3,true)
+MV.bossHp=boss.hp}else MV.bossHp=null}function mvLanternHeld(){try{const k2=KB_DEF.lantern[1]
+return held("lantern")||k2&&!!keys[k2]||typeof btnHold!=="undefined"&&btnHold.lantern||!!P.padLantern}catch(e){return false}}function mvHandPos(){let h=null
+try{h=flint&&(flint.userData.lh||(flint.userData.lh=flint.getObjectByName("LeftHand")||flint.getObjectByName("mixamorigLeftHand")||null))}catch(e){}if(h){const v=V3()
+h.getWorldPosition(v)
+return v}return V3(P.pos.x+Math.cos(P.face)*.45,P.pos.y+1.1,P.pos.z-Math.sin(P.face)*.45)}function mvOrb(){if(MV.orb)return
+MV.orb=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex,color:16758858,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}))
+MV.orbCore=new THREE.Sprite(new THREE.SpriteMaterial({map:mvTex("spark"),color:16777215,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}))
+MV.orb.add(MV.orbCore)
+scene.add(MV.orb)
+MV.orb.visible=false}function mvChargeTick(dt){const ok=state==="play"&&!P.dead&&!(typeof CINE!=="undefined"&&CINE.on)
+const h=ok&&mvLanternHeld()
+if(h){MV.hold+=dt
+if(MV.hold>.28){mvOrb()
+const was=MV.chg
+MV.chg=Math.min(1,(MV.hold-.28)/.85)
+P.castT=Math.max(P.castT||0,.3)
+const p=mvHandPos().add(V3(Math.sin(P.face)*.25,.05,Math.cos(P.face)*.25))
+MV.orb.visible=true
+MV.orb.position.copy(p)
+const pulse=MV.chg>=1?1+Math.sin(time*18)*.12:1
+MV.orb.scale.setScalar((.35+MV.chg*1.05)*pulse)
+MV.orb.material.color.setHex(MV.chg>=1?16770728:16758858)
+MV.orbCore.scale.setScalar(.5+MV.chg*.4)
+MV.orbCore.material.rotation+=dt*4
+if(Math.random()<.7){const a=Math.random()*6.28,b=Math.random()*3.14,r=1.3
+const s=V3(p.x+Math.cos(a)*Math.sin(b)*r,p.y+Math.cos(b)*r,p.z+Math.sin(a)*Math.sin(b)*r)
+const v=p.clone().sub(s).multiplyScalar(4)
+try{emit(s,{life:.25,size:.16,size1:.02,color:16765562,vx:v.x,vy:v.y,vz:v.z})}catch(e){}}MV.hum-=dt
+if(MV.hum<=0&&MV.chg<1){MV.hum=.12
+try{blip(300+MV.chg*700,340+MV.chg*760,.1,"triangle",.025)}catch(e){}}if(was<1&&MV.chg>=1){MV.full=true
+fvSay("f_charge",3)
+try{blip(1400,2100,.18,"sine",.06)
+blip(2100,2800,.22,"triangle",.03,.06)
+hapt(25)}catch(e){}mvImpact(p,.9,false)}const b=document.getElementById("bBlast")
+if(b){b.classList.add("charging")
+b.classList.toggle("full",MV.chg>=1)
+b.style.setProperty("--chg",MV.chg.toFixed(3))}}}else{if(MV.chg>=1&&ok)mvChargedShot()
+if(MV.hold>0){MV.hold=0
+MV.chg=0
+MV.full=false
+if(MV.orb)MV.orb.visible=false
+const b=document.getElementById("bBlast")
+if(b){b.classList.remove("charging","full")
+b.style.removeProperty("--chg")}}}}function mvChargedShot(){let dir=V3(Math.sin(P.face),0,Math.cos(P.face))
+const from=mvHandPos()
+try{if(lockT){dir=lockPos(lockT).sub(from).normalize()
+P.face=Math.atan2(dir.x,dir.z)
+if(flint)flint.rotation.y=P.face}}catch(e){}const o=new THREE.Group
+const a=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex,color:16758858,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}))
+a.scale.setScalar(2.6)
+const c=new THREE.Sprite(new THREE.SpriteMaterial({map:mvTex("spark"),color:16777215,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}))
+c.scale.setScalar(1.3)
+o.add(a,c)
+o.position.copy(from).addScaledVector(dir,.7)
+scene.add(o)
+MV.cs.push({o,c,v:dir.multiplyScalar(23),life:1.1,hit:new WeakSet})
+fvSay("f_blast_big",2)
+P.castT=.45
+P.blastCD=Math.max(P.blastCD,.4)
+shakeT=Math.max(shakeT,.15)
+try{sfx.blast()
+blip(180,90,.35,"sawtooth",.06)
+if(AC)noise(AC.currentTime,.35,.18,"lowpass",900,sfxBus)
+hapt(40)}catch(e){}}function mvCsTick(dt){for(let i=MV.cs.length-1;i>=0;i--){const s=MV.cs[i]
+s.life-=dt
+s.o.position.addScaledVector(s.v,dt)
+s.c.material.rotation+=dt*12
+const p=s.o.position
+try{emit(p.clone(),{life:.4,size:1.1,size1:.1,color:16760944})}catch(e){}let end=s.life<=0
+for(const e of enemies)if(e.alive&&!s.hit.has(e)&&p.distanceTo(e.pos.clone().setY(e.pos.y+.5))<1.5){s.hit.add(e)
+try{tryKill(e,s.v.clone().normalize(),false,true)}catch(_){}}for(const c of crates)if(c.alive&&p.distanceTo(V3((c.min.x+c.max.x)/2,c.min.y+.5,(c.min.z+c.max.z)/2))<1.4){if(c.kind==="boom"){explode(c)
+end=true}else if(c.kind==="iron"){c.kind="crate"
+breakCrate(c)
+cratesBroken=Math.max(0,cratesBroken-1)
+try{blip(900,300,.25,"square",.06)}catch(_){}end=true}else if(c.kind!=="bounce"){c.bounces=99
+breakCrate(c)}}if(!end&&inBoss&&boss&&boss.state!=="off"&&boss.state!=="dead"&&boss.state!=="intro"&&p.distanceTo(boss.pos)<3.8){if(boss.state==="sleep")boss.shotK=Math.max(boss.shotK||0,1)
+bossStrike("shot")
+end=true}for(const so of solids)if(!end&&so.alive&&(so.type==="wall"||so.type==="block"||so.type==="gate")&&p.x>so.min.x&&p.x<so.max.x&&p.z>so.min.z&&p.z<so.max.z&&p.y<so.max.y)end=true
+if(end){try{boomFX(p.clone(),.55)}catch(_){burst(p.clone(),16762954,24,6)}mvImpact(p.clone(),2,true)
+scene.remove(s.o)
+MV.cs.splice(i,1)}}}function movesTick(dt){if(!L1X&&LV===1)l1Extras()
+lowFxTick()
+fvTick()
+throwTick(dt)
+enemyLifeTick(dt)
+enemyHpTick(dt)
+orbFlyTick(dt)
+rimTick()
+npcTalkTick()
+try{for(const o of orbsArr)if(o.alive&&o.o.children[0]){o.o.children[0].rotation.y+=dt*2.2
+o.o.children[0].rotation.x=.35}}catch(e){}lightRevealTick(dt)
+railTick(dt)
+wallRunTick(dt)
+glideTick(dt)
+comboTick()
+if(P.spinT>MV.spinWas+.2)mvSpinStart()
+MV.spinWas=P.spinT||0
+mvSpinTick(dt)
+mvChargeTick(dt)
+mvCsTick(dt)
+mvImpTick(dt)
+try{ghostTick(dt)}catch(e){}try{crateWobTick(dt)}catch(e){}try{musLayerTick(dt)}catch(e){}try{rescueTick(dt)}catch(e){}try{wxTick(dt)}catch(e){window.__wxErr=String(e)}}const TALK={el:null,n:null,lbl:"",w:0,h:0}
+function talkBubble(textPx){const S=3,pw=Math.ceil(textPx/S)+14,ph=14,tail=4,W=pw,H=ph+tail
+const c=document.createElement("canvas")
+c.width=W
+c.height=H
+const g=c.getContext("2d")
+const O="#3a1838",F="#f6e8d4"
+g.fillStyle=O
+const r=[3,2,1]
+for(let y=0;y<ph;y++){const k=y<3?r[y]:y>ph-4?r[ph-1-y]:0
+g.fillRect(k,y,W-2*k,1)}g.fillStyle=F
+for(let y=1;y<ph-1;y++){const k=y<3?r[y]+1:y>ph-4?r[ph-1-y]+1:1
+g.fillRect(k,y,W-2*k,1)}g.fillStyle=O
+for(const x of[Math.round(W*.27),Math.round(W*.71)])g.fillRect(x,1,2,1)
+g.fillRect(Math.round(W*.2),ph-2,2,1)
+g.fillRect(1,Math.round(ph*.55),1,2)
+g.fillRect(W-2,Math.round(ph*.35),1,2)
+const tx=Math.round(W/2)-3
+g.fillStyle=O
+g.fillRect(tx,ph-1,7,1)
+g.fillRect(tx+1,ph,5,1)
+g.fillRect(tx+2,ph+1,3,1)
+g.fillRect(tx+3,ph+2,1,1)
+g.fillStyle=F
+g.fillRect(tx+1,ph-1,5,1)
+g.fillRect(tx+2,ph,3,1)
+g.fillRect(tx+3,ph+1,1,1)
+return{url:c.toDataURL(),w:W*S,h:H*S,bodyH:ph*S}}function talkUI(){if(TALK.el)return TALK.el
+const b=document.createElement("button")
+b.id="talkBtn"
+b.type="button"
+b.className="talkBtn"
+b.hidden=true
+b.innerHTML="<span></span>"
+b.addEventListener("pointerdown",(e=>{e.preventDefault()
+e.stopPropagation()
+npcTalkPress()}))
+document.body.appendChild(b)
+TALK.el=b
+return b}function talkLabel(){const pc=document.body.classList.contains("pc")
+if(!pc)return"TAP TO TALK"
+return window.__padLast?"PRESS RB TO TALK":"PRESS F TO TALK"}function talkSetLabel(b,t){let ready=true
+try{ready=document.fonts.check("700 16px WTPix")}catch(e){}if(TALK.lbl===t&&TALK.ready)return
+TALK.lbl=t
+TALK.ready=ready
+const sp=b.querySelector("span")
+sp.textContent=t
+let tw=t.length*13
+try{const cx=TALK.mc||(TALK.mc=document.createElement("canvas").getContext("2d"))
+cx.font="700 16px WTPix"
+tw=Math.max(cx.measureText(t).width+t.length,t.length*13.5)}catch(e){}const B=talkBubble(tw)
+b.style.width=B.w+"px"
+b.style.height=B.h+"px"
+b.style.backgroundImage="url("+B.url+")"
+b.style.backgroundSize=B.w+"px "+B.h+"px"
+sp.style.top=Math.round((B.bodyH-16)/2)+"px"
+TALK.w=B.w
+TALK.h=B.h}function npcTalkPress(){const n=TALK.n
+if(!n||n.said||n.busy||state!=="play"||P.dead)return false
+P.vel.x=0
+P.vel.z=0
+try{talkTo(n)}catch(e){}TALK.n=null
+if(TALK.el)TALK.el.hidden=true
+return true}function npcTalkTick(){let best=null,bd=1e9
+try{for(const n of C2&&C2.npcs||[]){if(n.mark)n.mark.visible=false
+if(!n.near||n.said||n.busy)continue
+const d=Math.hypot(P.pos.x-n.pos.x,P.pos.z-n.pos.z)
+if(d<bd){bd=d
+best=n}}}catch(e){}TALK.n=best
+const b=talkUI()
+let show=!!best&&!(typeof CINE!=="undefined"&&CINE.on)&&state==="play"
+if(show){const head=V3(best.pos.x,best.pos.y+(best.size||1.6)*1.18+.35,best.pos.z)
+const v=head.clone().project(camera)
+if(v.z>1||v.x<-1.05||v.x>1.05||v.y<-1.05||v.y>1.1)show=false
+else{try{const t=cgRay(camera.position,head)
+if(t<.97)show=false}catch(e){}}if(show){talkSetLabel(b,talkLabel())
+const x=Math.round((v.x*.5+.5)*innerWidth-TALK.w/2),bob=Math.floor(time*2.2)%2*3,y=Math.round((-v.y*.5+.5)*innerHeight-TALK.h-bob)
+b.style.transform="translate("+x+"px,"+y+"px)"}}if(b.hidden===show)b.hidden=!show}const GLD={armed:false,on:false,t:0,bufWas:0,snd:0}
+function mvJumpHeld(){try{const k2=KB_DEF.jump[1]
+return held("jump")||k2&&!!keys[k2]||typeof btnHold!=="undefined"&&btnHold.jump||!!P.padJump}catch(e){return false}}function glideTick(dt){const air=!P.onGround&&!P.dead&&state==="play"
+if(!air){if(GLD.orbOn){GLD.orbOn=false
+if(MV.orb&&MV.hold<=.28)MV.orb.visible=false
+if(flint)flint.rotation.z=0}GLD.armed=false
+GLD.on=false
+GLD.t=0
+GLD.bufWas=P.jumpBuf||0
+return}if((P.jumpBuf||0)>GLD.bufWas+.05&&P.coyote<=0)GLD.armed=true
+GLD.bufWas=P.jumpBuf||0
+const h=mvJumpHeld()
+if(GLD.armed&&h&&P.vel.y<0&&GLD.t<2.2){if(!GLD.on){GLD.on=true
+fvSay("f_glide",8,.5)
+try{blip(520,780,.25,"sine",.04)
+if(AC)noise(AC.currentTime,.4,.06,"bandpass",600,sfxBus)}catch(e){}}GLD.t+=dt
+P.vel.y=Math.max(P.vel.y,-2.3)
+P.jumpBuf=0
+try{mvOrb()
+if(!MV.charging){const hp=mvHandPos()
+MV.orb.visible=true
+MV.orb.position.copy(hp).add(V3(0,.15,0))
+MV.orb.scale.setScalar(.55+Math.sin(time*7)*.05)
+MV.orb.material.color.setHex(16756832)
+MV.orbCore.scale.setScalar(.35)
+GLD.orbOn=true}}catch(e){}if(flint)flint.rotation.z=Math.sin(time*3.2)*.07
+GLD.snd-=dt
+if(GLD.snd<=0){GLD.snd=.5
+try{if(AC)noise(AC.currentTime,.5,.035,"bandpass",500,sfxBus)}catch(e){}}if(Math.random()<.45)try{const hp=mvHandPos()
+emit(hp.clone().add(V3((Math.random()-.5)*.3,-.1,(Math.random()-.5)*.3)),{life:.8,size:.14,size1:.02,color:16752720,vy:-1.4,vx:-P.vel.x*.15,vz:-P.vel.z*.15})}catch(e){}}else if(GLD.on&&(!h||P.vel.y>=0||GLD.t>=2.2))GLD.on=false
+if(!GLD.on&&GLD.orbOn){GLD.orbOn=false
+if(MV.orb&&MV.hold<=.28)MV.orb.visible=false
+if(flint)flint.rotation.z=0}}const CB={n:0,was:true}
+function comboKill(){if(!P.onGround){CB.n++
+if(CB.n>=2){try{blip(660*Math.pow(1.122,CB.n),990*Math.pow(1.122,CB.n),.09,"square",.035)}catch(e){}}}}function comboTick(){const g=!!P.onGround||P.dead
+if(g&&!CB.was){if(CB.n>=2){const n=CB.n,b=(n-1)*2
+try{if(n>=3)fvSay("f_combo",10)
+popup("COMBO x"+n+"  +"+b,"#ffd27a")
+for(let i=0;i<b;i++)spawnOrb(P.pos.x+(Math.random()-.5)*1.5,P.pos.y+1.2,P.pos.z+(Math.random()-.5)*1.5,true)
+blip(880,1320,.12,"triangle",.05)
+blip(1320,1760,.16,"triangle",.04,.08)}catch(e){}}CB.n=0}CB.was=g}const WR={walls:[],on:false,w:null,dir:1,t:0,cool:0,lastW:null,step:0,bufWas:0}
+function wrTex(){if(WR.tex)return WR.tex
+const c=document.createElement("canvas")
+c.width=64
+c.height=64
+const g=c.getContext("2d")
+const cols=["#5e3a22","#684026","#56341e","#623c23"]
+for(let i=0;i<4;i++){g.fillStyle=cols[i]
+g.fillRect(i*16,0,16,64)
+g.fillStyle="#4a2a16"
+g.fillRect(i*16,0,1,64)
+for(let k=0;k<5;k++){g.fillStyle="rgba(40,20,10,.35)"
+g.fillRect(i*16+3+(k*7+i*5)%10,(k*13+i*9)%60,1,3)}g.fillStyle="#3a2010"
+g.fillRect(i*16+7,6,2,2)
+g.fillRect(i*16+7,56,2,2)}g.fillStyle="#4a2a16"
+g.fillRect(0,20,64,2)
+g.fillRect(0,42,64,2)
+g.fillStyle="#efe0c0"
+const chev=(x,y)=>{for(let j=0;j<7;j++){g.fillRect(x+j,y+j,4,2)
+g.fillRect(x+j,y+13-j,4,2)}}
+chev(6,25)
+chev(36,25)
+const t=new THREE.CanvasTexture(c)
+t.magFilter=THREE.NearestFilter
+t.minFilter=THREE.NearestFilter
+t.wrapS=t.wrapT=THREE.RepeatWrapping
+WR.tex=t
+return t}function mkRunWall(x0,x1,y0,y1,z0,z1){const alongX=x1-x0>z1-z0
+const len=alongX?x1-x0:z1-z0,h=y1-y0
+const tex=wrTex().clone()
+tex.needsUpdate=true
+tex.repeat.set(1,1)
+const side=new THREE.MeshLambertMaterial({map:tex})
+const top=new THREE.MeshLambertMaterial({color:5911580})
+const mats=alongX?[top,top,top,top,side,side]:[side,side,top,top,top,top]
+const s=addSolid(x0,x1,y0,y1,z0,z1,"wall",mats)
+s.runWall=true
+WR.walls.push({s,alongX})
+return s}function wrJumpPressed(){const j=(P.jumpBuf||0)>WR.bufWas+.05
+WR.bufWas=P.jumpBuf||0
+return j}function wallRunTick(dt){WR.cool=Math.max(0,WR.cool-dt)
+const jp=wrJumpPressed()
+if(P.grind){WR.bufWas=P.jumpBuf||0
+return}if(P.dead||state!=="play"||P.onGround){if(WR.on)wrStop()
+WR.lastW=P.onGround?null:WR.lastW
+return}if(WR.on){const W=WR.w,s=W.s
+WR.t+=dt
+if(W.arc){const ang=wrArcAng(W),n=WR.n,tx=Math.cos(ang)*WR.dir,tz=-Math.sin(ang)*WR.dir,rx=Math.sin(ang),rz=Math.cos(ang)
+const want=W.r+n*(W.thick/2+.42),d=Math.hypot(P.pos.x-W.cx,P.pos.z-W.cz),corr=(want-d)*8
+P.vel.x=tx*9.5+rx*corr
+P.vel.z=tz*9.5+rz*corr
+P.vel.y=Math.max(-3,3.4-WR.t*7.5)
+P.face=Math.atan2(tx,tz)
+if(flint){flint.rotation.y=P.face}WR.step-=dt
+if(WR.step<=0){WR.step=.09
+try{blip(220+Math.random()*60,160,.04,"triangle",.05)
+emit(V3(P.pos.x-rx*n*.35,P.pos.y+.2,P.pos.z-rz*n*.35),{life:.4,size:.3,size1:.05,color:13154464,vy:.4})}catch(e){}}if(jp){P.vel.x=rx*n*8.5+tx*5
+P.vel.z=rz*n*8.5+tz*5
+P.vel.y=11.5
+P.airSpun=false
+P.jumpBuf=0
+WR.bufWas=0
+try{GLD.armed=false
+blip(400,900,.12,"square",.05)
+burst(P.pos.clone().setY(P.pos.y+.8),15259832,10,4,.3)}catch(e){}WR.lastW=W
+WR.cool=.25
+wrStop()
+P.face=Math.atan2(P.vel.x,P.vel.z)
+return}if(WR.t>1.4||ang<W.a0||ang>W.a1){WR.lastW=W
+WR.cool=.2
+wrStop()}return}const ax=W.alongX?"x":"z",px=W.alongX?"z":"x"
+const n=WR.n
+P.vel[ax]=WR.dir*9.5
+P.vel[px]=-n*1.5
+P.vel.y=Math.max(-3,3.4-WR.t*7.5)
+P.face=Math.atan2(W.alongX?WR.dir:0,W.alongX?0:WR.dir)
+if(flint){flint.rotation.y=P.face}WR.step-=dt
+if(WR.step<=0){WR.step=.09
+try{blip(220+Math.random()*60,160,.04,"triangle",.05)
+emit(V3(P.pos.x+(W.alongX?0:n*.35),P.pos.y+.2,P.pos.z+(W.alongX?n*.35:0)),{life:.4,size:.3,size1:.05,color:13154464,vy:.4})}catch(e){}}const inLen=W.alongX?P.pos.x>s.min.x-.2&&P.pos.x<s.max.x+.2:P.pos.z>s.min.z-.2&&P.pos.z<s.max.z+.2
+if(jp){P.vel[px]=n*8.5
+P.vel[ax]=WR.dir*5
+P.vel.y=11.5
+fvSay("f_wallkick",1)
+P.airSpun=false
+P.jumpBuf=0
+WR.bufWas=0
+try{GLD.armed=false}catch(e){}try{blip(400,900,.12,"square",.05)
+burst(P.pos.clone().setY(P.pos.y+.8),15259832,10,4,.3)}catch(e){}WR.lastW=W
+WR.cool=.25
+wrStop(true)
+P.face=Math.atan2(W.alongX?WR.dir*.5:n,W.alongX?n:WR.dir*.5)
+return}if(WR.t>1.15||!inLen){WR.lastW=W
+WR.cool=.2
+wrStop()}return}if(WR.cool>0)return
+for(const W of WR.walls){const s=W.s
+if(!s.alive||W===WR.lastW)continue
+if(W.arc){if(P.pos.y+.4<W.y0||P.pos.y+1.2>W.y1+.6)continue
+const ang=wrArcAng(W)
+if(ang<W.a0+.08||ang>W.a1-.08)continue
+const d=Math.hypot(P.pos.x-W.cx,P.pos.z-W.cz)
+let n=0
+if(d>W.r+W.thick/2-.05&&d<W.r+W.thick/2+.75)n=1
+else if(d<W.r-W.thick/2+.05&&d>W.r-W.thick/2-.75)n=-1
+if(!n)continue
+const tx=Math.cos(ang),tz=-Math.sin(ang)
+const vt=P.vel.x*tx+P.vel.z*tz
+if(Math.abs(vt)<2.2||P.vel.y>8)continue
+WR.on=true
+P.wallRun=true
+WR.w=W
+WR.n=n
+WR.dir=Math.sign(vt)
+WR.t=0
+WR.step=0
+GLD.armed=false
+try{blip(300,500,.08,"triangle",.05)}catch(e){}break}if(P.pos.y+.4<s.min.y||P.pos.y+1.2>s.max.y+.6)continue
+const ax=W.alongX?"x":"z",px=W.alongX?"z":"x"
+const inLen=P.pos[ax]>s.min[ax]+.3&&P.pos[ax]<s.max[ax]-.3
+if(!inLen)continue
+const dLo=s.min[px]-P.pos[px],dHi=P.pos[px]-s.max[px]
+let n=0
+if(dLo>-.05&&dLo<.75)n=-1
+else if(dHi>-.05&&dHi<.75)n=1
+if(!n)continue
+const va=P.vel[ax]
+if(Math.abs(va)<2.2||P.vel.y>8)continue
+WR.on=true
+P.wallRun=true
+WR.w=W
+WR.n=n
+WR.dir=Math.sign(va)
+fvSay("f_wallrun",120,.5)
+WR.t=0
+WR.step=0
+GLD.armed=false
+try{blip(300,500,.08,"triangle",.05)}catch(e){}break}}function wrStop(){WR.on=false
+P.wallRun=false
+WR.w=null
+if(flint){flint.rotation.x=0
+flint.rotation.z=0}}function mkRunArc(cx,cz,r,a0,a1,y0,y1,thick=.5){const h=y1-y0,len=Math.abs(a1-a0)*r
+const tex=wrTex().clone()
+tex.needsUpdate=true
+tex.wrapS=tex.wrapT=THREE.RepeatWrapping
+tex.repeat.set(Math.max(1,Math.round(len/2.5)),Math.max(1,Math.round(h/2.5)))
+const mat=new THREE.MeshLambertMaterial({map:tex,side:THREE.DoubleSide})
+const seg=Math.max(8,Math.round(len/.8))
+const outer=new THREE.Mesh(new THREE.CylinderGeometry(r+thick/2,r+thick/2,h,seg,1,true,Math.min(a0,a1),Math.abs(a1-a0)),mat)
+const inner=new THREE.Mesh(new THREE.CylinderGeometry(r-thick/2,r-thick/2,h,seg,1,true,Math.min(a0,a1),Math.abs(a1-a0)),mat)
+for(const o of[outer,inner]){o.position.set(cx,y0+h/2,cz)
+scene.add(o)}const capM=new THREE.MeshLambertMaterial({color:5911580})
+const cap=new THREE.Mesh(new THREE.RingGeometry(r-thick/2,r+thick/2,seg,1,Math.min(a0,a1)-Math.PI/2,Math.abs(a1-a0)),capM)
+cap.rotation.x=-Math.PI/2
+cap.position.set(cx,y1,cz)
+scene.add(cap)
+const n=Math.max(2,Math.ceil(len/.9))
+const blocks=[]
+for(let i=0;i<=n;i++){const a=a0+(a1-a0)*i/n
+const x=cx+Math.sin(a)*r,z=cz+Math.cos(a)*r,k=thick/2+.08
+blocks.push(addSolid(x-k,x+k,y0,y1,z-k,z+k,"wall",null))}const W={arc:true,cx,cz,r,a0:Math.min(a0,a1),a1:Math.max(a0,a1),y0,y1,thick,s:{alive:true,min:V3(cx-r,y0,cz-r),max:V3(cx+r,y1,cz+r)},blocks,meshes:[outer,inner,cap]}
+WR.walls.push(W)
+return W}function wrArcAng(W){let a=Math.atan2(P.pos.x-W.cx,P.pos.z-W.cz)
+while(a<W.a0-Math.PI)a+=Math.PI*2
+while(a>W.a0+Math.PI)a-=Math.PI*2
+return a}const _wa={a:new THREE.Vector3,b:new THREE.Vector3,c:new THREE.Vector3,w:new THREE.Vector3,q:new THREE.Quaternion,q2:new THREE.Quaternion,pq:new THREE.Quaternion}
+function wrArm(){const W=WR.w
+if(!W||!flint)return false
+let nx,nz
+if(W.arc){const a=wrArcAng(W)
+nx=Math.sin(a)*WR.n
+nz=Math.cos(a)*WR.n}else if(W.alongX){nx=0
+nz=WR.n}else{nx=WR.n
+nz=0}const fx=Math.sin(P.face),fz=Math.cos(P.face)
+const tk=Math.min(1,WR.t*7)
+const s=Math.sign(-fz*nx+fx*nz)||1
+flint.rotation.set(0,P.face,0)
+_wa.q.setFromAxisAngle(_wa.w.set(fx,0,fz),s*.62*tk)
+flint.quaternion.premultiply(_wa.q)
+flint.position.x-=nx*.36*tk
+flint.position.z-=nz*.36*tk
+flint.position.y+=.12*tk
+flint.updateMatrixWorld(true)
+const ph=time*15,down=-1
+for(const[side,sg]of[["Left",1],["Right",-1]]){const up=flint.getObjectByName(side+"UpLeg"),lo=flint.getObjectByName(side+"Leg")
+if(!up||!lo)continue
+const sw=Math.sin(ph)*sg
+wrAim(up,lo,-nx*.55+fx*.5*sw,down*.62,-nz*.55+fz*.5*sw,tk)
+const ft=flint.getObjectByName(side+"Foot")
+if(ft)wrAim(lo,ft,-nx*.85-fx*.35,down*.25,-nz*.85-fz*.35,tk)}const L=flint.userData.armL||(flint.userData.armL=flint.getObjectByName("LeftArm")),R=flint.userData.armR||(flint.userData.armR=flint.getObjectByName("RightArm"))
+if(!L||!R)return false
+flint.updateMatrixWorld(true)
+L.getWorldPosition(_wa.a)
+R.getWorldPosition(_wa.b)
+const dl=-(_wa.a.x*nx+_wa.a.z*nz),dr=-(_wa.b.x*nx+_wa.b.z*nz)
+const arm=dl>dr?L:R
+const fore=arm===L?flint.userData.foreL||(flint.userData.foreL=flint.getObjectByName("LeftForeArm")):flint.userData.foreR||(flint.userData.foreR=flint.getObjectByName("RightForeArm"))
+if(!fore)return false
+const k=Math.min(1,WR.t*8)
+arm.getWorldPosition(_wa.a)
+fore.getWorldPosition(_wa.c)
+const cur=_wa.c.sub(_wa.a).normalize()
+_wa.w.set(-nx+fx*.25,.35,-nz+fz*.25).normalize()
+_wa.q.setFromUnitVectors(cur,_wa.w)
+arm.getWorldQuaternion(_wa.q2)
+_wa.q2.premultiply(_wa.q)
+arm.parent.getWorldQuaternion(_wa.pq)
+_wa.pq.invert()
+_wa.q2.premultiply(_wa.pq)
+arm.quaternion.slerp(_wa.q2,k)
+_wa.q.identity()
+fore.quaternion.slerp(_wa.q,k*.7)
+return true}function wrAim(bone,child,dx,dy,dz,k){bone.parent.updateMatrixWorld(true)
+bone.updateMatrixWorld(true)
+bone.getWorldPosition(_wa.a)
+child.getWorldPosition(_wa.c)
+const cur=_wa.c.sub(_wa.a).normalize()
+_wa.b.set(dx,dy,dz).normalize()
+_wa.q.setFromUnitVectors(cur,_wa.b)
+bone.getWorldQuaternion(_wa.q2)
+_wa.q2.premultiply(_wa.q)
+bone.parent.getWorldQuaternion(_wa.pq)
+_wa.pq.invert()
+_wa.q2.premultiply(_wa.pq)
+bone.quaternion.slerp(_wa.q2,k)
+bone.updateMatrixWorld(true)}const RL={rails:[],on:false,r:null,u:0,dir:1,spd:12,snd:0,cool:0,bufWas:0}
+function railTex(){if(RL.tex)return RL.tex
+const c=document.createElement("canvas")
+c.width=32
+c.height=8
+const g=c.getContext("2d")
+g.fillStyle="#8a8f9e"
+g.fillRect(0,0,32,8)
+g.fillStyle="#c9ccd6"
+g.fillRect(0,1,32,2)
+g.fillStyle="#5a5e6c"
+g.fillRect(0,6,32,2)
+for(let x=3;x<32;x+=8){g.fillStyle="#4a4e5a"
+g.fillRect(x,3,2,2)}const t=new THREE.CanvasTexture(c)
+t.magFilter=THREE.NearestFilter
+t.wrapS=t.wrapT=THREE.RepeatWrapping
+RL.tex=t
+return t}function mkRail(pts){const v=pts.map((p=>V3(p[0],p[1],p[2])))
+const curve=new THREE.CatmullRomCurve3(v,false,"centripetal")
+const L=curve.getLength()
+const tex=railTex().clone()
+tex.needsUpdate=true
+tex.repeat.set(Math.max(1,Math.round(L/1.2)),1)
+const tube=new THREE.Mesh(new THREE.TubeGeometry(curve,Math.max(16,Math.round(L*3)),.09,6,false),new THREE.MeshLambertMaterial({map:tex}))
+scene.add(tube)
+const postM=new THREE.MeshLambertMaterial({color:4861984})
+const n=Math.max(2,Math.round(L/2.6))
+for(let i=0;i<=n;i++){const p=curve.getPointAt(i/n)
+const gy=groundBelow(p.x,p.z,p.y-.2)
+const h=Math.max(.2,p.y-(gy>-90?gy:p.y-3))
+const post=new THREE.Mesh(new THREE.CylinderGeometry(.07,.09,h,5),postM)
+post.position.set(p.x,p.y-h/2-.08,p.z)
+scene.add(post)}const r={curve,L,tube,samples:[]}
+for(let i=0;i<=Math.round(L*4);i++){const u=i/Math.round(L*4)
+r.samples.push({u,p:curve.getPointAt(u)})}RL.rails.push(r)
+return r}function railTick(dt){RL.cool=Math.max(0,RL.cool-dt)
+const jp=(P.jumpBuf||0)>RL.bufWas+.05
+RL.bufWas=P.jumpBuf||0
+if(P.dead||state!=="play"){if(RL.on)railStop()
+return}if(RL.on){const r=RL.r
+RL.u+=RL.dir*RL.spd*dt/r.L
+if(RL.u<=0||RL.u>=1){const t=r.curve.getTangentAt(Math.min(1,Math.max(0,RL.u))).multiplyScalar(RL.dir)
+railStop()
+P.vel.set(t.x*RL.spd,Math.max(5,t.y*RL.spd+5),t.z*RL.spd)
+RL.cool=.4
+return}const p=r.curve.getPointAt(RL.u),t=r.curve.getTangentAt(RL.u).multiplyScalar(RL.dir)
+P.pos.set(p.x,p.y+.1,p.z)
+P.vel.set(t.x*RL.spd,0,t.z*RL.spd)
+P.onGround=false
+P.face=Math.atan2(t.x,t.z)
+if(flint)flint.rotation.y=P.face
+RL.spd=Math.min(17,Math.max(8,RL.spd-t.y*14*dt))
+RL.snd-=dt
+if(RL.snd<=0){RL.snd=.11
+try{if(AC)noise(AC.currentTime,.13,.05,"highpass",3200,sfxBus)}catch(e){}}if(Math.random()<.8)try{emit(V3(p.x,p.y+.08,p.z),{life:.3,size:.12,size1:.02,color:16767120,vx:-t.x*3+(Math.random()-.5)*2,vy:1.5+Math.random()*1.5,vz:-t.z*3+(Math.random()-.5)*2,g:-12})}catch(e){}if(jp){railStop()
+P.vel.set(t.x*RL.spd,11.4,t.z*RL.spd)
+P.airSpun=false
+P.jumpBuf=0
+RL.cool=.35
+try{sfx.jump()}catch(e){}}return}if(P.onGround||RL.cool>0||P.vel.y>2)return
+for(const r of RL.rails){for(const s of r.samples){const dx=P.pos.x-s.p.x,dz=P.pos.z-s.p.z,dy=P.pos.y-s.p.y
+if(dx*dx+dz*dz<.55*.55&&dy>-.35&&dy<.8){const t=r.curve.getTangentAt(s.u)
+const vt=P.vel.x*t.x+P.vel.z*t.z
+RL.on=true
+P.grind=true
+RL.r=r
+RL.u=s.u
+RL.dir=vt>=0?1:-1
+RL.spd=Math.max(10,Math.min(15,Math.abs(vt)+6))
+try{blip(900,600,.1,"square",.05)
+burst(s.p.clone(),16767120,10,4,.25)
+GLD.armed=false}catch(e){}return}}}}function railStop(){RL.on=false
+P.grind=false
+RL.r=null}function railPose(){if(!P.grind||!flint)return false
+const fx=Math.sin(P.face),fz=Math.cos(P.face),rx=fz,rz=-fx
+flint.updateMatrixWorld(true)
+const wob=Math.sin(time*9)*.12
+for(const[side,sg]of[["Left",1],["Right",-1]]){const a=flint.getObjectByName(side+"Arm"),f=flint.getObjectByName(side+"ForeArm"),h=flint.getObjectByName(side+"Hand")
+if(a&&f){const sh=V3()
+a.getWorldPosition(sh)
+const hp=V3(flint.position.x,sh.y,flint.position.z)
+const sd=Math.sign((sh.x-hp.x)*rx+(sh.z-hp.z)*rz)||sg
+wrAim(a,f,rx*sd,.1+wob*sd,rz*sd,1)
+if(h)wrAim(f,h,rx*sd,.05,rz*sd,1)}const up=flint.getObjectByName(side+"UpLeg"),lo=flint.getObjectByName(side+"Leg"),ft=flint.getObjectByName(side+"Foot")
+if(up&&lo){wrAim(up,lo,fx*.75*sg*.4+fx*.35,-.45,fz*.75*sg*.4+fz*.35,1)
+if(ft)wrAim(lo,ft,-fx*.35,-1,-fz*.35,1)}}flint.position.y-=.18
+return true}const LR={plats:[]}
+function lrTex(){if(LR.tex)return LR.tex
+const c=document.createElement("canvas")
+c.width=32
+c.height=32
+const g=c.getContext("2d")
+g.fillStyle="#4a3a7a"
+g.fillRect(0,0,32,32)
+g.fillStyle="#5c4a92"
+for(let i=0;i<14;i++)g.fillRect(i*11%30,(i*7+3)%30,2,2)
+g.fillStyle="#e8dcff"
+for(let x=0;x<32;x+=4){g.fillRect(x,0,2,1)
+g.fillRect(x,31,2,1)
+g.fillRect(0,x,1,2)
+g.fillRect(31,x,1,2)}g.fillStyle="#fff6d0"
+g.fillRect(9,12,1,1)
+g.fillRect(22,7,1,1)
+g.fillRect(17,23,1,1)
+const t=new THREE.CanvasTexture(c)
+t.magFilter=THREE.NearestFilter
+t.minFilter=THREE.NearestFilter
+LR.tex=t
+return t}function mkLightPlat(x,y,z,w=2.4,d=2.4,h=.5){const mat=new THREE.MeshLambertMaterial({map:lrTex(),transparent:true,opacity:.12,depthWrite:false})
+const s=addSolid(x-w/2,x+w/2,y-h,y,z-d/2,z+d/2,"block",null)
+s.alive=false
+const mesh=new THREE.Mesh(boxGeo(w,h,d,2.4),mat)
+mesh.position.set(x,y-h/2,z)
+scene.add(mesh)
+const pl={s,mesh,mat,k:0,linger:0,x,y,z}
+LR.plats.push(pl)
+return pl}function lightRevealTick(dt){if(!LR.plats.length)return
+const hp=P.pos
+const R=MV&&MV.chg>=1?8.5:MV&&MV.hold>.28?4.5+MV.chg*4:4.5
+for(const pl of LR.plats){const d=Math.hypot(hp.x-pl.x,hp.y-pl.y,hp.z-pl.z)
+const lit=d<R
+if(lit)pl.linger=1.6
+else pl.linger=Math.max(0,pl.linger-dt)
+const want=pl.linger>0?1:0
+const was=pl.k
+pl.k+=(want-pl.k)*Math.min(1,dt*(want?6:2.5))
+if(was<.6&&pl.k>=.6){pl.s.alive=true
+try{blip(700,1100,.15,"sine",.035)}catch(e){}}if(pl.k<.45&&pl.s.alive){const on=hp.x>pl.s.min.x-.3&&hp.x<pl.s.max.x+.3&&hp.z>pl.s.min.z-.3&&hp.z<pl.s.max.z+.3&&Math.abs(hp.y-pl.s.max.y)<.4
+if(on){pl.linger=.6
+pl.k=.5}else pl.s.alive=false}pl.mat.opacity=.12+pl.k*.88
+pl.mat.depthWrite=pl.k>.8
+pl.mat.color.setRGB(.6+pl.k*.4,.6+pl.k*.35,.75+pl.k*.15)}}const FF={face:0,lean:0,skidT:0,lastFace:0,idleT:0,yawnT:0,wob:0,look:0,lookT:null,dark:[4,6,7,10,12].includes(typeof LV!=="undefined"?LV:0)}
+function angDiff(a,b){let d=a-b
+while(d>Math.PI)d-=Math.PI*2
+while(d<-Math.PI)d+=Math.PI*2
+return d}function flintFeel(dt){if(victoryTick(dt))return
+if(!flint||state!=="play"||P.dead||P.wallRun||P.grind)return
+const sp=Math.hypot(P.vel.x,P.vel.z)
+const busy=P.spinT>0||P.hurtT>0||P.dashT>0||typeof GLD!=="undefined"&&GLD.on
+const dYaw=angDiff(P.face,FF.face)/Math.max(dt,.001)
+FF.face=P.face
+const want=P.onGround&&sp>2.5&&!busy?Math.max(-.32,Math.min(.32,-dYaw*.055))*Math.min(1,sp/6):0
+FF.lean+=(want-FF.lean)*Math.min(1,dt*10)
+if(!busy||Math.abs(FF.lean)>.01)flint.rotation.z=FF.lean
+if(!P.onGround&&P.vel.y>4)P.sq=Math.max(P.sq||0,Math.min(.14,(P.vel.y-4)*.02))
+if(P.onGround&&sp>5&&Math.abs(angDiff(P.face,FF.lastFace))>2.1&&FF.skidT<=0){FF.skidT=.28
+try{for(let i=0;i<8;i++)emit(P.pos.clone().add(V3((Math.random()-.5)*.5,.1,(Math.random()-.5)*.5)),{vx:(Math.random()-.5)*3,vy:.8+Math.random(),vz:(Math.random()-.5)*3,life:.5,size:.35,size1:.8,color:13615328,normal:true})
+noise(AC.currentTime,.22,.12,"bandpass",1400,sfxBus)}catch(e){}}if(FF.skidT>0){FF.skidT-=dt
+flint.rotation.x=-.28*Math.sin(FF.skidT/.28*Math.PI)}FF.lastFace=lerpAngle(FF.lastFace,P.face,Math.min(1,dt*6))
+const head=flint.userData.headB||(flint.userData.headB=flint.getObjectByName("Head")),hf=flint.userData.headF||(flint.userData.headF=flint.getObjectByName("headfront"))
+if(head&&hf&&!busy){let best=null,bd=7
+const fx=Math.sin(P.face),fz=Math.cos(P.face)
+const consider=(x,y,z)=>{const dx=x-P.pos.x,dz=z-P.pos.z,d=Math.hypot(dx,dz)
+if(d<bd&&d>.8&&(dx*fx+dz*fz)/d>-.1){bd=d
+best=[x,y,z]}}
+try{for(const e of enemies)if(e.alive)consider(e.pos.x,e.pos.y+.8,e.pos.z)}catch(e){}try{for(const n of C2&&C2.npcs||[])consider(n.pos.x,n.pos.y+(n.size||1.5),n.pos.z)}catch(e){}try{for(const m of orbsArr)if(m.alive)consider(m.o.position.x,m.o.position.y,m.o.position.z)}catch(e){}FF.look+=((best?1:0)-FF.look)*Math.min(1,dt*5)
+if(best)FF.lookT=best
+if(FF.look>.02&&FF.lookT){head.updateMatrixWorld(true)
+const hp=V3()
+head.getWorldPosition(hp)
+wrAim(head,hf,FF.lookT[0]-hp.x,(FF.lookT[1]-hp.y)*.6,FF.lookT[2]-hp.z,FF.look*.55)}}const atEdge=P.onGround&&sp<.6&&!busy&&(()=>{const fx=Math.sin(P.face),fz=Math.cos(P.face)
+const gy=groundBelow(P.pos.x+fx*.7,P.pos.z+fz*.7,P.pos.y+.2)
+return gy<P.pos.y-2.2})()
+FF.wob+=((atEdge?1:0)-FF.wob)*Math.min(1,dt*6)
+if(FF.wob>.05){const t=time*9
+for(const[side,sg]of[["Left",1],["Right",-1]]){const a=flint.getObjectByName(side+"Arm"),f=flint.getObjectByName(side+"ForeArm")
+if(!a||!f)continue
+const sh=V3()
+a.getWorldPosition(sh)
+const rx=Math.cos(P.face),rz=-Math.sin(P.face)
+const sd=Math.sign((sh.x-flint.position.x)*rx+(sh.z-flint.position.z)*rz)||sg
+wrAim(a,f,rx*sd*.6+Math.sin(P.face)*Math.cos(t+sg)*.8,Math.sin(t+sg)*.9,rz*sd*.6+Math.cos(P.face)*Math.cos(t+sg)*.8,FF.wob)}flint.rotation.x+=Math.sin(time*6)*.08*FF.wob}const still=P.onGround&&sp<.3&&!busy&&!atEdge
+FF.idleT=still?FF.idleT+dt:0
+if(FF.idleT>7&&FF.yawnT<=0){FF.yawnT=2.4
+FF.idleT=0
+if(!FF.dark)fvSay("f_yawn",20)}if(FF.yawnT>0){FF.yawnT-=dt
+if(!still)FF.yawnT=0
+const k=Math.sin(Math.min(1,(2.4-FF.yawnT)/2.4)*Math.PI)
+if(FF.dark){const a=flint.getObjectByName("LeftArm"),f=flint.getObjectByName("LeftForeArm")
+if(a&&f)wrAim(a,f,Math.sin(P.face)*.7+Math.cos(time*1.3)*.3,.55,Math.cos(P.face)*.7-Math.sin(time*1.3)*.3,k)
+if(head&&hf){const lh=V3()
+f&&f.getWorldPosition(lh)
+head.updateMatrixWorld(true)
+const hp=V3()
+head.getWorldPosition(hp)
+wrAim(head,hf,lh.x-hp.x+Math.sin(P.face),lh.y-hp.y+.3,lh.z-hp.z+Math.cos(P.face),k*.5)}}else{for(const side of["Left","Right"]){const a=flint.getObjectByName(side+"Arm"),f=flint.getObjectByName(side+"ForeArm")
+if(a&&f)wrAim(a,f,(side==="Left"?1:-1)*Math.cos(P.face)*.25,1,(side==="Left"?-1:1)*Math.sin(P.face)*.25,k)}if(head&&hf){head.updateMatrixWorld(true)
+const hp=V3()
+head.getWorldPosition(hp)
+wrAim(head,hf,Math.sin(P.face)*.5,.9,Math.cos(P.face)*.5,k*.6)}flint.scale.y*=1+k*.04}}}function rimPatch(obj,col,str){obj.traverse((o=>{if(!o.isMesh||!o.material)return
+const mats=Array.isArray(o.material)?o.material:[o.material]
+mats.forEach((m=>{if(m.userData.rim||!(m.isMeshStandardMaterial||m.isMeshPhongMaterial||m.isMeshLambertMaterial||m.isMeshToonMaterial))return
+m.userData.rim=1
+const prev=m.onBeforeCompile
+m.onBeforeCompile=(sh,r)=>{try{if(prev)prev(sh,r)}catch(e){}sh.uniforms.rimCol={value:new THREE.Color(col)}
+sh.uniforms.rimStr={value:str}
+sh.vertexShader=sh.vertexShader.replace("#include <common>","#include <common>\nvarying vec3 vRimN;varying vec3 vRimV;").replace("#include <project_vertex>","#include <project_vertex>\nvRimN=normalize(normalMatrix*objectNormal);vRimV=-mvPosition.xyz;")
+sh.fragmentShader=sh.fragmentShader.replace("#include <common>","#include <common>\nvarying vec3 vRimN;varying vec3 vRimV;uniform vec3 rimCol;uniform float rimStr;").replace("#include <dithering_fragment>","#include <dithering_fragment>\n{float rf=1.0-max(dot(normalize(vRimN),normalize(vRimV)),0.0);gl_FragColor.rgb+=rimCol*pow(rf,3.0)*rimStr;}")}
+m.customProgramCacheKey=()=>"rim"+col+str
+m.needsUpdate=true}))}))}function rimTick(){try{if(flint&&!flint.userData.rimDone){flint.userData.rimDone=1
+rimPatch(flint,16769712,.55)}for(const e of enemies){if(e.alive&&e.obj&&!e.obj.userData.rimDone&&!e.boss){e.obj.userData.rimDone=1
+rimPatch(e.obj,13161727,.35)}}}catch(e){}}setTimeout((function(){try{const b=document.getElementById("setLowFx")
+if(!b)return
+const sync=()=>{try{setTog("setLowFx",!!SET.lowfx)}catch(e){b.setAttribute("aria-pressed",SET.lowfx?"true":"false")
+b.textContent=SET.lowfx?"ON":"OFF"}}
+sync()
+b.addEventListener("click",(()=>{SET.lowfx=!SET.lowfx
+sync()
+try{saveSet()}catch(e){}}))}catch(e){}}),0)
+function lowFxTick(){if(SET&&SET.lowfx){if(typeof shakeT!=="undefined")shakeT=0}}const OF={seen:new WeakSet,fl:[],lastOp:-1}
+function orbFlyTick(dt){try{const fp=V3(P.pos.x,P.pos.y+.9,P.pos.z)
+for(const m of orbsArr){if(m.alive){if(m.v||P.dead)continue
+const d=m.o.position.distanceTo(fp)
+if(d<2.6&&d>.3){const k=Math.min(1,dt*(4+10*(1-d/2.6)))
+m.o.position.lerp(fp,k*.5)
+m.y=m.o.position.y}}else if(!OF.seen.has(m)){OF.seen.add(m)
+const v=m.o.position.clone().project(camera)
+if(v.z<1){const el=document.createElement("div")
+el.className="orbFly"
+document.body.appendChild(el)
+OF.fl.push({el,x:(v.x*.5+.5)*innerWidth,y:(-v.y*.5+.5)*innerHeight,t:0})}}}const tg=document.getElementById("cOrbs")
+const r=tg?tg.getBoundingClientRect():{left:30,top:90,width:20,height:20}
+const tx=r.left+14,ty=r.top+r.height/2
+for(let i=OF.fl.length-1;i>=0;i--){const f=OF.fl[i]
+f.t+=dt/.42
+const k=Math.min(1,f.t),e=k*k
+const x=f.x+(tx-f.x)*e,y=f.y+(ty-f.y)*e-Math.sin(k*Math.PI)*60
+f.el.style.left=x+"px"
+f.el.style.top=y+"px"
+f.el.style.transform="rotate(45deg) scale("+(1-k*.35)+")"
+if(k>=1){f.el.remove()
+OF.fl.splice(i,1)
+if(tg){tg.classList.remove("bump")
+void tg.offsetWidth
+tg.classList.add("bump")}}}const op=P.orbs%100/100
+if(Math.abs(op-OF.lastOp)>.001){OF.lastOp=op
+const ic=document.getElementById("orbRing")
+if(ic)ic.style.setProperty("--op",op.toFixed(3))}}catch(e){}}const EP={seen:new WeakSet,bub:[],dead:new WeakSet,bossHp:null,bossFlash:0}
+function epBangTex(){if(EP.tex)return EP.tex
+const c=document.createElement("canvas")
+c.width=12
+c.height=16
+const g=c.getContext("2d")
+const O="#3a1838",F="#f6e8d4",R="#d8402a"
+g.fillStyle=O
+g.fillRect(2,0,8,1)
+g.fillRect(1,1,10,1)
+g.fillRect(0,2,12,9)
+g.fillRect(1,11,10,1)
+g.fillRect(2,12,8,1)
+g.fillRect(5,13,3,1)
+g.fillRect(6,14,1,1)
+g.fillStyle=F
+g.fillRect(2,1,8,1)
+g.fillRect(1,2,10,9)
+g.fillRect(2,11,8,1)
+g.fillRect(6,12,1,1)
+g.fillStyle=R
+g.fillRect(5,3,2,5)
+g.fillRect(5,9,2,1)
+const t=new THREE.CanvasTexture(c)
+t.magFilter=THREE.NearestFilter
+t.minFilter=THREE.NearestFilter
+EP.tex=t
+return t}function enemyLifeTick(dt){try{const pp=P.pos
+for(const e of enemies){if(!e.obj||e.boss)continue
+const ch=e.obj.children[0]
+if(e.alive){const d=Math.hypot(e.pos.x-pp.x,e.pos.z-pp.z)
+if(ch){if(ch.userData.by==null)ch.userData.by=ch.position.y
+const ph=(e.ph||0)+time*3.2
+const hop=d>9?Math.max(0,Math.sin(time*1.7+(e.ph||0)*3))**12*.35:0
+ch.position.y=ch.userData.by+Math.abs(Math.sin(ph))*.05+hop+(e.epJ>0?Math.sin((1-e.epJ/.35)*Math.PI)*.45:0)
+if(e.epJ>0)e.epJ-=dt}if(d<8&&!EP.seen.has(e)&&state==="play"&&!P.dead){EP.seen.add(e)
+e.epJ=.35
+const s=new THREE.Sprite(new THREE.SpriteMaterial({map:epBangTex(),transparent:true,depthTest:false,fog:false}))
+s.renderOrder=998
+scene.add(s)
+EP.bub.push({s,e,t:0})
+try{blip(700,1050,.07,"square",.035)
+blip(1050,1400,.06,"square",.03,.06)}catch(_){}}}else if(e.dying>0&&!EP.dead.has(e)){EP.dead.add(e)
+try{for(let i=0;i<10;i++){const a=i/10*6.28
+emit(e.pos.clone().setY(e.pos.y+.6),{vx:Math.cos(a)*2.2,vy:.6+Math.random()*1.2,vz:Math.sin(a)*2.2,life:.55,size:.45,size1:1.1,color:14208232,normal:true})}blip(320+Math.random()*120,90,.18,"triangle",.05)}catch(_){}}}for(let i=EP.bub.length-1;i>=0;i--){const b=EP.bub[i]
+b.t+=dt
+const k=b.t/.9
+if(k>=1||!b.e.obj){scene.remove(b.s)
+b.s.material.dispose()
+EP.bub.splice(i,1)
+continue}const pop=k<.15?k/.15:1
+b.s.scale.set(.55*pop,.75*pop,1)
+b.s.position.set(b.e.pos.x,b.e.pos.y+(b.e.h||1.1)+.9+Math.min(.15,k*.6),b.e.pos.z)
+b.s.material.opacity=k>.8?(1-k)/.2:1}if(inBoss&&boss&&boss.obj){if(EP.bossHp!=null&&boss.hp<EP.bossHp)EP.bossFlash=.18
+EP.bossHp=boss.hp
+if(EP.bossFlash>0||EP.flashing){EP.bossFlash=Math.max(0,EP.bossFlash-dt)
+const on=EP.bossFlash>0
+boss.obj.traverse((o=>{if(!o.isMesh||!o.material)return
+const ms=Array.isArray(o.material)?o.material:[o.material]
+ms.forEach((m=>{if(!m.emissive)return
+if(m.userData.e0==null)m.userData.e0=m.emissive.getHex()
+m.emissive.setHex(on?11540504:m.userData.e0)}))}))
+EP.flashing=on}if(boss.state==="sleep"){boss.obj.rotation.z=Math.sin(time*7)*.08
+boss.obj.userData.wob=1}else if(boss.obj.userData.wob){boss.obj.rotation.z=0
+boss.obj.userData.wob=0}}else EP.bossHp=null}catch(e){window.__epErr=String(e).slice(0,200)}}const VD={t:0,cb:null}
+function victoryDance(cb){fvSay(["f_level_win1","f_level_win2"],5)
+VD.t=1.7
+VD.cb=cb
+P.vel.set(0,0,0)
+try{const n=[523,659,784,1047]
+n.forEach(((f,i)=>blip(f,f*1.01,.16,"square",.04,i*.12)))
+blip(1047,1568,.35,"triangle",.04,.5)}catch(e){}}function victoryTick(dt){if(VD.t<=0)return false
+VD.t-=dt
+P.vel.x=0
+P.vel.z=0
+const k=1-VD.t/1.7
+if(flint){const hop=Math.abs(Math.sin(k*Math.PI*3))*.55
+flint.position.y+=hop
+flint.rotation.y=P.face+(k<.5?k*2*Math.PI*2:0)
+for(const[side,sg]of[["Left",1],["Right",-1]]){const a=flint.getObjectByName(side+"Arm"),f=flint.getObjectByName(side+"ForeArm")
+if(!a||!f)continue
+const pump=Math.sin(time*14+(sg>0?0:Math.PI))*.35
+wrAim(a,f,(sg>0?1:-1)*Math.cos(P.face)*.35,1,(sg>0?-1:1)*Math.sin(P.face)*.35+pump*.2,1)}if(Math.random()<.5)try{emit(flint.position.clone().add(V3((Math.random()-.5)*1.6,1+Math.random()*1.5,(Math.random()-.5)*1.6)),{life:.6,size:.18,size1:.02,color:16773304,vy:1})}catch(e){}}if(VD.t<=0&&VD.cb){const c=VD.cb
+VD.cb=null
+c()}return true}const EH={list:new Map}
+function ehDraw(c,hp,max,flick){const g=c.getContext("2d")
+const pw=7,gap=2,W=max*pw+(max-1)*gap+4,H=11
+c.width=W
+c.height=H
+g.clearRect(0,0,W,H)
+g.fillStyle="#3a1838"
+g.fillRect(1,0,W-2,H)
+g.fillRect(0,1,W,H-2)
+g.fillStyle="#f6e8d4"
+g.fillRect(1,1,W-2,H-2)
+for(let i=0;i<max;i++){const x=2+i*(pw+gap),lit=i<hp
+if(lit){g.fillStyle="#c8341e"
+g.fillRect(x+1,5,5,4)
+g.fillRect(x+2,4,3,1)
+g.fillStyle="#f08a24"
+g.fillRect(x+2,5,3,3)
+g.fillRect(x+3,3-(flick&&i===hp-1?1:0),1,2)
+g.fillStyle="#ffe07a"
+g.fillRect(x+3,6,1,2)}else{g.fillStyle="#a89ab0"
+g.fillRect(x+2,7,3,2)
+g.fillRect(x+3,5,1,2)}}}function enemyHpTick(dt){try{for(const e of enemies){if(e.boss)continue
+let r=EH.list.get(e)
+if(!e.alive){if(r){scene.remove(r.s)
+r.s.material.map.dispose()
+r.s.material.dispose()
+EH.list.delete(e)}continue}if(e.maxHp===undefined){try{ensureHp(e)}catch(_){}}if(!(e.maxHp>1))continue
+const d=Math.hypot(e.pos.x-P.pos.x,e.pos.z-P.pos.z)
+const want=(d<7||e.hp<e.maxHp)&&state==="play"
+if(!r){if(!want)continue
+const c=document.createElement("canvas")
+ehDraw(c,e.hp,e.maxHp,false)
+const t=new THREE.CanvasTexture(c)
+t.magFilter=THREE.NearestFilter
+t.minFilter=THREE.NearestFilter
+const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false,fog:false}))
+s.renderOrder=997
+scene.add(s)
+r={s,c,t,hp:e.hp,sh:0,a:0,fl:0}
+EH.list.set(e,r)}if(r.hp!==e.hp){r.sh=.3
+r.hp=e.hp
+ehDraw(r.c,e.hp,e.maxHp,false)
+r.t.needsUpdate=true
+try{emit(e.pos.clone().setY(e.pos.y+(e.h||1.1)+.7),{life:.5,size:.25,size1:.05,color:11049648,vy:1.2,normal:true})}catch(_){}}r.fl-=dt
+if(r.fl<=0){r.fl=.18
+const f=Math.random()<.5
+ehDraw(r.c,e.hp,e.maxHp,f)
+r.t.needsUpdate=true}r.a+=((want?1:0)-r.a)*Math.min(1,dt*8)
+r.s.material.opacity=r.a
+r.s.visible=r.a>.02
+const sc=.055
+r.s.scale.set(r.c.width*sc,r.c.height*sc,1)
+r.sh=Math.max(0,r.sh-dt)
+const jx=r.sh>0?(Math.random()-.5)*.12:0
+r.s.position.set(e.pos.x+jx,e.pos.y+(e.h||1.1)+.55+(e.obj&&e.obj.children[0]?e.obj.children[0].position.y-(e.obj.children[0].userData.by||0):0),e.pos.z)}}catch(err){window.__ehErr=String(err).slice(0,200)}}function updCharger(e,dt){const d=Math.hypot(P.pos.x-e.pos.x,P.pos.z-e.pos.z)
+e.cs=e.cs||"idle"
+e.ct=(e.ct||0)-dt
+if(e.cs==="idle"){e.obj.rotation.y=lerpAngle(e.obj.rotation.y,Math.atan2(P.pos.x-e.pos.x,P.pos.z-e.pos.z),Math.min(1,dt*3))
+e.face=e.obj.rotation.y
+if(d<9&&e.ct<=0&&state==="play"&&!P.dead){e.cs="wind"
+e.ct=.7
+try{blip(200,140,.5,"sawtooth",.04)}catch(_){}}}else if(e.cs==="wind"){e.obj.position.x=e.pos.x+(Math.random()-.5)*.12
+e.obj.rotation.x=-.25
+mvTint(e,10489872,.5+.5*Math.sin(time*30))
+if(e.ct<=0){e.cs="rush"
+e.ct=.65
+e.rd=V3(Math.sin(e.face),0,Math.cos(e.face))
+mvTint(e,null)
+e.obj.rotation.x=.2}}else if(e.cs==="rush"){const nx=e.pos.x+e.rd.x*10*dt,nz=e.pos.z+e.rd.z*10*dt
+let blocked=false
+try{const gy=groundBelow(nx,nz,e.pos.y+.6)
+if(gy<e.pos.y-1)blocked=true
+for(const s of solids)if(s.alive&&s.type==="wall"&&overlapXZ(s,nx,nz,.5)&&e.pos.y<s.max.y)blocked=true}catch(_){}if(!blocked){e.pos.x=nx
+e.pos.z=nz}if(Math.random()<.6)try{emit(e.pos.clone().setY(e.pos.y+.1),{life:.4,size:.3,size1:.7,color:13615328,normal:true,vy:.5})}catch(_){}if(d<1.1&&!P.dead)try{hurt()}catch(_){}if(e.ct<=0||blocked){e.cs="dizzy"
+e.ct=1.4
+e.dizzy=true
+e.obj.rotation.x=0
+try{blip(600,300,.2,"triangle",.05)}catch(_){}}}else if(e.cs==="dizzy"){e.obj.rotation.z=Math.sin(time*9)*.25
+if(Math.random()<.15)try{emit(e.pos.clone().setY(e.pos.y+(e.h||1.1)+.4),{life:.5,size:.2,size1:.05,color:16773280,vx:Math.cos(time*6)*1.2,vz:Math.sin(time*6)*1.2})}catch(_){}if(e.ct<=0){e.cs="idle"
+e.ct=1.2
+e.dizzy=false
+e.obj.rotation.z=0}}if(e.cs!=="wind")e.obj.position.set(e.pos.x,e.pos.y,e.pos.z)}const THR=[]
+function updThrower(e,dt){const d=Math.hypot(P.pos.x-e.pos.x,P.pos.z-e.pos.z)
+e.obj.rotation.y=lerpAngle(e.obj.rotation.y,Math.atan2(P.pos.x-e.pos.x,P.pos.z-e.pos.z),Math.min(1,dt*4))
+e.face=e.obj.rotation.y
+e.tt=(e.tt==null?1.5:e.tt)-dt
+if(e.tt<.5&&e.tt>0)e.obj.rotation.x=-.35*Math.sin((.5-e.tt)/.5*Math.PI)
+else e.obj.rotation.x=0
+if(e.tt<=0){e.tt=2.6
+if(d<13&&state==="play"&&!P.dead){const tgt=P.pos.clone()
+const from=e.pos.clone().setY(e.pos.y+(e.h||1.1)+.3)
+const o=new THREE.Mesh(new THREE.IcosahedronGeometry(.22,0),new THREE.MeshLambertMaterial({color:e.projCol||8048714,emissive:2109456,flatShading:true}))
+o.position.copy(from)
+scene.add(o)
+const sh=new THREE.Mesh(new THREE.CircleGeometry(.7,16),new THREE.MeshBasicMaterial({color:0,transparent:true,opacity:.35,depthWrite:false}))
+sh.rotation.x=-Math.PI/2
+const gy=groundBelow(tgt.x,tgt.z,tgt.y+.5)
+sh.position.set(tgt.x,(gy>-50?gy:tgt.y)+.04,tgt.z)
+scene.add(sh)
+THR.push({o,sh,from,to:V3(tgt.x,gy>-50?gy:tgt.y,tgt.z),t:0,T:.95,e})
+try{blip(400,700,.12,"triangle",.04)}catch(_){}}}e.obj.position.set(e.pos.x,e.pos.y,e.pos.z)}function throwTick(dt){for(let i=THR.length-1;i>=0;i--){const q=THR[i]
+q.t+=dt
+const k=Math.min(1,q.t/q.T)
+q.o.position.lerpVectors(q.from,q.to,k)
+q.o.position.y+=Math.sin(k*Math.PI)*3.2
+q.o.rotation.x+=dt*8
+q.sh.scale.setScalar(.4+k*.6)
+q.sh.material.opacity=.15+k*.3
+if(k>=1){if(Math.hypot(P.pos.x-q.to.x,P.pos.z-q.to.z)<1.1&&Math.abs(P.pos.y-q.to.y)<1.4)try{hurt()}catch(_){}try{burst(q.to.clone().setY(q.to.y+.3),q.e.projCol||8048714,14,4,.3)
+blip(300,120,.15,"square",.05)}catch(_){}scene.remove(q.o)
+scene.remove(q.sh)
+q.o.geometry.dispose()
+q.o.material.dispose()
+q.sh.geometry.dispose()
+q.sh.material.dispose()
+THR.splice(i,1)}}}function updShielded(e,dt){const want=Math.atan2(P.pos.x-e.pos.x,P.pos.z-e.pos.z)
+e.obj.rotation.y=lerpAngle(e.obj.rotation.y,want,Math.min(1,dt*1.3))
+e.face=e.obj.rotation.y
+e.obj.position.set(e.pos.x,e.pos.y,e.pos.z)
+if(!e.shieldMesh&&e.obj){const sm=new THREE.Mesh(new THREE.CylinderGeometry(.62,.62,.12,8),new THREE.MeshLambertMaterial({color:9081008,flatShading:true}))
+sm.rotation.x=Math.PI/2
+sm.position.set(0,.75,.55)
+e.obj.add(sm)
+e.shieldMesh=sm}}function mvTint(e,hex,k=1){if(!e.obj)return
+e.obj.traverse((o=>{if(!o.isMesh||!o.material)return
+if(!o.userData.ownMat){o.userData.ownMat=1
+o.material=Array.isArray(o.material)?o.material.map((x=>x.clone())):o.material.clone()}const ms=Array.isArray(o.material)?o.material:[o.material]
+ms.forEach((m=>{if(!m.emissive)return
+if(m.userData.te0==null)m.userData.te0=m.emissive.getHex()
+if(hex==null)m.emissive.setHex(m.userData.te0)
+else m.emissive.setHex(hex).multiplyScalar(k)}))}))}function mkFoe(kind,key,x,z,y,size=1.4,o={}){const upd=kind==="charger"?updCharger:kind==="thrower"?updThrower:updShielded
+const e=mkEnemy(key,kind,x,z,y,size,Object.assign({upd,pk:key},o))
+if(e&&kind==="shielded")e.shieldFront=true
+return e}const FV={buf:{},bad:{},cd:{},last:0}
+function fvLoad(k){if(FV.buf[k]||FV.bad[k]||!AC)return
+FV.buf[k]="ld"
+fetch("vo/flint/"+k+".mp3").then((r=>{if(!r.ok)throw 0
+return r.arrayBuffer()})).then((ab=>AC.decodeAudioData(ab))).then((b=>{FV.buf[k]=b})).catch((()=>{FV.bad[k]=1
+delete FV.buf[k]}))}function fvSay(keys,cool=4,chance=1){try{if(!AC||Math.random()>chance)return
+const arr=Array.isArray(keys)?keys:[keys]
+arr.forEach(fvLoad)
+const now=performance.now()/1e3
+const g=arr.join("|")
+if(FV.cd[g]>now||now-FV.last<.6)return
+const ok=arr.filter((k=>FV.buf[k]&&FV.buf[k]!=="ld"))
+if(!ok.length)return
+const k=ok[Math.floor(Math.random()*ok.length)]
+const s=AC.createBufferSource()
+s.buffer=FV.buf[k]
+s.playbackRate.value=.97+Math.random()*.06
+s.connect(typeof voBus!=="undefined"&&voBus?voBus:AC.destination)
+s.start()
+FV.cd[g]=now+cool
+FV.last=now}catch(e){}}const FVW={hurt:0,spin:0,jb:0,hp:3,started:false,orbs:0,lives:0,boss:false,bossHp:null}
+function fvTick(){try{if(state!=="play")return
+if(!FVW.started){FVW.started=true
+FVW.lives=P.lives
+setTimeout((()=>fvSay(FF.dark?"f_dark":["f_start1","f_start2"],30)),1800)}if(P.hurtT>FVW.hurt+.2&&!P.dead)fvSay(["f_hurt1","f_hurt2","f_hurt3"],1.2)
+FVW.hurt=P.hurtT||0
+if(P.spinT>FVW.spin+.2)fvSay(["f_spin1","f_spin2"],1.5,.45)
+FVW.spin=P.spinT||0
+if(P.hp===1&&FVW.hp>1)fvSay("f_lowhp",20)
+FVW.hp=P.hp
+if(P.lives>FVW.lives)fvSay("f_extralife",10)
+FVW.lives=P.lives
+if(inBoss&&!FVW.boss){FVW.boss=true
+setTimeout((()=>fvSay(["f_boss_enter1","f_boss_enter2"],60)),2500)}if(inBoss&&boss){if(FVW.bossHp!=null&&boss.hp<FVW.bossHp)fvSay("f_boss_hit",6,.6)
+FVW.bossHp=boss.hp
+if(boss.state==="sleep"&&!FVW.down){FVW.down=1
+fvSay("f_boss_down",12,.7)}if(boss.state!=="sleep")FVW.down=0}}catch(e){}}let L1X=false
+function l1Extras(){if(L1X||LV!==1||!CRS.paths||!CRS.paths[0])return
+L1X=true
+const path=CRS.paths[0]
+const P0=s=>crsAt(path,s,0)
+try{const ss=[26,32,38].map((s=>P0(s)))
+const[a,b,c]=ss
+const d=2*(a.x*(b.z-c.z)+b.x*(c.z-a.z)+c.x*(a.z-b.z))
+const ux=((a.x*a.x+a.z*a.z)*(b.z-c.z)+(b.x*b.x+b.z*b.z)*(c.z-a.z)+(c.x*c.x+c.z*c.z)*(a.z-b.z))/d,uz=((a.x*a.x+a.z*a.z)*(c.x-b.x)+(b.x*b.x+b.z*b.z)*(a.x-c.x)+(c.x*c.x+c.z*c.z)*(b.x-a.x))/d
+const R=Math.hypot(a.x-ux,a.z-uz),w=COURSE[1].w||5.6
+const rw=R+w/2-.35
+const s0=P0(25.5),s1=P0(38.5)
+let a0=Math.atan2(s0.x-ux,s0.z-uz),a1=Math.atan2(s1.x-ux,s1.z-uz)
+while(a1-a0>Math.PI)a1-=Math.PI*2
+while(a0-a1>Math.PI)a1+=Math.PI*2
+const yb=Math.min(s0.y,s1.y)
+mkRunArc(ux,uz,rw,Math.min(a0,a1),Math.max(a0,a1),yb-.3,yb+3.6,.45)
+const n=9
+for(let i=1;i<n;i++){const t=Math.min(a0,a1)+Math.abs(a1-a0)*i/n
+const r2=rw-.95
+spawnOrb(ux+Math.sin(t)*r2,yb+2.1+Math.sin(i/n*Math.PI)*.6,uz+Math.cos(t)*r2)}}catch(e){window.__l1e="wall "+e}try{const pts=[]
+for(let s=226;s<=244;s+=3.6){const q=crsAt(path,s,1.7)
+pts.push([q.x,q.y+1.15+(s===226?.25:0),q.z])}mkRail(pts)
+for(let s=228;s<=242;s+=2){const q=crsAt(path,s,1.7)
+spawnOrb(q.x,q.y+2.2,q.z)}}catch(e){window.__l1e="rail "+e}try{const q=crsAt(path,13,-2.2)
+mkRescue(q.x,q.y,q.z,"THANKS, FLINT!")}catch(e){window.__l1e="rescue "+e}try{const st=[[95.5,1.4,1.5],[98.5,.4,2.9],[101.5,-.6,4.3]]
+for(const[s,lat,h]of st){const q=crsAt(path,s,lat)
+mkLightPlat(q.x,q.y+h,q.z,2.1,2.1,.45)}const q=crsAt(path,105.5,0),y=q.y+5.6
+const isl=addSolid(q.x-1.9,q.x+1.9,y-.9,y,q.z-1.9,q.z+1.9,"block",[wallMat,wallMat,groundTop,wallMat,wallMat,wallMat])
+makeCrate("lucky",q.x,q.z,y)
+for(let i=0;i<8;i++){const t=i/8*Math.PI*2
+spawnOrb(q.x+Math.sin(t)*1.3,y+.9,q.z+Math.cos(t)*1.3)}try{updHUD()}catch(_){}}catch(e){window.__l1e="steps "+e}}const CF={fov0:null,rocks:[],spawn:0,lines:0}
+function cartFx(dt,v,end){try{if(CF.fov0==null)CF.fov0=camera.fov
+if(end){camera.fov=CF.fov0
+camera.updateProjectionMatrix()
+for(const r of CF.rocks){scene.remove(r.m)
+scene.remove(r.sh)}CF.rocks.length=0
+return}const k=Math.max(0,Math.min(1,(v-11)/7.5))
+const want=CF.fov0+k*9
+camera.fov+=(want-camera.fov)*Math.min(1,dt*3)
+camera.updateProjectionMatrix()
+if(!(SET&&SET.lowfx))shakeT=Math.max(shakeT,.03+k*.05)
+CF.lines-=dt
+if(CF.lines<=0&&k>.3){CF.lines=.4-k*.2
+const d=document.getElementById("dashFx")
+if(d){d.classList.remove("on")
+void d.offsetWidth
+d.classList.add("on")}}if(P.pos.z<-342&&P.pos.z>-368){CF.spawn-=dt
+if(CF.spawn<=0){CF.spawn=.55
+const x=[-3,0,3][Math.floor(Math.random()*3)]+(Math.random()-.5),z=P.pos.z-18-Math.random()*6
+const sh=new THREE.Mesh(new THREE.CircleGeometry(1,14),new THREE.MeshBasicMaterial({color:0,transparent:true,opacity:0,depthWrite:false}))
+sh.rotation.x=-Math.PI/2
+sh.position.set(x,3.03,z)
+scene.add(sh)
+const m=new THREE.Mesh(new THREE.DodecahedronGeometry(.8+Math.random()*.4,0),new THREE.MeshLambertMaterial({color:5917306,flatShading:true}))
+m.position.set(x,15,z)
+scene.add(m)
+CF.rocks.push({m,sh,x,z,t:0})
+try{blip(120,60,.5,"sawtooth",.03)}catch(_){}}}for(let i=CF.rocks.length-1;i>=0;i--){const r=CF.rocks[i]
+r.t+=dt
+const k2=Math.min(1,r.t/1.05)
+r.sh.material.opacity=k2*.5
+r.sh.scale.setScalar(.5+k2*.6)
+r.m.position.y=15-12*k2*k2
+r.m.rotation.x+=dt*4
+if(k2>=1&&!r.hit){r.hit=true
+if(Math.hypot(P.pos.x-r.x,P.pos.z-r.z)<1.5&&!P.dead)try{hurt()}catch(_){}try{burst(V3(r.x,3.4,r.z),9075370,16,6,.4)
+noise(AC.currentTime,.3,.18,"lowpass",400,sfxBus)
+shakeT=Math.max(shakeT,.15)}catch(_){}}if(r.t>1.6){scene.remove(r.m)
+scene.remove(r.sh)
+r.m.geometry.dispose()
+r.sh.geometry.dispose()
+CF.rocks.splice(i,1)}}}catch(e){}}const GH={t:0,list:[],was:0}
+function ghostSnap(){try{flint.updateMatrixWorld(true)
+const g=new THREE.Group
+flint.traverse((m=>{if(!m.isSkinnedMesh||!m.visible)return
+m.skeleton.update()
+const src=m.geometry.attributes.position,idx=m.geometry.index,n=src.count,a=new Float32Array(n*3),v=new THREE.Vector3
+for(let k=0;k<n;k++){v.fromBufferAttribute(src,k)
+m.boneTransform(k,v)
+v.applyMatrix4(m.matrixWorld)
+a[k*3]=v.x
+a[k*3+1]=v.y
+a[k*3+2]=v.z}const geo=new THREE.BufferGeometry
+geo.setAttribute("position",new THREE.BufferAttribute(a,3))
+if(idx)geo.setIndex(idx)
+const mesh=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:16751162,transparent:true,opacity:.42,depthWrite:false}))
+mesh.frustumCulled=false
+g.add(mesh)}))
+scene.add(g)
+GH.list.push({g,t:0})}catch(e){}}function ghostTick(dt){const on=P.dashT>0&&!P.dead&&!SET.lowfx
+if(on&&!GH.was)GH.t=0
+GH.was=on
+if(on){GH.t-=dt
+if(GH.t<=0&&GH.list.length<4){GH.t=.055
+ghostSnap()}}for(let i=GH.list.length-1;i>=0;i--){const h=GH.list[i]
+h.t+=dt
+const o=Math.max(0,.42*(1-h.t/.32))
+h.g.children.forEach((m=>m.material.opacity=o))
+if(h.t>.32){scene.remove(h.g)
+h.g.children.forEach((m=>{m.geometry.dispose()
+m.material.dispose()}))
+GH.list.splice(i,1)}}}const CN={i:0,t:-9,done:false}
+const CN_SC=[0,2,4,7,9,12,14,16,19,21,24]
+function cnTone(semi,d,vol,del){const f=392*Math.pow(2,semi/12)
+blip(f,f*.998,d,"triangle",vol,del||0)
+blip(f*2,f*1.996,d*.6,"square",vol*.18,del||0)}function crateNote(){try{if(!AC)return
+CN.i=time-CN.t<1.4?Math.min(CN_SC.length-1,CN.i+1):0
+CN.t=time
+cnTone(CN_SC[CN.i],.22,.05)
+if(!CN.done&&cratesTotal>0&&cratesBroken>=cratesTotal){CN.done=true;[0,4,7,12,7,12,16,19].forEach(((s,k)=>cnTone(s,k===7?.5:.16,.06,.18+k*.11)))
+try{popup("EVERY CRATE!","#ffd27a")}catch(_){}}}catch(e){}}let CW_g=true
+function crateWobTick(dt){if(SET.lowfx)return
+const land=P.onGround&&!CW_g
+CW_g=P.onGround
+const fast=P.dashT>0||P.spinT>0
+for(const s of crates){if(!s.alive||!s.obj||s.kind==="iron")continue
+const cx=(s.min.x+s.max.x)/2,cz=(s.min.z+s.max.z)/2,d=Math.hypot(P.pos.x-cx,P.pos.z-cz)
+if((land||fast)&&d<2.4&&Math.abs(P.pos.y-s.min.y)<2.2&&!(s.wob>.3)){s.wob=1
+s.wobA=Math.atan2(P.pos.x-cx,P.pos.z-cz)}if(s.wob>0){s.wob=Math.max(0,s.wob-dt*2.6)
+const a=Math.sin((1-s.wob)*26)*s.wob*.09
+s.obj.rotation.x=Math.cos(s.wobA)*a
+s.obj.rotation.z=-Math.sin(s.wobA)*a}}}(function(){try{if(JSON.parse(localStorage.getItem("wt-settings")||"{}").wobble){const c=THREE.ShaderChunk
+c.project_vertex=c.project_vertex+"\n{vec2 _sn=vec2(240.,135.);vec2 _p=gl_Position.xy/gl_Position.w;gl_Position.xy=floor(_p*_sn+.5)/_sn*gl_Position.w;}\n"}}catch(e){}setTimeout((()=>{try{const b=document.getElementById("setWobble")
+if(!b)return
+const sync=()=>{try{setTog("setWobble",!!SET.wobble)}catch(e){b.setAttribute("aria-pressed",SET.wobble?"true":"false")
+b.textContent=SET.wobble?"ON":"OFF"}}
+sync()
+b.addEventListener("click",(()=>{SET.wobble=!SET.wobble
+sync()
+try{saveSet()}catch(e){}}))}catch(e){}}),0)})()
+window.MUSL={k:1,still:0}
+function musLayerTick(dt){const M=window.MUSL
+M.at=performance.now()
+const mv=Math.hypot(P.vel.x,P.vel.z)>1||!P.onGround
+M.still=mv?0:M.still+dt
+let near=false
+try{if(inBoss)near=true
+else for(const e of enemies){if(e.alive&&!e.dying&&e.obj&&e.obj.position.distanceTo(P.pos)<13){near=true
+break}}}catch(e){}const tgt=near?1:M.still>5?.3:.75
+M.k+=(tgt-M.k)*Math.min(1,dt*(tgt>M.k?2.5:.6))}const WX={on:false,kind:null,o:null,n:0,a:null,v:null,steam:0}
+window.__WX=WX
+function wxInit(){WX.on=true
+const K={1:"leaf",3:"rain",8:"ember",13:"ember"}[LV]
+if(!K)return
+WX.kind=K
+const rain=K==="rain"
+WX.n=(rain?520:170)*(SET.lowfx?.5:1)|0
+const n=WX.n
+const pos=new Float32Array(n*(rain?6:3))
+WX.a=new Float32Array(n*3)
+WX.v=new Float32Array(n)
+for(let i=0;i<n;i++){WX.a[i*3]=R(-22,22)
+WX.a[i*3+1]=R(-4,18)
+WX.a[i*3+2]=R(-22,22)
+WX.v[i]=Math.random()}const g=new THREE.BufferGeometry
+g.setAttribute("position",new THREE.BufferAttribute(pos,3))
+if(rain)WX.o=new THREE.LineSegments(g,new THREE.LineBasicMaterial({color:13689087,transparent:true,opacity:.6,depthWrite:false}))
+else WX.o=new THREE.Points(g,new THREE.PointsMaterial({color:K==="leaf"?14721104:16747066,size:K==="leaf"?.16:.09,transparent:true,opacity:.85,depthWrite:false}))
+WX.o.frustumCulled=false
+scene.add(WX.o)}function wxTick(dt){if(!WX.on)wxInit()
+if(!WX.o)return
+const rain=WX.kind==="rain",ember=WX.kind==="ember",leaf=WX.kind==="leaf"
+const heavy=typeof inBoss!=="undefined"&&inBoss?1.35:1,cx=camera.position.x,cy=camera.position.y,cz=camera.position.z,A=WX.a,p=WX.o.geometry.attributes.position.array
+const lx=P.pos.x,ly=P.pos.y+1.1,lz=P.pos.z,lr=MV&&MV.chg>0?3.2:1.9
+let hiss=0
+for(let i=0;i<WX.n;i++){const j=i*3
+let x=A[j],y=A[j+1],z=A[j+2],s=WX.v[i]
+if(rain)y-=(16+s*6)*heavy*dt
+else if(ember){y+=(.6+s*.8)*dt
+x+=Math.sin(time*1.3+s*9)*dt*.5}else{y-=(.7+s*.5)*dt
+x+=(Math.sin(time*.9+s*7)*.8+.5)*dt
+z+=Math.cos(time*.7+s*5)*.4*dt}if(y<-4)y+=22
+if(y>18)y-=22
+if(x<-22)x+=44
+if(x>22)x-=44
+if(z<-22)z+=44
+if(z>22)z-=44
+const wx=cx+x-lx,wy=cy+y-ly,wz=cz+z-lz,d=Math.hypot(wx,wy,wz)
+if(d<lr&&d>.01){const f=(lr-d)/lr*dt*(rain?14:6)
+x+=wx/d*f
+z+=wz/d*f
+if(rain&&d<.7)hiss++}A[j]=x
+A[j+1]=y
+A[j+2]=z
+if(rain){const k=i*6
+p[k]=cx+x
+p[k+1]=cy+y
+p[k+2]=cz+z
+p[k+3]=cx+x+.04
+p[k+4]=cy+y+.8
+p[k+5]=cz+z+.02}else{p[j]=cx+x
+p[j+1]=cy+y
+p[j+2]=cz+z}}WX.o.geometry.attributes.position.needsUpdate=true
+WX.steam-=dt
+if(hiss&&WX.steam<=0&&!P.dead){WX.steam=.12
+try{emit(V3(lx+R(-.2,.2),ly+.2,lz+R(-.2,.2)),{vx:R(-.3,.3),vy:R(.8,1.6),vz:R(-.3,.3),g:-1,life:.5,size:.14,size1:.3,color:14213360})}catch(e){}}}const RSC={list:[]}
+window.__RSC=RSC
+function mkRescue(x,y,z,line){const g=new THREE.Group
+g.position.set(x,y,z)
+scene.add(g)
+const iron=new THREE.MeshLambertMaterial({color:4867672,flatShading:true}),brass=new THREE.MeshLambertMaterial({color:10123834,flatShading:true})
+const base=new THREE.Mesh(new THREE.CylinderGeometry(.62,.68,.14,8),iron)
+base.position.y=.07
+g.add(base)
+const top=new THREE.Mesh(new THREE.ConeGeometry(.66,.36,8),iron)
+top.position.y=1.48
+g.add(top)
+const ring=new THREE.Mesh(new THREE.TorusGeometry(.18,.04,4,8),brass)
+ring.position.y=1.74
+g.add(ring)
+const bars=[]
+for(let i=0;i<8;i++){const a=i/8*Math.PI*2
+const b=new THREE.Mesh(new THREE.BoxGeometry(.06,1.2,.06),iron)
+b.position.set(Math.sin(a)*.6,.72,Math.cos(a)*.6)
+g.add(b)
+bars.push(b)}const band=new THREE.Mesh(new THREE.TorusGeometry(.61,.035,4,8),brass)
+band.rotation.x=Math.PI/2
+band.position.y=.9
+g.add(band)
+const c=new THREE.Group
+c.position.y=.14
+g.add(c)
+const wax=new THREE.Mesh(new THREE.CylinderGeometry(.2,.24,.5,7),new THREE.MeshLambertMaterial({color:15917764,flatShading:true}))
+wax.position.y=.25
+c.add(wax)
+const drip=new THREE.Mesh(new THREE.CylinderGeometry(.215,.2,.08,7),new THREE.MeshLambertMaterial({color:16773852,flatShading:true}))
+drip.position.y=.48
+c.add(drip)
+const eyeM=new THREE.MeshBasicMaterial({color:2757668})
+for(const s of[-1,1]){const e=new THREE.Mesh(new THREE.BoxGeometry(.05,.08,.02),eyeM)
+e.position.set(s*.08,.32,.215)
+c.add(e)}const fl=new THREE.Mesh(new THREE.ConeGeometry(.09,.26,5),new THREE.MeshBasicMaterial({color:16754746}))
+fl.position.y=.66
+c.add(fl)
+const fl2=new THREE.Mesh(new THREE.ConeGeometry(.045,.14,5),new THREE.MeshBasicMaterial({color:16773296}))
+fl2.position.y=.63
+c.add(fl2)
+const r={g,c,fl,bars,top,ring,band,base,x,y,z,state:"caged",t:0,line:line||"THANKS, FLINT!",el:null,fly:[]}
+try{r.sol=addSolid(x-.62,x+.62,y,y+1.6,z-.62,z+.62,"wall",null)}catch(e){}RSC.list.push(r)
+return r}function rescueOpen(r){r.state="free"
+r.t=0
+if(r.sol)r.sol.alive=false
+try{sfx.crate()
+blip(1400,900,.08,"square",.04);[0,4,7,12].forEach(((s,k)=>cnTone(s,.14,.05,.25+k*.09)))}catch(e){}for(const m of[...r.bars,r.top,r.ring,r.band]){const a=Math.atan2(m.position.x,m.position.z)||Math.random()*6
+r.fly.push({m,vx:Math.sin(a)*R(2,4),vy:R(3,6),vz:Math.cos(a)*R(2,4),sp:R(-8,8)})}for(let i=0;i<6;i++)spawnOrb(r.x+R(-.6,.6),r.y+.5,r.z+R(-.6,.6),true)
+try{burst(V3(r.x,r.y+.8,r.z),16765562,14,4,.4)}catch(e){}}function rescueBubble(r,show){if(!r.el){const b=document.createElement("div")
+b.className="talkBtn"
+b.style.pointerEvents="none"
+b.innerHTML="<span></span>"
+document.body.appendChild(b)
+const sp=b.querySelector("span")
+sp.textContent=r.line
+let tw=r.line.length*13.5
+try{const cx=document.createElement("canvas").getContext("2d")
+cx.font="700 16px WTPix"
+tw=Math.max(cx.measureText(r.line).width+r.line.length,tw)}catch(e){}const B=talkBubble(tw)
+b.style.width=B.w+"px"
+b.style.height=B.h+"px"
+b.style.backgroundImage="url("+B.url+")"
+b.style.backgroundSize=B.w+"px "+B.h+"px"
+sp.style.top=Math.round((B.bodyH-16)/2)+"px"
+r.el=b
+r.bw=B.w
+r.bh=B.h}const b=r.el
+if(!show){b.hidden=true
+return}const v=V3(r.g.position.x,r.g.position.y+r.c.position.y+1.2,r.g.position.z).project(camera)
+if(v.z>1){b.hidden=true
+return}b.hidden=false
+b.style.transform="translate("+Math.round((v.x*.5+.5)*innerWidth-r.bw/2)+"px,"+Math.round((-v.y*.5+.5)*innerHeight-r.bh)+"px)"}function rescueTick(dt){for(const r of RSC.list){r.t+=dt
+r.fl.scale.y=1+Math.sin(time*14+r.x)*.15
+if(r.state==="caged"){r.c.position.y=.14+Math.abs(Math.sin(time*3.2))*.06
+r.c.rotation.y=Math.sin(time*1.4)*.6
+const d=Math.hypot(P.pos.x-r.x,P.pos.z-r.z),dy=P.pos.y-r.y
+if(!P.dead&&(d<1.6&&dy>-.5&&dy<2&&(P.spinT>0||P.dashT>0)||d<.9&&dy>1.2&&dy<2.2&&P.vel.y<0)){rescueOpen(r)
+if(P.vel.y<0&&dy>1.2)P.vel.y=9}}else if(r.state==="free"){for(const f of r.fly){f.vy-=20*dt
+f.m.position.x+=f.vx*dt
+f.m.position.y=Math.max(.05,f.m.position.y+f.vy*dt)
+f.m.position.z+=f.vz*dt
+f.m.rotation.x+=f.sp*dt
+if(f.m.position.y<=.05){f.vx*=.8
+f.vz*=.8
+f.sp*=.8}}const h=r.t<1.8?Math.abs(Math.sin(r.t*7))*.45:0
+r.c.position.y=.14+h
+r.c.rotation.y=Math.atan2(P.pos.x-r.x,P.pos.z-r.z)
+rescueBubble(r,r.t>.25&&r.t<2.6&&state==="play")
+if(r.t>2.6){const a=r.c.rotation.y+Math.PI
+r.c.position.x+=Math.sin(a)*dt*4
+r.c.position.z+=Math.cos(a)*dt*4
+r.c.position.y=.14+Math.abs(Math.sin(r.t*14))*.2}if(r.t>3.6){r.state="gone"
+try{burst(V3(r.x+r.c.position.x,r.y+.6,r.z+r.c.position.z),16765562,10,3,.3)}catch(e){}scene.remove(r.c)
+rescueBubble(r,false)}}else if(r.state==="gone"&&r.t>8){for(const f of r.fly){f.m.visible=false}r.state="done"}}}if(LV===1){ARENA={x0:-9.5,x1:9.5,z0:-74,z1:-104,cz:-89,y:0}
 slab(-20,20,12,-36)
 slab(-20,6,-36,-52)
 slab(-20,20,-52,-60.5)
@@ -8037,7 +9387,7 @@ for(const[x,z,y]of[[-3.6,-9,0],[3.8,-27,0],[-7,-56,2.5],[6,-75,2.5]])shaft(x,y+7
 for(const[x,y,z]of[[-3.6,1.6,-9],[3.8,1.6,-27],[0,8,-133]]){const pl=new THREE.PointLight(8060730,1.2,9,2)
 pl.position.set(x,y,z)
 scene.add(pl)}L.storm=true}else if(LV===3){ARENA={x0:-12,x1:12,z0:-108,z1:-134,cz:-121,y:1.2,cx:0}
-Object.assign(L,{num:3,name:"DEAD LETTER BOG",start:V3(0,1,7),killY:-3,mus:LVMUS[3][0],bossMus:LVMUS[3][1],bossName:"THE DEAD LETTER MIMIC",hemiI:1,hint:"HOP THE LETTERS · THEY SINK IF YOU LINGER",grade:{sat:1.24,vig:.8,tint:[1.04,1,1.06]},clampP:p=>{p.x=clamp(p.x,-30,30)
+Object.assign(L,{num:3,name:"DEAD LETTER BOG",start:V3(0,1,7),killY:-3,mus:LVMUS[3][0],bossMus:LVMUS[3][1],bossName:"THE DEAD LETTER MIMIC",hemiI:1,hint:"HOP THE LETTERS · THEY SINK IF YOU LINGER",grade:{sat:1.1,vig:.8,tint:[.97,1.04,.96]},clampP:p=>{p.x=clamp(p.x,-30,30)
 p.z=Math.min(p.z,11.5)
 if(p.z<-106&&!inBoss)p.x=clamp(p.x,-11.5,11.5)},clampCam:c=>{c.z=Math.min(c.z,13)}})
 const sky=skyTex((g=>{grad(g,512,1024,[[0,"#12052e"],[.28,"#3a1478"],[.46,"#a03ab0"],[.56,"#e08ac8"],[.62,"#6a2a90"],[1,"#3a1a5a"]])
@@ -8367,7 +9717,7 @@ spawnOrb(-1,3.1,-93.8)
 makeCrate("check",0,-99,1.2)
 mimicling(3,-102,1.2)
 makeCrate("crate",-3,-103,1.2)}}else if(LV===4){const GT1=getTheme(1),GM=GT1.M
-Object.assign(L,{num:4,name:"GLOWSHROOM MINES",start:V3(0,0,7),killY:-3,mus:LVMUS[4][0],bossMus:LVMUS[4][1],hemiI:1,hint:"HOP THE MILLSTONES · RIDE THE CART TO THE PORTAL",grade:{sat:1.2,vig:.85,tint:[.98,1,1.1]},clampP:p=>{if(p.z>-58){p.x=clamp(p.x,-8.6,8.6)
+Object.assign(L,{num:4,name:"GLOWSHROOM MINES",start:V3(0,0,7),killY:-3,mus:LVMUS[4][0],bossMus:LVMUS[4][1],hemiI:1,hint:"HOP THE MILLSTONES · RIDE THE CART TO THE PORTAL",grade:{sat:1.08,vig:.85,tint:[.95,1.02,1.03]},clampP:p=>{if(p.z>-58){p.x=clamp(p.x,-8.6,8.6)
 p.z=Math.min(p.z,11.5)}},clampCam:c=>{if(c.z>-56){c.x=clamp(c.x,-8.2,8.2)
 c.z=Math.min(c.z,12)}}})
 scene.background=GT1.skyT
@@ -8457,8 +9807,14 @@ track(3.2,-223.4,-238)
 deck(-4.7,4.7,-238,-241.9,TY,wood,woodS,.4)
 track(0,-241.9,-256)
 track(0,-259.5,-280)
-liquidPool(-40,40,-60,-305,-2,slimeT,6261316)
-for(let z=-74;z>-280;z-=14){const g=new THREE.Group
+track(0,-296,-312)
+deck(-4.7,4.7,-312,-315.9,TY,wood,woodS,.4)
+track(-3.2,-315.9,-334)
+track(3.2,-315.9,-334)
+deck(-4.7,4.7,-334,-337.9,TY,wood,woodS,.4)
+track(0,-341.5,-372)
+liquidPool(-40,40,-60,-405,-2,slimeT,6261316)
+for(let z=-74;z>-372;z-=14){const g=new THREE.Group
 for(const sx of[-1,1]){const p=new THREE.Mesh(kBoxGeo(.42,7,.42,1.2),TW)
 p.position.set(sx*4.6,TY+2.4,z)
 g.add(p)
@@ -8469,37 +9825,38 @@ g.add(br)}const cap=new THREE.Mesh(kBoxGeo(10,.5,.5,1.2),TW)
 cap.position.set(0,TY+5.9,z)
 g.add(cap)
 c1Add(g)
-c1Lantern(-1.2,TY+2.8,z,{h:2.8,pool:false})}for(const sx of[-1,1])for(let z=-62;z>-305;z-=11){const m=kRockMass(sx*R(18,22),-3,z,R(10,14),R(16,26),R(11,14),z*sx*7|0,{tile:7})
+c1Lantern(-1.2,TY+2.8,z,{h:2.8,pool:false})}for(const sx of[-1,1])for(let z=-62;z>-400;z-=11){const m=kRockMass(sx*R(18,22),-3,z,R(10,14),R(16,26),R(11,14),z*sx*7|0,{tile:7})
 m.children.forEach((c=>{c.material=c===m.children[0]?c1Lam("caveR",KT.rock(),{color:12098264}):c1Lam("caveT",KT.moss(),{color:10128072})}))
 c1Add(m)}{const st=[]
-for(let i=0;i<70;i++){const sx=pick([-1,1])
-st.push([sx*R(8,15),R(16,22),R(-300,-62),R(1,2.4),R(0,TAU),R(1.5,3)])}const sg=new THREE.ConeGeometry(.7,3,5)
+for(let i=0;i<95;i++){const sx=pick([-1,1])
+st.push([sx*R(8,15),R(16,22),R(-390,-62),R(1,2.4),R(0,TAU),R(1.5,3)])}const sg=new THREE.ConeGeometry(.7,3,5)
 sg.rotateX(Math.PI)
 kInstanced(sg,c1Lam("stal",KT.rock(),{color:10127048,flatShading:true}),st,60)}deck(-5,5,-280,-296,TY,rock,rockS,3)
-addSolid(-2,2,TY,TY+1.2,-283.6,-282.6,"block",woodS)
-goalPortal(0,TY,-291)
+deck(-5,5,-372,-388,TY,rock,rockS,3)
+addSolid(-2,2,TY,TY+1.2,-375.6,-374.6,"block",woodS)
+goalPortal(0,TY,-383)
 for(let z=8;z>-56;z-=5.5)for(const sx of[-1,1]){const m=GT1.props[0](GM)
 scen(m.o,sx*R(7.4,8.4),z+R(-1,1),0,0)}for(const[x,z]of[[-5,-10],[5,-22],[-6,-52],[6,-54]]){const h=GT1.props[1](GM)
 scen(h.o,x*1.2,z,R(0,3))}for(let i=0;i<26;i++){const x=R(-8,8),z=R(-56,10)
 if(Math.abs(x)<3)continue
 const c=GT1.props[2](GM)
 scen(c.o,x,z,0,0)}for(let i=0;i<30;i++){const sx=pick([-1,1])
-crystal(sx*R(5,9),0,R(-60,8),R(.3,.8),pick([11563263,13664511,7381247]))}for(let z=-70;z>-292;z-=7){for(const sx of[-1,1]){if(Math.random()<.6){const m=GT1.props[0](GM)
+crystal(sx*R(5,9),0,R(-60,8),R(.3,.8),pick([11563263,13664511,7381247]))}for(let z=-70;z>-384;z-=7){for(const sx of[-1,1]){if(Math.random()<.6){const m=GT1.props[0](GM)
 m.o.scale.setScalar(R(1.4,2.4))
 scen(m.o,sx*R(9,14),z,0,R(-2,1))}if(Math.random()<.5)crystal(sx*R(7,12),R(-1,2),z+R(-3,3),R(.6,1.4),pick([11563263,13664511]))}}for(const[x,z]of[[-12,-100],[13,-132],[-11,-170],[12,-215],[-12,-262]]){const w=new THREE.Mesh(new THREE.PlaneGeometry(2.4,16),new THREE.MeshBasicMaterial({map:slimeT,color:9109322,transparent:true,opacity:.85}))
 w.position.set(x,4,z)
 w.rotation.y=x<0?Math.PI/2:-Math.PI/2
 scene.add(w)
 L.bubbles.push(V3(x,-1.8,z))}for(const[x,z]of[[-3,-40],[4,-12],[0,-110],[0,-160]])shaft(x,8,z,4,18,R(-.2,.2),10139903,.12)
-for(const[x,z,y]of[[-3.6,-60,3],[3.6,-66,3],[-4.4,-286,TY],[4.4,-286,TY]])c1Torch(x,y,z,{h:2})
+for(const[x,z,y]of[[-3.6,-60,3],[3.6,-66,3],[-4.4,-286,TY],[4.4,-286,TY],[-4.4,-378,TY],[4.4,-378,TY]])c1Torch(x,y,z,{h:2})
 for(let z=4;z>-50;z-=12)for(const sx of[-1,1])c1Torch(sx*8.4,0,z,{h:2.2})
 for(const[x,z,s,ry]of[[-6.9,1,.95,1.2],[6.9,-6,1,-1.3],[-6.9,-16.5,1,1.1],[7,-25.5,.9,-1.2],[-7,-28.4,.9,1.3]]){c1MushHouse(x,0,z,s,ry)
 addSolid(x-1.2*s,x+1.2*s,0,3.3*s,z-1.2*s,z+1.2*s,"wall",null)}for(const sx of[-1,1])for(let z=8;z>-62;z-=11){const m=kRockMass(sx*12.4,-1,z,6.5,R(11,16),12,z*sx*3+7|0,{tile:6,ry:0,ledges:false})
 m.children[0].material=c1Lam("caveR",KT.rock(),{color:12098264})
 m.children[1].material=c1Lam("caveT",KT.moss(),{color:10128072})
 c1Add(m)}c1Reeds(c1Scatter(-9,9,-48,-30,22,-.35,((x,z)=>Math.abs(x)<3.2),.6,1,61),8059135)
-for(let i=0;i<12;i++){const sx=pick([-1,1])
-c1CrystalCluster(sx*R(9,13),R(-1,3),R(-300,-70),R(1.2,2.2),pick([11563263,13664511,9071359]))}for(let i=0;i<6;i++){const sx=pick([-1,1])
+for(let i=0;i<18;i++){const sx=pick([-1,1])
+c1CrystalCluster(sx*R(9,13),R(-1,3),R(-390,-70),R(1.2,2.2),pick([11563263,13664511,9071359]))}for(let i=0;i<6;i++){const sx=pick([-1,1])
 c1CrystalCluster(sx*R(8,10),0,R(-55,6),R(.8,1.3),pick([11563263,13664511]))}scene.background=c1StormSky({grad:[[0,"#06021a"],[.3,"#1e0a4a"],[.5,"#3a1478"],[.6,"#5a2a9a"],[1,"#1a0a3a"]],bolts:true})
 L.storm=true
 L.update=dt=>{if(!L.riding&&!L.rode&&P.pos.distanceTo(cart.position)<1.8&&!P.dead){L.riding=true
@@ -8508,28 +9865,31 @@ P.pos.set(cart.position.x,TY+.05,cart.position.z)
 P.vel.set(0,0,0)
 banner("HOLD ON!","MINE CART")
 sfx.check()
-blip(200,600,.4,"sawtooth",.06)}if(L.riding){L.forceZ=-12
-P.ram=true
+blip(200,600,.4,"sawtooth",.06)}if(L.riding){L.cartV=Math.min(18.5,(L.cartV||11)+dt*.55)
+L.forceZ=-L.cartV
+try{cartFx(dt,L.cartV)}catch(e){}P.ram=true
 L.lockYaw=0
 cart.position.set(P.pos.x,P.pos.y,P.pos.z)
 cart.rotation.z=clamp(-P.vel.x*.06,-.25,.25)
 cart.rotation.x=P.onGround?Math.sin(time*30)*.015:.1
 if(P.onGround&&Math.random()<.6)emit(V3(P.pos.x+R(-.8,.8),P.pos.y+.1,P.pos.z+.9),{vx:R(-1,1),vy:R(1,2.5),vz:2,life:.25,size:.15,size1:.02,color:16765562})
 if(P.onGround&&Math.random()<dt*14&&AC)noise(AC.currentTime,.05,.05,"bandpass",R(1500,2600),sfxBus)
-if(P.pos.z<-281){L.riding=false
-L.forceZ=0
+if(P.pos.z<-373){L.riding=false
+L.cartV=0
+try{cartFx(0,0,true)}catch(e){}L.forceZ=0
 P.ram=false
 L.lockYaw=null
 P.vel.z=-4
 P.vel.y=7
-cart.position.set(0,TY,-281.8)
+cart.position.set(0,TY,-373.8)
 cart.rotation.set(0,0,0)
 burst(V3(0,TY+1,-282),16765562,20,5)
 sfx.boom()
 shakeT=.3}}}
 L.onRespawn=()=>{if(L.riding||P.pos.z<-60&&checkpoint.z>-70){L.riding=false
 L.rode=false
-L.forceZ=0
+L.cartV=0
+try{cartFx(0,0,true)}catch(e){}L.forceZ=0
 P.ram=false
 L.lockYaw=null
 cart.position.copy(CART0)
@@ -8596,7 +9956,7 @@ for(let z=-244;z>-256;z-=3)spawnOrb(0,TY+1.1,z)
 orbArc(0,-256,0,-260,3,2.4)
 makeCrate("crate",0,-265,TY)
 makeCrate("ward",0,-272,TY)
-for(let z=-262;z>-279;z-=3)spawnOrb(0,TY+1.1,z)}}else if(LV===5){Object.assign(L,{num:5,name:"THE MILL THAT BITES",start:V3(0,0,4),killY:-3,mus:LVMUS[5][0],bossMus:LVMUS[5][1],bossName:"THE MILL THAT BITES",hemiI:1.05,hint:"RUN RIGHT! DON'T LET THE MILL CATCH YOU",side:-1.5,grade:{sat:1.2,vig:.85,tint:[1,.98,1.08]},camH:2.8,camD:10.5,clampP:p=>{const lim=p.z>-249?3.9:p.z>-310.5?7.2:10.6
+for(let z=-262;z>-279;z-=3)spawnOrb(0,TY+1.1,z)}}else if(LV===5){Object.assign(L,{num:5,name:"THE MILL THAT BITES",start:V3(0,0,4),killY:-3,mus:LVMUS[5][0],bossMus:LVMUS[5][1],bossName:"THE MILL THAT BITES",hemiI:1.05,hint:"RUN RIGHT! DON'T LET THE MILL CATCH YOU",side:-1.5,grade:{sat:1.08,vig:.85,tint:[1.05,1,.95]},camH:2.8,camD:10.5,clampP:p=>{const lim=p.z>-249?3.9:p.z>-310.5?7.2:10.6
 p.x=clamp(p.x,-lim,lim)
 p.z=Math.max(Math.min(p.z,9),-346.4)},clampCam:c=>{}})
 ARENA={x0:-11,x1:11,z0:-311,z1:-347,cz:-329,y:9,cx:0}
@@ -9071,7 +10431,7 @@ mill.rotation.order="YXZ"
 mill.rotation.set(b.roll||0,b.yaw||0,0)
 if(ph>=2&&b.used&&!inHole()&&P.pos.y>=GY-.05&&HOLES.filter((h=>h.open)).length>2){closeHole(b.used)
 b.used=null}}}else if(LV===6){ARENA={x0:-10,x1:10,z0:-98,z1:-122,cz:-110,y:18,cx:0}
-Object.assign(L,{num:6,name:"THE CLOCK TOWER",start:V3(0,0,5),killY:-4,mus:LVMUS[6][0],bossMus:LVMUS[6][1],bossName:"THE SOOTWING RAVEN",hemiI:1,hint:"CLIMB THE TOWER · RIDE THE BELLS",grade:{sat:1.22,vig:.8,tint:[1.04,1,1.06]},clampP:p=>{if(p.z>-14){p.x=clamp(p.x,-9.6,9.6)
+Object.assign(L,{num:6,name:"THE CLOCK TOWER",start:V3(0,0,5),killY:-4,mus:LVMUS[6][0],bossMus:LVMUS[6][1],bossName:"THE SOOTWING RAVEN",hemiI:1,hint:"CLIMB THE TOWER · RIDE THE BELLS",grade:{sat:1.08,vig:.8,tint:[.97,.99,1.04]},clampP:p=>{if(p.z>-14){p.x=clamp(p.x,-9.6,9.6)
 p.z=Math.min(p.z,9.4)}},clampCam:c=>{if(c.z>-14){c.x=clamp(c.x,-9.2,9.2)
 c.z=Math.min(c.z,9.6)}}})
 const sky=skyTex((g=>{grad(g,512,1024,[[0,"#0c0426"],[.3,"#2a0e5e"],[.5,"#6a2aa0"],[.58,"#3a1a6a"],[1,"#1a0a3a"]])
@@ -9327,7 +10687,7 @@ orbLine(0,-82,0,-92,5,15)
 gloombat(0,-86,2.6,1.4,16)
 makeCrate("bounce",0,-96,14)
 for(let i=0;i<4;i++)spawnOrb(0,17+i*.8,-96.6)}}else if(LV===7){ARENA={x0:-12,x1:12,z0:-92,z1:-122,cz:-105,y:4,cx:0}
-Object.assign(L,{num:7,name:"THE HOLLOW KING",start:V3(0,0,6),killY:-4,mus:LVMUS[7][0],bossMus:LVMUS[7][1],bossName:"THE HOLLOW KING",hemiI:1,hint:"CROSS THE RUINS · DON'T LOOK DOWN",grade:{sat:1.25,vig:.85,tint:[1.06,.98,1.08]},clampP:p=>{if(p.z>-26){p.x=clamp(p.x,-6.6,6.6)
+Object.assign(L,{num:7,name:"THE HOLLOW KING",start:V3(0,0,6),killY:-4,mus:LVMUS[7][0],bossMus:LVMUS[7][1],bossName:"THE HOLLOW KING",hemiI:1,hint:"CROSS THE RUINS · DON'T LOOK DOWN",grade:{sat:1.06,vig:.85,tint:[.96,.98,1.02]},clampP:p=>{if(p.z>-26){p.x=clamp(p.x,-6.6,6.6)
 p.z=Math.min(p.z,9.5)}else if(p.z<-56&&p.z>-80)p.x=clamp(p.x,-8.6,8.6)},clampCam:c=>{if(c.z>-26){c.x=clamp(c.x,-6.2,6.2)
 c.z=Math.min(c.z,10)}}})
 const sky=skyTex((g=>{grad(g,512,1024,[[0,"#060216"],[.3,"#1a0a4a"],[.5,"#4a1a8a"],[.62,"#2a0e5a"],[1,"#120626"]])
@@ -9568,7 +10928,7 @@ makeCrate("crate",7.5,-66,3.5)
 makeCrate("bounce",-7.5,-76,2.5)
 for(let i=0;i<4;i++)spawnOrb(-7.5,5.5+i*.8,-76)
 orbArc(0,-81,0,-87,4,3.4)}}else if(LV===8){ARENA={x0:-11,x1:11,z0:-104,z1:-128,cz:-115,y:12,cx:0}
-Object.assign(L,{num:8,name:"DRAGON GATE",start:V3(0,0,5),killY:-4,mus:LVMUS[8][0],bossMus:LVMUS[8][1],bossName:"THE DRAGON GATE",hemiI:1,hint:"CLIMB THE MOUNTAIN PATH",grade:{sat:1.24,vig:.85,tint:[1.06,1,1.04]},clampP:p=>{if(p.z>-12){p.x=clamp(p.x,-4.6,4.6)
+Object.assign(L,{num:8,name:"DRAGON GATE",start:V3(0,0,5),killY:-4,mus:LVMUS[8][0],bossMus:LVMUS[8][1],bossName:"THE DRAGON GATE",hemiI:1,hint:"CLIMB THE MOUNTAIN PATH",grade:{sat:1.1,vig:.85,tint:[1.08,.98,.9]},clampP:p=>{if(p.z>-12){p.x=clamp(p.x,-4.6,4.6)
 p.z=Math.min(p.z,9.5)}},clampCam:c=>{if(c.z>-12){c.x=clamp(c.x,-6,6)
 c.z=Math.min(c.z,11)}}})
 const sky=skyTex((g=>{grad(g,512,1024,[[0,"#0a0322"],[.3,"#2a0c66"],[.48,"#5a2aa8"],[.6,"#3a1478"],[1,"#1a0838"]])
@@ -9798,7 +11158,7 @@ spawnOrb(-1.5,10.8,-84.5)
 spawnOrb(1.6,11.4,-87.6)
 spawnOrb(-1.2,12,-90.8)
 makeCrate("crate",0,-94.5,11.2)}}else if(LV===9){ARENA={x0:-11,x1:11,z0:-90,z1:-118,cz:-104,y:3,cx:0}
-Object.assign(L,{num:9,name:"THE MOON'S TEETH",start:V3(0,0,5),killY:-4,mus:LVMUS[9][0],bossMus:LVMUS[9][1],bossName:"THE MOON'S TEETH",hemiI:.95,hint:"TIME YOUR STEPS · THE TEETH BITE",grade:{sat:1.24,vig:.9,tint:[1,.98,1.12]},clampP:p=>{if(p.z>-30){p.x=clamp(p.x,-3.6,3.6)
+Object.assign(L,{num:9,name:"THE MOON'S TEETH",start:V3(0,0,5),killY:-4,mus:LVMUS[9][0],bossMus:LVMUS[9][1],bossName:"THE MOON'S TEETH",hemiI:.95,hint:"TIME YOUR STEPS · THE TEETH BITE",grade:{sat:1.06,vig:.9,tint:[.98,.99,1.05]},clampP:p=>{if(p.z>-30){p.x=clamp(p.x,-3.6,3.6)
 p.z=Math.min(p.z,9.5)}else if(p.z<-56&&p.z>-86)p.x=clamp(p.x,-3.6,3.6)},clampCam:c=>{if(c.z>-30){c.x=clamp(c.x,-3.2,3.2)
 c.z=Math.min(c.z,10)}else if(c.z<-56&&c.z>-86)c.x=clamp(c.x,-3.2,3.2)}})
 const sky=skyTex((g=>{grad(g,512,1024,[[0,"#050214"],[.35,"#1a0a4a"],[.5,"#3a1a7a"],[.62,"#1e0c4a"],[1,"#0a0420"]])
@@ -10047,7 +11407,7 @@ makeCrate("crate",2.6,-85,3)
 makeCrate("crate",-2.6,-85,3)
 makeCrate("crate",-2.6,-85,4)
 orbLine(0,-64,0,-87,8,4.2)}}else if(LV===10){ARENA={x0:-6.6,x1:6.6,z0:-272,z1:-300,cz:-286,y:3,cx:0}
-Object.assign(L,{num:10,name:"MOONLINE RAILWAY",start:V3(0,0,4),killY:-7,mus:SMUS[3]||SMUS[0],bossMus:LVMUS[10][1],bossName:"THE BELLWARDEN",hemiI:1.05,hint:"FOLLOW THE MOONLINE · MIND THE MAGENTA LANES",grade:{sat:1.25,vig:.88,tint:[1.02,.97,1.12]},clampP:p=>{if(p.z>-16)p.z=Math.min(p.z,8.5)},clampCam:c=>{if(c.z>-16)c.z=Math.min(c.z,13)}})
+Object.assign(L,{num:10,name:"MOONLINE RAILWAY",start:V3(0,0,4),killY:-7,mus:SMUS[3]||SMUS[0],bossMus:LVMUS[10][1],bossName:"THE BELLWARDEN",hemiI:1.05,hint:"FOLLOW THE MOONLINE · MIND THE MAGENTA LANES",grade:{sat:1.1,vig:.88,tint:[.95,1.02,1.05]},clampP:p=>{if(p.z>-16)p.z=Math.min(p.z,8.5)},clampCam:c=>{if(c.z>-16)c.z=Math.min(c.z,13)}})
 function pixTex(pal,n=32,rx=1,ry=1,f){const c=document.createElement("canvas")
 c.width=c.height=n
 const g=c.getContext("2d")
@@ -10770,7 +12130,7 @@ if(e)e.trk=TU[0]}makeCrate("boom",4,-252,3)
 makeCrate("crate",-4,-260,3)
 makeCrate("iron",0,-264,3)
 makeCrate("check",-4,-268,3)}}else if(LV===11){ARENA={x0:-13,x1:13,z0:-137,z1:-163,cz:-150,y:5,cx:0}
-Object.assign(L,{num:11,name:"REGENT'S HOLLOW",start:V3(0,0,60),killY:-5,mus:LVMUS[11][0],bossMus:LVMUS[11][1],bossName:"THE ROOT REGENT",hemiI:1.05,hint:"INTO THE HOLLOW · JUMP THE ROOT LASHES",grade:{sat:1.2,vig:.9,tint:[.96,1,1.14]},clampP:p=>{p.z=Math.min(p.z,63.4)
+Object.assign(L,{num:11,name:"REGENT'S HOLLOW",start:V3(0,0,60),killY:-5,mus:LVMUS[11][0],bossMus:LVMUS[11][1],bossName:"THE ROOT REGENT",hemiI:1.05,hint:"INTO THE HOLLOW · JUMP THE ROOT LASHES",grade:{sat:1.1,vig:.9,tint:[.96,1.05,.97]},clampP:p=>{p.z=Math.min(p.z,63.4)
 if(p.z<-136&&p.y>4)p.x=clamp(p.x,-12.6,12.6)},clampCam:c=>{c.z=Math.min(c.z,70)}})
 SEC.built=true
 scene.background=skyTex((g=>{grad(g,512,1024,[[0,"#02031a"],[.25,"#081248"],[.45,"#14227a"],[.56,"#2a2a8a"],[.62,"#101a5a"],[1,"#060a2a"]])
@@ -11566,7 +12926,7 @@ makeCrate("crate",4,-122,2.5)
 bud(-2,-131,4.2,0,5)
 for(let i=0;i<4;i++)spawnOrb(0,3.6+i*.5,-125-i*2.2)}}else if(LV===12){const ACZ=-166,AY=2
 ARENA={x0:-13,x1:13,z0:-153,z1:-179,cz:ACZ,y:AY,cx:0}
-Object.assign(L,{num:12,name:"THE DROWNED ARCHIVE",start:V3(0,3,8),killY:-3.4,mus:LVMUS[12][0],bossMus:LVMUS[12][1],bossName:"ABBESS UNDERTOW",hemiI:1.05,hint:"CROSS THE GREAT READING HALL",grade:{sat:1.22,vig:.9,tint:[.94,1,1.16]},clampP:p=>{if(p.x>SX-120)return
+Object.assign(L,{num:12,name:"THE DROWNED ARCHIVE",start:V3(0,3,8),killY:-3.4,mus:LVMUS[12][0],bossMus:LVMUS[12][1],bossName:"ABBESS UNDERTOW",hemiI:1.05,hint:"CROSS THE GREAT READING HALL",grade:{sat:1.1,vig:.9,tint:[.95,1,1.07]},clampP:p=>{if(p.x>SX-120)return
 p.z=Math.min(p.z,9.6)
 if(p.z<-153.4&&p.y>1){const dx=p.x,dz=p.z-ACZ,d=Math.hypot(dx,dz)
 if(d>12.6){p.x=dx/d*12.6
@@ -12263,7 +13623,7 @@ makeCrate("crate",-3,-139)
 makeCrate("crate",3,-139)
 for(let i=0;i<4;i++)spawnOrb(0,1.4+i*.5,-141-i*1.8)}}else if(LV===13){const ACZ=-146,AY=5,BY=2
 ARENA={x0:-14,x1:14,z0:-132,z1:-160,cz:ACZ,y:AY,cx:0}
-Object.assign(L,{num:13,name:"CINDERWING'S CROSSING",start:V3(0,BY,6),killY:-6.5,mus:LVMUS[13][0],bossMus:LVMUS[13][1],bossName:"BARONESS CINDERWING",hemiI:.95,hint:"CROSS THE BRIDGE · MIND THE SQUIRES",grade:{sat:1.16,vig:.95,tint:[1.12,.96,.92]},clampP:p=>{if(p.x>SX-120)return
+Object.assign(L,{num:13,name:"CINDERWING'S CROSSING",start:V3(0,BY,6),killY:-6.5,mus:LVMUS[13][0],bossMus:LVMUS[13][1],bossName:"BARONESS CINDERWING",hemiI:.95,hint:"CROSS THE BRIDGE · MIND THE SQUIRES",grade:{sat:1.1,vig:.95,tint:[1.1,.96,.9]},clampP:p=>{if(p.x>SX-120)return
 p.z=Math.min(p.z,9.4)
 if(p.z<-132.4&&p.y>AY-1){p.x=clamp(p.x,-13.3,13.3)
 p.z=Math.max(p.z,-159.3)}},clampCam:c=>{if(c.x<SX-120)c.z=Math.min(c.z,16)}})
@@ -13460,7 +14820,7 @@ orbLine(0,-92,0,-116,7,BY+1.2)
 makeCrate("check",0,-116.8,BY)
 for(let i=0;i<4;i++)spawnOrb(0,BY+1.4+i*.75,-119.5-i*2.2)}}else if(LV===14){const ACZ=-136,AY=12
 ARENA={x0:-14,x1:14,z0:-122,z1:-150,cz:ACZ,y:AY,cx:0}
-Object.assign(L,{num:14,name:"THE STAR-CAGE CITADEL",start:V3(0,0,6),killY:-9,mus:LVMUS[14][0],bossMus:LVMUS[14][1],bossName:"VESPER QUILL",hemiI:1.05,hint:"CLIMB TO THE OBSERVATORY",grade:{sat:1.2,vig:.92,tint:[1.04,.96,1.14]},clampP:p=>{if(p.x>SX-120)return
+Object.assign(L,{num:14,name:"THE STAR-CAGE CITADEL",start:V3(0,0,6),killY:-9,mus:LVMUS[14][0],bossMus:LVMUS[14][1],bossName:"VESPER QUILL",hemiI:1.05,hint:"CLIMB TO THE OBSERVATORY",grade:{sat:1.1,vig:.92,tint:[1.02,.97,1.07]},clampP:p=>{if(p.x>SX-120)return
 p.z=Math.min(p.z,9.4)
 if(p.z<-122.4&&p.y>AY-1){const dx=p.x,dz=p.z-ACZ,d=Math.hypot(dx,dz)
 if(d>13.2){p.x=dx/d*13.2
@@ -13600,29 +14960,57 @@ i?sh.lineTo(x,y):sh.moveTo(x,y)}sh.closePath()
 const g=new THREE.ExtrudeGeometry(sh,{depth:d,bevelEnabled:true,bevelSize:.06,bevelThickness:.06,bevelSegments:1})
 g.rotateX(-Math.PI/2)
 return g}const goldM=c1M("vcGold",(()=>new THREE.MeshLambertMaterial({color:16762954,emissive:5913096})))
-const CONS={pads:[],order:[0,1,2,3,4],i:0,show:-1,st:0,open:false,taught:false,lines:[]}
+const CONS={pads:[],order:[0,1,2,3,4],i:0,show:-1,st:0,open:false,taught:true,lines:[],seen:false}
 for(const[x,z]of[[-5.2,-46.2],[-1.6,-50.4],[3.4,-47.6],[5.6,-53.6],[-.6,-56.4]]){const g=new THREE.Group
-const d=new THREE.Mesh(new THREE.CylinderGeometry(1,1.1,.22,10),[side,top,side])
-d.position.y=.11
+const d=new THREE.Mesh(new THREE.CylinderGeometry(1,1.12,.26,16),[side,top,side])
+d.position.y=.13
 g.add(d)
-const st=new THREE.Mesh(starGeo(.7,.3,.06),c1M("padStar",(()=>new THREE.MeshBasicMaterial({color:6965914}))).clone())
+const rim=new THREE.Mesh(new THREE.TorusGeometry(.93,.05,5,24),c1M("consRim",(()=>new THREE.MeshLambertMaterial({color:9071146}))))
+rim.rotation.x=Math.PI/2
+rim.position.y=.27
+g.add(rim)
+const st=new THREE.Mesh(starGeo(.66,.28,.05),new THREE.MeshLambertMaterial({color:11569722,emissive:1708036,flatShading:true}))
 st.position.y=.24
 g.add(st)
-const gl=spr(glowTex,gold,2.4,2.4,0,.5,0)
+const gl=spr(glowTex,gold,1.4,1.4,0,.5,0)
 gl.material.opacity=0
 g.add(gl)
 g.position.set(x,3,z)
 scene.add(g)
 addSolid(x-.8,x+.8,3,3.22,z-.8,z+.8,"ground",null)
-CONS.pads.push({g,st,gl,x,z,lit:false})}const SGATE={}
+CONS.pads.push({g,st,gl,x,z,lit:false})}{const c=document.createElement("canvas")
+c.width=c.height=96
+const g=c.getContext("2d")
+for(let y=0;y<96;y+=6)for(let x=0;x<96;x+=6){g.fillStyle=["#1e1a3a","#241f44","#1a1834","#28224a"][((x*3+y*5)/6|0)%4]
+g.fillRect(x,y,6,6)}g.fillStyle="#120e24"
+for(let k=0;k<96;k+=6){g.fillRect(k,0,1,96)
+g.fillRect(0,k,96,1)}const P5=[[-5.2,-46.2],[-1.6,-50.4],[3.4,-47.6],[5.6,-53.6],[-.6,-56.4]],cx=.1,cz=-50.8,R=8.2
+const uv=([x,z])=>[(x-cx)/R*48+48,(z-cz)/R*48+48]
+g.strokeStyle="#8a6a2a"
+g.lineWidth=2
+g.beginPath()
+P5.forEach(((q,i)=>{const[u,v]=uv(q)
+i?g.lineTo(u,v):g.moveTo(u,v)}))
+g.closePath()
+g.stroke()
+g.fillStyle="#c8a050"
+for(let k=0;k<30;k++){const a=k/30*Math.PI*2
+g.fillRect(48+Math.cos(a)*45|0,48+Math.sin(a)*45|0,2,2)}const t=new THREE.CanvasTexture(c)
+t.magFilter=THREE.NearestFilter
+t.minFilter=THREE.NearestFilter
+const m=new THREE.Mesh(new THREE.CircleGeometry(R,40),new THREE.MeshLambertMaterial({map:t}))
+m.rotation.x=-Math.PI/2
+m.position.set(cx,3.012,cz)
+scene.add(m)}const SGATE={}
 {const c=document.createElement("canvas")
 c.width=128
 c.height=128
 const g=c.getContext("2d")
-g.fillStyle="rgba(60,20,120,.35)"
+g.fillStyle="#1a1638"
 g.fillRect(0,0,128,128)
-const pts=[[20,100],[40,40],[64,70],[90,30],[108,96],[64,110]]
-g.strokeStyle="rgba(230,200,255,.9)"
+for(let k=0;k<60;k++){g.fillStyle=k%3?"#3a3466":"#f6e8c8"
+g.fillRect(k*37%126,k*53%126,k%3?1:2,k%3?1:2)}const pts=[[20,100],[40,40],[64,70],[90,30],[108,96],[64,110]]
+g.strokeStyle="#c8a050"
 g.lineWidth=3
 g.beginPath()
 pts.forEach(((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1])))
@@ -13631,11 +15019,16 @@ g.fillStyle="#fff6c8"
 for(const p of pts){g.beginPath()
 g.arc(p[0],p[1],6,0,TAU)
 g.fill()}const t=new THREE.CanvasTexture(c)
-const m=new THREE.Mesh(new THREE.PlaneGeometry(3.4,3.4),new THREE.MeshBasicMaterial({map:t,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}))
+t.magFilter=THREE.NearestFilter
+const m=new THREE.Mesh(new THREE.PlaneGeometry(3.4,3.4),new THREE.MeshLambertMaterial({map:t,color:16777215,emissive:2234436,transparent:true,side:THREE.DoubleSide}))
 m.position.set(0,4.75,-60.6)
 scene.add(m)
 SGATE.m=m
-SGATE.s=addSolid(-1.7,1.7,3,7,-61,-60.2,"wall",null)}function consLine(a,b){const A=CONS.pads[a],B=CONS.pads[b]
+{const fm=new THREE.MeshLambertMaterial({color:9071146,flatShading:true})
+for(const[w,h,x,y]of[[3.8,.25,0,6.5],[3.8,.25,0,3],[.25,3.7,-1.8,4.75],[.25,3.7,1.8,4.75]]){const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,.22),fm)
+b.position.set(x,y,-60.62)
+m.add(b)
+b.position.set(x,y-4.75,-.02)}}SGATE.s=addSolid(-1.7,1.7,3,7,-61,-60.2,"wall",null)}function consLine(a,b){const A=CONS.pads[a],B=CONS.pads[b]
 const l=Math.hypot(B.x-A.x,B.z-A.z)
 const m=new THREE.Mesh(new THREE.PlaneGeometry(.18,l),new THREE.MeshBasicMaterial({color:gold,transparent:true,opacity:.85,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}))
 m.rotation.x=-Math.PI/2
@@ -13644,8 +15037,9 @@ m.rotation.order="XZY"
 m.position.set((A.x+B.x)/2,3.27,(A.z+B.z)/2)
 scene.add(m)
 CONS.lines.push(m)}function consLight(p,on){p.lit=on
-p.st.material.color.setHex(on?16765562:6965914)
-p.gl.material.opacity=on?.7:0}function consReset(replay){CONS.i=0
+p.st.material.color.setHex(on?16770720:11569722)
+p.st.material.emissive.setHex(on?8018448:1708036)
+p.gl.material.opacity=on?.45:0}function consReset(replay){CONS.i=0
 CONS.pads.forEach((p=>consLight(p,false)))
 CONS.lines.forEach((l=>scene.remove(l)))
 CONS.lines.length=0
@@ -13657,11 +15051,15 @@ if(SGATE.t>1)SGATE.m.visible=false}return}SGATE.m.material.opacity=.75+.25*Math.
 if(CONS.show>=0){CONS.st+=dt
 const k=Math.floor(CONS.st/.55)
 CONS.pads.forEach(((p,j)=>{const on=j===CONS.order[k]&&CONS.st>0&&CONS.st%.55<.42
-p.gl.material.opacity=on?.9:0
-p.st.material.color.setHex(on?16765562:6965914)}))
+p.gl.material.opacity=on?.55:0
+p.st.material.color.setHex(on?16770720:11569722)
+p.st.material.emissive.setHex(on?8018448:1708036)}))
 if(CONS.st>0&&CONS.st%.55<dt&&k<5)blip(700+k*120,900+k*120,.15,"sine",.05)
 if(k>=5){CONS.show=-1
-CONS.pads.forEach((p=>consLight(p,false)))}return}if(!CONS.taught||!P.onGround||Math.abs(P.pos.y-3.22)>.3)return
+CONS.pads.forEach((p=>consLight(p,false)))}return}if(!CONS.seen&&P.onGround&&Math.abs(P.pos.y-3.22)<.4&&Math.hypot(P.pos.x-.1,P.pos.z+50.8)<9){CONS.seen=true
+consReset(true)
+showHint("WATCH THE ORDER · THEN STEP ON THE STARS",3)
+return}if(!CONS.taught||!P.onGround||Math.abs(P.pos.y-3.22)>.3)return
 for(let j=0;j<5;j++){const p=CONS.pads[j]
 if(p.lit||Math.hypot(P.pos.x-p.x,P.pos.z-p.z)>.85)continue
 if(j===CONS.order[CONS.i]){consLight(p,true)
@@ -13693,7 +15091,7 @@ RIDE2.path=[[-8.4,3,-79],[-15,4.5,-74],[-24,7,-77],[-30,9.5,-87],[-29,11,-98],[-
 RIDE2.curve=new THREE.CatmullRomCurve3(RIDE2.path)
 RIDE2.len=RIDE2.curve.getLength()
 RIDE2.mines=[]
-for(const u of[.34,.56,.78]){const q=RIDE2.curve.getPointAt(u)
+for(const u of[]){const q=RIDE2.curve.getPointAt(u)
 const m=new THREE.Mesh(new THREE.OctahedronGeometry(.55,0),c1M("mineM",(()=>new THREE.MeshLambertMaterial({color:11561727,emissive:3803754}))))
 m.add(spr(glowTex,violet,2,2,0,0,0))
 m.position.set(q.x,q.y+.75,q.z)
@@ -13724,8 +15122,18 @@ if(R2.on&&Math.random()<.9)emit(V3(q.x+R(-.6,.6),q.y-.2,q.z+R(-.6,.6)),{vx:R(-.5
 for(const mn of R2.mines){mn.m.rotation.y+=dt*2
 mn.m.position.y=mn.q.y+.75+Math.sin(time*3+mn.u*9)*.1
 if(state==="play"&&!P.dead&&P.pos.distanceTo(mn.m.position)<.95){hurt()
-burst(mn.m.position.clone(),violet,16,5,.4)}}}const TEL={yaw:Math.PI/2,target:Math.PI/2,hit:false,broke:false}
-{const base=new THREE.Mesh(new THREE.CylinderGeometry(1.3,1.5,.6,12),side)
+burst(mn.m.position.clone(),violet,16,5,.4)}}}const TEL={yaw:Math.PI/2,target:Math.PI/2,hit:false,broke:false,ht:0,shards:[]}
+window.__TEL=TEL
+function telPix(w,h,f){const c=document.createElement("canvas")
+c.width=w
+c.height=h
+f(c.getContext("2d"),w,h)
+const t=new THREE.CanvasTexture(c)
+t.magFilter=THREE.NearestFilter
+t.minFilter=THREE.NearestFilter
+return t}{const brassD=c1M("vcBrassD",(()=>new THREE.MeshLambertMaterial({color:9071146})))
+const iron=c1M("telIron",(()=>new THREE.MeshLambertMaterial({color:3814472,flatShading:true})))
+const base=new THREE.Mesh(new THREE.CylinderGeometry(1.3,1.5,.6,12),side)
 base.position.set(4.2,7.8,-100.5)
 c1Add(base)
 c1Solid(3,5.4,7.5,8.1,-101.7,-99.3)
@@ -13733,70 +15141,174 @@ const piv=new THREE.Group
 piv.position.set(4.2,8.1,-100.5)
 scene.add(piv)
 TEL.piv=piv
-const post=new THREE.Mesh(new THREE.CylinderGeometry(.25,.32,1.6,8),goldM)
-post.position.y=.8
-piv.add(post)
+for(let k=0;k<3;k++){const a=k/3*TAU
+const leg=new THREE.Mesh(new THREE.CylinderGeometry(.07,.1,1.9,6),brassD)
+leg.position.set(Math.sin(a)*.42,.8,Math.cos(a)*.42)
+leg.rotation.set(Math.cos(a)*.32,0,-Math.sin(a)*.32)
+piv.add(leg)}const collar=new THREE.Mesh(new THREE.CylinderGeometry(.3,.36,.35,10),goldM)
+collar.position.y=1.55
+piv.add(collar)
 const tube=new THREE.Group
-tube.position.y=1.7
+tube.position.y=1.8
 tube.rotation.x=-.12
 piv.add(tube)
-const t1=new THREE.Mesh(new THREE.CylinderGeometry(.42,.55,3.4,12),goldM)
+TEL.tube=tube
+const t1=new THREE.Mesh(new THREE.CylinderGeometry(.4,.56,3.6,14),goldM)
 t1.rotation.x=Math.PI/2
 tube.add(t1)
-const t2=new THREE.Mesh(new THREE.CylinderGeometry(.62,.62,.3,12),c1M("vcBrassD",(()=>new THREE.MeshLambertMaterial({color:9071146}))))
-t2.rotation.x=Math.PI/2
-t2.position.z=1.6
-tube.add(t2)
-const lens=new THREE.Mesh(new THREE.CircleGeometry(.5,16),new THREE.MeshBasicMaterial({color:13166847}))
-lens.position.z=1.76
+for(const[z,r]of[[-1.5,.47],[-.4,.52],[.8,.57],[1.62,.66]]){const ring=new THREE.Mesh(new THREE.TorusGeometry(r,.06,6,16),brassD)
+ring.position.z=z
+tube.add(ring)}const hood=new THREE.Mesh(new THREE.CylinderGeometry(.66,.6,.4,14,1,true),brassD)
+hood.rotation.x=Math.PI/2
+hood.position.z=1.9
+tube.add(hood)
+const eye=new THREE.Mesh(new THREE.CylinderGeometry(.13,.16,.6,8),brassD)
+eye.rotation.x=Math.PI/2
+eye.position.z=-2.05
+tube.add(eye)
+const lens=new THREE.Mesh(new THREE.CircleGeometry(.56,20),new THREE.MeshPhongMaterial({color:10148095,emissive:1718874,shininess:120,specular:16777215,transparent:true,opacity:.85}))
+lens.position.z=1.95
 tube.add(lens)
-const crank=new THREE.Mesh(new THREE.TorusGeometry(.5,.08,6,12),goldM)
-crank.position.set(0,.5,0)
-crank.rotation.x=Math.PI/2
+TEL.lens=lens
+const crank=new THREE.Group
+crank.position.set(.55,1.45,0)
+crank.rotation.z=Math.PI/2
 piv.add(crank)
 TEL.crank=crank
-const beam=new THREE.Mesh(new THREE.BoxGeometry(.22,.22,1),new THREE.MeshBasicMaterial({color:16773824,transparent:true,opacity:.75,blending:THREE.AdditiveBlending,depthWrite:false}))
+crank.add(new THREE.Mesh(new THREE.TorusGeometry(.42,.05,6,14),goldM))
+for(let k=0;k<4;k++){const sp=new THREE.Mesh(new THREE.BoxGeometry(.05,.8,.05),goldM)
+sp.rotation.z=k*Math.PI/4
+crank.add(sp)}const knob=new THREE.Mesh(new THREE.CylinderGeometry(.06,.06,.3,6),brassD)
+knob.position.set(.42,0,.15)
+knob.rotation.x=Math.PI/2
+crank.add(knob)
+const shaftT=telPix(4,32,((g,w,h)=>{for(let x=0;x<w;x++){}const gr=g.createLinearGradient(0,0,0,h)
+gr.addColorStop(0,"rgba(255,244,200,.9)")
+gr.addColorStop(1,"rgba(255,230,160,.25)")
+g.fillStyle=gr
+g.fillRect(0,0,w,h)}))
+shaftT.magFilter=THREE.LinearFilter
+const beam=new THREE.Group
 scene.add(beam)
 TEL.beam=beam
-const sealM=new THREE.MeshBasicMaterial({color:11561727,transparent:true,opacity:.45,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide})
-const seal=new THREE.Mesh(new THREE.PlaneGeometry(8,4.6),sealM)
+const outer=new THREE.Mesh(new THREE.CylinderGeometry(.42,.18,1,14,1,true),new THREE.MeshBasicMaterial({map:shaftT,transparent:true,opacity:.32,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide,fog:false}))
+outer.rotation.x=Math.PI/2
+beam.add(outer)
+const core=new THREE.Mesh(new THREE.CylinderGeometry(.07,.05,1,8,1,true),new THREE.MeshBasicMaterial({color:16774872,transparent:true,opacity:.7,blending:THREE.AdditiveBlending,depthWrite:false,fog:false}))
+core.rotation.x=Math.PI/2
+beam.add(core)
+TEL.bOuter=outer
+TEL.bCore=core
+const glassT=telPix(64,40,((g,w,h)=>{const panes=["#5a2a9a","#3a3aa8","#7a3aa8","#2a4a9a","#6a2a8a","#4a5ab8"]
+for(let y=0;y<h;y+=8)for(let x=0;x<w;x+=8){g.fillStyle=panes[((x*7+y*3)/8|0)%panes.length]
+g.fillRect(x,y,8,8)}g.fillStyle="#1a1028"
+for(let y=0;y<h;y+=8)g.fillRect(0,y,w,1)
+for(let x=0;x<w;x+=8)g.fillRect(x,0,1,h)
+g.fillStyle="#ffe8a0"
+const pts=[[10,30],[20,12],[32,20],[44,8],[54,28]]
+g.strokeStyle="#ffe8a0"
+g.lineWidth=1
+g.beginPath()
+pts.forEach(((p,i)=>i?g.lineTo(p[0]+.5,p[1]+.5):g.moveTo(p[0]+.5,p[1]+.5)))
+g.stroke()
+for(const p of pts)g.fillRect(p[0]-1,p[1]-1,3,3)}))
+const glassM=new THREE.MeshPhongMaterial({map:glassT,transparent:true,opacity:.86,shininess:90,specular:13417471,emissive:1706544,side:THREE.DoubleSide})
+const seal=new THREE.Mesh(new THREE.PlaneGeometry(8,4.6),glassM)
 seal.position.set(0,9.8,-104.4)
 scene.add(seal)
 TEL.seal=seal
-const sl=new THREE.Mesh(new THREE.CircleGeometry(.7,20),new THREE.MeshBasicMaterial({color:6961834}))
+const crackT=telPix(64,40,((g,w,h)=>{g.clearRect(0,0,w,h)
+g.strokeStyle="rgba(255,250,235,1)"
+g.lineWidth=1
+const cx=32,cy=19
+for(let k=0;k<11;k++){let x=cx,y=cy,a=k/11*TAU+Math.random()*.4
+g.beginPath()
+g.moveTo(x,y)
+for(let n=0;n<6;n++){a+=(Math.random()-.5)*.8
+x+=Math.cos(a)*5
+y+=Math.sin(a)*4
+g.lineTo(x|0,y|0)}g.stroke()}}))
+const crack=new THREE.Mesh(new THREE.PlaneGeometry(8,4.6),new THREE.MeshBasicMaterial({map:crackT,transparent:true,opacity:0,depthWrite:false,fog:false}))
+crack.position.set(0,9.8,-104.36)
+scene.add(crack)
+TEL.crack=crack
+const frameM=c1M("telFrame",(()=>new THREE.MeshLambertMaterial({color:4866136,flatShading:true})))
+for(const[w,h,x,y]of[[8.8,.45,0,12.2],[8.8,.45,0,7.4],[.45,5.2,-4.2,9.8],[.45,5.2,4.2,9.8],[.18,4.6,-1.4,9.8],[.18,4.6,1.4,9.8]]){const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,.35),w<.3||h<.3?iron:frameM)
+b.position.set(x,y,-104.42)
+scene.add(b)
+TEL["fr"+x+y]=b}const sl=new THREE.Mesh(new THREE.CircleGeometry(.72,20),new THREE.MeshPhongMaterial({color:6961834,emissive:1706538,shininess:100,specular:16777215}))
 sl.position.set(0,9.6,-104.3)
 scene.add(sl)
 TEL.slens=sl
-TEL.ss=addSolid(-4,4,7.5,12.5,-104.7,-104.1,"wall",null)}function telTick(dt){if(spinNear(4.2,-100.5,2.2,7.5)&&!TEL.cd){TEL.cd=.6
+const slr=new THREE.Mesh(new THREE.TorusGeometry(.76,.09,6,20),iron)
+slr.position.set(0,9.6,-104.28)
+scene.add(slr)
+TEL.slr=slr
+TEL.ss=addSolid(-4,4,7.5,12.5,-104.7,-104.1,"wall",null)}function telShatter(){const g=new THREE.MeshPhongMaterial({map:TEL.seal.material.map,transparent:true,opacity:.9,shininess:90,side:THREE.DoubleSide})
+for(let k=0;k<26;k++){const sh=new THREE.Shape
+const r=.25+Math.random()*.5
+sh.moveTo(0,r)
+sh.lineTo(r*.8,-r*.5)
+sh.lineTo(-r*.7,-r*.6)
+sh.closePath()
+const m=new THREE.Mesh(new THREE.ShapeGeometry(sh),g)
+const x=(Math.random()-.5)*7.6,y=9.8+(Math.random()-.5)*4.2
+m.position.set(x,y,-104.35)
+scene.add(m)
+TEL.shards.push({m,v:V3(x*.6+(Math.random()-.5)*2,1+Math.random()*3,3+Math.random()*4),w:V3(Math.random()*6,Math.random()*6,Math.random()*6),t:0})}}function telTick(dt){if(spinNear(4.2,-100.5,2.2,7.5)&&!TEL.cd){TEL.cd=.6
 TEL.target+=Math.PI/4
-blip(500,700,.2,"square",.05)}if(TEL.cd){TEL.cd=Math.max(0,TEL.cd-dt)}TEL.yaw=lerp(TEL.yaw,TEL.target,Math.min(1,dt*5))
+blip(500,700,.2,"square",.05)
+blip(300,260,.25,"triangle",.04,.05)}if(TEL.cd){TEL.cd=Math.max(0,TEL.cd-dt)}TEL.yaw=lerp(TEL.yaw,TEL.target,Math.min(1,dt*5))
 TEL.piv.rotation.y=TEL.yaw
-TEL.crank.rotation.z+=dt*(TEL.target-TEL.yaw)*4
-const o=V3(4.2,9.8,-100.5),dir=V3(Math.sin(TEL.yaw),.12,Math.cos(TEL.yaw)).normalize()
+TEL.crank.rotation.x+=dt*(TEL.target-TEL.yaw)*6
+const o=V3(4.2,9.95,-100.5),dir=V3(Math.sin(TEL.yaw),.12,Math.cos(TEL.yaw)).normalize()
 let len=22
 const toS=Math.atan2(0-4.2,-104.3+100.5)
 let da=Math.atan2(Math.sin(TEL.yaw-toS),Math.cos(TEL.yaw-toS))
 const aimed=!TEL.broke&&Math.abs(da)<.12&&Math.abs(TEL.target-TEL.yaw)<.05
 if(!TEL.broke&&Math.abs(da)<.5)len=Math.hypot(4.2,3.8)/Math.max(.2,Math.cos(da))
 TEL.beam.scale.set(1,1,len)
-TEL.beam.position.copy(o).addScaledVector(dir,len/2+1.6)
+TEL.beam.position.copy(o).addScaledVector(dir,len/2+1.9)
 TEL.beam.lookAt(o.clone().addScaledVector(dir,len+2))
-TEL.beam.material.opacity=.55+.2*Math.sin(time*20)
-if(!TEL.broke){TEL.seal.material.opacity=.38+.12*Math.sin(time*4)
-if(aimed){TEL.ht=(TEL.ht||0)+dt
-TEL.slens.material.color.setHex(16773824)
-if(Math.random()<.5)emit(V3(R(-.4,.4),9.6+R(-.4,.4),-104.2),{vx:R(-3,3),vy:R(-1,3),vz:R(0,2),life:.4,size:.4,color:gold})
-if(TEL.ht>1){TEL.broke=true
+TEL.bOuter.material.opacity=.26+.06*Math.sin(time*9)
+TEL.bCore.material.opacity=.6+.15*Math.sin(time*17)
+if(Math.random()<.35){const k=Math.random()
+emit(o.clone().addScaledVector(dir,1.9+len*k).add(V3((Math.random()-.5)*.4,(Math.random()-.5)*.4,(Math.random()-.5)*.4)),{life:.8,size:.07,size1:.02,color:16773824,vy:.15})}for(let i=TEL.shards.length-1;i>=0;i--){const q=TEL.shards[i]
+q.t+=dt
+q.v.y-=14*dt
+q.m.position.addScaledVector(q.v,dt)
+q.m.rotation.x+=q.w.x*dt
+q.m.rotation.y+=q.w.y*dt
+q.m.rotation.z+=q.w.z*dt
+if(q.m.position.y<7.6&&q.v.y<0){q.v.y*=-.25
+q.v.x*=.5
+q.v.z*=.5
+q.m.position.y=7.6}q.m.material.opacity=Math.max(0,.9-Math.max(0,q.t-1.6))
+if(q.t>2.6){scene.remove(q.m)
+TEL.shards.splice(i,1)}}if(!TEL.broke){if(aimed){TEL.ht=Math.min(1.6,(TEL.ht||0)+dt)
+const k=Math.min(1,TEL.ht/1.4)
+TEL.slens.material.emissive.setRGB(.3+k*1.2,.12+k*.9,.05+k*.6)
+TEL.crack.material.opacity=Math.max(0,(k-.25)/.75)
+if(Math.random()<.5)emit(V3((Math.random()-.5)*.8,9.6+(Math.random()-.5)*.8,-104.2),{vx:(Math.random()-.5)*3,vy:Math.random()*3,vz:1+Math.random()*2,life:.4,size:.25,size1:.04,color:k>.7?16774880:16752704})
+TEL.crk=(TEL.crk||0)-dt
+if(TEL.crk<=0&&k>.3){TEL.crk=.18-k*.1
+blip(2400+Math.random()*1800,1200,.04,"square",.025)}if(TEL.ht>1.4){TEL.broke=true
 TEL.ss.alive=false
 TEL.seal.visible=false
+TEL.crack.visible=false
 TEL.slens.visible=false
+TEL.slr.visible=false
+for(const k2 in TEL)if(k2.startsWith("fr")&&TEL[k2]&&TEL[k2].geometry&&TEL[k2].geometry.parameters.width<.3)TEL[k2].visible=false
+telShatter()
 sfx.boom()
-shakeT=Math.max(shakeT,.4)
-burst(V3(0,9.8,-104.4),violet,60,9,.8)
-burst(V3(0,9.8,-104.4),gold,30,7,.6)
+try{if(AC)noise(AC.currentTime,.6,.3,"highpass",3e3,sfxBus)
+for(let n=0;n<6;n++)blip(3e3+Math.random()*2e3,1800,.08,"triangle",.04,n*.04)}catch(e){}shakeT=Math.max(shakeT,.4)
+burst(V3(0,9.8,-104.4),gold,24,7,.5)
 showHint("THE SEAL SHATTERS · ON TO THE OBSERVATORY",2.4)
-if(L.bramT)L.bramT.lines=[["SIR BRAMBLE VALE","Ha! Square on the seal. Up you go, little lantern. I'll hold the terrace.",4.6,"point"]],L.bramT.said=false}}else{TEL.ht=0
-TEL.slens.material.color.setHex(6961834)}}}{for(const[x,y,z,w,h,d,rx,rz]of[[-2,4.6,-89.5,3.6,3.2,3.2,.2,.15],[1.9,5,-90.2,3.4,3.6,3,-.15,.25],[0,7.4,-89.8,4.4,2.2,2.6,.3,-.1],[-3.4,3.8,-87.6,1.8,1.6,1.8,.4,.5],[3.2,3.7,-87.4,1.6,1.4,1.6,-.3,.2]]){const m=new THREE.Mesh(kBoxGeo(w,h,d,2.2),side)
+if(L.bramT)L.bramT.lines=[["SIR BRAMBLE VALE","Ha! Square on the seal. Up you go, little lantern. I'll hold the terrace.",4.6,"point"]],L.bramT.said=false}}else{TEL.ht=Math.max(0,(TEL.ht||0)-dt*.8)
+const k=Math.min(1,TEL.ht/1.4)
+TEL.slens.material.emissive.setRGB(.1+k*1.2,.04+k*.9,.16+k*.6)
+TEL.crack.material.opacity=Math.max(0,(k-.25)/.75)}}}{for(const[x,y,z,w,h,d,rx,rz]of[[-2,4.6,-89.5,3.6,3.2,3.2,.2,.15],[1.9,5,-90.2,3.4,3.6,3,-.15,.25],[0,7.4,-89.8,4.4,2.2,2.6,.3,-.1],[-3.4,3.8,-87.6,1.8,1.6,1.8,.4,.5],[3.2,3.7,-87.4,1.6,1.4,1.6,-.3,.2]]){const m=new THREE.Mesh(kBoxGeo(w,h,d,2.2),side)
 m.position.set(x,y,z)
 m.rotation.set(rx,R(-.3,.3),rz)
 c1Add(m)}addSolid(-4,4,3,10.5,-91.8,-86.6,"wall",null)}{const ct=VIO.clone()
@@ -14451,7 +15963,7 @@ consTick(dt)
 rideTick(dt)
 telTick(dt)
 if(GIMP&&!GIMP.alive&&!RIDE2.ready){RIDE2.ready=true
-if(L.netH){L.netH.lines=[["NETTLE COGFOOT","Ha! Look at him go. Right — the shooting star's free. Hop on, it'll carry you round to the terrace.",5.4,"point"],["NETTLE COGFOOT","Mind the crystal mines on the way. Jump 'em!",3.4,"wave"]]
+if(L.netH){L.netH.lines=[["NETTLE COGFOOT","Ha! Look at him go. Right — the shooting star's free. Hop on, it'll carry you round to the terrace.",5.4,"point"],["NETTLE COGFOOT","Hold on tight and enjoy the view!",3.4,"wave"]]
 L.netH.said=false}showHint("NETTLE'S SHOOTING STAR IS FREE",2.4)}for(const e of IMPS)if(!e.alive&&e.star.visible){e.star.visible=false
 for(const t of e.trail)t.visible=false}if(SEC.done&&!SEC.on&&!L.arr){L.arr=1
 setTimeout((()=>banner("THE STAR-CAGE CITADEL","THE LAST CAUSEWAY")),700)}for(const p of POSTS)p.gl.material.opacity=.45+.2*Math.sin(time*2+p.ph)
@@ -14543,6 +16055,8 @@ for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i)
 return u.buffer}function loadGLB(b64){return new Promise(((res,rej)=>GL.parse(b64buf(b64),"",res,rej)))}let flintGL=null,crateProto=null
 const crates=[],enemies=[],orbsArr=[],shots=[]
 let cratesTotal=0,cratesBroken=0
+enemies.push=function(...a){for(const e of a){try{const b=e&&(e.base||e.pos)
+if(b&&!e.sk)e.sk=Math.round(b.x*2)+","+Math.round((b.y||0)*2)+","+Math.round(b.z*2)}catch(_){}}return Array.prototype.push.apply(this,a)}
 const CRATE_LBL={boom:{t:"TNT",c:"#ffd21a",f:"900 58px Arial Black,Impact,sans-serif"},bounce:{shape:"arrow",c:"#ffffff"},check:{t:"C",c:"#ffffff",f:"900 96px Arial Black,Impact,sans-serif",y:70},lucky:{t:"?",c:"#ffd21a",f:"900 96px Arial Black,Impact,sans-serif",y:70},ward:{shape:"star",c:"#ffffff"}}
 const CRATE_KIND={crate:{tint:16777215,icon:null},bounce:{tint:10157946,icon:["↑","#d8ff8a","#3ad01a"]},boom:{tint:16734794,icon:["!","#fff6b0","#ff3a1a"]},check:{tint:9099519,icon:["C","#e8f8ff","#3a9aff"]},ward:{tint:16765562,icon:["✦","#fff6b0","#ffb03a"]},lucky:{tint:16769162,icon:["?","#fff6b0","#c06aff"]},iron:{tint:9081008,icon:["▣","#d8e0ff","#3a405a"]}}
 function makeCrate(kind,x,z,y=0){const K=CRATE_KIND[kind]
@@ -14672,7 +16186,8 @@ scene.remove(s.obj)
 const p=V3((s.min.x+s.max.x)/2,s.min.y+.5,(s.min.z+s.max.z)/2)
 for(let i=0;i<14;i++)emit(p,{vx:R(-4,4),vy:R(2,7),vz:R(-4,4),g:16,life:R(.5,.9),size:R(.25,.45),size1:.1,color:pick([11565620,9067044,14196816]),normal:true})
 sfx.crate()
-if(s.kind!=="check"){cratesBroken++}if(s.kind==="crate"){const n=(Math.random()*3|0)+2
+if(s.kind!=="check"){cratesBroken++
+try{crateNote()}catch(_){}}if(s.kind==="crate"){const n=(Math.random()*3|0)+2
 for(let i=0;i<n;i++)spawnOrb(p.x+R(-.4,.4),p.y+.2,p.z+R(-.4,.4),true)
 if(P.hp<MAXHP&&Math.random()<.12)spawnWisp(p.x,p.y+.3,p.z,true)}if(s.kind==="lucky"){burst(p,16769162,20,6,.5)
 if(P.hp<MAXHP&&Math.random()<.5)spawnWisp(p.x,p.y+.3,p.z,true)
@@ -14696,7 +16211,7 @@ scene.remove(s.obj)
 if(s.num)scene.remove(s.num)
 const p=V3((s.min.x+s.max.x)/2,s.min.y+.5,(s.min.z+s.max.z)/2)
 cratesBroken++
-boomFX(p.clone().setY(p.y+.45),1.15)
+try{crateNote()}catch(_){}boomFX(p.clone().setY(p.y+.45),1.15)
 sfx.boom()
 shakeT=.35
 if(P.pos.distanceTo(p)<2.3)hurt()
@@ -14708,7 +16223,11 @@ d.normalize()
 tryKill(e,d,false,true)
 if(e.alive)tryKill(e,d,false,true)}}for(const c of crates)if(c.alive&&c!==s&&V3((c.min.x+c.max.x)/2,c.min.y+.5,(c.min.z+c.max.z)/2).distanceTo(p)<1.8){if(c.kind==="boom")startFuse(c)
 else breakCrate(c)}for(const e of enemies)if(e.alive&&e.pos.distanceTo(p)<3.4)killEnemy(e)
-updHUD()}function spawnOrb(x,y,z,pop){const o=grp(spr(glowTex,16769354,.78,.78,0,0,0),spr(glowTex,16774336,.3,.3,0,0,0))
+updHUD()}let _orbGeo=null,_orbMat=null
+function orbGem(){if(!_orbGeo){_orbGeo=new THREE.IcosahedronGeometry(.2,0)
+_orbMat=new THREE.MeshLambertMaterial({color:16762426,emissive:5911552,flatShading:true})}const m=new THREE.Mesh(_orbGeo,_orbMat)
+m.userData.orbGem=1
+return m}function spawnOrb(x,y,z,pop){const o=grp(orbGem(),spr(glowTex,16765024,.62,.62,0,0,0))
 o.position.set(x,y,z)
 scene.add(o)
 const m={o,y,ph:R(0,TAU),alive:true,v:pop?V3(R(-2,2),R(4,6),R(-2,2)):null}
@@ -15102,10 +16621,10 @@ P.vel.set(0,Math.min(P.vel.y,0),0)
 setTimeout((()=>{if(P.dead&&actions.sleep){playAct("sleep",.3,true)
 actions.sleep.timeScale=1.6}}),380);[700,1050,1400].forEach(((t,i)=>setTimeout((()=>{if(P.dead){zzz(P.pos.clone().add(V3(.4+i*.15,1.1+i*.2,0)))
 blip(150-i*10,95,.45,"sine",.05)}}),t)))}updHUD()
-setTimeout((()=>{try{iris(true,.45)}catch(e){fade(1,.4)}}),fell?150:1500)
+setTimeout((()=>{try{iris(true,.8)}catch(e){fade(1,.6)}}),fell?150:1500)
 setTimeout((()=>{if(P.lives<=0){try{setTimeout(irisOff,900)}catch(e){}gameOver()
 return}respawn()
-try{iris(false,.55)}catch(e){fade(0,.5)}}),fell?650:2e3)}let bossRetried=false
+try{setTimeout((()=>iris(false,.95)),180)}catch(e){fade(0,.6)}}),fell?1e3:2350)}let bossRetried=false
 function restartLevel(){try{sessionStorage.setItem("wt-lives",String(P.lives))}catch(e){}goTo("retry")}function respawn(){P.hp=MAXHP
 clearHaz()
 chaseReset()
@@ -15627,8 +17146,8 @@ lockPointer()
 return}if(state!=="play")return
 if(isK("jump",k)){if(e)e.preventDefault()
 P.jumpBuf=.14}if(isK("spin",k))doSpin()
-if(isK("lantern",k))doBlast()
-if(isK("dash",k))doDash()
+if(isK("lantern",k)&&!(e&&e.repeat))doBlast()
+if((k==="f"||k==="enter")&&state==="play"&&!(e&&e.repeat)){try{npcTalkPress()}catch(_){}}if(isK("dash",k))doDash()
 if(isK("pause",k)&&k!=="escape")togglePause()
 else if(isK("pause",k)&&!document.pointerLockElement)togglePause()}function lockPointer(){if(SET.mouse===false||!matchMedia("(pointer:fine)").matches)return
 const c=renderer.domElement
@@ -15718,16 +17237,19 @@ knob.style.transform=""
 stick.style.left=stick.style.top=stick.style.bottom=""}}))
 const btnHold={jump:false}
 for(const[id,fn]of[["bJump",()=>{P.jumpBuf=.14
-btnHold.jump=true}],["bSpin",doSpin],["bBlast",doBlast],["bDash",doDash]]){const b=$(id)
+btnHold.jump=true}],["bSpin",doSpin],["bBlast",()=>{doBlast()
+btnHold.lantern=true}],["bDash",doDash]]){const b=$(id)
 b.addEventListener("pointerdown",(e=>{e.preventDefault()
 e.stopPropagation()
 initAudio()
 if(state==="play")fn()
 b.classList.add("down")}))
 b.addEventListener("pointerup",(()=>{b.classList.remove("down")
-if(id==="bJump")btnHold.jump=false}))
+if(id==="bJump")btnHold.jump=false
+if(id==="bBlast")btnHold.lantern=false}))
 b.addEventListener("pointerleave",(()=>{b.classList.remove("down")
-if(id==="bJump")btnHold.jump=false}))}function readInput(){let x=0,z=0
+if(id==="bJump")btnHold.jump=false
+if(id==="bBlast")btnHold.lantern=false}))}function readInput(){let x=0,z=0
 const gp=PAD.out||{x:0,z:0,jump:false}
 x+=gp.x
 z+=gp.z
@@ -15990,7 +17512,9 @@ stopMusic()
 $("overTitle").textContent="You Woke Up"
 $("overSub").textContent="Out of lives · the dream fades"
 $("nextBtn").hidden=true
-showResults(false)}function bossDefeated(){const A=ARENA
+showResults(false)
+try{$("cpBtn").hidden=!cpGet(LV)
+$("againBtn").textContent=cpGet(LV)?"RESTART LEVEL":"REPLAY"}catch(e){}}function bossDefeated(){const A=ARENA
 $("bossBar").hidden=true
 clearGlobs()
 if(typeof clearHaz==="function")clearHaz()
@@ -16019,10 +17543,12 @@ const gem=cratesBroken>=cratesTotal,relic=runTime<=LEVELS[LV-1].par
 $("overTitle").textContent=LV===14?"The Dream Is Over":LV===9?"Chapter 1 Complete":"Level Complete"
 $("overSub").textContent=LV===14?"Flint wakes up · thank you for playing Wicktail":LV===9?"Chapter 2 · The Stolen Stars is unlocked":LV>=MAXLV?LEVELS[LV-1].name+" · more of Chapter 2 is on the way":LEVELS[LV-1].name
 try{const best=getBest(),b=best[LV]||{}
-best[LV]={shards:Math.max(b.shards||0,SEC.shards),gem:b.gem||gem,relic:b.relic||relic,time:b.time?Math.min(b.time,runTime):runTime,orbs:Math.max(b.orbs||0,P.orbs)}
+const sid=[...new Set([...b.sid||[],...SEC.got||[]])]
+best[LV]={sid,shards:Math.max(b.shards||0,SEC.shards,sid.length),gem:b.gem||gem,relic:b.relic||relic,time:b.time?Math.min(b.time,runTime):runTime,orbs:Math.max(b.orbs||0,P.orbs)}
 localStorage.setItem("wt-best",JSON.stringify(best))}catch(e){}$("bossBar").hidden=true
 if($("sShards"))$("sShards").textContent=SEC.shards+"/3"
-showResults(true,gem,relic)}function showResults(won,gem,relic){$("over").hidden=false
+showResults(true,gem,relic)}function showResults(won,gem,relic){if(won){try{$("cpBtn").hidden=true
+$("againBtn").textContent="REPLAY"}catch(e){}}$("over").hidden=false
 $("controls").hidden=true
 $("hud").hidden=true
 const rows=[...document.querySelectorAll("#over .rrow")]
@@ -16044,6 +17570,7 @@ if(won){setTimeout((()=>{if(gem){$("bGem").classList.add("got")
 sfx.life()}}),1700)
 setTimeout((()=>{if(relic){$("bRelic").classList.add("got")
 sfx.check()}}),2100)}}function fillStats(){}$("againBtn").addEventListener("click",(()=>goTo("play")))
+$("cpBtn").addEventListener("click",(()=>{try{sessionStorage.setItem("wt-cont","1")}catch(e){}goResume(LV)}))
 $("nextBtn").addEventListener("click",(()=>goLevel(LV+1)))
 $("overMenu").addEventListener("click",(()=>goTo("menu")))
 menuCh(CHSEL)
@@ -16057,7 +17584,7 @@ let rt
 if(renderer.capabilities.isWebGL2&&THREE.WebGLMultisampleRenderTarget){rt=new THREE.WebGLMultisampleRenderTarget(w*pr,h*pr,{format:THREE.RGBAFormat})
 rt.samples=4}composer=new THREE.EffectComposer(renderer,rt)
 composer.addPass(new THREE.RenderPass(scene,camera))
-bloomPass=new THREE.UnrealBloomPass(new THREE.Vector2(w/2,h/2),.28,.45,.86)
+bloomPass=new THREE.UnrealBloomPass(new THREE.Vector2(w/2,h/2),.17,.4,.9)
 composer.addPass(bloomPass)
 composer.addPass(new THREE.ShaderPass(FinalShader))
 composer.setSize(w,h)}catch(e){composer=null}}function draw(){const sc=MENU.on&&MENU.scene?MENU.scene:scene
@@ -16211,9 +17738,10 @@ updAmb(dt)
 c2WorldTick(dt)}if(L.goal&&!L.goalDone&&time>(L.goalAt||0)&&P.pos.distanceTo(L.goal)<1.9){L.goalDone=true
 sfx.check()
 burst(L.goal.clone(),13150463,40,8,.6)
-fade(1,.5)
+const _go=()=>{fade(1,.5)
 setTimeout((()=>{fade(0,.4)
-levelComplete()}),600)}}for(const c of crates){if(!c.alive||c.kind!=="boom")continue
+levelComplete()}),600)}
+try{victoryDance(_go)}catch(e){_go()}}}for(const c of crates){if(!c.alive||c.kind!=="boom")continue
 const cx=(c.min.x+c.max.x)/2,cz=(c.min.z+c.max.z)/2
 for(const e of enemies){if(!e.alive)continue
 if(Math.abs(e.pos.x-cx)<1.35&&Math.abs(e.pos.z-cz)<1.35&&e.pos.y<c.max.y+1.2&&e.pos.y>c.min.y-1.6){explode(c)
@@ -16322,12 +17850,12 @@ landRing.material.opacity=clamp(.35+h*.08,.35,.8)}}let tr=P.face
 if(P.spinT>0)tr+=(1-P.spinT/.45)*TAU*2
 flint.rotation.y=P.spinT>0?tr:lerpAngle(flint.rotation.y,tr,Math.min(1,dt*14))
 flint.visible=state==="cine"||!(P.invuln>0&&Math.floor(time*14)%2)||P.dead
-if(state==="title"){playAct("idle")}else if(!P.dead&&P.spinT<=0&&P.hurtT<=0){if(!P.onGround){if(curAct!==actions.jump){playAct("jump",.1,true)
+if(state==="title"){playAct("idle")}else if(!P.dead&&P.spinT<=0&&P.hurtT<=0){if(P.wallRun){if(curAct!==actions.run){playAct("run",.08)}if(actions.run)actions.run.timeScale=1.7}else if(P.grind){if(curAct!==actions.walk&&actions.walk){playAct("walk",.12)}if(actions.walk)actions.walk.timeScale=1e-4}else if(!P.onGround){if(curAct!==actions.jump){playAct("jump",.1,true)
 actions.jump.time=.55
 actions.jump.timeScale=1.3}}else if(sp>1.2&&!L.riding){if(P.walk&&actions.walk){playAct("walk",.15)
 actions.walk.timeScale=1}else{playAct("run",.12)
 actions.run.timeScale=.6+sp/7.2*.6}}else playAct("idle",.2)}mixer.update(dt)
-try{flintArm()}catch(e){}const lan=flint.userData.lan
+try{flintArm()}catch(e){}try{flintFeel(dt)}catch(e){window.__ffErr=String(e).slice(0,200)}const lan=flint.userData.lan
 const fd=V3(Math.sin(P.face),0,Math.cos(P.face))
 if(flint.userData.hand){flint.updateMatrixWorld()
 flint.userData.hand.getWorldPosition(lan.position)
@@ -16434,7 +17962,7 @@ location.reload()}function cpKey(n){return"wt-cp-"+(n||LV)}function cpGet(n){try
 return c&&c.v===1?c:null}catch(e){return null}}function cpClear(n){try{localStorage.removeItem(cpKey(n))}catch(e){}}function cpSave(){try{if(SEC.bonus||state!=="play")return
 const br=[]
 crates.forEach(((c,i)=>{if(!c.alive)br.push(i)}))
-localStorage.setItem(cpKey(),JSON.stringify({v:1,x:+checkpoint.x.toFixed(2),y:+checkpoint.y.toFixed(2),z:+checkpoint.z.toFixed(2),f:+(P.face||0).toFixed(3),sec:SEC.on?1:0,br,cb:cratesBroken,orbs:P.orbs,lives:P.lives,sh:SEC.got.slice(),t:Math.round(runTime),at:Date.now(),ver:WT_VERSION}))}catch(e){}}function cpApply(){const c=cpGet()
+localStorage.setItem(cpKey(),JSON.stringify({v:1,x:+checkpoint.x.toFixed(2),y:+checkpoint.y.toFixed(2),z:+checkpoint.z.toFixed(2),f:+(P.face||0).toFixed(3),sec:SEC.on?1:0,br,cb:cratesBroken,ek:enemies.filter((e=>!e.alive&&e.sk&&!e.boss&&!e.summoned)).map((e=>e.sk)),orbs:P.orbs,lives:P.lives,sh:SEC.got.slice(),t:Math.round(runTime),at:Date.now(),ver:WT_VERSION}))}catch(e){}}function cpApply(){const c=cpGet()
 if(!c)return false
 try{if(SEC.built&&!c.sec&&SEC.on){SEC.on=false
 SEC.done=true}(c.br||[]).forEach((i=>{const s=crates[i]
@@ -16442,7 +17970,11 @@ if(s&&s.alive){s.alive=false
 scene.remove(s.obj)
 if(s.num)scene.remove(s.num)}}))
 cratesBroken=c.cb||0
-P.orbs=c.orbs||0
+try{const ek=new Set(c.ek||[])
+for(const e of enemies){if(e.alive&&e.sk&&ek.has(e.sk)&&!e.boss){e.alive=false
+e.dying=0
+scene.remove(e.obj)
+if(e.shadow)scene.remove(e.shadow)}}}catch(_){}P.orbs=c.orbs||0
 if(c.lives>0)P.lives=c.lives
 SEC.got=(c.sh||[]).slice()
 SEC.shards=SEC.got.length
@@ -16455,7 +17987,8 @@ P.face=c.f||P.face
 flint.position.copy(P.pos)
 camBehind()
 if(L.onResume)L.onResume(c)
-updHUD()
+try{if(sessionStorage.getItem("wt-cont")){sessionStorage.removeItem("wt-cont")
+P.lives=Math.max(P.lives,4)}}catch(e){}updHUD()
 showHint("BACK AT YOUR CHECKPOINT",2.6)
 return true}catch(e){console.error(e)
 return false}}function goResume(n){try{localStorage.setItem("wt-level",String(n))
@@ -16639,7 +18172,8 @@ $("ltip").innerHTML=pick(TIPS)
 setTimeout((()=>prompt(pcm?"PRESS ANY BUTTON":"TAP TO CONTINUE",(()=>{initAudio()
 hideLoader()
 beginPlay()}))),350)}})()
-function beginPlay(){menuExit()
+function beginPlay(){try{irisDraw(0)
+setTimeout((()=>iris(false,1.1)),250)}catch(e){}menuExit()
 initAudio()
 lockPointer()
 try{const d=document.documentElement
