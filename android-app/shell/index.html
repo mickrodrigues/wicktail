@@ -9623,7 +9623,7 @@ addSolid(e.x-.25,e.x+.25,e.y,e.y+5,e.z-.25,e.z+.25,"wall",null)}const bm=new THR
 bm.position.set(q.x,q.y+4.9,q.z)
 bm.rotation.y=-q.a
 scene.add(bm)
-const bellM=[14196800,14727264,13144120]
+const bellM=[11016204,13668368,5905080]
 L1V.bells=[-3,0,3].map(((lat,i)=>{const e=at(s0,lat)
 const g=new THREE.Group
 g.position.set(e.x,e.y+4.7,e.z)
@@ -9654,7 +9654,20 @@ d.position.set(sd*1.4,2.1,0)
 L1V.door.add(d)
 for(const yy of[.8,3.2]){const st=new THREE.Mesh(boxGeo(2.6,.18,.34,1),dark)
 st.position.set(sd*1.4,yy,0)
-L1V.door.add(st)}}L1V.door.position.set(g2.x,g2.y,g2.z)
+L1V.door.add(st)}}L1V.plq=L1V.order.map(((bi,k)=>{const m=new THREE.MeshLambertMaterial({color:bellM[bi],emissive:0})
+const ring=new THREE.Mesh(new THREE.CylinderGeometry(.62,.62,.12,16),new THREE.MeshLambertMaterial({color:3810328}))
+ring.rotation.x=Math.PI/2
+ring.position.set((k-1)*1.65,1.55,0)
+L1V.door.add(ring)
+for(const zz of[-.22,.22]){const d=new THREE.Mesh(new THREE.CylinderGeometry(.5,.5,.06,16),m)
+d.rotation.x=Math.PI/2
+d.position.set((k-1)*1.65,1.55,zz)
+L1V.door.add(d)
+const bl=new THREE.Mesh(new THREE.ConeGeometry(.26,.42,8),new THREE.MeshLambertMaterial({color:2758672}))
+bl.rotation.x=0
+bl.position.set((k-1)*1.65,1.57,zz*1.25)
+L1V.door.add(bl)}return m}))
+L1V.door.position.set(g2.x,g2.y,g2.z)
 L1V.door.rotation.y=-g2.a
 scene.add(L1V.door)
 for(const sd of[-1,1]){const e=at(b-1,sd*3.2)
@@ -9710,16 +9723,23 @@ L1V.cool-=dt
 for(const b of B){b.sw*=Math.pow(.15,dt)
 b.g.rotation.x=Math.sin(time*9+b.i)*b.sw*.6
 b.glow=Math.max(0,b.glow-dt*1.6)
-b.bell.material.emissive.setRGB(b.glow*.9,b.glow*.6,b.glow*.15)}if(L1V.bigBell)L1V.bigBell.rotation.z=Math.sin(time*.8)*.08
+b.bell.material.emissive.copy(b.bell.material.color).multiplyScalar(Math.min(1,b.glow)*.85)}if(L1V.bigBell)L1V.bigBell.rotation.z=Math.sin(time*.8)*.08
+if(L1V.plq)L1V.plq.forEach(((m,k)=>{const on=L1V.solved||k<L1V.got
+const fl=L1V.playT>=0&&L1V.playT>.6+k*.75&&L1V.playT<1.2+k*.75
+const v=on?.55+Math.sin(time*4)*.1:fl?.7:0
+m.emissive.setRGB(v,v*.8,v*.5)}))
 if(L1V.solved){if(L1V.door&&L1V.door.position.y>-7)L1V.door.position.y-=dt*3
 return}const q=crsNear(P.pos.x,P.pos.z)
 const inZone=q&&q.path===CRS.paths[0]&&q.tag==="bells"
 const ring=b=>{b.sw=1
-b.glow=1
-try{cnTone([12,16,19][b.i],.5,.07)
+b.glow=1.4
+try{burst(b.pos.clone().setY(b.pos.y-.6),[16743002,16769162,13148415][b.i],14,3,.4)}catch(_){}try{cnTone([12,16,19][b.i],.5,.07)
 blip(880+b.i*220,700+b.i*180,.4,"sine",.04)}catch(_){}}
+if(!inZone)L1V.heard=false
 if(inZone&&L1V.playT<0&&!L1V.heard){L1V.playT=0
-L1V.heard=true}if(L1V.playT>=0){const prev=L1V.playT
+L1V.heard=true
+L1V.idle=0}if(inZone&&L1V.playT<0&&L1V.got===0){L1V.idle=(L1V.idle||0)+dt
+if(L1V.idle>9){L1V.heard=false}}if(L1V.playT>=0){const prev=L1V.playT
 L1V.playT+=dt
 L1V.order.forEach(((bi,k)=>{const tt=.6+k*.75
 if(prev<tt&&L1V.playT>=tt)ring(B[bi])}))
@@ -9732,8 +9752,9 @@ try{for(const s of shots){if(s.o.position.distanceTo(b.pos)<1.1){hit=true
 s.life=0}}}catch(_){}try{for(const c of MV.cs)if(c.o.position.distanceTo(b.pos)<1.4)hit=true}catch(_){}if(!hit)continue
 ring(b)
 L1V.cool=.45
+L1V.idle=0
 if(L1V.order[L1V.got]===b.i){L1V.got++
-if(L1V.got>=3){L1V.solved=true
+try{sfx.coin&&sfx.coin()}catch(_){}if(L1V.got>=3){L1V.solved=true
 if(L1V.gateBlock)L1V.gateBlock.alive=false
 try{[0,4,7,12,16].forEach(((s,k)=>cnTone(s,.3,.07,.3+k*.12)))
 sfx.check()}catch(_){}try{burst(B[1].pos.clone(),16765562,30,6,.5)}catch(_){}}}else{L1V.got=0
