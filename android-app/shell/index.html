@@ -9200,7 +9200,8 @@ r.c.position.x+=Math.sin(a)*dt*4
 r.c.position.z+=Math.cos(a)*dt*4
 r.c.position.y=.14+Math.abs(Math.sin(r.t*14))*.2}if(r.t>3.6){r.state="gone"
 try{burst(V3(r.x+r.c.position.x,r.y+.6,r.z+r.c.position.z),16765562,10,3,.3)}catch(e){}scene.remove(r.c)
-rescueBubble(r,false)}}else if(r.state==="gone"&&r.t>8){for(const f of r.fly){f.m.visible=false}r.state="done"}}}window.__dbg={mkFoe:(a,b,c,d,e,f)=>mkFoe(a,b,c,d,e,f),crsAt:(a,b,c,d)=>crsAt(a,b,c,d),orbs:()=>orbsArr,spawnOrb:(a,b,c)=>spawnOrb(a,b,c),enemies:()=>enemies,MV:()=>MV}
+rescueBubble(r,false)}}else if(r.state==="gone"&&r.t>8){for(const f of r.fly){f.m.visible=false}r.state="done"}}}window.__dbg={lock:()=>{updLock()
+return lockT&&lockT.type==="bell"?lockT.i:lockT?"en":null},mkFoe:(a,b,c,d,e,f)=>mkFoe(a,b,c,d,e,f),crsAt:(a,b,c,d)=>crsAt(a,b,c,d),orbs:()=>orbsArr,spawnOrb:(a,b,c)=>spawnOrb(a,b,c),enemies:()=>enemies,MV:()=>MV}
 const MN={}
 function mnItems(box,items){box.innerHTML=""
 items.forEach(((it,k)=>{const b=document.createElement("button")
@@ -9500,7 +9501,19 @@ return(x,z,y)=>{const e=mkFoe(f[1],f[0],x,z,y||0,f[2])
 if(e)e.sig=true
 return e}}if(LV===1){COURSE[1]={w:5.6,noHighShard:true,cmds:[{s:12,w:8,tag:"gate"},{s:4,w:5.6},{arc:35,r:14},{s:6,dh:1},{arc:-70,r:12},{s:7},{gap:1,s:2.8},{s:7},{arc:45,r:13,dh:-1},{s:14,tag:"lant"},{arc:-30,r:16},{s:6,w:9,tag:"nook2"},{s:4,w:5.6,dh:1.4},{arc:20,r:12},{s:8,tag:"ck"},{s:4,w:12},{s:42,w:12,tag:"fork"},{s:4,w:12},{s:4,w:5.6,tag:"ck"},{s:22,w:4.8,dh:-2.2,tag:"chase"},{s:2.4,w:4.8,tag:"chase"},{s:22,w:4.8,dh:-2.2,tag:"chase"},{s:4,w:5.6},{s:7},{arc:-60,r:12},{s:12,tag:"lant"},{arc:80,r:11},{s:8,dh:-1.4},{gap:1,s:2.6},{s:10},{arc:-30,r:14},{s:8},{s:16,w:11,tag:"bells"},{s:6,w:5.6,tag:"end"}],look:{top:"path",banks:true},hz:"lant"}}const L1V={bells:null,solved:false,relit:false}
 window.__L1V=L1V
-if(LV===1){L.courseDress=(p,o)=>{try{l1v2Dress(p,o)}catch(e){window.__l1vErr=String(e)+" "+(e.stack||"").slice(0,300)}}
+if(LV===1){L.lockOnly=()=>{if(!L1V.bells||L1V.solved)return null
+const q=crsNear(P.pos.x,P.pos.z)
+if(!q||q.tag!=="bells")return null
+let dx=Math.sin(P.face),dz=Math.cos(P.face)
+const m=Math.hypot(inp.x,inp.z)
+if(m>.25){dx=inp.x/m
+dz=inp.z/m}let best=null,bs=-9
+for(const b of L1V.bells){const vx=b.x-P.pos.x,vz=b.z-P.pos.z,d=Math.hypot(vx,vz)
+if(d>16)continue
+const sc=d<1.2?9:(vx*dx+vz*dz)/d
+if(sc>bs){bs=sc
+best=b}}return best}
+L.courseDress=(p,o)=>{try{l1v2Dress(p,o)}catch(e){window.__l1vErr=String(e)+" "+(e.stack||"").slice(0,300)}}
 L.lockExtra=()=>{if(!L1V.bells||L1V.solved)return[]
 const q=crsNear(P.pos.x,P.pos.z)
 return q&&q.tag==="bells"?L1V.bells:[]}}function l1v2Dress(path,{tagRuns}){L1V.path=path
@@ -17250,7 +17263,8 @@ let lockT=null,lockPrev=null,lockPop=0
 function lockAlive(t){return t==="boss"?boss.state==="sleep"||boss.state==="tired":t.alive&&!t.dying}function lockPos(t){return t==="boss"?boss.pos.clone():t.pos.clone().setY(t.pos.y+(t.type==="bat"?0:.6))}function updLock(){lockT=null
 if(state!=="play"||P.dead){lockSpr.visible=false
 return}let best=16
-for(const e of L.lockExtra?enemies.concat(L.lockExtra()):enemies){if(!lockAlive(e))continue
+const _lo=L.lockOnly&&L.lockOnly()
+if(_lo){lockT=_lo}else for(const e of L.lockExtra?enemies.concat(L.lockExtra()):enemies){if(!lockAlive(e))continue
 const d=Math.hypot(e.pos.x-P.pos.x,e.pos.z-P.pos.z)
 if(d<best&&Math.abs(e.pos.y-P.pos.y)<5){best=d
 lockT=e}}if(inBoss&&lockAlive("boss")&&Math.hypot(boss.pos.x-P.pos.x,boss.pos.z-P.pos.z)<18)lockT="boss"
