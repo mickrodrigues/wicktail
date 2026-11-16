@@ -6325,7 +6325,7 @@ d.rotation.x=-Math.PI/2
 d.position.set(q.x,q.y+.03,q.z)
 scene.add(d)
 CRS.items.push({k:"jet",x:q.x,y:q.y,z:q.z,t:i*.8,per:2.6})}}if(LV===9){CRS.items.push({k:"stars",path,t:2})}if(L.courseDress)L.courseDress(path,{mn,mx,tagRuns,tagS,rng})
-if(LV!==15)crsPop(path,rng,Object.assign({skip:["chase","ride","lily","fork","bridge","blade","gear"],step:7},D.pop||{}))
+if(L.courseExtra)try{L.courseExtra(path,{mn,mx,tagRuns,tagS,rng})}catch(e){window.__lvErr=String(e)}if(LV!==15)crsPop(path,rng,Object.assign({skip:["chase","ride","lily","fork","bridge","blade","gear"],step:7},D.pop||{}))
 const pts=path.pts
 const len=path.len
 if(LV!==15&&!D.noHighShard){crsShardHigh(path,len*.3,"high")
@@ -9263,7 +9263,7 @@ r.c.position.x+=Math.sin(a)*dt*4
 r.c.position.z+=Math.cos(a)*dt*4
 r.c.position.y=.14+Math.abs(Math.sin(r.t*14))*.2}if(r.t>3.6){r.state="gone"
 try{burst(V3(r.x+r.c.position.x,r.y+.6,r.z+r.c.position.z),16765562,10,3,.3)}catch(e){}scene.remove(r.c)
-rescueBubble(r,false)}}else if(r.state==="gone"&&r.t>8){for(const f of r.fly){f.m.visible=false}r.state="done"}}}window.__dbg={wz:(a,b,c,d,e,f,g,h)=>warnZone(a,b,c,d,e,f,g,h),lock:()=>{updLock()
+rescueBubble(r,false)}}else if(r.state==="gone"&&r.t>8){for(const f of r.fly){f.m.visible=false}r.state="done"}}}window.__dbg={shards:()=>pickups.filter((p=>p.k==="shard")).map((p=>p.id)),wz:(a,b,c,d,e,f,g,h)=>warnZone(a,b,c,d,e,f,g,h),lock:()=>{updLock()
 return lockT&&lockT.type==="bell"?lockT.i:lockT?"en":null},mkFoe:(a,b,c,d,e,f)=>mkFoe(a,b,c,d,e,f),crsAt:(a,b,c,d)=>crsAt(a,b,c,d),orbs:()=>orbsArr,spawnOrb:(a,b,c)=>spawnOrb(a,b,c),enemies:()=>enemies,MV:()=>MV}
 const MN={}
 function mnItems(box,items){box.innerHTML=""
@@ -10965,7 +10965,7 @@ scene.add(m)
 const st=spr(wkPaint("steam"),16777215,s*1.6,s*1.6,x,y+s*.9,z)
 st.material.opacity=.55
 scene.add(st);(WK.steam=WK.steam||[]).push({m:st,y0:y+s*.9,ph:Math.random()*6})
-return m}if(LV===2){COURSE[2]={w:5.4,noHighShard:true,cmds:[{s:12,w:9,tag:"mgate"},{s:4,w:5.4},{arc:-90,r:7},{s:6},{arc:90,r:7},{s:14,tag:"gey"},{s:7,w:9,tag:"nook"},{s:3,w:5.4},{arc:60,r:9},{s:4},{s:6,w:12},{s:30,w:12,hole:2.3,tag:"fork"},{s:6,w:5.4},{arc:-75,r:9},{s:8,dh:1.2},{s:18,w:7.5,tag:"stalls"},{s:12,w:5.4,tag:"gey"},{arc:45,r:10},{s:7,w:9,tag:"nook"},{s:3,w:5.4},{s:8,tag:"ck"},{s:4,w:7},{arc:-30,r:22,dh:-3,tag:"ride"},{s:16,dh:-4,tag:"ride"},{arc:50,r:18,dh:-3,tag:"ride"},{gap:1,s:3.2,tag:"ride"},{s:12,dh:-3,tag:"ride"},{arc:-45,r:18,dh:-2,tag:"ride"},{s:10,dh:-2,tag:"ride"},{s:3,tag:"ride"},{s:6,w:5.4},{s:14,w:10,tag:"brew"},{s:8,w:5.4,tag:"end"}],look:{top:"market",banks:true}}
+return m}if(LV===2){COURSE[2]={w:5.4,cmds:[{s:12,w:9,tag:"mgate"},{s:4,w:5.4},{arc:-90,r:7},{s:6},{arc:90,r:7},{s:14,tag:"gey"},{s:7,w:9,tag:"nook"},{s:3,w:5.4},{arc:60,r:9},{s:4},{s:6,w:12},{s:30,w:12,hole:2.3,tag:"fork"},{s:6,w:5.4},{arc:-75,r:9},{s:8,dh:1.2},{s:18,w:7.5,tag:"stalls"},{s:12,w:5.4,tag:"gey"},{arc:45,r:10},{s:7,w:9,tag:"nook"},{s:3,w:5.4},{s:8,tag:"ck"},{s:4,w:7},{arc:-30,r:22,dh:-3,tag:"ride"},{s:16,dh:-4,tag:"ride"},{arc:50,r:18,dh:-3,tag:"ride"},{gap:1,s:3.2,tag:"ride"},{s:12,dh:-3,tag:"ride"},{arc:-45,r:18,dh:-2,tag:"ride"},{s:10,dh:-2,tag:"ride"},{s:3,tag:"ride"},{s:6,w:5.4},{s:14,w:10,tag:"brew"},{s:8,w:5.4,tag:"end"}],look:{top:"market",banks:true}}
 L.courseDress=(p,o)=>{try{w2Dress(p,o)}catch(e){window.__lvErr=String(e)+" "+(e.stack||"").slice(0,300)}}}function w2Dress(path){WK.path=path
 const beaten=wkBeaten()
 const awns=["awnR","awnG","awnP","awnO"]
@@ -11083,7 +11083,7 @@ if(WK.spray&&Math.random()<dt*20){const sp=pick(WK.spray)
 try{emit(V3(sp.x+R(-.5,.5),sp.y,sp.z+R(-.5,.5)),{life:.8,size:.3,size1:.8,color:14348543,vy:R(1.5,3),g:4,normal:true})}catch(_){}}if(WK.lamps)for(const l of WK.lamps)l.G.rotation.z=Math.sin(time*1.3+l.ph)*.08
 if(WK.flies)for(const f of WK.flies){f.m.position.y=f.y0+Math.sin(time*1.3+f.ph)*.4
 f.m.material.opacity=.55+.45*Math.sin(time*3+f.ph*2)}if(WK.steam)for(const s of WK.steam){s.m.position.y=s.y0+Math.sin(time*1.4+s.ph)*.25
-s.m.material.opacity=.4+.15*Math.sin(time*2+s.ph)}}if(LV===3){COURSE[3]={w:4.4,noHighShard:true,cmds:[{s:8,w:7,tag:"bgate"},{s:4,w:4.4},{arc:40,r:10},{s:6},{arc:-80,r:9},{s:4},{gap:1,s:12,tag:"lily"},{s:4},{s:7,w:8,tag:"nook"},{s:3,w:4.4},{arc:60,r:10},{s:8,tag:"ck"},{s:4,tag:"dark"},{arc:-50,r:10,tag:"dark"},{s:10,tag:"dark"},{gap:1,s:2.4,tag:"dark"},{s:8,w:9,tag:"dark"},{s:6,w:9,tag:"dark"},{arc:70,r:9,tag:"dark"},{s:8,tag:"dark"},{gap:1,s:2.6,tag:"dark"},{s:10,tag:"dark"},{arc:-40,r:12,tag:"dark"},{s:6,tag:"dark"},{s:6},{arc:-30,r:12},{s:7,w:8,tag:"nook"},{s:3,w:4.4},{gap:1,s:14,tag:"lily"},{s:8},{s:14,w:7,tag:"boxes"},{arc:50,r:10},{s:12},{s:6,tag:"end"}],look:{top:"boards",rails:true,water:true},killY:-.9}
+s.m.material.opacity=.4+.15*Math.sin(time*2+s.ph)}}if(LV===3){COURSE[3]={w:4.4,cmds:[{s:8,w:7,tag:"bgate"},{s:4,w:4.4},{arc:40,r:10},{s:6},{arc:-80,r:9},{s:4},{gap:1,s:12,tag:"lily"},{s:4},{s:7,w:8,tag:"nook"},{s:3,w:4.4},{arc:60,r:10},{s:8,tag:"ck"},{s:4,tag:"dark"},{arc:-50,r:10,tag:"dark"},{s:10,tag:"dark"},{gap:1,s:2.4,tag:"dark"},{s:8,w:9,tag:"dark"},{s:6,w:9,tag:"dark"},{arc:70,r:9,tag:"dark"},{s:8,tag:"dark"},{gap:1,s:2.6,tag:"dark"},{s:10,tag:"dark"},{arc:-40,r:12,tag:"dark"},{s:6,tag:"dark"},{s:6},{arc:-30,r:12},{s:7,w:8,tag:"nook"},{s:3,w:4.4},{gap:1,s:14,tag:"lily"},{s:8},{s:14,w:7,tag:"boxes"},{arc:50,r:10},{s:12},{s:6,tag:"end"}],look:{top:"boards",rails:true,water:true},killY:-.9}
 L.courseDress=(p,o)=>{try{w3Dress(p,o)}catch(e){window.__lvErr=String(e)+" "+(e.stack||"").slice(0,300)}}}function wkPaint3(k){const key="wk3_"+k
 if(L1TX[key])return L1TX[key]
 const c=document.createElement("canvas")
@@ -11334,7 +11334,7 @@ G.add(bt)
 const g2=spr(glowTex,col||16756816,1.6,1.6,0,-.54,0)
 g2.material.opacity=.45
 G.add(g2);(WK.lamps=WK.lamps||[]).push({G,ph:Math.random()*6})
-return G}if(LV===4){COURSE[4]={w:5,noHighShard:true,cmds:[{s:12,w:7,tag:"mgate"},{s:4,w:5},{arc:-50,r:8},{s:6,dh:-1},{arc:70,r:7},{s:16,tag:"rock"},{arc:-60,r:8,tag:"rock"},{s:6},{gap:1,s:11,tag:"bridge"},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5},{arc:45,r:9},{s:8,tag:"ck"},{s:5},{gap:1,s:10,tag:"wrun"},{s:6},{arc:-80,r:7,dh:1.2},{s:10,dh:1.2},{gap:1,s:2.6},{s:8},{arc:60,r:8,tag:"rock"},{s:12,tag:"rock"},{s:6,w:8,tag:"nook"},{s:2,w:5},{arc:-40,r:10},{gap:1,s:11,tag:"bridge"},{s:8},{arc:30,r:12},{s:12,w:9,tag:"cavern"},{s:8,w:5,tag:"end"}],look:{top:"boards",banks:true,tunnel:true}}
+return G}if(LV===4){COURSE[4]={w:5,cmds:[{s:12,w:7,tag:"mgate"},{s:4,w:5},{arc:-50,r:8},{s:6,dh:-1},{arc:70,r:7},{s:16,tag:"rock"},{arc:-60,r:8,tag:"rock"},{s:6},{gap:1,s:11,tag:"bridge"},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5},{arc:45,r:9},{s:8,tag:"ck"},{s:5},{gap:1,s:10,tag:"wrun"},{s:6},{arc:-80,r:7,dh:1.2},{s:10,dh:1.2},{gap:1,s:2.6},{s:8},{arc:60,r:8,tag:"rock"},{s:12,tag:"rock"},{s:6,w:8,tag:"nook"},{s:2,w:5},{arc:-40,r:10},{gap:1,s:11,tag:"bridge"},{s:8},{arc:30,r:12},{s:12,w:9,tag:"cavern"},{s:8,w:5,tag:"end"}],look:{top:"boards",banks:true,tunnel:true}}
 L.courseDress=(p,o)=>{try{w4Dress(p,o)}catch(e){window.__lvErr=String(e)+" "+(e.stack||"").slice(0,300)}}}function w4Dress(path){WK.path=path
 const beaten=wkBeaten()
 {const[a]=wkRuns(path,"mgate")[0]||[0]
@@ -11408,7 +11408,7 @@ sp.rotation.z=a
 W.add(sp)}}const hub=new THREE.Mesh(new THREE.CylinderGeometry(.25*R/2+.1,.25*R/2+.1,R*.6,10),new THREE.MeshLambertMaterial({map:wkPaint("iron")}))
 hub.rotation.x=Math.PI/2
 W.add(hub);(WK.wheels=WK.wheels||[]).push({W,spd:o.spd||.6})
-return G}if(LV===5){COURSE[5]={w:5.6,noHighShard:true,cmds:[{s:12,w:7,tag:"mgate"},{s:4,w:5.6},{arc:30,r:16},{s:10},{arc:-60,r:14},{s:6},{gap:1,s:13,tag:"blade"},{s:6},{s:6,w:9,tag:"nook"},{s:2,w:5.6},{arc:50,r:14,dh:1},{s:10,tag:"ck"},{s:30,w:9,tag:"flume"},{s:4,w:5.6},{arc:-40,r:16},{s:8},{gap:1,s:2.8},{s:8},{arc:70,r:12},{s:4},{gap:1,s:13,tag:"blade"},{s:8},{s:6,w:9,tag:"nook"},{s:2,w:5.6},{arc:-45,r:14},{s:14},{s:6,tag:"end"}],look:{top:"boards",rails:true,water:true,blue:true},killY:-.9,noReeds:false}
+return G}if(LV===5){COURSE[5]={w:5.6,cmds:[{s:12,w:7,tag:"mgate"},{s:4,w:5.6},{arc:30,r:16},{s:10},{arc:-60,r:14},{s:6},{gap:1,s:13,tag:"blade"},{s:6},{s:6,w:9,tag:"nook"},{s:2,w:5.6},{arc:50,r:14,dh:1},{s:10,tag:"ck"},{s:30,w:9,tag:"flume"},{s:4,w:5.6},{arc:-40,r:16},{s:8},{gap:1,s:2.8},{s:8},{arc:70,r:12},{s:4},{gap:1,s:13,tag:"blade"},{s:8},{s:6,w:9,tag:"nook"},{s:2,w:5.6},{arc:-45,r:14},{s:14},{s:6,tag:"end"}],look:{top:"boards",rails:true,water:true,blue:true},killY:-.9,noReeds:false}
 L.courseDress=(p,o)=>{try{w5Dress(p,o)}catch(e){window.__lvErr=String(e)+" "+(e.stack||"").slice(0,300)}}}function w5Dress(path){WK.path=path
 const beaten=wkBeaten()
 {const[a]=wkRuns(path,"mgate")[0]||[0]
@@ -11561,7 +11561,7 @@ g.rotation.x=Math.PI/2
 const W=new THREE.Group
 W.add(g)
 G.add(W);(WK.wheels=WK.wheels||[]).push({W,spd})
-return G}if(LV===6){COURSE[6]={w:5,noHighShard:true,cmds:[{s:12,w:7,tag:"cgate"},{s:4,w:5},{arc:-45,r:11,dh:1.5},{s:6,dh:1},{gap:1,s:12,tag:"gear"},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5},{arc:80,r:10,dh:2},{s:12,tag:"pend"},{arc:-70,r:11,dh:2},{s:8,tag:"ck"},{s:4},{gap:1,s:9,tag:"wrun"},{s:5},{gap:1,s:12,tag:"gear"},{s:6,dh:1},{arc:60,r:11,dh:2},{s:14,tag:"pend"},{s:6,w:8,tag:"nook"},{s:2,w:5},{arc:-50,r:12,dh:1.5},{s:6},{gap:1,s:2.6},{s:8,dh:1},{arc:40,r:12},{s:10,w:8,tag:"face"},{s:6,w:5,tag:"end"}],look:{top:"boards",sky:true}}
+return G}if(LV===6){COURSE[6]={w:5,cmds:[{s:12,w:7,tag:"cgate"},{s:4,w:5},{arc:-45,r:11,dh:1.5},{s:6,dh:1},{gap:1,s:12,tag:"gear"},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5},{arc:80,r:10,dh:2},{s:12,tag:"pend"},{arc:-70,r:11,dh:2},{s:8,tag:"ck"},{s:4},{gap:1,s:9,tag:"wrun"},{s:5},{gap:1,s:12,tag:"gear"},{s:6,dh:1},{arc:60,r:11,dh:2},{s:14,tag:"pend"},{s:6,w:8,tag:"nook"},{s:2,w:5},{arc:-50,r:12,dh:1.5},{s:6},{gap:1,s:2.6},{s:8,dh:1},{arc:40,r:12},{s:10,w:8,tag:"face"},{s:6,w:5,tag:"end"}],look:{top:"boards",sky:true}}
 L.courseDress=(p,o)=>{try{w6Dress(p,o)}catch(e){window.__lvErr=String(e)+" "+(e.stack||"").slice(0,300)}}}function w6Dress(path){WK.path=path
 const beaten=wkBeaten()
 {const[a]=wkRuns(path,"cgate")[0]||[0]
@@ -11690,7 +11690,7 @@ const r2=ring.clone()
 r2.position.y=.6+h-.05
 G.add(r2)}else{for(let i=0;i<3;i++){const ch=new THREE.Mesh(new THREE.DodecahedronGeometry(.3+Math.random()*.25,0),st)
 ch.position.set(R(-1.2,1.2),.25,R(-1.2,1.2))
-G.add(ch)}}return G}if(LV===7){COURSE[7]={w:5,noHighShard:true,cmds:[{s:12,w:7.5,tag:"hgate"},{s:4,w:5},{arc:40,r:12},{s:10,tag:"crush"},{arc:-60,r:11},{s:6},{gap:1,s:12,tag:"crumble"},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5},{arc:70,r:10,dh:1.5},{s:12,tag:"crush"},{s:8,tag:"ck"},{s:4,w:6},{s:6,w:6,dh:-1.6,tag:"stairs"},{gap:1,s:6,w:6,dh:-1.6,tag:"stairs"},{s:6,w:6,dh:-1.6,tag:"stairs"},{s:4,w:5},{arc:-50,r:12},{gap:1,s:2.6},{s:6},{arc:-40,r:12},{gap:1,s:14,tag:"crumble"},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5},{arc:60,r:11,dh:-1.5},{s:14,tag:"crush"},{arc:-30,r:14},{s:12,w:9,tag:"throne"},{s:6,w:5,tag:"end"}],look:{top:"castle",sky:true,castle:true}}
+G.add(ch)}}return G}if(LV===7){COURSE[7]={w:5,cmds:[{s:12,w:7.5,tag:"hgate"},{s:4,w:5},{arc:40,r:12},{s:10,tag:"crush"},{arc:-60,r:11},{s:6},{gap:1,s:12,tag:"crumble"},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5},{arc:70,r:10,dh:1.5},{s:12,tag:"crush"},{s:8,tag:"ck"},{s:4,w:6},{s:6,w:6,dh:-1.6,tag:"stairs"},{gap:1,s:6,w:6,dh:-1.6,tag:"stairs"},{s:6,w:6,dh:-1.6,tag:"stairs"},{s:4,w:5},{arc:-50,r:12},{gap:1,s:2.6},{s:6},{arc:-40,r:12},{gap:1,s:14,tag:"crumble"},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5},{arc:60,r:11,dh:-1.5},{s:14,tag:"crush"},{arc:-30,r:14},{s:12,w:9,tag:"throne"},{s:6,w:5,tag:"end"}],look:{top:"castle",sky:true,castle:true}}
 L.courseDress=(p,o)=>{try{w7Dress(p,o)}catch(e){window.__lvErr=String(e)+" "+(e.stack||"").slice(0,300)}}}function w7Dress(path){WK.path=path
 const beaten=wkBeaten()
 {const[a]=wkRuns(path,"hgate")[0]||[0]
@@ -11818,7 +11818,7 @@ const p=new THREE.Mesh(new THREE.CylinderGeometry(.08,.12,1.4,6),im)
 p.position.set(x,y+.7,z)
 scene.add(p)
 const f=spr(glowTex,16747050,1.6,2.2,x,y+2.3,z)
-scene.add(f);(WK.fires=WK.fires||[]).push({m:f,x,y:y+2,z})}if(LV===8){COURSE[8]={w:5.2,noHighShard:true,cmds:[{s:12,w:7,tag:"dgate"},{s:4,w:5.2},{arc:-40,r:12,dh:1},{s:8,tag:"jet"},{arc:70,r:10,dh:1.5},{s:8,tag:"jet"},{gap:1,s:2.6},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5.2},{arc:-60,r:11,dh:1},{s:8,tag:"ck"},{s:6,dh:2,tag:"lava"},{arc:120,r:7,dh:3,tag:"lava"},{s:6,dh:2,tag:"lava"},{gap:1,s:2.4,tag:"lava"},{s:4,dh:1,tag:"lava"},{arc:-120,r:7,dh:3,tag:"lava"},{s:8,dh:2.5,tag:"lava"},{arc:80,r:8,dh:2,tag:"lava"},{s:6,dh:1,tag:"lava"},{s:8},{s:8,dh:2.4,tag:"launch"},{gap:1,s:14,dh:-3.4,tag:"glide"},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5.2},{arc:-40,r:12},{s:10,tag:"jet"},{gap:1,s:2.8},{s:8},{arc:30,r:14},{s:10,w:9,tag:"maw"},{s:6,w:5.2,tag:"end"}],look:{top:"rock",banks:true,lava:true}}
+scene.add(f);(WK.fires=WK.fires||[]).push({m:f,x,y:y+2,z})}if(LV===8){COURSE[8]={w:5.2,cmds:[{s:12,w:7,tag:"dgate"},{s:4,w:5.2},{arc:-40,r:12,dh:1},{s:8,tag:"jet"},{arc:70,r:10,dh:1.5},{s:8,tag:"jet"},{gap:1,s:2.6},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5.2},{arc:-60,r:11,dh:1},{s:8,tag:"ck"},{s:6,dh:2,tag:"lava"},{arc:120,r:7,dh:3,tag:"lava"},{s:6,dh:2,tag:"lava"},{gap:1,s:2.4,tag:"lava"},{s:4,dh:1,tag:"lava"},{arc:-120,r:7,dh:3,tag:"lava"},{s:8,dh:2.5,tag:"lava"},{arc:80,r:8,dh:2,tag:"lava"},{s:6,dh:1,tag:"lava"},{s:8},{s:8,dh:2.4,tag:"launch"},{gap:1,s:14,dh:-3.4,tag:"glide"},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5.2},{arc:-40,r:12},{s:10,tag:"jet"},{gap:1,s:2.8},{s:8},{arc:30,r:14},{s:10,w:9,tag:"maw"},{s:6,w:5.2,tag:"end"}],look:{top:"rock",banks:true,lava:true}}
 L.courseDress=(p,o)=>{try{w8Dress(p,o)}catch(e){window.__lvErr=String(e)+" "+(e.stack||"").slice(0,300)}}}function w8Dress(path){WK.path=path
 const beaten=wkBeaten()
 {const[a]=wkRuns(path,"dgate")[0]||[0]
@@ -11895,7 +11895,7 @@ G.add(fire)
 WK.maw={m:fire}
 wkFoe(path,a+5,-1.8)
 wkFoe(path,a+8,1.8)}wkFoe(path,path.len*.12,0)
-wkFoe(path,path.len*.38,1)}if(LV===9){COURSE[9]={w:5,lowg:1,noHighShard:true,cmds:[{s:12,w:7,tag:"mgate"},{s:4,w:5},{arc:30,r:14},{s:4},{gap:1,s:7},{s:5},{s:6,w:8,tag:"nook"},{s:2,w:5},{arc:-50,r:12},{gap:1,s:8},{s:6,tag:"star"},{arc:60,r:12,tag:"star"},{gap:1,s:7},{s:5},{s:6,tag:"ck"},{s:16,w:8,tag:"secret"},{gap:1,s:9},{s:5,tag:"star"},{arc:-70,r:11,dh:2,tag:"star"},{gap:1,s:8},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5},{arc:45,r:12},{gap:1,s:10},{s:6,tag:"star"},{arc:-40,r:13,tag:"star"},{gap:1,s:7},{s:8},{s:10,w:9,tag:"face"},{s:6,w:5,tag:"end"}],look:{top:"moon",sky:true,moon:true}}
+wkFoe(path,path.len*.38,1)}if(LV===9){COURSE[9]={w:5,lowg:1,cmds:[{s:12,w:7,tag:"mgate"},{s:4,w:5},{arc:30,r:14},{s:4},{gap:1,s:7},{s:5},{s:6,w:8,tag:"nook"},{s:2,w:5},{arc:-50,r:12},{gap:1,s:8},{s:6,tag:"star"},{arc:60,r:12,tag:"star"},{gap:1,s:7},{s:5},{s:6,tag:"ck"},{s:16,w:8,tag:"secret"},{gap:1,s:9},{s:5,tag:"star"},{arc:-70,r:11,dh:2,tag:"star"},{gap:1,s:8},{s:6},{s:6,w:8,tag:"nook"},{s:2,w:5},{arc:45,r:12},{gap:1,s:10},{s:6,tag:"star"},{arc:-40,r:13,tag:"star"},{gap:1,s:7},{s:8},{s:10,w:9,tag:"face"},{s:6,w:5,tag:"end"}],look:{top:"moon",sky:true,moon:true}}
 L.courseDress=(p,o)=>{try{w9Dress(p,o)}catch(e){window.__lvErr=String(e)+" "+(e.stack||"").slice(0,300)}}}function w9Dress(path){WK.path=path
 const beaten=wkBeaten()
 const rockM=l1Mat("masonry",12103888)
@@ -11940,7 +11940,74 @@ scene.add(gl)
 const[a]=wkRuns(path,"face")[0]
 wkFoe(path,a+5,-1.6)
 wkFoe(path,a+7,1.6)}wkFoe(path,path.len*.1,0)
-wkFoe(path,path.len*.5,1)}if(LV===1){ARENA={x0:-9.5,x1:9.5,z0:-74,z1:-104,cz:-89,y:0}
+wkFoe(path,path.len*.5,1)}if(LV===10){COURSE[10]={w:5.4,cmds:[{s:8},{s:6,w:8.5,tag:"nook"},{s:2,w:5.4},{arc:35,r:14},{s:10,tag:"bells"},{arc:-60,r:12,dh:1.5},{gap:1,s:2.8},{s:8},{arc:50,r:13},{gap:1,s:12,tag:"crumble"},{s:6},{s:8,tag:"ck"},{s:4},{gap:1,s:11,tag:"viaduct"},{s:6},{arc:-45,r:12,dh:1.5},{s:16,tag:"bells"},{arc:70,r:11},{gap:1,s:2.6},{s:10},{s:6,w:8.5,tag:"nook"},{s:2,w:5.4},{arc:-30,r:14,dh:-1},{gap:1,s:12,tag:"crumble"},{s:8},{arc:40,r:12},{s:12,tag:"bells"},{s:6,tag:"end"}],look:{top:"boards",banks:true}}
+L.courseDress=(p,o)=>{try{w10Dress(p,o)}catch(e){window.__lvErr=String(e)+" "+(e.stack||"").slice(0,300)}}}function w10Dress(path){WK.path=path
+wkRuns(path,"nook").forEach((([a,b],i)=>wkNook(path,(a+b)/2,i%2?1:-1,{wall:l1Mat("wood",9071194),roof:l1Mat("wood",5913130),glow:16765562,deco:G=>{const sg=new THREE.Mesh(boxGeo(1.4,.4,.08,1),new THREE.MeshLambertMaterial({color:2763338}))
+sg.position.set(0,2.2,-1.4)
+G.add(sg)}})))
+{const[a,b]=wkRuns(path,"viaduct")[0]
+const c0=crsAt(path,a-1),c1=crsAt(path,b+1)
+for(const lat of[-.4,.4]){const pts=[]
+for(let s=a-2;s<=b+2;s+=1.5){const c=crsAt(path,s,lat)
+const k=(s-(a-2))/(b+2-(a-2))
+pts.push([c.x,c0.y+(c1.y-c0.y)*k+.25,c.z])}mkRail(pts)}for(let s=a;s<=b;s+=1.4){const c=crsAt(path,s,0)
+const k=(s-a)/(b-a)
+spawnOrb(c.x,c0.y+(c1.y-c0.y)*k+1.2,c.z)}const st=l1Mat("masonry",9078952)
+for(const s of[a+.5,b-.5]){const c=crsAt(path,s)
+const pr=new THREE.Mesh(boxGeo(3,14,2,2),st)
+pr.position.set(c.x,c.y-7.2,c.z)
+pr.rotation.y=-c.a
+scene.add(pr)}}for(const f of[.18,.45,.8]){const s=path.len*f
+if(!crsAt(path,s).p.gap)wkFoe(path,s,0)}}function wkLedge(path,s,sd,o={}){const q=crsAt(path,s)
+const w=q.p.w
+const e=crsAt(path,s,sd*(w/2+2.4))
+const top=q.y+(o.h||1.3)
+const mat=o.mat||l1Mat("masonry",12101848)
+const col=new THREE.Mesh(boxGeo(2.2,top-q.y+8,2.2,1.2),mat)
+col.position.set(e.x,top-(top-q.y+8)/2,e.z)
+col.rotation.y=-q.a
+scene.add(col)
+addSolid(e.x-1.1,e.x+1.1,top-.4,top,e.z-1.1,e.z+1.1,"block",null)
+if(o.deco)o.deco(e,top,q)
+makeCrate("lucky",e.x,e.z,top)
+spawnOrb(e.x,top+1.6,e.z)
+const m=crsAt(path,s,sd*(w/2+.9))
+spawnOrb(m.x,q.y+1.6,m.z)
+return e}function wkBooks(){const key="wk_books"
+if(L1TX[key])return L1TX[key]
+const c=document.createElement("canvas")
+c.width=c.height=128
+const g=c.getContext("2d")
+let x=77
+const r=()=>(x=x*16807%2147483647)/2147483647
+g.fillStyle="#3a2416"
+g.fillRect(0,0,128,128)
+for(let row=0;row<4;row++){const y0=row*32
+g.fillStyle="#5a3a22"
+g.fillRect(0,y0+28,128,4)
+let bx=2
+while(bx<124){const bw=4+r()*7,bh=18+r()*8
+g.fillStyle=["#7a2a3a","#2a4a7a","#3a6a3a","#8a6a2a","#5a3a7a","#2a2a4a"][r()*6|0]
+g.fillRect(bx,y0+28-bh,bw,bh)
+g.fillStyle="rgba(255,220,150,.5)"
+g.fillRect(bx,y0+28-bh+3,bw,1.5)
+bx+=bw+1}}const t=new THREE.CanvasTexture(c)
+t.encoding=THREE.sRGBEncoding
+L1TX[key]=t
+return t}if(LV===12||LV===13||LV===14){L.courseExtra=path=>{WK.path=path
+const L2=path.len
+const spots=[L2*.22,L2*.61]
+spots.forEach(((s0,i)=>{let s=s0
+for(let k=0;k<30&&(crsAt(path,s).p.gap||crsAt(path,s).p.tag);k++)s+=1
+const sd=i%2?1:-1
+if(LV===12)wkLedge(path,s,sd,{h:1.4,mat:new THREE.MeshLambertMaterial({map:wkBooks()})})
+else if(LV===13)wkLedge(path,s,sd,{h:1.3,mat:l1Mat("wood",5917258),deco:(e,top)=>{const f=spr(glowTex,16747050,1.4,1.8,e.x+.7,top+.6,e.z)
+scene.add(f);(WK.fires=WK.fires||[]).push({m:f,x:e.x+.7,y:top+.3,z:e.z})}})
+else wkLedge(path,s,sd,{h:1.4,mat:l1Mat("masonry",13154544),deco:(e,top)=>{const st=spr(glowTex,16771232,2.4,2.4,e.x,top+2.4,e.z)
+st.material.opacity=.5
+scene.add(st)}})}))
+if(LV===12)for(const f of[.15,.42,.78]){const s=path.len*f
+if(!crsAt(path,s).p.gap&&!crsAt(path,s).p.tag)wkFoe(path,s,0)}}}if(LV===1){ARENA={x0:-9.5,x1:9.5,z0:-74,z1:-104,cz:-89,y:0}
 slab(-20,20,12,-36)
 slab(-20,6,-36,-52)
 slab(-20,20,-52,-60.5)
