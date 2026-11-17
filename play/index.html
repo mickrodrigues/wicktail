@@ -7264,12 +7264,16 @@ if(fps>target*1.08&&AUTO.res<1){AUTO.res=Math.min(1,AUTO.res+.05)
 applyGfx()
 AUTO.cool=5}}}function gfxMobFx(){try{if(AUTO.fx>=1&&composer){for(const rt of[composer.renderTarget1,composer.renderTarget2])if(rt&&rt.samples){rt.samples=0
 rt.dispose()}}if(AUTO.fx>=2&&composer){composer=null
-bloomPass=null}}catch(e){}}const FCAP={last:0}
+bloomPass=null}}catch(e){}}const FCAP={last:0,acc:0}
 function capSkip(){const c=SET.cap||0
 if(!c)return false
 const n=performance.now()
-if(n-FCAP.last<1e3/c-1.2)return true
+const d=FCAP.last?n-FCAP.last:1e3
 FCAP.last=n
+FCAP.acc=Math.min(FCAP.acc+d,120)
+const iv=1e3/c
+if(FCAP.acc<iv-1.5)return true
+FCAP.acc=Math.max(0,FCAP.acc-iv)
 return false}const FPSC={t:0,n:0}
 function fpsCount(dt){if(!SET.fpsShow)return
 FPSC.t+=dt
@@ -19355,10 +19359,14 @@ const ln=c1Lantern(0,0,0,{h:.01,solid:false,pool:false})
 ln.position.set(e.x-sd*.9,e.y+3.25,e.z)
 ln.rotation.y=sd>0?Math.PI:0
 c1Solid(e.x-.28,e.x+.28,e.y,e.y+3.8,e.z-.28,e.z+.28)}const sign=new THREE.Mesh(new THREE.BoxGeometry(5.8,.9,.24),[wood,wood,wood,wood,tgSignMat("THE OLD LAMPLIGHTERS' YARD",512,80),wood])
-sign.position.set(q.x,q.y+3.55,q.z+.05)
+sign.position.set(q.x,q.y+3.35,q.z+.05)
 sign.rotation.y=-q.a
 c1Add(sign)
-c1Bunting(q.x-2.6,q.y+3.9,q.z+.3,q.x+2.6,q.y+3.9,q.z+.3,{sag:.5,cols:[8010464,16765503,4856458,16758858]})}const seen={}
+{const p0=path.pts[0]
+const sx=p0.x-3.6,sz=p0.z-3.2
+const sy=topAt(sx,sz,p0.y)
+const sp=tgSignpost(sx,sy,sz,0,"RANGE · BEHIND YOU")
+sp.rotation.y=Math.PI+.75}}const seen={}
 for(const t of["hop","dashrun","canyon","drop","stairs","cellar","targets","finish"]){const r=tagRuns(t)[0]
 if(!r||seen[TG_ST[t][0]])continue
 seen[TG_ST[t][0]]=1
@@ -19636,9 +19644,7 @@ const m=new THREE.Mesh(c1Box(4.6,1.2,z1-z0,2,2),[cob,cob,cob,cob,cob,cob].map(((
 m.position.set(o.x,o.y-.6,(z0+z1)/2)
 c1Add(m)
 for(const sd of[-1,1]){c1GardenWall(o.x+sd*2.6,z0+.6,o.x+sd*2.6,z1-.4,o.y,.75,{flowers:true})}for(const z of[z0+2.5,z1-2]){const t=c1Torch(o.x+2.6,o.y+.95,z,{h:1.2,solid:false,pool:false})
-const t2=c1Torch(o.x-2.6,o.y+.95,z,{h:1.2,solid:false,pool:false})}kRockMass(o.x,o.y-1.6-9,(z0+z1)/2,4.4,9,z1-z0,7,{blocks:0,ledges:false,ry:0})
-const sp=tgSignpost(o.x-2,o.y,p0.z-1.6,0,"SHOOTING RANGE")
-sp.rotation.y=Math.PI*.15}{const x0=o.x-o.hw-3,x1=o.x+o.hw+3,z0=o.z0,z1=o.z1+3
+const t2=c1Torch(o.x-2.6,o.y+.95,z,{h:1.2,solid:false,pool:false})}kRockMass(o.x,o.y-1.6-9,(z0+z1)/2,4.4,9,z1-z0,7,{blocks:0,ledges:false,ry:0})}{const x0=o.x-o.hw-3,x1=o.x+o.hw+3,z0=o.z0,z1=o.z1+3
 addSolid(x0,x1,o.y-2,o.y,z0,z1,"ground",null,{surf:"stone"})
 const ft=stoneT.clone()
 ft.needsUpdate=true
