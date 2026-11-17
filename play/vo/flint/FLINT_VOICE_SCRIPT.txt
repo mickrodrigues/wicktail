@@ -1,0 +1,69 @@
+WICKTAIL · FLINT VOICE SCRIPT
+================================================================
+How to record:
+  - Phone voice memo is fine. Quiet room, phone ~20 cm from your mouth.
+  - Say each line 2-3 times with slightly different energy; send the best.
+  - Save each as .mp3 (or .m4a/.wav, I'll convert) with the EXACT file name.
+  - Keep a little gap of silence before and after each line.
+  - Flint: brave even when nervous, cheeky to bullies, kind to scared folk.
+    Sound like a small hero, not a cartoon mascot. Natural > "voice acting".
+
+Any line you don't record is simply skipped in the game, nothing breaks.
+
+----------------------------------------------------------------
+A. EFFORT SOUNDS (no words, short, 0.2-0.6 s)  [highest priority]
+----------------------------------------------------------------
+f_jump1.mp3 .......... small "hup!"
+f_jump2.mp3 .......... small "hah!"
+f_spin1.mp3 .......... quick "hyah!"
+f_spin2.mp3 .......... quick "hup-hah!"
+f_hurt1.mp3 .......... "ow!"
+f_hurt2.mp3 .......... "oof!"
+f_hurt3.mp3 .......... sharp "agh!"
+f_land_big.mp3 ....... landing grunt "nngh"
+f_death.mp3 .......... falling "whoaaa..." (fades)
+f_charge.mp3 ......... building effort "hhhnnn..." (~1 s)
+f_blast_big.mp3 ...... releasing "HAH!"
+f_wallkick.mp3 ....... "hup!" (kicking off a wall)
+f_glide.mp3 .......... relieved breath "whew..."
+f_yawn.mp3 ........... big sleepy yawn (idle)
+
+----------------------------------------------------------------
+B. SHORT BARKS DURING PLAY (1-2 s)
+----------------------------------------------------------------
+f_start1.mp3 ......... "Right. Let's bring the light back."
+f_start2.mp3 ......... "Okay, dream. Let's see what you've got."
+f_dark.mp3 ........... "Good thing I brought a lantern."
+f_secret.mp3 ......... "Someone thought I'd miss that."
+f_shard.mp3 .......... "Ooh, shiny."
+f_closecall.mp3 ...... "Plenty of room. Mostly."
+f_combo.mp3 .......... "Too easy!"
+f_orbs.mp3 ........... "Ha! Keep 'em coming."
+f_extralife.mp3 ...... "Feeling lucky."
+f_lowhp.mp3 .......... "Still here. Still glowing."
+f_view.mp3 ........... "Okay... that was worth the climb."
+f_wallrun.mp3 ........ "Didn't know I could do that!"
+f_npc_hi.mp3 ......... "Hey! You okay?"
+
+----------------------------------------------------------------
+C. BOSSES
+----------------------------------------------------------------
+f_boss_enter1.mp3 .... "Big entrance. Small manners."
+f_boss_enter2.mp3 .... "Okay... you're bigger than I hoped."
+f_boss_hit.mp3 ....... "Got you!"
+f_boss_down.mp3 ...... "Now's my chance!"
+f_boss_win.mp3 ....... "And stay asleep."
+
+----------------------------------------------------------------
+D. STORY MOMENTS
+----------------------------------------------------------------
+f_star_free.mp3 ...... "Back where you belong."
+f_help.mp3 ........... "Come on. We'll find a way."
+f_vesper1.mp3 ........ "You can draw a road. You don't get to own it."
+f_vesper2.mp3 ........ "Roads aren't yours to keep. People need them to get home."
+f_archive_out.mp3 .... "I'm returning that book. Eventually."
+f_apple.mp3 .......... "Mm. Bramble was right. It does taste better after a victory."
+f_level_win1.mp3 ..... "Yes! Next dream!"
+f_level_win2.mp3 ..... "Think I've earned a nap."
+
+Put the files in:  wicktail/vo/flint/   (or just send them to me)
