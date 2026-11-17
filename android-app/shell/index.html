@@ -4786,6 +4786,7 @@ m.scale.multiplyScalar(c.s/3.6)
 m.position.set(c.x,c.y,c.z)
 m.rotation.y=c.ry||R(0,TAU)
 scene.add(m)}}function enemyMaxHp(e){if(inBoss||e&&e.summoned)return 1
+if(e&&e.type==="bat")return 1
 let h=LV<=3?1:LV<=6?2:3
 if(e&&e.summoned)h--
 if(SET.easy)h--
@@ -5638,7 +5639,7 @@ const ca=Math.cos(q.a),sa=Math.sin(q.a),lim=q.w/2-PR
 if(q.wall&&Math.abs(lat)>lim){const nl=Math.sign(lat)*lim
 p.x+=(nl-lat)*ca
 p.z+=(nl-lat)*sa}const pts=q.path.pts
-if(q.i===0&&lon<0||q.i===pts.length-1&&lon>0){p.x-=lon*sa
+if(q.i===0&&lon<0&&!L.openStart||q.i===pts.length-1&&lon>0){p.x-=lon*sa
 p.z+=lon*ca}}function crsAt(path,s,lat=0,dy=0){const pts=path.pts,p=pts[clamp(Math.round(s/.5),0,pts.length-1)]
 return{x:p.x+Math.cos(p.a)*lat,y:p.y+dy,z:p.z+Math.sin(p.a)*lat,a:p.a,p}}function crsFwd(p){return V3(Math.sin(p.a),0,-Math.cos(p.a))}function crsMesh(path,o){const P=path.pts,CH=70,SK0=o.skirt||7
 const out=[]
@@ -6478,7 +6479,8 @@ return out}if(CINE.on){HOLD.pad=now[0]?1:0
 return out}if(window._anyBtn&&now.some(((v,i)=>v&&!(PAD.prevAny||[])[i]))){PAD.prevAny=now
 window._anyBtn()
 return out}PAD.prevAny=now
-const btns=[...document.querySelectorAll("button")].filter((x=>x.offsetParent!==null&&!x.closest("#controls")&&!x.closest("#hud")&&!x.disabled))
+const mdl=document.getElementById("wtConfirm")||document.getElementById("rgPanel")
+const btns=[...document.querySelectorAll("button")].filter((x=>x.offsetParent!==null&&!x.closest("#controls")&&!x.closest("#hud")&&!x.disabled&&(!mdl||mdl.contains(x))))
 if(!btns.length)return out
 let mv=0
 const ay=p.axes[1]||0,ax=p.axes[0]||0
@@ -7474,7 +7476,38 @@ if(!on)return
 const hgt=boss.h||boss.obj&&boss.obj.userData.h||3.2
 BWM.position.set(boss.pos.x,boss.pos.y+hgt+1.4+Math.sin(time*6)*.25,boss.pos.z)
 BWM.cone.rotation.y+=.08
-BWM.scale.setScalar(1+Math.sin(time*10)*.12)}const BOOM={tex:null,list:[]}
+BWM.scale.setScalar(1+Math.sin(time*10)*.12)}function wtConfirm(title,sub,yesTxt,yes){if(document.getElementById("wtConfirm"))return
+if(!document.getElementById("wtCfCss")){const s=document.createElement("style")
+s.id="wtCfCss"
+s.textContent=`\n#wtConfirm{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;background:rgba(8,3,20,.62);padding:16px;box-sizing:border-box}\n#wtConfirm .cfIn{width:min(420px,100%);border-radius:20px;padding:22px 22px 18px;text-align:center;color:#fff3d0}\n#wtConfirm h3{margin:0 0 8px;font:700 24px/1.1 var(--head);letter-spacing:.06em;color:#ffe8a8}\n#wtConfirm p{margin:0 0 18px;font:800 14px/1.35 var(--ui);color:#cdb8f0}\n#wtConfirm .cfB{display:flex;gap:12px}#wtConfirm .cfB .mbtn{flex:1;margin:0;min-width:0;font:700 17px/1 var(--head)!important;letter-spacing:.12em!important;padding:14px 8px!important}\n#wtConfirm .cfB .mbtn:focus-visible{outline:3px solid #ffd27a;outline-offset:2px}`
+document.head.appendChild(s)}const d=document.createElement("div")
+d.id="wtConfirm"
+d.setAttribute("role","dialog")
+d.setAttribute("aria-modal","true")
+d.innerHTML='<div class="cfIn glass"><h3></h3><p></p><div class="cfB"><button type="button" class="mbtn glass back" data-a="no">CANCEL</button><button type="button" class="mbtn primary" data-a="yes"></button></div></div>'
+d.querySelector("h3").textContent=title
+d.querySelector("p").textContent=sub
+d.querySelector('[data-a="yes"]').textContent=yesTxt||"YES"
+document.body.appendChild(d)
+const bs=[...d.querySelectorAll("button")]
+let k=0
+bs[0].focus({preventScroll:true})
+const close=()=>{d.remove()
+removeEventListener("keydown",kd,true)}
+const kd=e=>{if(e.key==="Escape"||e.key==="Backspace"){close()}else if(e.key==="ArrowLeft"||e.key==="ArrowRight"||e.key==="a"||e.key==="d"||e.key==="Tab"){k=1-k
+bs[k].focus({preventScroll:true})}else if(e.key==="Enter"||e.key===" "){bs[k].click()}else return
+e.preventDefault()
+e.stopImmediatePropagation()}
+addEventListener("keydown",kd,true)
+d.addEventListener("click",(e=>{const b=e.target.closest("button")
+if(!b){if(e.target===d)close()
+return}const y=b.dataset.a==="yes"
+close()
+if(y)yes()}))
+const ob=window.__uiBack
+window.__uiBack=()=>{if(document.getElementById("wtConfirm")){close()
+window.__uiBack=ob
+return true}return ob?ob():false}}const BOOM={tex:null,list:[]}
 function boomTex(){if(BOOM.tex)return BOOM.tex
 const img=new Image
 const base=new THREE.Texture(img)
@@ -8784,7 +8817,12 @@ wrAim(a,f,(sg>0?1:-1)*Math.cos(P.face)*.35,1,(sg>0?-1:1)*Math.sin(P.face)*.35+pu
 VD.cb=null
 c()}return true}const EH={list:new Map}
 const EH_NAME={balebutt:"Balebutt",potlobber:"Pot Lobber",postbox:"Postbox Mimic",lampmole:"Lamp Mole",coggremlin:"Cog Gremlin",cuckoo:"Cuckoo Gunner",crownguard:"Crown Guard",emberpup:"Ember Pup",moonmite:"Moon Mite",ticket:"Ticket Taker",rootsentry:"Root Sentry",inksquid:"Ink Squid",cindermoth:"Cinder Moth",starwarden:"Star Warden"}
-function ehRR(g,x,y,w,h,r){g.beginPath()
+Object.assign(EH_NAME,{cinder:"Cinderling",sunling:"Sunling",bat:"Soot Crow",brat:"Brew Brat",mimic:"Mimicling",mimicling:"Mimicling",gremlin:"Grist Gremlin",crank:"Crown Crank",gnawer:"Gargoyle Gnawer",comet:"Chomp Comet",clapper:"Clapper Jack",bud:"Bristle Bud",ripple:"Ripple Novice",novice:"Ripple Novice",squire:"Soot Squire",orbit:"Orbit Imp",imp:"Orbit Imp",dummy:"Straw Dummy"})
+function ehName(e){if(e.type==="bat")return e.raven?"Soot Crow":"Gloom Bat"
+const n=EH_NAME[e.pk]||EH_NAME[e.type]||EH_NAME[e.key]
+if(n)return n
+const t=String(e.pk||e.type||"Minion")
+return t.charAt(0).toUpperCase()+t.slice(1)}function ehRR(g,x,y,w,h,r){g.beginPath()
 g.moveTo(x+r,y)
 g.lineTo(x+w-r,y)
 g.quadraticCurveTo(x+w,y,x+w,y+r)
@@ -8802,7 +8840,10 @@ if(label){g.font="700 24px Cinzel,Georgia,serif"
 const txt=label.toUpperCase()
 let tw=0
 for(const ch of txt)tw+=g.measureText(ch).width+1.6
-const pw=Math.min(W-8,tw+22)
+if(tw>W-34){const fs=Math.max(13,Math.floor(24*(W-34)/tw))
+g.font="700 "+fs+"px Cinzel,Georgia,serif"
+tw=0
+for(const ch of txt)tw+=g.measureText(ch).width+1.6}const pw=Math.min(W-8,tw+22)
 const pg=g.createLinearGradient(0,4,0,30)
 pg.addColorStop(0,"#3a1a6e")
 pg.addColorStop(1,"#160830")
@@ -8860,7 +8901,7 @@ const d=Math.hypot(e.pos.x-P.pos.x,e.pos.z-P.pos.z)
 const want=(d<9||e.hp<e.maxHp||e.rg&&d<40)&&state==="play"&&(!e.obj||e.obj.visible!==false)
 if(!r){if(!want)continue
 const c=document.createElement("canvas")
-const label=EH_NAME[e.pk]||"Lv "+(LV===15?"·":LV)
+const label=ehName(e)
 ehDraw(c,e.hp,e.maxHp,e.hp,label,0)
 const t=new THREE.CanvasTexture(c)
 t.encoding=THREE.sRGBEncoding
@@ -9295,7 +9336,9 @@ r.c.position.x+=Math.sin(a)*dt*4
 r.c.position.z+=Math.cos(a)*dt*4
 r.c.position.y=.14+Math.abs(Math.sin(r.t*14))*.2}if(r.t>3.6){r.state="gone"
 try{burst(V3(r.x+r.c.position.x,r.y+.6,r.z+r.c.position.z),16765562,10,3,.3)}catch(e){}scene.remove(r.c)
-rescueBubble(r,false)}}else if(r.state==="gone"&&r.t>8){for(const f of r.fly){f.m.visible=false}r.state="done"}}}window.__dbg={gr:(x,z,y)=>crsGround(x,z,y),act:()=>({actions,mixer:typeof mixer!=="undefined"?mixer:null,curAct}),zf:()=>window.__zf,shards:()=>pickups.filter((p=>p.k==="shard")).map((p=>p.id)),wz:(a,b,c,d,e,f,g,h)=>warnZone(a,b,c,d,e,f,g,h),lock:()=>{updLock()
+rescueBubble(r,false)}}else if(r.state==="gone"&&r.t>8){for(const f of r.fly){f.m.visible=false}r.state="done"}}}window.__dbg={eh:(n,hp)=>{const c=document.createElement("canvas")
+ehDraw(c,hp||3,hp||3,hp||3,n,0)
+return c.toDataURL()},ehn:()=>enemies.map((e=>ehName(e))),gr:(x,z,y)=>crsGround(x,z,y),act:()=>({actions,mixer:typeof mixer!=="undefined"?mixer:null,curAct}),zf:()=>window.__zf,shards:()=>pickups.filter((p=>p.k==="shard")).map((p=>p.id)),wz:(a,b,c,d,e,f,g,h)=>warnZone(a,b,c,d,e,f,g,h),lock:()=>{updLock()
 return lockT&&lockT.type==="bell"?lockT.i:lockT?"en":null},mkFoe:(a,b,c,d,e,f)=>mkFoe(a,b,c,d,e,f),crsAt:(a,b,c,d)=>crsAt(a,b,c,d),orbs:()=>orbsArr,spawnOrb:(a,b,c)=>spawnOrb(a,b,c),enemies:()=>enemies,MV:()=>MV}
 const MN={}
 function mnItems(box,items){box.innerHTML=""
@@ -9343,12 +9386,11 @@ if(pz&&!pz.hidden&&document.getElementById("settingsScr").hidden){if(mnKeys(pz.q
 const pz=document.getElementById("pause")
 const note=document.createElement("div")
 note.className="pNote"
-note.innerHTML='<i class="pin"></i><h2>PAUSED</h2><div class="nLv" id="nLv"></div><div class="nSt" id="nSt"></div><div class="nRule"></div><div class="mList nList"></div><div class="nRule"></div><div class="mList nList2"></div><button type="button" class="nFb" id="nFb">Send feedback</button>'
+note.innerHTML='<i class="pin"></i><h2>PAUSED</h2><div class="nLv" id="nLv"></div><div class="nSt" id="nSt"></div><div class="nRule"></div><div class="mList nList"></div><div class="nRule"></div><div class="mList nList2"></div>'
 pz.appendChild(note)
 mnItems(note.querySelector(".nList"),[{t:"Resume",fn:()=>click("resumeBtn")},{t:"Restart level",fn:()=>click("pRestart")},{t:"Dream journal",fn:()=>{click("journalBtn")}},{t:"Settings",fn:()=>click("pSettings")}])
 mnItems(note.querySelector(".nList2"),[{t:"Return to menu",fn:()=>click("pQuit")}])
 note.querySelector(".nList2 .mItem").classList.remove("on")
-note.querySelector("#nFb").addEventListener("click",(()=>click("pFeedback")))
 new MutationObserver((()=>{try{if(!pz.hidden){document.getElementById("nLv").textContent=LV===15?"Training Grounds":LEVELS[LV-1].name
 const sh=typeof SEC!=="undefined"&&SEC.shards||0
 document.getElementById("nSt").textContent="Shards "+sh+" / 3  ·  Crates "+cratesBroken+" / "+cratesTotal
@@ -12240,7 +12282,46 @@ if(zone.some((q=>Math.hypot(q.x-e.pos.x,q.z-e.pos.z)<7.5))){scene.remove(e.obj)
 if(e.shadow)scene.remove(e.shadow)
 e.alive=false
 enemies.splice(i,1)
-n++}}window.__chaseClear=n}}catch(e){}}if(LV===1){ARENA={x0:-9.5,x1:9.5,z0:-74,z1:-104,cz:-89,y:0}
+n++}}window.__chaseClear=n}}catch(e){}}function wtModelFor(key){try{if(key==="cinder")return cinderProto?cinderProto.clone(true):null
+if(key==="bat")return ravenProto?ravenProto.clone(true):null
+if(key==="brat")return bratProto?THREE.SkeletonUtils?THREE.SkeletonUtils.clone(bratProto):bratProto.clone(true):null
+if(typeof C2KEYS!=="undefined"&&C2KEYS.includes(key)&&C2.rig[key]){const a=c2Make(key,1)
+return a?a.g:null}if(PROTO[key])return cloneProto(key)}catch(e){}return null}function wtPortrait(key,S=128){const m=wtModelFor(key)
+if(!m)return null
+const sc=new THREE.Scene
+sc.add(new THREE.HemisphereLight(16773344,4864618,1.25))
+const dl=new THREE.DirectionalLight(16777215,.9)
+dl.position.set(2,4,5)
+sc.add(dl)
+sc.add(m)
+m.updateMatrixWorld(true)
+const box=(new THREE.Box3).setFromObject(m)
+const c=box.getCenter(new THREE.Vector3),sz=box.getSize(new THREE.Vector3)
+const cam=new THREE.PerspectiveCamera(28,1,.01,100)
+const d=Math.max(sz.x,sz.y*1.05,sz.z)*2.3
+cam.position.set(c.x+d*.32,c.y+d*.12,c.z+d)
+cam.lookAt(c)
+const rt=new THREE.WebGLRenderTarget(S,S)
+const cc=renderer.getClearColor(new THREE.Color),ca=renderer.getClearAlpha()
+renderer.setRenderTarget(rt)
+renderer.setClearColor(0,0)
+renderer.clear()
+renderer.render(sc,cam)
+const px=new Uint8Array(S*S*4)
+renderer.readRenderTargetPixels(rt,0,0,S,S,px)
+renderer.setRenderTarget(null)
+renderer.setClearColor(cc,ca)
+rt.dispose()
+const cv=document.createElement("canvas")
+cv.width=cv.height=S
+const g=cv.getContext("2d")
+const id=g.createImageData(S,S)
+for(let y=0;y<S;y++)for(let x=0;x<S;x++){const si=((S-1-y)*S+x)*4,di=(y*S+x)*4
+for(let k=0;k<3;k++)id.data[di+k]=Math.round(255*Math.pow(px[si+k]/255,1/2.2))
+id.data[di+3]=px[si+3]}g.putImageData(id,0,0)
+return cv}window.__thumb=(k,S)=>{const c=wtPortrait(k,S||160)
+return c?c.toDataURL("image/png"):null}
+if(LV===1){ARENA={x0:-9.5,x1:9.5,z0:-74,z1:-104,cz:-89,y:0}
 slab(-20,20,12,-36)
 slab(-20,6,-36,-52)
 slab(-20,20,-52,-60.5)
@@ -19243,7 +19324,7 @@ consReset(true)}})
 L.netH=npc("nettle",-6.4,-74.6,3,Math.PI*.75,1.35,[["NETTLE COGFOOT","Psst! Down here! That great big Imp's squatting on my shooting star.",4.6,"talk"],["NETTLE COGFOOT","Knock him out and I'll send you up past the broken stairs. Watch his stars, he throws all three!",5.6,"point"]],{name:"NETTLE COGFOOT"})
 L.bramT=npc("bramble",2,-102.6,7.5,Math.PI,1.75,[["SIR BRAMBLE VALE","The upper stair is sealed with starlight. But this old telescope can focus a beam.",5,"talk"],["SIR BRAMBLE VALE","Spin its crank to turn it. Aim it at the seal's lens, and hold steady.",4.6,"point"]],{name:"SIR BRAMBLE VALE"})
 makeCrate("check",0,-101,7.5)
-for(let i=0;i<5;i++)spawnOrb(0,8.9+i*.8,-106-i*2.2)}}else if(LV===15){Object.assign(L,{num:15,name:"TRAINING GROUNDS",start:V3(0,0,4),killY:-40,mus:LVMUS[1][0],bossMus:LVMUS[1][0],bossName:"",hemiI:1,hint:"",grade:{sat:1.06,vig:.75,tint:[1.05,1,.95]},inArena:()=>false,tg:true})
+for(let i=0;i<5;i++)spawnOrb(0,8.9+i*.8,-106-i*2.2)}}else if(LV===15){Object.assign(L,{num:15,name:"TRAINING GROUNDS",start:V3(0,0,4),killY:-40,mus:LVMUS[1][0],bossMus:LVMUS[1][0],bossName:"",hemiI:1,hint:"",grade:{sat:1.06,vig:.75,tint:[1.05,1,.95]},inArena:()=>false,tg:true,openStart:true})
 ARENA={x0:-9,x1:9,z0:-900,z1:-930,cz:-915,y:0}
 {const sky=skyTex((g=>{grad(g,512,1024,[[0,"#1a1048"],[.32,"#4a2a8a"],[.5,"#c86a8a"],[.58,"#f2a86a"],[.64,"#ffd08a"],[1,"#3a2a5a"]])
 stars(g,512,1024,120,.3)
@@ -19354,7 +19435,7 @@ c1Add(cap)
 const ln=c1Lantern(0,0,0,{h:.01,solid:false,pool:false})
 ln.position.set(e.x-sd*.9,e.y+3.25,e.z)
 ln.rotation.y=sd>0?Math.PI:0
-c1Solid(e.x-.28,e.x+.28,e.y,e.y+3.8,e.z-.28,e.z+.28)}const sign=new THREE.Mesh(new THREE.BoxGeometry(5.8,.9,.24),[wood,wood,wood,wood,tgSignMat("THE OLD LAMPLIGHTERS' YARD",512,80),wood])
+c1Solid(e.x-.28,e.x+.28,e.y,e.y+3.8,e.z-.28,e.z+.28)}const sign=new THREE.Mesh(new THREE.BoxGeometry(4.5,.9,.24),[wood,wood,wood,wood,tgSignMat("THE OLD LAMPLIGHTERS' YARD",512,96),tgSignMat("THE OLD LAMPLIGHTERS' YARD",512,96)])
 sign.position.set(q.x,q.y+3.35,q.z+.05)
 sign.rotation.y=-q.a
 c1Add(sign)
@@ -19366,8 +19447,12 @@ sp.rotation.y=Math.PI+.75}}const seen={}
 for(const t of["hop","dashrun","canyon","drop","stairs","cellar","targets","finish"]){const r=tagRuns(t)[0]
 if(!r||seen[TG_ST[t][0]])continue
 seen[TG_ST[t][0]]=1
-const q=crsAt(path,Math.max(0,r[0]-2.2),-(crsAt(path,r[0]).p.w/2-.45))
-tgSignpost(q.x,q.y,q.z,-q.a,TG_ST[t][0])}const TR=[],BU=[]
+const w=crsAt(path,r[0]).p.w/2,bw=Math.max(1.7,Math.min(2.6,.3+TG_ST[t][0].length*.13))
+const q=crsAt(path,Math.max(0,r[0]-2.2),-(w+bw/2+.3))
+const y=topAt(q.x,q.z,null)
+if(y!=null&&y>q.y-.6&&y<q.y+2.5)tgSignpost(q.x,y,q.z,-q.a,TG_ST[t][0])
+else{const q2=crsAt(path,Math.max(0,r[0]-2.2),-(w-bw/2-.35))
+tgSignpost(q2.x,q2.y,q2.z,-q.a,TG_ST[t][0])}}const TR=[],BU=[]
 let k=0
 for(let s=4;s<path.len-4;s+=9,k++){const q=crsAt(path,s)
 const tag=q.tag||""
@@ -19422,18 +19507,29 @@ g.fillStyle="rgba(0,0,0,.5)"
 g.fillText(text,W/2+2,H/2+3)
 g.fillStyle="#ffe8a8"
 g.fillText(text,W/2,H/2+1)}))})}function tgSignpost(x,y,z,ry,text){const g=new THREE.Group
-const wood=c1Lam("wood",c1Wood())
-const p=new THREE.Mesh(c1Box(.22,2.4,.22,1,2),wood)
-p.position.y=1.2
+const wood=c1Lam("wood",c1Wood()),iron=c1M("iron",(()=>new THREE.MeshLambertMaterial({color:2762288})))
+const bw=Math.max(1.7,Math.min(2.6,.3+text.length*.13))
+for(const sx of[-1,1]){const p=new THREE.Mesh(c1Box(.18,2.5,.18,1,2),wood)
+p.position.set(sx*(bw/2+.1),1.25,0)
 g.add(p)
-const b=new THREE.Mesh(new THREE.BoxGeometry(1.9,.62,.12),[wood,wood,wood,wood,tgSignMat(text,256,84),tgSignMat(text,256,84)])
-b.position.set(0,2.05,0)
+const cap=new THREE.Mesh(new THREE.ConeGeometry(.16,.22,4),iron)
+cap.rotation.y=Math.PI/4
+cap.position.set(sx*(bw/2+.1),2.61,0)
+g.add(cap)}const tm=tgSignMat(text,Math.round(bw*128),84)
+const b=new THREE.Mesh(new THREE.BoxGeometry(bw,.62,.1),[wood,wood,wood,wood,tm,tm])
+b.position.set(0,1.95,0)
 g.add(b)
+for(const sx of[-1,1]){const ch=new THREE.Mesh(new THREE.BoxGeometry(.04,.3,.04),iron)
+ch.position.set(sx*bw*.36,2.4,0)
+g.add(ch)}const bar=new THREE.Mesh(c1Box(bw+.4,.14,.14,1,1),wood)
+bar.position.y=2.52
+g.add(bar)
 g.position.set(x,y,z)
 g.rotation.y=ry+Math.PI
 c1Add(g)
-c1Solid(x-.14,x+.14,y,y+2.4,z-.14,z+.14)
-return g}function tgHay(x,y,z,ry){const m=c1M("tgHay",(()=>new THREE.MeshLambertMaterial({map:l1Paint("hay")})))
+const ca=Math.cos(ry),sa=Math.sin(ry)
+for(const sx of[-1,1]){const px=x+ca*sx*(bw/2+.1),pz=z-sa*sx*(bw/2+.1)
+c1Solid(px-.12,px+.12,y,y+2.5,pz-.12,pz+.12)}return g}function tgHay(x,y,z,ry){const m=c1M("tgHay",(()=>new THREE.MeshLambertMaterial({map:l1Paint("hay")})))
 const tie=c1M("tgTie",(()=>new THREE.MeshLambertMaterial({color:6961690})))
 const g=new THREE.Group
 for(const[dx,dy,dz]of[[0,0,0],[1.15,0,0],[.55,.72,0]]){const b=new THREE.Mesh(c1Box(1.1,.7,.75,1,1),m)
@@ -19506,14 +19602,39 @@ scene.add(g)
 const t={g,face,iron,alive:true,x,y:y+1.75*sc,z,pos:V3(x,y+1.15*sc,z),type:"target",fall:1,back:0}
 TG.targets.push(t)
 return t}L.lockExtra=()=>TG.targets
-window.__RGF={open:()=>rgOpen(),spawn:()=>rgSpawn(),clear:()=>rgClear(),close:()=>rgClose()}
+window.__RGF={open:()=>rgOpen(),spawn:()=>rgSpawn(),clear:()=>rgClear(),close:()=>rgClose(),load:k=>rgLoad(RG_ROS.find((r=>r.key===k))),one:(k,x,z)=>rgSpawnOne(k,RG.o.x+x,RG.o.fire+z)}
 const RG={o:null,key:"dummy",hp:3,beh:"stand",n:1,dist:"mid",respawn:true,dmg:false,list:[],queue:[],st:{kills:0,hits:0,shots:0,best:0},seenShots:new WeakSet,dirty:true,ui:null,thumbs:{},inZone:false,scr:null,con:null}
 window.__RG=RG
 const RG_DIST={near:7,mid:13,far:22},RG_HP=[1,2,3,5,8,12],RG_N=[1,3,5]
 const RG_BEH=[["stand","STAND STILL"],["strafe","STRAFE"],["fight","FIGHT BACK"]]
-function rgRoster(){const out=[{key:"dummy",name:"Straw Dummy",from:"THE YARD",ok:true}]
-try{for(let i=1;i<FOE_LV.length;i++){const[k]=FOE_LV[i]
-out.push({key:k,name:EH_NAME[k]||k,from:i>=10?"CH 2 · LV "+(i-9):"LEVEL "+i,ok:!!PROTO[k]})}}catch(e){}return out}function rgDummyProto(){if(PROTO.dummy)return
+const RG_ROS=[{key:"dummy",name:"Straw Dummy",from:"THE YARD"},{key:"cinder",name:"Cinderling",from:"LEVEL 1",pack:"assets1.js",asset:"cinder"},{key:"bat",name:"Soot Crow",from:"LEVEL 1",pack:"assets1.js",asset:"raven"},{key:"balebutt",from:"LEVEL 1"},{key:"brat",name:"Brew Brat",from:"LEVEL 2",pack:"assets2.js"},{key:"potlobber",from:"LEVEL 2"},{key:"mimic",name:"Mimicling",from:"LEVEL 3",pack:"assets3.js"},{key:"postbox",from:"LEVEL 3"},{key:"gremlin",name:"Grist Gremlin",from:"LEVEL 4",pack:"assets4.js"},{key:"lampmole",from:"LEVEL 4"},{key:"coggremlin",from:"LEVEL 5"},{key:"crank",name:"Crown Crank",from:"LEVEL 6",pack:"assets6.js"},{key:"cuckoo",from:"LEVEL 6"},{key:"crownguard",from:"LEVEL 7"},{key:"gnawer",name:"Gargoyle Gnawer",from:"LEVEL 8",pack:"assets8.js"},{key:"emberpup",from:"LEVEL 8"},{key:"comet",name:"Chomp Comet",from:"LEVEL 9",pack:"assets9.js"},{key:"moonmite",from:"LEVEL 9"},{key:"clapper",name:"Clapper Jack",from:"CH 2 · LEVEL 1",pack:"assets10.js",c2:1},{key:"ticket",from:"CH 2 · LEVEL 1"},{key:"bud",name:"Bristle Bud",from:"CH 2 · LEVEL 2",pack:"assets11.js",c2:1},{key:"rootsentry",from:"CH 2 · LEVEL 2"},{key:"ripple",name:"Ripple Novice",from:"CH 2 · LEVEL 3",pack:"assets12.js",c2:1},{key:"inksquid",from:"CH 2 · LEVEL 3"},{key:"squire",name:"Soot Squire",from:"CH 2 · LEVEL 4",pack:"assets13.js",c2:1},{key:"cindermoth",from:"CH 2 · LEVEL 4"},{key:"orbit",name:"Orbit Imp",from:"CH 2 · LEVEL 5",pack:"assets14.js",c2:1},{key:"starwarden",from:"CH 2 · LEVEL 5"}]
+RG_ROS.forEach(((r,i)=>{r.i=i
+if(!r.name)r.name=EH_NAME[r.key]||r.key
+r.sig=!r.pack&&r.key!=="dummy"}))
+function rgReady(r){if(r.key==="dummy")return true
+if(r.key==="cinder")return!!cinderProto
+if(r.key==="bat")return!!ravenProto
+if(r.key==="brat")return!!bratProto
+if(r.c2)return!!(C2.rig&&C2.rig[r.key])
+return!!PROTO[r.key]}function rgAvail(r){return r.pack?true:rgReady(r)}function rgRoster(){return RG_ROS.map((r=>Object.assign(r,{ok:rgAvail(r)})))}function rgLoad(r){if(rgReady(r))return Promise.resolve(true)
+if(!r.pack)return Promise.resolve(false)
+if(r.loading)return r.loading
+r.loading=(async()=>{try{const keep=window.WT_LV
+await loadAsset(r.pack)
+const lv=window.WT_LV||{}
+const data=lv[r.asset||r.key]
+window.WT_LV=keep
+if(!data)return false
+const gl=await loadGLB(data)
+if(r.key==="cinder")cinderProto=norm(gl.scene,1.25,false)
+else if(r.key==="bat")ravenProto=norm(gl.scene,1.75,false)
+else if(r.key==="brat"){bratProto=norm(gl.scene,1.3,false)
+if(gl.animations.length)PANIM.brat=gl.animations}else if(r.c2){brighten(gl.scene,.3)
+C2.rig[r.key]=rigSplit(gl.scene,RIGSPEC[r.key]||{parts:[]})}else{PROTO[r.key]=norm(gl.scene,1,false)
+if(gl.animations&&gl.animations.length)PANIM[r.key]=gl.animations}return true}catch(e){window.__rgLoadErr=String(e).slice(0,200)
+r.loading=null
+return false}})()
+return r.loading}function rgDummyProto(){if(PROTO.dummy)return
 const g=new THREE.Group
 const an=new THREE.Group
 an.name="fAnim"
@@ -19562,37 +19683,65 @@ an.add(fc)
 const tuft=new THREE.Mesh(new THREE.ConeGeometry(.07,.12,6),straw)
 tuft.position.y=1.06
 an.add(tuft)
-PROTO.dummy=g}function rgSpawnOne(key,x,z){const o=RG.o
+PROTO.dummy=g}function rgMake(r,x,z,y,fight){switch(r.key){case"dummy":rgDummyProto()
+return mkEnemy("dummy","dummy",x,z,y,1.9,{upd:rgCalmAI,pk:"dummy"})
+case"cinder":{const e=cinder(x,z,true,fight?1.8:0,1.1)
+if(e){e.pos.y=e.base.y=y}return e}case"bat":return gloombat(x,z,fight?2.2:0,1.2,y+1.7)
+case"brat":return brat(x,z,y)
+case"mimic":return walker("mimic",x,z,y,1.6)
+case"gremlin":return walker("gremlin",x,z,y,1.45)
+case"crank":return crank(x,z,y)
+case"gnawer":return gnawer(x,z,y)
+case"comet":return comet(x,z,y)
+case"clapper":{const e=clapper(x,z,y,12)
+if(e)e.free=true
+return e}}if(r.c2)return c2Enemy(r.key,r.key,x,z,y,{bud:1.35,ripple:1.25,squire:1.3,orbit:1.3}[r.key]||1.3,{upd:rgHunt,spd:r.key==="squire"?3.4:2.4})
+const kind=(FOE_LV.find((f=>f&&f[0]===r.key))||[0,"charger"])[1]
+return mkFoe(kind,r.key,x,z,y)}function rgSpawnOne(key,x,z){const o=RG.o
 const y=o.y
+const r=RG_ROS.find((q=>q.key===key))||RG_ROS[0]
 let e=null
-try{if(key==="dummy"){rgDummyProto()
-e=mkEnemy("dummy","dummy",x,z,y,1.9,{upd:rgDummyAI,pk:"dummy",face:Math.PI})}else{const kind=(FOE_LV.find((f=>f&&f[0]===key))||[0,"charger"])[1]
-e=mkFoe(kind,key,x,z,y)}}catch(err){window.__rgSpawnErr=String(err).slice(0,200)}if(!e)return null
+const fight=RG.beh==="fight"&&key!=="dummy"
+try{e=rgMake(r,x,z,y,fight)}catch(err){window.__rgSpawnErr=String(err).slice(0,200)}if(!e)return null
 e.rg=true
-e.base=V3(x,y,z)
+e.pk=e.pk||key
+e.base=V3(x,e.pos.y,z)
 e.face=Math.PI
 e.maxHp=e.hp=RG.hp
 e.rgT0=time
 e.rgHp=e.hp
 e.rgLane=x
 e.rgKey=key
-if(RG.beh!=="fight"||key==="dummy"){e.ai0=e.upd
+if(!fight){e.ai0=e.upd
 e.upd=rgCalmAI
+e.type="rg"
 e.noBlk=true
 e.shieldFront=false
-e.guard=null}burst(V3(x,y+.8,z),16765562,18,5,.4)
+e.guard=null
+e.harmless=true}burst(V3(x,y+.8,z),16765562,18,5,.4)
 try{fDust(V3(x,y+.1,z),15257760,10)}catch(_){}RG.list.push(e)
-return e}function rgDummyAI(e,dt){rgCalmAI(e,dt)}function rgCalmAI(e,dt){const want=Math.atan2(P.pos.x-e.pos.x,P.pos.z-e.pos.z)
+return e}function rgHunt(e,dt){const a=e.an,dx=P.pos.x-e.pos.x,dz=P.pos.z-e.pos.z,d=Math.hypot(dx,dz)
+e.face=lerpAngle(e.face||0,Math.atan2(dx,dz),Math.min(1,dt*4))
+if(d<15&&d>1.1&&!P.dead&&state==="play"){if(a)c2Play(a,"walk")
+const sp=(e.spd||2.4)*dt
+e.pos.x+=Math.sin(e.face)*sp
+e.pos.z+=Math.cos(e.face)*sp}else if(a)c2Play(a,"idle")
+if(a)c2Anim(a,dt)
+e.obj.position.copy(e.pos)
+e.obj.rotation.y=e.face}function rgDummyAI(e,dt){rgCalmAI(e,dt)}function rgCalmAI(e,dt){const want=Math.atan2(P.pos.x-e.pos.x,P.pos.z-e.pos.z)
 e.face=lerpAngle(e.face||0,want,Math.min(1,dt*3))
 if(RG.beh==="strafe"&&!(e.hurtT>0)){e.ph=e.ph||Math.random()*6
 e.sx=(e.sx||0)+dt
 const w=Math.sin(e.sx*1.15+e.ph)
 e.pos.x=e.base.x+w*2.6
 e.lean=Math.cos(e.sx*1.15+e.ph)*.12}else e.lean=0
-if(e.knock){e.knock.multiplyScalar(Math.max(0,1-dt*8))}if(e.hurtT>0){e.hurtT-=dt
+if(e.flap)e.flap.value=Math.sin(time*14+(e.ph||0))*.7+.2
+if(e.raven)e.pos.y=e.base.y+Math.sin(time*2.6+(e.ph||0))*.18
+if(e.an){c2Play(e.an,RG.beh==="strafe"?"walk":"idle")
+c2Anim(e.an,dt)}if(e.knock){e.knock.multiplyScalar(Math.max(0,1-dt*8))}if(e.hurtT>0){e.hurtT-=dt
 e.obj.rotation.z=Math.sin(time*40)*.12*e.hurtT}else e.obj.rotation.z=0
 e.obj.position.set(e.pos.x,e.pos.y,e.pos.z)
-e.obj.rotation.y=e.face}function rgLanes(n){return n===1?[0]:n===3?[-5,0,5]:[-8,-4,0,4,8]}function rgSpawn(){rgClear(true)
+e.obj.rotation.y=e.face+(e.raven?Math.PI:0)}function rgLanes(n){return n===1?[0]:n===3?[-5,0,5]:[-8,-4,0,4,8]}function rgSpawn(){rgClear(true)
 const o=RG.o
 const d=RG_DIST[RG.dist]
 for(const lx of rgLanes(RG.n)){const z=o.fire+d+(RG.n>1?Math.abs(lx)*.15:0)
@@ -19683,9 +19832,8 @@ scene.add(pl2)
 for(const sd of[-1,1]){const post=new THREE.Mesh(c1Box(.2,1.3,.2,1,1),wood)
 post.position.set(o.x+sd*(o.hw-.6),o.y+.65,z)
 c1Add(post)
-const b=new THREE.Mesh(new THREE.BoxGeometry(1.1,.5,.08),[wood,wood,wood,wood,tgSignMat(d+" M",128,56),wood])
-b.position.set(o.x+sd*(o.hw-.6),o.y+1.35,z)
-b.rotation.y=Math.PI
+const b=new THREE.Mesh(new THREE.BoxGeometry(1.1,.5,.08),[wood,wood,wood,wood,wood,tgSignMat(d+" M",128,56)])
+b.position.set(o.x+sd*(o.hw-.6),o.y+1.25,z-.16)
 c1Add(b)}}{const bz=o.z1-1
 const earth=new THREE.MeshLambertMaterial({map:noiseTex("#6a4a34",["#7a5a3e","#5a3c28","#86664a","#4e3424"],3,1,false),color:13150352})
 const b=new THREE.Mesh(new THREE.CylinderGeometry(1,1,o.hw*2-2,8,1,false,0,Math.PI),earth)
@@ -19731,11 +19879,11 @@ p.position.set(x,o.y+1.7,z)
 c1Add(p)
 c1Solid(x-.2,x+.2,o.y,o.y+3.4,z-.2,z+.2)}for(const z of[hz0,hz1]){const b=new THREE.Mesh(c1Box(7,.3,.3,3,1),wood)
 b.position.set(hx,o.y+3.4,z)
-c1Add(b)}for(const sd of[-1,1]){const rf=new THREE.Mesh(c1Box(7.8,.22,3.6,3,2),roofM)
-rf.position.set(hx,o.y+4.15,(hz0+hz1)/2+sd*1.5)
-rf.rotation.x=-sd*.42
+c1Add(b)}for(const sd of[-1,1]){const rf=new THREE.Mesh(c1Box(7.8,.22,3.7,3,2),roofM)
+rf.position.set(hx,o.y+4.2,(hz0+hz1)/2+sd*1.62)
+rf.rotation.x=sd*.5
 c1Add(rf)}const ridge=new THREE.Mesh(c1Box(8,.3,.3,3,1),wood)
-ridge.position.set(hx,o.y+4.85,(hz0+hz1)/2)
+ridge.position.set(hx,o.y+5.08,(hz0+hz1)/2)
 c1Add(ridge)
 const bench=new THREE.Mesh(c1Box(5,.5,1,2,1),wood)
 bench.position.set(hx,o.y+.5,hz0+.7)
@@ -19744,14 +19892,14 @@ c1Solid(hx-2.5,hx+2.5,o.y,o.y+1,hz0+.2,hz0+1.2,"block")
 for(let i=0;i<5;i++){const ln=c1Lantern(0,0,0,{h:.01,solid:false,pool:false})
 ln.position.set(hx-2.2+i*1.1-.75,o.y+3.2,hz1-.1)}c1Barrel(hx-2.6,o.y,hz1-.9,1)
 c1Barrel(hx+2.6,o.y,hz1-.9,.9)
-tgHay(hx+.8,o.y,hz1+1.2,.2)}for(const sx of[-1,1]){const pole=new THREE.Mesh(c1Box(.25,5.6,.25,1,3),wood)
-pole.position.set(o.x+sx*11.5,o.y+2.8,o.fire-.6)
+tgHay(hx+.8,o.y,hz1+1.2,.2)}for(const sx of[-1,1]){const pole=new THREE.Mesh(c1Box(.25,7.8,.25,1,4),wood)
+pole.position.set(o.x+sx*11.5,o.y+3.9,o.fire-.6)
 c1Add(pole)
-c1Solid(o.x+sx*11.5-.15,o.x+sx*11.5+.15,o.y,o.y+5.6,o.fire-.75,o.fire-.45)
+c1Solid(o.x+sx*11.5-.15,o.x+sx*11.5+.15,o.y,o.y+7.8,o.fire-.75,o.fire-.45)
 const cap=new THREE.Mesh(new THREE.ConeGeometry(.3,.4,4),iron)
-cap.position.set(o.x+sx*11.5,o.y+5.8,o.fire-.6)
+cap.position.set(o.x+sx*11.5,o.y+8,o.fire-.6)
 cap.rotation.y=Math.PI/4
-c1Add(cap)}c1Bunting(o.x-11.5,o.y+5.4,o.fire-.6,o.x+11.5,o.y+5.4,o.fire-.6,{sag:1.1,cols:[8010464,16765503,4856458,16758858]})
+c1Add(cap)}c1Bunting(o.x-11.5,o.y+7.6,o.fire-.6,o.x+11.5,o.y+7.6,o.fire-.6,{sag:.7,cols:[8010464,16765503,4856458,16758858]})
 const cx=o.x+3.2,cz=o.fire-2.6
 const con=new THREE.Group
 con.position.set(cx,o.y,cz)
@@ -19779,7 +19927,7 @@ for(let i=0;i<5;i++){g.fillStyle=i<3?"#d0123a":"#3a1a4a"
 g.fillRect(22+i*18,64,14,12)}}))
 const pad=new THREE.Mesh(new THREE.PlaneGeometry(1.15,.82),new THREE.MeshBasicMaterial({map:pt,toneMapped:false}))
 pad.position.set(0,1.185,-.03)
-pad.rotation.x=-1.99
+pad.rotation.set(-1.99,0,Math.PI)
 con.add(pad)
 const cg=spr(glowTex,11563263,2.2,1.4,0,1.35,0)
 cg.material.opacity=.35
@@ -19790,52 +19938,28 @@ c1Solid(cx-.55,cx+.55,o.y,o.y+1.2,cz-.4,cz+.4)
 RG.con={x:cx,y:o.y,z:cz,m:con,pos:V3(cx,o.y,cz),size:1.1}
 c1Barrel(o.x+8.4,o.y,o.fire-5,1)
 c1Barrel(o.x+9.3,o.y,o.fire-4.4,.85)
-tgSignpost(o.x-2.6,o.y,o.z0+2.2,0,"LAMPLIGHTERS' RANGE")}for(let z=o.z0+8;z<o.z1-2;z+=9)for(const sd of[-1,1]){c1Banner(o.x+sd*(o.hw+2.4),o.y+1.2,z,sd>0?-Math.PI/2:Math.PI/2,(z/9|0)%2?"#4a1a8a":"#8a1a3a",3.6)}for(let z=o.z0+4;z<o.z1;z+=12)for(const sd of[-1,1])c1Torch(o.x+sd*(o.hw+.9),o.y+1.1,z,{h:1.3,solid:false,pool:false})
+tgSignpost(o.x-5.6,o.y,o.z0+1.6,0,"LAMPLIGHTERS' RANGE")}for(let z=o.z0+8;z<o.z1-2;z+=9)for(const sd of[-1,1]){c1Banner(o.x+sd*(o.hw+2.4),o.y+1.2,z,sd>0?-Math.PI/2:Math.PI/2,(z/9|0)%2?"#4a1a8a":"#8a1a3a",3.6)}for(let z=o.z0+4;z<o.z1;z+=12)for(const sd of[-1,1])c1Torch(o.x+sd*(o.hw+.9),o.y+1.1,z,{h:1.3,solid:false,pool:false})
 const TR=[],BU=[]
 for(let z=o.z0+3;z<o.z1+2;z+=4.5)for(const sd of[-1,1]){if(Math.random()<.55)TR.push([o.x+sd*(o.hw+2.3+Math.random()*.4),o.y,z+R(-1,1),R(.6,.9),R(0,TAU)])
 else BU.push([o.x+sd*(o.hw+2.2),o.y,z,R(.6,.9),R(0,TAU)])}c1Trees(TR,"bloom")
 c1Bushes(BU,true)}rgDummyProto()
 rgDrawScreen()
 L.interact={pos:RG.con.pos,size:1.1,verb:"USE THE CONSOLE",near:()=>state==="play"&&!P.dead&&Math.hypot(P.pos.x-RG.con.x,P.pos.z-RG.con.z)<2.4,press:()=>rgOpen()}
-rgTapHook()}function rgThumb(key){if(RG.thumbs[key]!==undefined)return RG.thumbs[key]
-let url=null
-try{if(key==="dummy")rgDummyProto()
-if(!PROTO[key])return RG.thumbs[key]=null
-const sc=new THREE.Scene
-sc.add(new THREE.HemisphereLight(16773344,4864618,1.25))
-const dl=new THREE.DirectionalLight(16777215,.9)
-dl.position.set(2,4,5)
-sc.add(dl)
-const m=cloneProto(key)
-sc.add(m)
-m.updateMatrixWorld(true)
-const box=(new THREE.Box3).setFromObject(m)
-const c=box.getCenter(V3()),sz=box.getSize(V3())
-const cam=new THREE.PerspectiveCamera(28,1,.01,100)
-const d=Math.max(sz.x,sz.y*1.05,sz.z)*2.3
-cam.position.set(c.x+d*.32,c.y+d*.12,c.z+d)
-cam.lookAt(c)
-const S=128
-const rt=new THREE.WebGLRenderTarget(S,S)
-const cc=renderer.getClearColor(new THREE.Color),ca=renderer.getClearAlpha()
-renderer.setRenderTarget(rt)
-renderer.setClearColor(0,0)
-renderer.clear()
-renderer.render(sc,cam)
-const px=new Uint8Array(S*S*4)
-renderer.readRenderTargetPixels(rt,0,0,S,S,px)
-renderer.setRenderTarget(null)
-renderer.setClearColor(cc,ca)
-rt.dispose()
-const cv=document.createElement("canvas")
-cv.width=cv.height=S
-const g=cv.getContext("2d")
-const id=g.createImageData(S,S)
-for(let y=0;y<S;y++)for(let x=0;x<S;x++){const si=((S-1-y)*S+x)*4,di=(y*S+x)*4
-for(let k=0;k<3;k++)id.data[di+k]=Math.round(255*Math.pow(px[si+k]/255,1/2.2))
-id.data[di+3]=px[si+3]}g.putImageData(id,0,0)
-url=cv}catch(e){window.__rgThumbErr=String(e).slice(0,200)
-url=null}return RG.thumbs[key]=url}function rgRR(g,x,y,w,h,r){g.beginPath()
+rgTapHook()}const RG_SHEET={img:null,ok:false,n:8,S:160}
+const RG_THUMB_MISSING=["cindermoth","starwarden"]
+function rgSheet(){if(RG_SHEET.img)return RG_SHEET
+const im=new Image
+im.onload=()=>{RG_SHEET.ok=true
+RG.dirty=true}
+im.src="art/range_thumbs.png"
+RG_SHEET.img=im
+return RG_SHEET}function rgThumb(key){const r=RG_ROS.find((q=>q.key===key))
+const sh=rgSheet()
+if(!r||!sh.ok||RG_THUMB_MISSING.includes(key))return null
+const c=document.createElement("canvas")
+c.width=c.height=128
+c.getContext("2d").drawImage(sh.img,r.i%sh.n*sh.S,Math.floor(r.i/sh.n)*sh.S,sh.S,sh.S,0,0,128,128)
+return c}function rgRR(g,x,y,w,h,r){g.beginPath()
 g.moveTo(x+r,y)
 g.arcTo(x+w,y,x+w,y+h,r)
 g.arcTo(x+w,y+h,x,y+h,r)
@@ -19860,7 +19984,7 @@ g.stroke()
 g.lineWidth=1.5
 rgRR(g,14,14,W-28,H-28,10)
 g.stroke()
-const ros=rgRoster(),cur=ros.find((r=>r.key===RG.key))||ros[0]
+const cur=RG_ROS.find((r=>r.key===RG.key))||RG_ROS[0]
 g.textBaseline="alphabetic"
 g.textAlign="left"
 g.fillStyle="#ffd27a"
@@ -19924,40 +20048,50 @@ const hit=rc.intersectObjects([RG.scr.m,RG.con.m],true)
 if(hit.length)rgOpen()}),{passive:true})}function rgCss(){if(document.getElementById("rgCss"))return
 const s=document.createElement("style")
 s.id="rgCss"
-s.textContent=`\n#rgPanel{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;background:rgba(10,4,24,.5);padding:max(8px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));box-sizing:border-box;touch-action:manipulation}\n#rgPanel .rgIn{width:min(1120px,100%);max-height:100%;overflow:auto;border-radius:20px;padding:14px 18px 14px;color:#fff3d0;font:800 13px/1.2 var(--ui);box-sizing:border-box;-webkit-overflow-scrolling:touch}\n#rgPanel .rgHd{display:flex;align-items:baseline;gap:14px;margin-bottom:10px}\n#rgPanel h2{margin:0;font:700 22px/1 var(--head);letter-spacing:.08em;color:#ffe8a8;white-space:nowrap}\n#rgPanel .rgSub{flex:1;color:#b8a0e0;font:800 12px/1.2 var(--ui)}\n#rgPanel .rgX{width:38px;height:38px;border-radius:50%;border:1px solid var(--rimS);background:linear-gradient(180deg,var(--glass2),var(--glass));color:#ffe8a8;font:900 18px/1 var(--ui);cursor:pointer;flex:none}\n#rgPanel .rgRos{display:flex;gap:9px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}\n#rgPanel .rgC{flex:none;width:112px;border-radius:14px;padding:6px 6px 8px;cursor:pointer;text-align:center;border:1px solid var(--rimS);background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));color:#fff3d0;font:inherit;position:relative}\n#rgPanel .rgC canvas,#rgPanel .rgC .rgPh{display:block;width:84px;height:84px;margin:0 auto 4px;border-radius:10px;background:radial-gradient(circle at 50% 40%,rgba(176,112,255,.28),rgba(0,0,0,0) 70%)}\n#rgPanel .rgC .rgPh{display:flex;align-items:center;justify-content:center;font:700 34px/1 var(--head);color:#7a5aa8}\n#rgPanel .rgC b{display:block;font:700 12px/1.15 var(--head);letter-spacing:.03em;color:#ffe8a8;min-height:28px}\n#rgPanel .rgC i{display:block;font-style:normal;font:800 9.5px/1 var(--ui);color:#b8a0e0;margin-top:3px;letter-spacing:.06em}\n#rgPanel .rgC.on{border-color:#ffd27a;box-shadow:0 0 0 2px #ffd27a inset,0 0 18px rgba(255,190,80,.35);background:linear-gradient(180deg,rgba(255,210,122,.18),rgba(255,210,122,.04))}\n#rgPanel .rgC[disabled]{opacity:.38;cursor:default}\n#rgPanel .rgMid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 22px;margin:4px 0 10px}\n#rgPanel .rgRow{display:flex;align-items:center;gap:10px;min-width:0}\n#rgPanel .rgRow>label{width:112px;flex:none;font:800 11px/1.15 var(--ui);letter-spacing:.1em;color:#ffd27a}\n#rgPanel .rgSeg{display:flex;gap:6px;flex:1;min-width:0;flex-wrap:wrap}\n#rgPanel .rgSeg button{flex:1;min-width:40px;padding:9px 6px;border-radius:10px;border:1px solid var(--rimS);background:linear-gradient(180deg,var(--glass2),var(--glass));color:#fff3d0;font:900 12px/1 var(--ui);letter-spacing:.06em;cursor:pointer;white-space:nowrap}\n#rgPanel .rgSeg button.on{background:linear-gradient(180deg,#ffe8a8,#f2b048 55%,#c47418);color:#2a1004;border-color:#fff1c0}\n#rgPanel .rgBar{display:flex;align-items:center;gap:12px;margin:0 0 10px;padding:6px 10px;border-radius:14px;background:rgba(0,0,0,.18)}\n#rgPanel .rgBar canvas{width:200px;height:64px;flex:none}\n#rgPanel .rgBar span{color:#b8a0e0;font:800 12px/1.3 var(--ui)}\n#rgPanel .rgBtns{display:flex;gap:10px}\n#rgPanel .rgBtns button{flex:1;padding:13px 0;border-radius:12px;cursor:pointer;font:700 15px/1 var(--head);letter-spacing:.12em;color:#fff3d0;background:linear-gradient(180deg,var(--glass2),var(--glass));border:1px solid var(--rimS)}\n#rgPanel .rgBtns button.pri{flex:1.6;background:linear-gradient(180deg,#ffe8a8,#f2b048 55%,#c47418);color:#2a1004;border-color:#fff1c0}\n@media (max-height:420px){#rgPanel .rgIn{padding:10px 14px}#rgPanel h2{font-size:18px}#rgPanel .rgC{width:96px}#rgPanel .rgC canvas,#rgPanel .rgC .rgPh{width:64px;height:64px}#rgPanel .rgSeg button{padding:7px 4px}#rgPanel .rgBtns button{padding:10px 0}#rgPanel .rgBar canvas{width:150px;height:48px}#rgPanel .rgMid{gap:6px 16px}}\n@media (max-width:640px){#rgPanel .rgMid{grid-template-columns:1fr}}`
+s.textContent=`\n#rgPanel{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;background:rgba(10,4,24,.55);box-sizing:border-box;touch-action:manipulation;\n  padding:max(8px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}\n#rgPanel *{box-sizing:border-box}\n#rgPanel .rgIn{width:min(1180px,100%);height:min(640px,100%);display:flex;flex-direction:column;border-radius:20px;padding:12px 14px;color:#fff3d0;font:800 13px/1.2 var(--ui)}\n#rgPanel .rgHd{display:flex;align-items:center;gap:12px;flex:none;margin-bottom:8px}\n#rgPanel h2{margin:0;font:700 clamp(17px,2.4vw,24px)/1 var(--head);letter-spacing:.08em;color:#ffe8a8;white-space:nowrap}\n#rgPanel .rgSub{flex:1;min-width:0;color:#b8a0e0;font:800 clamp(10px,1.3vw,12px)/1.2 var(--ui);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}\n#rgPanel .rgX{width:36px;height:36px;border-radius:50%;flex:none;border:1px solid var(--rimS);background:linear-gradient(180deg,var(--glass2),var(--glass));color:#ffe8a8;font:900 17px/1 var(--ui);cursor:pointer}\n#rgPanel .rgBody{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:12px}\n#rgPanel .rgRos{min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px;align-content:start;padding:2px 4px 2px 2px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}\n#rgPanel .rgC{position:relative;border-radius:12px;padding:5px 4px 6px;cursor:pointer;text-align:center;border:1px solid var(--rimS);background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));color:#fff3d0;font:inherit;min-width:0}\n#rgPanel .rgPic{display:block;width:100%;aspect-ratio:1;max-width:66px;margin:0 auto 3px;border-radius:9px;background:radial-gradient(circle at 50% 42%,rgba(176,112,255,.3),rgba(0,0,0,0) 70%);background-repeat:no-repeat}\n#rgPanel .rgPic.ph{display:flex;align-items:center;justify-content:center;font:700 26px/1 var(--head);color:#7a5aa8}\n#rgPanel .rgC b{display:block;font:700 10.5px/1.12 var(--head);letter-spacing:.02em;color:#ffe8a8;min-height:24px;overflow-wrap:anywhere}\n#rgPanel .rgC i{display:block;font:800 8.5px/1 var(--ui);font-style:normal;color:#b8a0e0;margin-top:2px;letter-spacing:.05em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}\n#rgPanel .rgC.on{border-color:#ffd27a;box-shadow:0 0 0 2px #ffd27a inset,0 0 16px rgba(255,190,80,.35);background:linear-gradient(180deg,rgba(255,210,122,.2),rgba(255,210,122,.05))}\n#rgPanel .rgC[disabled]{opacity:.35;cursor:default}\n#rgPanel .rgC .ld{position:absolute;inset:0;border-radius:12px;display:none;align-items:center;justify-content:center;background:rgba(14,6,34,.6);font:900 10px/1 var(--ui);letter-spacing:.1em;color:#ffd27a}\n#rgPanel .rgC.loading .ld{display:flex}\n#rgPanel .rgSide{min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:7px;padding-right:2px}\n#rgPanel .rgSel{display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:14px;background:rgba(0,0,0,.2)}\n#rgPanel .rgSel canvas{width:clamp(130px,17vw,190px);height:auto;aspect-ratio:300/96;flex:none}\n#rgPanel .rgSel span{min-width:0;color:#cdb8f0;font:800 clamp(10px,1.25vw,12px)/1.3 var(--ui)}\n#rgPanel .rgRow{display:grid;grid-template-columns:clamp(64px,8.5vw,96px) minmax(0,1fr);align-items:center;gap:8px}\n#rgPanel .rgRow>label{font:900 clamp(9px,1.1vw,10.5px)/1.1 var(--ui);letter-spacing:.1em;color:#ffd27a}\n#rgPanel .rgSeg{display:flex;gap:5px;min-width:0}\n#rgPanel .rgSeg button,#rgPanel .rgTog{flex:1 1 0;min-width:0;height:clamp(30px,4.4vw,38px);padding:0 4px;border-radius:10px;border:1px solid var(--rimS);background:linear-gradient(180deg,var(--glass2),var(--glass));color:#fff3d0;\n  font:900 clamp(10px,1.3vw,12.5px)/1 var(--ui);letter-spacing:.05em;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}\n#rgPanel .rgSeg button.on,#rgPanel .rgTog.on{background:linear-gradient(180deg,#ffe8a8,#f2b048 55%,#c47418);color:#2a1004;border-color:#fff1c0}\n#rgPanel .rgTogs{display:flex;gap:6px}\n#rgPanel .rgBtns{display:flex;gap:7px;margin-top:auto;padding-top:2px}\n#rgPanel .rgBtns button{flex:1;height:clamp(38px,5.4vw,48px);border-radius:12px;cursor:pointer;font:700 clamp(12px,1.6vw,15px)/1 var(--head);letter-spacing:.1em;color:#fff3d0;background:linear-gradient(180deg,var(--glass2),var(--glass));border:1px solid var(--rimS);white-space:nowrap}\n#rgPanel .rgBtns button.pri{flex:1.7;background:linear-gradient(180deg,#ffe8a8,#f2b048 55%,#c47418);color:#2a1004;border-color:#fff1c0}\n#rgPanel .rgBtns button[disabled]{opacity:.5}\n#rgPanel button:focus-visible{outline:3px solid #ffd27a;outline-offset:1px}\n@media (max-width:600px){#rgPanel .rgBody{grid-template-columns:1fr;overflow-y:auto}#rgPanel .rgRos{overflow:visible}}`
 document.head.appendChild(s)}function rgOpen(){if(RG.ui||state!=="play")return
 rgCss()
 try{if(document.pointerLockElement)document.exitPointerLock()}catch(_){}const ros=rgRoster()
+const sh=rgSheet()
 const d=document.createElement("div")
 d.id="rgPanel"
 const seg=(k,opts)=>'<div class="rgSeg" data-k="'+k+'">'+opts.map((([v,l])=>'<button type="button" data-v="'+v+'">'+l+"</button>")).join("")+"</div>"
-d.innerHTML='<div class="rgIn glass"><div class="rgHd"><h2>RANGE DIRECTOR</h2><span class="rgSub">Pick who steps up, how many health bars they get and what they do · then spawn them and practise.</span><button type="button" class="rgX" data-a="close" aria-label="Close">✕</button></div>'+'<div class="rgRos">'+ros.map((r=>'<button type="button" class="rgC" data-key="'+r.key+'"'+(r.ok?"":" disabled")+'><span class="rgPh">'+r.name[0]+"</span><b>"+r.name+"</b><i>"+(r.ok?r.from:"COMING SOON")+"</i></button>")).join("")+"</div>"+'<div class="rgBar"><canvas width="300" height="96"></canvas><span></span></div>'+'<div class="rgMid">'+'<div class="rgRow"><label>HEALTH BARS</label>'+seg("hp",RG_HP.map((v=>[v,v])))+"</div>"+'<div class="rgRow"><label>THEY…</label>'+seg("beh",RG_BEH)+"</div>"+'<div class="rgRow"><label>HOW MANY</label>'+seg("n",RG_N.map((v=>[v,"×"+v])))+"</div>"+'<div class="rgRow"><label>DISTANCE</label>'+seg("dist",[["near","NEAR · 7M"],["mid","MID · 13M"],["far","FAR · 22M"]])+"</div>"+'<div class="rgRow"><label>RESPAWN ON KILL</label>'+seg("respawn",[[1,"ON"],[0,"OFF"]])+"</div>"+'<div class="rgRow"><label>FLINT TAKES HITS</label>'+seg("dmg",[[0,"NO"],[1,"YES"]])+"</div>"+'</div><div class="rgBtns"><button type="button" class="pri" data-a="spawn">SPAWN</button><button type="button" data-a="clear">CLEAR FIELD</button><button type="button" data-a="reset">RESET STATS</button></div></div>'
+const pic=r=>{if(!sh.ok||RG_THUMB_MISSING.includes(r.key))return'<span class="rgPic ph">'+r.name[0]+"</span>"
+const x=r.i%sh.n,y=Math.floor(r.i/sh.n),rows=Math.ceil(RG_ROS.length/sh.n)
+return'<span class="rgPic" style="background-image:url(art/range_thumbs.png);background-size:'+sh.n*100+"% "+rows*100+"%;background-position:"+x/(sh.n-1)*100+"% "+(rows>1?y/(rows-1)*100:0)+'%"></span>'}
+d.innerHTML='<div class="rgIn glass"><div class="rgHd"><h2>RANGE DIRECTOR</h2><span class="rgSub">Pick who steps up, their health bars and what they do, then spawn them.</span><button type="button" class="rgX back" data-a="close" aria-label="Close">✕</button></div>'+'<div class="rgBody"><div class="rgRos">'+ros.map((r=>'<button type="button" class="rgC" data-key="'+r.key+'"'+(r.ok?"":" disabled")+">"+pic(r)+"<b>"+r.name+"</b><i>"+(r.ok?r.from:"COMING SOON")+'</i><span class="ld">LOADING…</span></button>')).join("")+"</div>"+'<div class="rgSide"><div class="rgSel"><canvas width="300" height="96"></canvas><span></span></div>'+'<div class="rgRow"><label>HEALTH BARS</label>'+seg("hp",RG_HP.map((v=>[v,v])))+"</div>"+'<div class="rgRow"><label>THEY…</label>'+seg("beh",[["stand","STAND"],["strafe","STRAFE"],["fight","FIGHT"]])+"</div>"+'<div class="rgRow"><label>HOW MANY</label>'+seg("n",RG_N.map((v=>[v,"×"+v])))+"</div>"+'<div class="rgRow"><label>DISTANCE</label>'+seg("dist",[["near","7 M"],["mid","13 M"],["far","22 M"]])+"</div>"+'<div class="rgRow"><label>OPTIONS</label><div class="rgTogs"><button type="button" class="rgTog" data-t="respawn"></button><button type="button" class="rgTog" data-t="dmg"></button></div></div>'+'<div class="rgBtns"><button type="button" class="pri" data-a="spawn">SPAWN</button><button type="button" data-a="clear">CLEAR</button><button type="button" data-a="reset">RESET</button></div></div></div></div>'
 document.body.appendChild(d)
 RG.ui=d
 RG.prevState=state
 state="range"
-const cards=[...d.querySelectorAll(".rgC")]
-let ci=0
-const nextThumb=()=>{if(!RG.ui||ci>=cards.length)return
-const c=cards[ci++]
-const th=rgThumb(c.dataset.key)
-if(th){const cv=document.createElement("canvas")
-cv.width=cv.height=128
-cv.getContext("2d").drawImage(th,0,0)
-c.querySelector(".rgPh").replaceWith(cv)}setTimeout(nextThumb,0)}
-setTimeout(nextThumb,30)
+const spawnB=d.querySelector('[data-a="spawn"]')
 const sync=()=>{d.querySelectorAll(".rgC").forEach((c=>c.classList.toggle("on",c.dataset.key===RG.key)))
-const val={hp:RG.hp,beh:RG.beh,n:RG.n,dist:RG.dist,respawn:RG.respawn?1:0,dmg:RG.dmg?1:0}
+const val={hp:RG.hp,beh:RG.beh,n:RG.n,dist:RG.dist}
 d.querySelectorAll(".rgSeg").forEach((s=>{s.querySelectorAll("button").forEach((b=>b.classList.toggle("on",String(val[s.dataset.k])===b.dataset.v)))}))
-const r=ros.find((x=>x.key===RG.key))||ros[0]
-try{ehDraw(d.querySelector(".rgBar canvas"),RG.hp,RG.hp,RG.hp,r.name,0)}catch(_){}d.querySelector(".rgBar span").textContent=r.name+" · "+r.from+" · "+(RG.beh==="fight"?"uses its real attacks, shields and dodges":RG.beh==="strafe"?"steps side to side across its lane":"stands and takes it")}
+const tr=d.querySelector('[data-t="respawn"]'),td=d.querySelector('[data-t="dmg"]')
+tr.textContent="RESPAWN: "+(RG.respawn?"ON":"OFF")
+tr.classList.toggle("on",RG.respawn)
+td.textContent="HITS ON FLINT: "+(RG.dmg?"ON":"OFF")
+td.classList.toggle("on",RG.dmg)
+const r=RG_ROS.find((x=>x.key===RG.key))||RG_ROS[0]
+try{ehDraw(d.querySelector(".rgSel canvas"),RG.hp,RG.hp,RG.hp,r.name,0)}catch(_){}const ready=rgReady(r)
+spawnB.disabled=!ready
+spawnB.textContent=ready?"SPAWN":"LOADING…"
+d.querySelector(".rgSel span").textContent=r.from+" · "+(RG.beh==="fight"?r.key==="dummy"?"a dummy never fights back":"uses its attacks, shields and dodges":RG.beh==="strafe"?"steps side to side across its lane":"stands still and takes it")}
+const pick=key=>{RG.key=key
+const r=RG_ROS.find((x=>x.key===key))
+if(r&&!rgReady(r)){const c=d.querySelector('.rgC[data-key="'+key+'"]')
+if(c)c.classList.add("loading")
+rgLoad(r).then((ok=>{if(c)c.classList.remove("loading")
+if(!ok&&c){c.disabled=true
+c.querySelector("i").textContent="COULDN'T LOAD"}RG.dirty=true
+if(RG.ui)sync()}))}}
+if(!rgReady(RG_ROS.find((x=>x.key===RG.key))||RG_ROS[0]))pick(RG.key)
 sync()
 d.addEventListener("click",(e=>{const b=e.target.closest("button")
-if(!b)return
-try{blip(900,1200,.04,"square",.03)}catch(_){}if(b.classList.contains("rgC")){if(b.disabled)return
-RG.key=b.dataset.key}else if(b.parentElement.classList.contains("rgSeg")){const k=b.parentElement.dataset.k,v=b.dataset.v
+if(!b||b.disabled)return
+try{blip(900,1200,.04,"square",.03)}catch(_){}if(b.classList.contains("rgC")){pick(b.dataset.key)}else if(b.dataset.t){RG[b.dataset.t]=!RG[b.dataset.t]}else if(b.parentElement.classList.contains("rgSeg")){const k=b.parentElement.dataset.k,v=b.dataset.v
 if(k==="hp"||k==="n")RG[k]=+v
-else if(k==="respawn"||k==="dmg")RG[k]=v==="1"
 else RG[k]=v}else if(b.dataset.a==="spawn"){rgClose()
 rgSpawn()
 return}else if(b.dataset.a==="clear"){rgClear(false)}else if(b.dataset.a==="reset"){RG.st={kills:0,hits:0,shots:0,best:0}}else if(b.dataset.a==="close"){rgClose()
@@ -19972,39 +20106,8 @@ RG.lockFix=()=>{if(document.pointerLockElement&&RG.ui)try{document.exitPointerLo
 document.addEventListener("pointerlockchange",RG.lockFix)
 window.__uiBack=()=>{if(RG.ui){rgClose()
 return true}return false}
-if(window.__padLast){const tip=document.createElement("div")
-tip.style.cssText="margin-top:8px;text-align:center;color:#b8a0e0;font:800 11px/1 var(--ui);letter-spacing:.08em"
-tip.textContent="A SPAWN · B BACK · LB/RB ENEMY · D-PAD HEALTH BARS · X BEHAVIOUR · Y HOW MANY"
-d.querySelector(".rgIn").appendChild(tip)}const prev={}
-const pad=()=>{if(!RG.ui)return
-try{const gp=[...navigator.getGamepads?navigator.getGamepads():[]].find((g=>g&&g.connected))
-if(gp){const pr=i=>!!(gp.buttons[i]&&gp.buttons[i].pressed)
-const ed=i=>{const v=pr(i),e=v&&!prev[i]
-prev[i]=v
-return e}
-const ok=ros.filter((r=>r.ok))
-let ix=Math.max(0,ok.findIndex((r=>r.key===RG.key)))
-let ch=false
-if(ed(0)){rgClose()
-rgSpawn()
-return}if(ed(1)){rgClose()
-return}if(ed(4)){ix=(ix+ok.length-1)%ok.length
-RG.key=ok[ix].key
-ch=true}if(ed(5)){ix=(ix+1)%ok.length
-RG.key=ok[ix].key
-ch=true}const hi=RG_HP.indexOf(RG.hp)
-if(ed(12)){RG.hp=RG_HP[Math.min(RG_HP.length-1,hi+1)]
-ch=true}if(ed(13)){RG.hp=RG_HP[Math.max(0,hi-1)]
-ch=true}if(ed(2)){const bi=RG_BEH.findIndex((b=>b[0]===RG.beh))
-RG.beh=RG_BEH[(bi+1)%RG_BEH.length][0]
-ch=true}if(ed(3)){RG.n=RG_N[(RG_N.indexOf(RG.n)+1)%RG_N.length]
-ch=true}if(ch){RG.dirty=true
-sync()
-const c=d.querySelector(".rgC.on")
-if(c)c.scrollIntoView({block:"nearest",inline:"center"})}}}catch(_){}requestAnimationFrame(pad)}
-try{const gp=[...navigator.getGamepads?navigator.getGamepads():[]].find((g=>g&&g.connected))
-if(gp)gp.buttons.forEach(((b,i)=>prev[i]=b.pressed))}catch(_){}requestAnimationFrame(pad)
-P.vel.x=P.vel.z=0}function rgClose(){if(!RG.ui)return
+{const on=d.querySelector(".rgC.on")
+if(on)try{on.scrollIntoView({block:"nearest"})}catch(_){}}P.vel.x=P.vel.z=0}function rgClose(){if(!RG.ui)return
 RG.ui.remove()
 RG.ui=null
 if(state==="range")state="play"
@@ -21424,8 +21527,8 @@ return"ok"}if(state==="title"&&vis("title"))return"exit"
 return"ok"}catch(e){return"ok"}}
 $("resumeBtn").addEventListener("click",(()=>{togglePause()
 lockPointer()}))
-$("pRestart").addEventListener("click",(()=>goTo("play")))
-$("pQuit").addEventListener("click",(()=>goTo("menu")))
+$("pRestart").addEventListener("click",(()=>wtConfirm("RESTART LEVEL?","You'll go back to the very start of the level.","RESTART",(()=>goTo("play")))))
+$("pQuit").addEventListener("click",(()=>wtConfirm("QUIT TO MENU?","Anything since your last checkpoint will be lost.","QUIT",(()=>goTo("menu")))))
 $("pSettings").addEventListener("click",(()=>{$("pause").hidden=true
 $("settingsScr").hidden=false}))
 document.querySelectorAll("[data-close]").forEach((b=>b.addEventListener("click",(()=>{$(b.dataset.close).hidden=true
